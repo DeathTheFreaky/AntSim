@@ -16,6 +16,18 @@ import renderEngine.Renderer;
  */
 public class MainLoop {
 	
+	/* The OpenGL code so far has been written based on the a youtube tutorial series. 
+	 * Also, there is a plugin for writing GLSL shaders in Eclipse: http://stackoverflow.com/questions/8434358/adding-glsl-syntax-highlighting-to-eclipse
+	 * 
+	 * In case of questions, refer to the following videos:
+	 * 
+	 * 1.) Setting up Display: http://www.youtube.com/watch?v=VS8wlS9hF8E
+	 * 2.) VAOs and VBOs: http://www.youtube.com/watch?v=WMiggUPst-Q
+	 * 3.) Using index buffers: http://www.youtube.com/watch?v=z2yFlvkBbmk
+	 * 4.) Introduction to Shaders: http://www.youtube.com/watch?v=AyNZG_mqGVE
+	 * 5.) Coloring using Shaders: http://www.youtube.com/watch?v=4w7lNF8dnYw (shaders.vertexShader, shaders.fragmentShader)
+	 * */
+	
 	public static void main(String[] args) {
 		
 		DisplayManager.createDisplay();
