@@ -17,7 +17,9 @@ import renderEngine.Renderer;
 public class MainLoop {
 	
 	/* The OpenGL code so far has been written based on the a youtube tutorial series. 
-	 * Also, there is a plugin for writing GLSL shaders in Eclipse: http://stackoverflow.com/questions/8434358/adding-glsl-syntax-highlighting-to-eclipse
+	 * 
+	 * Also, there is a plugin for writing GLSL shaders in Eclipse: http://sourceforge.net/projects/webglsl/
+	 * -> Extract .zip file to Eclipse installation directory
 	 * 
 	 * In case of questions, refer to the following videos:
 	 * 
