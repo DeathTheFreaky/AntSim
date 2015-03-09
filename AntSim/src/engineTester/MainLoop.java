@@ -33,6 +33,7 @@ public class MainLoop {
 	 * 4.) Introduction to Shaders: http://www.youtube.com/watch?v=AyNZG_mqGVE
 	 * 5.) Coloring using Shaders: http://www.youtube.com/watch?v=4w7lNF8dnYw (shaders.vertexShader, shaders.fragmentShader)
 	 * 6.) Texturing: http://www.youtube.com/watch?v=SPt-aogu72A
+	 * 7.) Matrices & Uniform Variables: http://www.youtube.com/watch?v=oc8Yl4ZruCA -> Uniform Variables are used to send variables from Java code to the shaders
 	 * */
 	
 	public static void main(String[] args) {
