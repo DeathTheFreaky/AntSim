@@ -1,4 +1,4 @@
-package renderEngine;
+package models;
 
 /**The RawModel stores 3D models as VAOs (Vertex Array Objects).<br><br>
  * VAOs are the modern way of storing and rendering models in OpenGl.<br>

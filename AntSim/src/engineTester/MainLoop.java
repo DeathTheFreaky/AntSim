@@ -1,12 +1,15 @@
 package engineTester;
 
+import models.RawModel;
+import models.TexturedModel;
+
 import org.lwjgl.opengl.Display;
 
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
-import renderEngine.RawModel;
 import renderEngine.Renderer;
 import shaders.StaticShader;
+import textures.ModelTexture;
 
 /**MainLoop holds the main game loop containing the main game logic and handles the initialization and destruction of the game.
  * <br>
@@ -29,6 +32,7 @@ public class MainLoop {
 	 * 3.) Using index buffers: http://www.youtube.com/watch?v=z2yFlvkBbmk
 	 * 4.) Introduction to Shaders: http://www.youtube.com/watch?v=AyNZG_mqGVE
 	 * 5.) Coloring using Shaders: http://www.youtube.com/watch?v=4w7lNF8dnYw (shaders.vertexShader, shaders.fragmentShader)
+	 * 6.) Texturing: http://www.youtube.com/watch?v=SPt-aogu72A
 	 * */
 	
 	public static void main(String[] args) {
@@ -52,18 +56,27 @@ public class MainLoop {
 				3,1,2	//Bottom right triangle (V3,V1,V2)
 		};
 		
+		float[] textureCoords = {
+				0,0,	//V0
+				0,1,	//V1
+				1,1,	//V2
+				1,0		//V3
+		};
+		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
 		 */
 		
-		RawModel model = loader.loadToVAO(vertices, indices);
+		RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
+		ModelTexture texture = new ModelTexture(loader.loadTexture("test_texture")); //load a texture from a png file
+		TexturedModel texturedModel = new TexturedModel(model, texture); //stick the texture on a RawModel
 		
 		//main game loop
 		while(!Display.isCloseRequested()) {
 			//game logic
 			renderer.prepare(); //basically clears screen from previous frame
 			shader.start();
-			renderer.render(model);
+			renderer.render(texturedModel);
 			shader.stop();
 			DisplayManager.updateDisplay();
 		}
