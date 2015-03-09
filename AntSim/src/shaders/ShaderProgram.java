@@ -7,33 +7,56 @@ import java.io.IOException;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
+/**This class represents a generic shader program containing all attributes and methods that every shader program needs to have.
+ * 
+ * @author Flo
+ *
+ */
 public abstract	class ShaderProgram {
 
-	private int programID;
+	private int programID; 
 	private int vertexShaderID;
 	private int fragmentShaderID;
 	
 	public ShaderProgram(String vertexFile, String fragmentFile) {
-		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
-		fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
-		programID = GL20.glCreateProgram();
+		
+		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER); //load vertex shader into OpenGL
+		fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER); //load fragment shader into OpenGL
+		
+		//create new program that will tie vertex shader and fragment shader together
+		programID = GL20.glCreateProgram(); 
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
+		
 		bindAttributes();
 	}
 	
+	/**Starts the shader program.
+	 * 
+	 */
 	public void start() {
+		
 		GL20.glUseProgram(programID);
 	}
 	
+	/**Stops the shader program.
+	 * 
+	 */
 	public void stop() {
+		
 		GL20.glUseProgram(0);
 	}
 	
+	/**Deletes both the vertex and the fragment shader. 
+	 * 
+	 */
 	public void cleanUp() {
-		stop();
+		
+		stop(); //make sure program is not running
+		
+		//detach shaders from program, delete shaders and finally delete program
 		GL20.glDetachShader(programID, vertexShaderID);
 		GL20.glDetachShader(programID, fragmentShaderID);
 		GL20.glDeleteShader(vertexShaderID);
@@ -41,13 +64,32 @@ public abstract	class ShaderProgram {
 		GL20.glDeleteProgram(programID);
 	}
 	
+	/**Links up the inputs to the shader programs to one of the VAOs of a RawModel.
+	 * 
+	 */
 	protected abstract void bindAttributes();
 	
+	/**Binds an attribute from a VAO's attribute list to the input parameters of the shader program.
+	 * 
+	 * @param attribute - number of an attribute list in the VAO that we want to bind
+	 * @param variableName - variableName in the shader code that we want to bind that attribute to
+	 */
 	protected void bindAttribute(int attribute, String variableName) {
+		
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
 	
+	/**Opens up source code files, reads in all the lines and connects them all together into one long string.<br>
+	 * This long string will then be attached to the new vertex or fragment shader, depending on the passed type.<br>
+	 * Finally, this method will compile the shader and print any errors that were found in the shader code.<br> 
+	 * 
+	 * @param file - a shader file
+	 * @param type - indicates whether the shader is a vertex or a fragment shader
+	 * @return - the shaderID
+	 */
 	private static int loadShader(String file, int type) {
+		
+		//read contents of Shader into one long string
 		StringBuilder shaderSource = new StringBuilder();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -61,14 +103,19 @@ public abstract	class ShaderProgram {
 			e.printStackTrace();
 			System.exit(-1);
 		}
+		
+		//create new shader and attach source code from the shader file
 		int shaderID = GL20.glCreateShader(type);
 		GL20.glShaderSource(shaderID, shaderSource);
+		
+		//compile the shader and print any errors in the shader code
 		GL20.glCompileShader(shaderID);
 		if(GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
 			System.err.println("Could not compile shader.");
 			System.exit(-1);
 		}
+		
 		return shaderID;
 	}
 }
