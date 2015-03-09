@@ -6,6 +6,7 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.RawModel;
 import renderEngine.Renderer;
+import shaders.StaticShader;
 
 /**MainLoop holds the main game loop containing the main game logic and handles the initialization and destruction of the game.
  * <br>
@@ -36,13 +37,14 @@ public class MainLoop {
 		
 		Loader loader = new Loader();
 		Renderer renderer = new Renderer();
+		StaticShader shader = new StaticShader();
 		
 		// draw a cube for testing purposes
 		float[] vertices = {
 				-0.5f, 0.5f, 0, 	//V0
 				-0.5f, -0.5f, 0,	//V1
 				0.5f, -0.5f, 0,		//V2
-				0.5f, 0.5f, 0f		//V3
+				0.5f, 0.5f, 0		//V3
 		};
 		
 		int[] indices = {
@@ -63,9 +65,11 @@ public class MainLoop {
 			
 			//game logic
 			renderer.render(model);
+			shader.stop();
 			DisplayManager.updateDisplay();
 		}
 		
+		shader.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
