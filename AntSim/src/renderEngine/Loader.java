@@ -32,7 +32,7 @@ public class Loader {
 		bindIndicesBuffer(indices); //bind indices to the VAO
 		storeDataInAttributeList(0, positions); //store positional data into attribute list 0 of the VAO
 		unbindVAO(); //now that we finished using the VAO, we need to unbind it
-		return new RawModel(vaoID, indices.length/3); //number of indices: distinct positions/3 (x,y,z per vertex)
+		return new RawModel(vaoID, indices.length); //number of indices equals vertex count
 	}
 	
 	/**Deletes all VAOS and VBOS stored in the vaos and vbos lists.
