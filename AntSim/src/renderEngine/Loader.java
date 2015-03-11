@@ -1,15 +1,22 @@
 package renderEngine;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
+import models.RawModel;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 
 /**Loader loads 3D Models into memory by storing positional data about the model in a VAO.
  * 
@@ -18,24 +25,48 @@ import org.lwjgl.opengl.GL30;
  */
 public class Loader {
 	
-	private List<Integer> vaos = new ArrayList<Integer>(); //list holding all vaos
-	private List<Integer> vbos = new ArrayList<Integer>(); //list holding all vbos
+	private List<Integer> vaos = new ArrayList<Integer>(); //list holding all vaos ids to be cleaned at program exit
+	private List<Integer> vbos = new ArrayList<Integer>(); //list holding all vbos ids to be cleaned at program exit
+	private List<Integer> textures = new ArrayList<Integer>(); //list holding all texture ids to be cleaned at program exit
 	
-	/**Takes in position coordinates and the indices of positions of a model's vertexes, loads this data into a VAO and then returns information about the VAO as a RawModel object.
+	/**Takes in position coordinates, texture coordinates and the indices of positions of a model's vertexes, loads this data into a VAO and then returns information about the VAO as a RawModel object.
 	 * 
 	 * @param positions - an array of x,y,z positions stored as floats
+	 * @param textureCoords - an array of texture coordinates stored as floats
 	 * @param indices - an array integer indices indicating the positions of vertexes
 	 * @return - a RawModel object storing positional data inside a VAO
 	 */
-	public RawModel loadToVAO(float[] positions, int[] indices) {
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices); //bind indices to the VAO
-		storeDataInAttributeList(0, positions); //store positional data into attribute list 0 of the VAO
+		storeDataInAttributeList(0, 3, positions); //store positional data into attribute list 0 of the VAO
+		storeDataInAttributeList(1, 2, textureCoords); //store texture coordinates into attribute list 1 of the VAO
 		unbindVAO(); //now that we finished using the VAO, we need to unbind it
 		return new RawModel(vaoID, indices.length); //number of indices equals vertex count
 	}
 	
-	/**Deletes all VAOS and VBOS stored in the vaos and vbos lists.
+	/**Loads up a texture into memory to be used by OpenGL.
+	 * 
+	 * @param filename - the filename of the texture 
+	 * @return - the ID of the newly loaded texture
+	 */
+	public int loadTexture(String fileName) {
+		
+		//load a texture in .png format from /res directory
+		Texture texture = null;
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/"+fileName+".png"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		int textureID = texture.getTextureID();
+		
+		return textureID;
+	}
+	
+	/**Deletes all VAOS, VBOS and textures stored in the vaos, vbos and textures lists.
 	 * 
 	 */
 	public void cleanUp(){
@@ -44,6 +75,9 @@ public class Loader {
 		}
 		for (int vbo:vbos) {
 			GL15.glDeleteBuffers(vbo);
+		}
+		for (int texture:textures) {
+			GL15.glDeleteBuffers(texture);
 		}
 	}
 	
@@ -61,15 +95,16 @@ public class Loader {
 	/**Stores data into one of the attribute lists of a VAO.
 	 * 
 	 * @param attributeNumber - number of the attribute list in which the data shall be stored
+	 * @param coordinateSize - eg. 3 for x,y,z or 2 for texture coordinates
 	 * @param data - the data which shall be stored inside an attribute list of a VAO
 	 */
-	private void storeDataInAttributeList(int attributeNumber, float[] data) {
+	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
 		int vboID = GL15.glGenBuffers(); //creates an empty VBO, returning the empty VBO's ID
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID); //VBO needs to be bound before it can be used; type of VBA is GL_ARRAY_BUFFER
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);//usage of static means we will not be editing the data later on
-		GL20.glVertexAttribPointer(attributeNumber, 3, GL11.GL_FLOAT, false, 0, 0);//puts VBO into the VAO
+		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);//puts VBO into the VAO
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0); //unbind VBO when we're done using it by binding with 0 instead of an actual VBO ID
 	}
 	
