@@ -42,7 +42,7 @@ public class Renderer {
 	public void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST); //enable depth test -> to only show closest vertices (and not the hidden ones)
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT); //clears color of last frame and depth buffer
-		GL11.glClearColor(1f, 0, 0, 1); //choose color (R,G,B,A) with which the screen will be cleared
+		GL11.glClearColor(0, 0, 0, 0); //choose color (R,G,B,A) with which the screen will be cleared
 	}
 	
 	/**Renders an Entity to the screen, applying the given shader program.

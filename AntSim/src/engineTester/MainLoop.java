@@ -10,6 +10,7 @@ import entities.Camera;
 import entities.Entity;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
+import renderEngine.OBJLoader;
 import renderEngine.Renderer;
 import shaders.StaticShader;
 import textures.ModelTexture;
@@ -38,6 +39,8 @@ public class MainLoop {
 	 * 6.) Texturing: http://www.youtube.com/watch?v=SPt-aogu72A
 	 * 7.) Matrices & Uniform Variables: http://www.youtube.com/watch?v=oc8Yl4ZruCA -> Uniform Variables are used to send variables from Java code to the shaders
 	 * 8.) Model, View & Projection Matrices: http://www.youtube.com/watch?v=50Y9u7K0PZo
+	 * 9.) OBJ File Format: http://www.youtube.com/watch?v=KMWUjNE0fYI
+	 * 10.) Loading 3D Models: http://www.youtube.com/watch?v=YKFYtekgnP8
 	 * */
 	
 	public static void main(String[] args) {
@@ -131,17 +134,21 @@ public class MainLoop {
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
 		 */
 		
-		RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
-		ModelTexture texture = new ModelTexture(loader.loadTexture("test_texture")); //load a texture from a png file
+		RawModel model = OBJLoader.loadObjModel("models/stall", loader); //loads a 3D model from an .obj file
+		
+		ModelTexture texture = new ModelTexture(loader.loadTexture("models/stallTexture")); //load a texture from a png file
+		
 		TexturedModel staticModel = new TexturedModel(model, texture); //stick the texture on a RawModel
-		Entity entity = new Entity(staticModel, new Vector3f(0,0,-5),0,0,0,1); 
+		
+		Entity entity = new Entity(staticModel, new Vector3f(0,0,-30),0,0,0,1); 
+		
 		Camera camera = new Camera();
 		
 		//main game loop
 		while(!Display.isCloseRequested()) {
 			
 			//game logic
-			//entity.increaseRotation(1, 1, 0);
+			entity.increaseRotation(0, 1, 0);
 			camera.move(); //every single frame check for key inputs which move the camera
 		
 			renderer.prepare(); //basically clears screen from previous frame
