@@ -36,6 +36,8 @@ public abstract	class ShaderProgram {
 		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
+		
+		getAllUniformLocations(); //do not forget to get the uniform variable locations in the shader code
 	}
 	
 	/**Makes sure that all ShaderProgram classes have a method that gets all the uniform locations.

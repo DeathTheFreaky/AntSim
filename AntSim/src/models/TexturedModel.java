@@ -2,10 +2,11 @@ package models;
 
 import textures.ModelTexture;
 
-/**TexturedModel contains both a RawModel and a Texture.
+/**TexturedModel contains both a RawModel and a ModelTexture.
  * 
  * @author Flo
- *
+ * @see RawModel
+ * @see ModelTexture
  */
 public class TexturedModel {
 	

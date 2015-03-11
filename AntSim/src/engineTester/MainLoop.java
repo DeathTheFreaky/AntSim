@@ -4,7 +4,10 @@ import models.RawModel;
 import models.TexturedModel;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 
+import entities.Camera;
+import entities.Entity;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.Renderer;
@@ -34,6 +37,7 @@ public class MainLoop {
 	 * 5.) Coloring using Shaders: http://www.youtube.com/watch?v=4w7lNF8dnYw (shaders.vertexShader, shaders.fragmentShader)
 	 * 6.) Texturing: http://www.youtube.com/watch?v=SPt-aogu72A
 	 * 7.) Matrices & Uniform Variables: http://www.youtube.com/watch?v=oc8Yl4ZruCA -> Uniform Variables are used to send variables from Java code to the shaders
+	 * 8.) Model, View & Projection Matrices: http://www.youtube.com/watch?v=50Y9u7K0PZo
 	 * */
 	
 	public static void main(String[] args) {
@@ -41,27 +45,86 @@ public class MainLoop {
 		DisplayManager.createDisplay();
 		
 		Loader loader = new Loader();
-		Renderer renderer = new Renderer();
 		StaticShader shader = new StaticShader();
+		Renderer renderer = new Renderer(shader);
 		
-		// draw a cube for testing purposes
 		float[] vertices = {			
-				-0.5f,0.5f,0,	//V0
-				-0.5f,-0.5f,0,	//V1
-				0.5f,-0.5f,0,	//V2
-				0.5f,0.5f,0		//V3
-		};
-		
-		int[] indices = {
-				0,1,3,	//Top left triangle (V0,V1,V3)
-				3,1,2	//Bottom right triangle (V3,V1,V2)
+				-0.5f,0.5f,-0.5f,	
+				-0.5f,-0.5f,-0.5f,	
+				0.5f,-0.5f,-0.5f,	
+				0.5f,0.5f,-0.5f,		
+				
+				-0.5f,0.5f,0.5f,	
+				-0.5f,-0.5f,0.5f,	
+				0.5f,-0.5f,0.5f,	
+				0.5f,0.5f,0.5f,
+				
+				0.5f,0.5f,-0.5f,	
+				0.5f,-0.5f,-0.5f,	
+				0.5f,-0.5f,0.5f,	
+				0.5f,0.5f,0.5f,
+				
+				-0.5f,0.5f,-0.5f,	
+				-0.5f,-0.5f,-0.5f,	
+				-0.5f,-0.5f,0.5f,	
+				-0.5f,0.5f,0.5f,
+				
+				-0.5f,0.5f,0.5f,
+				-0.5f,0.5f,-0.5f,
+				0.5f,0.5f,-0.5f,
+				0.5f,0.5f,0.5f,
+				
+				-0.5f,-0.5f,0.5f,
+				-0.5f,-0.5f,-0.5f,
+				0.5f,-0.5f,-0.5f,
+				0.5f,-0.5f,0.5f
+				
 		};
 		
 		float[] textureCoords = {
-				0,0,	//V0
-				0,1,	//V1
-				1,1,	//V2
-				1,0		//V3
+				
+				0,0,
+				0,1,
+				1,1,
+				1,0,			
+				0,0,
+				0,1,
+				1,1,
+				1,0,			
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0
+
+				
+		};
+		
+		int[] indices = {
+				0,1,3,	
+				3,1,2,	
+				4,5,7,
+				7,5,6,
+				8,9,11,
+				11,9,10,
+				12,13,15,
+				15,13,14,	
+				16,17,19,
+				19,17,18,
+				20,21,23,
+				23,21,22
+
 		};
 		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
@@ -70,14 +133,21 @@ public class MainLoop {
 		
 		RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
 		ModelTexture texture = new ModelTexture(loader.loadTexture("test_texture")); //load a texture from a png file
-		TexturedModel texturedModel = new TexturedModel(model, texture); //stick the texture on a RawModel
+		TexturedModel staticModel = new TexturedModel(model, texture); //stick the texture on a RawModel
+		Entity entity = new Entity(staticModel, new Vector3f(0,0,-5),0,0,0,1); 
+		Camera camera = new Camera();
 		
 		//main game loop
 		while(!Display.isCloseRequested()) {
+			
 			//game logic
+			//entity.increaseRotation(1, 1, 0);
+			camera.move(); //every single frame check for key inputs which move the camera
+		
 			renderer.prepare(); //basically clears screen from previous frame
 			shader.start();
-			renderer.render(texturedModel);
+			shader.loadViewMatrix(camera); //all objects in the world need to be moved every single frame to simulate the camera
+			renderer.render(entity, shader);
 			shader.stop();
 			DisplayManager.updateDisplay();
 		}
