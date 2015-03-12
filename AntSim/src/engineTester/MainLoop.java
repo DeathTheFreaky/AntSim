@@ -8,12 +8,13 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
+import entities.Light;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
+import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
-import renderEngine.Renderer;
-import shaders.StaticShader;
 import textures.ModelTexture;
+import toolbox.Terrain;
 
 /**MainLoop holds the main game loop containing the main game logic and handles the initialization and destruction of the game.
  * <br>
@@ -41,6 +42,10 @@ public class MainLoop {
 	 * 8.) Model, View & Projection Matrices: http://www.youtube.com/watch?v=50Y9u7K0PZo
 	 * 9.) OBJ File Format: http://www.youtube.com/watch?v=KMWUjNE0fYI
 	 * 10.) Loading 3D Models: http://www.youtube.com/watch?v=YKFYtekgnP8
+	 * 11.) Per-Pixel/Diffuse Lighting: http://www.youtube.com/watch?v=bcxX0R8nnDs //brightness of objects surface depends on how much the surface faces the light
+	 * 12.) Specular Lighting: http://www.youtube.com/watch?v=GZ_1xOm-3qU //used in addition to diffuse lighting -> reflected light on shiny object
+	 * 13.) Optimizing and Ambient Lighting: http://www.youtube.com/watch?v=X6KjDwA7mZg //Ambient lighting: add a bit of light to every part of the model
+	 * 14.) Simple Terrain: http://www.youtube.com/watch?v=yNYwZMmgTJk
 	 * */
 	
 	public static void main(String[] args) {
@@ -48,118 +53,47 @@ public class MainLoop {
 		DisplayManager.createDisplay();
 		
 		Loader loader = new Loader();
-		StaticShader shader = new StaticShader();
-		Renderer renderer = new Renderer(shader);
-		
-		float[] vertices = {			
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,0.5f,-0.5f,		
-				
-				-0.5f,0.5f,0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				0.5f,0.5f,-0.5f,	
-				0.5f,-0.5f,-0.5f,	
-				0.5f,-0.5f,0.5f,	
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,-0.5f,	
-				-0.5f,-0.5f,-0.5f,	
-				-0.5f,-0.5f,0.5f,	
-				-0.5f,0.5f,0.5f,
-				
-				-0.5f,0.5f,0.5f,
-				-0.5f,0.5f,-0.5f,
-				0.5f,0.5f,-0.5f,
-				0.5f,0.5f,0.5f,
-				
-				-0.5f,-0.5f,0.5f,
-				-0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,-0.5f,
-				0.5f,-0.5f,0.5f
-				
-		};
-		
-		float[] textureCoords = {
-				
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,			
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0,
-				0,0,
-				0,1,
-				1,1,
-				1,0
-
-				
-		};
-		
-		int[] indices = {
-				0,1,3,	
-				3,1,2,	
-				4,5,7,
-				7,5,6,
-				8,9,11,
-				11,9,10,
-				12,13,15,
-				15,13,14,	
-				16,17,19,
-				19,17,18,
-				20,21,23,
-				23,21,22
-
-		};
 		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
 		 */
 		
-		RawModel model = OBJLoader.loadObjModel("models/stall", loader); //loads a 3D model from an .obj file
+		RawModel model = OBJLoader.loadObjModel("models/dragon", loader); //loads a 3D model from an .obj file
 		
-		ModelTexture texture = new ModelTexture(loader.loadTexture("models/stallTexture")); //load a texture from a png file
+		ModelTexture texture = new ModelTexture(loader.loadTexture("models/dragon")); //load a texture from a png file
+		texture.setShineDamper(10);
+		texture.setReflectivity(1);
 		
 		TexturedModel staticModel = new TexturedModel(model, texture); //stick the texture on a RawModel
 		
 		Entity entity = new Entity(staticModel, new Vector3f(0,0,-30),0,0,0,1); 
+		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
+		
+		Terrain terrain = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain2 = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass")));
 		
 		Camera camera = new Camera();
+		
+		MasterRenderer renderer = new MasterRenderer();
 		
 		//main game loop
 		while(!Display.isCloseRequested()) {
 			
+			entity.increaseRotation(0, 0.5f, 0);
+			
 			//game logic
-			entity.increaseRotation(0, 1, 0);
 			camera.move(); //every single frame check for key inputs which move the camera
-		
-			renderer.prepare(); //basically clears screen from previous frame
-			shader.start();
-			shader.loadViewMatrix(camera); //all objects in the world need to be moved every single frame to simulate the camera
-			renderer.render(entity, shader);
-			shader.stop();
+			
+			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain2);
+			renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
+			
+			renderer.render(light, camera);
+			
 			DisplayManager.updateDisplay();
 		}
 		
-		shader.cleanUp();
+		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
