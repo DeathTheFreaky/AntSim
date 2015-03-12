@@ -18,47 +18,25 @@ import textures.ModelTexture;
 import toolbox.Maths;
 import entities.Entity;
 
-/**Renderer renders models from data stored inside VAOs.
+/**EntityRenderer renders static models.
  * 
  * @author Flo
  *
  */
-public class Renderer {
+public class EntityRenderer {
 	
-	//set projection matrix parameters
-	private static final float FOV = 70; 
-	private static final float NEAR_PLANE = 0.1f;
-	private static final float FAR_PLANE = 1000;
-	
-	private Matrix4f projectionMatrix;
 	private StaticShader shader;
 	
-	/**Creates a new Renderer which can be used my {@link MasterRenderer} to delegate rendering functions.
+	/**Creates a new EntityRenderer which can be used by {@link MasterRenderer} to delegate rendering functions.
 	 * 
 	 * @param shader - a {@link StaticShader} used for rendering
+	 * @param projectionMatrix - a 4x4 projectionMatrix
 	 */
-	public Renderer(StaticShader shader) {
-		
+	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
-		
-		//prevent rendering of triangles whose normals point away/face away from the camera
-		GL11.glEnable(GL11.GL_CULL_FACE); 
-		GL11.glCullFace(GL11.GL_BACK);
-		
-		createProjectionMatrix();
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
-	}
-	
-	/**Prepares OpenGL to render a frame of the game.<br>
-	 * Should be called every frame.<br>
-	 * 
-	 */
-	public void prepare() {
-		GL11.glEnable(GL11.GL_DEPTH_TEST); //enable depth test -> to only show closest vertices (and not the hidden ones)
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT); //clears color of last frame and depth buffer
-		GL11.glClearColor(0, 0, 0, 0); //choose color (R,G,B,A) with which the screen will be cleared
 	}
 	
 	/**Renders all entities in an efficient way by performing certain operations for the same 3d model only once for all instances.
@@ -70,7 +48,7 @@ public class Renderer {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
 			for(Entity entity:batch) {
-				prepareInstance(entity);
+				loadModelMatrix(entity);
 				
 				// render triangles, draw all vertexes, 																					 
 				// the indices are stored as unsigned ints and start rendering at the beginning of the data
@@ -112,33 +90,13 @@ public class Renderer {
 		GL30.glBindVertexArray(0); 
 	}
 	
-	/**Prepares an entity for rendering. 
+	/**Creates and loads an entity's transformation matrix into the shader program. 
 	 * 
 	 * @param entity - the {@link Entity} to be rendered
 	 */
-	private void prepareInstance(Entity entity) {
+	private void loadModelMatrix(Entity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), 
 				entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale()); //transformation matrix to be applied in the shader program
 		shader.loadTransformationMatrix(transformationMatrix); //load transformation matrix into the shader program
 	}
-	
-	/**Creates a Projection Matrix with the parameters set in Renderer.
-	 * 
-	 */
-	private void createProjectionMatrix(){
-		
-		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight();
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
-		float x_scale = y_scale / aspectRatio;
-		float frustum_length = FAR_PLANE - NEAR_PLANE;
-
-		projectionMatrix = new Matrix4f();
-		projectionMatrix.m00 = x_scale;
-		projectionMatrix.m11 = y_scale;
-		projectionMatrix.m22 = -((FAR_PLANE + NEAR_PLANE) / frustum_length);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = -((2 * NEAR_PLANE * FAR_PLANE) / frustum_length);
-		projectionMatrix.m33 = 0;
-	}
-
 }

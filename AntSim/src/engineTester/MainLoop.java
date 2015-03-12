@@ -14,6 +14,7 @@ import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
 import textures.ModelTexture;
+import toolbox.Terrain;
 
 /**MainLoop holds the main game loop containing the main game logic and handles the initialization and destruction of the game.
  * <br>
@@ -44,6 +45,7 @@ public class MainLoop {
 	 * 11.) Per-Pixel/Diffuse Lighting: http://www.youtube.com/watch?v=bcxX0R8nnDs //brightness of objects surface depends on how much the surface faces the light
 	 * 12.) Specular Lighting: http://www.youtube.com/watch?v=GZ_1xOm-3qU //used in addition to diffuse lighting -> reflected light on shiny object
 	 * 13.) Optimizing and Ambient Lighting: http://www.youtube.com/watch?v=X6KjDwA7mZg //Ambient lighting: add a bit of light to every part of the model
+	 * 14.) Simple Terrain: http://www.youtube.com/watch?v=yNYwZMmgTJk
 	 * */
 	
 	public static void main(String[] args) {
@@ -65,7 +67,11 @@ public class MainLoop {
 		TexturedModel staticModel = new TexturedModel(model, texture); //stick the texture on a RawModel
 		
 		Entity entity = new Entity(staticModel, new Vector3f(0,0,-30),0,0,0,1); 
-		Light light = new Light(new Vector3f(0,0,-20), new Vector3f(1,1,1));
+		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
+		
+		Terrain terrain = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain2 = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grass")));
+		
 		Camera camera = new Camera();
 		
 		MasterRenderer renderer = new MasterRenderer();
@@ -73,9 +79,13 @@ public class MainLoop {
 		//main game loop
 		while(!Display.isCloseRequested()) {
 			
+			entity.increaseRotation(0, 0.5f, 0);
+			
 			//game logic
 			camera.move(); //every single frame check for key inputs which move the camera
 			
+			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain2);
 			renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
 			
 			renderer.render(light, camera);

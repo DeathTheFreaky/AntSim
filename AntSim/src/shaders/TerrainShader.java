@@ -2,20 +2,20 @@ package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+import toolbox.Maths;
+import toolbox.Terrain;
 import entities.Camera;
 import entities.Light;
-import toolbox.Maths;
 
-/**StaticShader is used for the rendering of all static models.<br>
+/**TerrainShader is used for the rendering of {@link Terrain}s.
  * 
  * @author Flo
- * @see ShaderProgram
  *
  */
-public class StaticShader extends ShaderProgram {
-	
-	private static final String VERTEX_FILE = "src/shaders/vertexShader.vsh";
-	private static final String FRAGMENT_FILE = "src/shaders/fragmentShader.fsh";
+public class TerrainShader extends ShaderProgram {
+
+	private static final String VERTEX_FILE = "src/shaders/terrainVertexShader.vsh";
+	private static final String FRAGMENT_FILE = "src/shaders/terrainFragmentShader.fsh";
 
 	//location of uniform variables in shader code
 	private int location_transformationMatrix; 
@@ -29,7 +29,7 @@ public class StaticShader extends ShaderProgram {
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
 	 */
-	public StaticShader() {
+	public TerrainShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
 
