@@ -125,7 +125,7 @@ public class OBJLoader {
 			indicesArray[i] = indices.get(i);
 		}
 		
-		return loader.loadToVAO(verticesArray, textureArray, indicesArray); //loads data extracted from .obj file into a VAO returning a new RawModel
+		return loader.loadToVAO(verticesArray, textureArray, normalsArray, indicesArray); //loads data extracted from .obj file into a VAO returning a new RawModel
 	}
 	
 	/**Puts vertex data into the correct position in the textureArray and normalsArray.<br>

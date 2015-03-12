@@ -33,14 +33,16 @@ public class Loader {
 	 * 
 	 * @param positions - an array of x,y,z positions stored as floats
 	 * @param textureCoords - an array of texture coordinates stored as floats
+	 * @param normals - an array of normals stored as floats
 	 * @param indices - an array integer indices indicating the positions of vertexes
 	 * @return - a RawModel object storing positional data inside a VAO
 	 */
-	public RawModel loadToVAO(float[] positions, float[] textureCoords, int[] indices) {
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices); //bind indices to the VAO
 		storeDataInAttributeList(0, 3, positions); //store positional data into attribute list 0 of the VAO
 		storeDataInAttributeList(1, 2, textureCoords); //store texture coordinates into attribute list 1 of the VAO
+		storeDataInAttributeList(2, 3, normals); //store normals into attribute list 2 of the VAO
 		unbindVAO(); //now that we finished using the VAO, we need to unbind it
 		return new RawModel(vaoID, indices.length); //number of indices equals vertex count
 	}
