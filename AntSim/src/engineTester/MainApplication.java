@@ -36,6 +36,8 @@ public class MainApplication {
 	 * Also, there is a plugin for writing GLSL shaders in Eclipse: http://sourceforge.net/projects/webglsl/
 	 * -> Extract .zip file to Eclipse installation directory
 	 * 
+	 * OpenGL Api: https://www.opengl.org/sdk/docs/man4/index.php
+	 * 
 	 * In case of questions, refer to the following videos:
 	 * 
 	 * 1.) Setting up Display: http://www.youtube.com/watch?v=VS8wlS9hF8E
@@ -54,6 +56,7 @@ public class MainApplication {
 	 * 14.) Simple Terrain: http://www.youtube.com/watch?v=yNYwZMmgTJk
 	 * 15.) Transparency (Textures): http://www.youtube.com/watch?v=ZyzXBYVvjsg
 	 * 16.) Fog: http://www.youtube.com/watch?v=qslBNLeSPUc
+	 * 17.) Multitexturing: http://www.youtube.com/watch?v=-kbal7aGUpk
 	 * */
 	
 	private static final float WORLD_SIZE_X = 800;
