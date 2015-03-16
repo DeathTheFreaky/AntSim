@@ -51,6 +51,7 @@ public class MainLoop {
 	 * 13.) Optimizing and Ambient Lighting: http://www.youtube.com/watch?v=X6KjDwA7mZg //Ambient lighting: add a bit of light to every part of the model
 	 * 14.) Simple Terrain: http://www.youtube.com/watch?v=yNYwZMmgTJk
 	 * 15.) Transparency (Textures): http://www.youtube.com/watch?v=ZyzXBYVvjsg
+	 * 16.) Fog: http://www.youtube.com/watch?v=qslBNLeSPUc
 	 * */
 	
 	public static void main(String[] args) {

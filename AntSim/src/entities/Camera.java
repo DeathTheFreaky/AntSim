@@ -11,7 +11,7 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class Camera {
 
-	private Vector3f position = new Vector3f(0,0,0);
+	private Vector3f position = new Vector3f(0,10,-400);
 	private float pitch; //how high or low the camera is aiming
 	private float yaw; //how much left or right the camera is aiming
 	private float roll; //the camera's tilt - at 180° it is upside down
