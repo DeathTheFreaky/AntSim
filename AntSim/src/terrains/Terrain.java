@@ -1,8 +1,11 @@
 package terrains;
 
+import engineTester.MainApplication;
 import models.RawModel;
 import renderEngine.Loader;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 /**Respresents a Terrain made up of a {@link RawModel} and a {@link ModelTexture}.
  * 
@@ -11,25 +14,29 @@ import textures.ModelTexture;
  */
 public class Terrain {
 
-	private static final float SIZE = 800;
+	private final static float sizeX = MainApplication.getWorldSizeX();
+	private final static float sizeZ = MainApplication.getWorldSizeZ();
 	private static final int VERTEX_COUNT = 128; //vertices along each side of the terrain
 	
 	private float x;
 	private float z;
 	private RawModel model;
-	private ModelTexture texture;
+	private TerrainTexturePack texturePack;
+	private TerrainTexture blendMap; //yeah, so it's not really a TerrainTexture but it works
 	
 	/**Creates a new {@link Terrain}.
 	 * 
 	 * @param gridX - terrain's x position as an int
 	 * @param gridZ - terrain's z position as an int
 	 * @param loader - a 3d model {@link Loader}
-	 * @param texture - a {@link ModelTexture}
+	 * @param texturePack - a {@link TerrainTexturePack} containing the different {@link TerrainTexture} to be drawn on the {@link Terrain}
+	 * @param blendMap - a blendMap indicating how much of each terrain texture to be used on a specific vertex
 	 */
-	public Terrain(int gridX, int gridZ, Loader loader, ModelTexture texture) {
-		this.texture = texture;
-		this.x = gridX * SIZE;
-		this.z = gridZ * SIZE;
+	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap) {
+		this.texturePack = texturePack;
+		this.blendMap = blendMap;
+		this.x = gridX * sizeX;
+		this.z = gridZ * sizeZ;
 		this.model = generateTerrain(loader);
 	}
 	
@@ -47,9 +54,9 @@ public class Terrain {
 		int vertexPointer = 0;
 		for(int i=0;i<VERTEX_COUNT;i++){ //i<128
 			for(int j=0;j<VERTEX_COUNT;j++){ //j<128
-				vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE - 400;
+				vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * sizeX - sizeX/2;
 				vertices[vertexPointer*3+1] = 0;
-				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE - 800;
+				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * sizeZ;
 				normals[vertexPointer*3] = 0;
 				normals[vertexPointer*3+1] = 1;
 				normals[vertexPointer*3+2] = 0;
@@ -76,8 +83,12 @@ public class Terrain {
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
 
-	public static float getSize() {
-		return SIZE;
+	public static float getSizeX() {
+		return sizeX;
+	}
+	
+	public static float getSizeZ() {
+		return sizeZ;
 	}
 
 	public static int getVertexCount() {
@@ -96,7 +107,19 @@ public class Terrain {
 		return model;
 	}
 
-	public ModelTexture getTexture() {
-		return texture;
+	public TerrainTexturePack getTexturePack() {
+		return texturePack;
+	}
+
+	public void setTexturePack(TerrainTexturePack texturePack) {
+		this.texturePack = texturePack;
+	}
+
+	public TerrainTexture getBlendMap() {
+		return blendMap;
+	}
+
+	public void setBlendMap(TerrainTexture blendMap) {
+		this.blendMap = blendMap;
 	}
 }

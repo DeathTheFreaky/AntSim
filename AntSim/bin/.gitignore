@@ -1,7 +1,11 @@
-/engineTester/
+/entities/
+/models/
+/textures/
+/toolbox/
+/objConverter/
 /renderEngine/
+/engineTester/
 /shaders/
-/Terrain/
 /terrains/
 /entities/
 /models/

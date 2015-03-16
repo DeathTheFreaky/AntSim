@@ -28,11 +28,13 @@ public class Maths {
 		matrix.setIdentity(); //resets matrix to identity matrix
 		
 		//translate, rotate around all 3 axis, scale the matrix
-		Matrix4f.translate(translation, matrix, matrix);
+		Matrix4f.translate(translation, matrix, matrix); 
 		Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1,0,0), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0,1,0), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0,0,1), matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix); //scale uniformly in all 3 axis
+		
+		// this process resembles: TransformedVector = TranslationMatrix * RotationMatrix * ScaleMatrix * OriginalVector;
 		
 		return matrix;
 	}

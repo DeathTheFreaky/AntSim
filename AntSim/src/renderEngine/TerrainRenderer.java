@@ -14,6 +14,7 @@ import org.lwjgl.util.vector.Vector3f;
 import shaders.TerrainShader;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexturePack;
 import toolbox.Maths;
 
 /**TerrainRenderer renders terrains.
@@ -34,6 +35,7 @@ public class TerrainRenderer {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.connectTextureUnits(); //connect sample2Ds to texture units only once - stay connected throughout the application
 		shader.stop();
 	}
 	
@@ -66,11 +68,30 @@ public class TerrainRenderer {
 		GL20.glEnableVertexAttribArray(1); //enable the attributelist with ID of 1 to access texture coords
 		GL20.glEnableVertexAttribArray(2); //enable the attributelist with ID of 2 to access normals
 		
+		bindTextures(terrain);
+		
 		//load shine variables for specular lighting; load, activate and bind model texture
-		ModelTexture texture = terrain.getTexture();
-		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity()); //load shine damper and reflectivity needed for specular lighting in the shader program
-		GL13.glActiveTexture(GL13.GL_TEXTURE0); //activate first texture bank 0 -> bank that's used by default by Sampler2d from fragment shader
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getTexture().getID()); //bind texture so it can be used
+		shader.loadShineVariables(1, 0); //load shine damper and reflectivity needed for specular lighting in the shader program
+	}
+	
+	/**Binds all the textured used on this terrain, as well as the blend map, to different texture units.
+	 * 
+	 * @param terrain - the {@link Terrain} holding the blendMap and the {@link TerrainTexturePack}
+	 */
+	private void bindTextures(Terrain terrain) {
+		TerrainTexturePack texturePack = terrain.getTexturePack();
+		
+		//bind textures to the different texture units
+		GL13.glActiveTexture(GL13.GL_TEXTURE0); 
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getBackgroundTexture().getTextureID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE1); 
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getrTexture().getTextureID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE2); 
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getgTexture().getTextureID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE3); 
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturePack.getbTexture().getTextureID());
+		GL13.glActiveTexture(GL13.GL_TEXTURE4); 
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlendMap().getTextureID());
 	}
 	
 	/**Unbinds an active {@link Terrain} once it's finished rendering.

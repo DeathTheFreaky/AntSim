@@ -29,6 +29,11 @@ public class MasterRenderer {
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000;
 	
+	//define sky colors = frame clear color (like a background color)
+	private static final float RED = 0.4f;
+	private static final float GREEN = 0.75f;
+	private static final float BLUE = 1.0f;
+	
 	private Matrix4f projectionMatrix;
 	
 	private StaticShader shader = new StaticShader();
@@ -73,11 +78,13 @@ public class MasterRenderer {
 	public void render(Light light, Camera camera) {
 		prepare();
 		shader.start();
+		shader.loadSkyColor(RED, GREEN, BLUE);
 		shader.loadLight(light);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
 		shader.stop();
 		terrainShader.start();
+		terrainShader.loadSkyColor(RED, GREEN, BLUE);
 		terrainShader.loadLight(light);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
@@ -100,7 +107,7 @@ public class MasterRenderer {
 	public void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST); //enable depth test -> to only show closest vertices (and not the hidden ones)
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT); //clears color of last frame and depth buffer
-		GL11.glClearColor(0, 0, 0, 0); //choose color (R,G,B,A) with which the screen will be cleared
+		GL11.glClearColor(RED, GREEN, BLUE, 1f); //represents skycolor: choose color (R,G,B,A) with which the screen will be cleared
 	}
 	
 	/**Sort entity in the entities Hashmap by their correct {@link TexturedModel} for more efficient rendering.
