@@ -9,7 +9,7 @@ in vec3 toCameraVector;
 
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
-uniform sampler2D textureSampler; //basically represents textures we're going to use
+uniform sampler2D modelTexture; //basically represents textures we're going to use
 uniform vec3 lightColor;
 uniform float shineDamper;
 uniform float reflectivity;
@@ -32,6 +32,11 @@ void main(void) {
 	float dampedFactor = pow(specularFactor, shineDamper); //raising specularFactor to the power of the damper value makes low dampered values even lower but does not affect strong dempered values so much
 	vec3 finalSpecular = dampedFactor * lightColor * reflectivity; //final specular value is calculated by multiplying dampedFactor with a light color and the reflectivity
 
-	outColor = vec4(diffuse, 1.0) * texture(textureSampler, pass_textureCoords) + vec4(finalSpecular, 1.0) ; //returns color of the pixel on the texture at given coordinates 
+	vec4 textureColor = texture(modelTexture, pass_textureCoords);
+	if (textureColor.a < 0.5) {
+		discard; //used to discard transparent parts of half-transparent textures (like fern or grass)
+	}
+
+	outColor = vec4(diffuse, 1.0) * textureColor + vec4(finalSpecular, 1.0) ; //returns color of the pixel on the texture at given coordinates 
 		//by multiplying the texture with the light color and adding the specularLighting value
 }

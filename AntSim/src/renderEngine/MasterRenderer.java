@@ -15,7 +15,7 @@ import entities.Light;
 import models.TexturedModel;
 import shaders.StaticShader;
 import shaders.TerrainShader;
-import toolbox.Terrain;
+import terrains.Terrain;
 
 /**MasterRenderer handles all of the rendering code in the application.
  * 
@@ -44,13 +44,25 @@ public class MasterRenderer {
 	 * 
 	 */
 	public MasterRenderer() {
+		enableCulling();
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
-		
-		//prevent rendering of triangles whose normals point away/face away from the camera
+	}
+	
+	/**Enables back face culling for non-transparent textures.<br>
+	 *(prevent rendering of triangles whose normals point away/face away from the camera)
+	 */
+	public static void enableCulling() {
 		GL11.glEnable(GL11.GL_CULL_FACE); 
 		GL11.glCullFace(GL11.GL_BACK);
+	}
+	
+	/**Disables back face culling for transparent textures.
+	 * 
+	 */
+	public static void disableCulling() {
+		GL11.glDisable(GL11.GL_CULL_FACE); 
 	}
 	
 	/**Renders a frame to the screen.

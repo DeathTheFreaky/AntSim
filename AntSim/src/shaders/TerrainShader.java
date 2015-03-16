@@ -2,8 +2,8 @@ package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
 
+import terrains.Terrain;
 import toolbox.Maths;
-import toolbox.Terrain;
 import entities.Camera;
 import entities.Light;
 

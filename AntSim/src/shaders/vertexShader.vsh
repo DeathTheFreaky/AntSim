@@ -17,6 +17,8 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition;
 
+uniform float useFakeLighting; //no booleans in GSLS, set to 0.0 to disable fakeLighting, 1.0 to enable it
+
 void main(void) { //main is run for every vertex which undergoes vertexShader
 
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0); //calculate position of vertex in the world by performing a transformation on it
@@ -25,7 +27,12 @@ void main(void) { //main is run for every vertex which undergoes vertexShader
 	gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0); 
 	pass_textureCoords = textureCoords; //pass on taxture coordinates to the fragment shader
 
-	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz; //save xyz components of resulting 4d vector as a 3d vector in surfaceNormal
+	vec3 actualNormal = normal;
+	if (useFakeLighting > 0.5) {
+		actualNormal = vec3(0.0, 1.0, 0.0);
+	}
+
+	surfaceNormal = (transformationMatrix * vec4(actualNormal, 0.0)).xyz; //save xyz components of resulting 4d vector as a 3d vector in surfaceNormal
 	toLightVector = lightPosition - worldPosition.xyz; //difference between lightPosition and position of vertex in the world
 	toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz; //viewMatrix contains negative inversion of camera position - 
 		// convert this to a 4d vector -> result is camera position; get vector from vertex to camera position by subtracting vertex position from camera position

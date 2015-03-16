@@ -25,38 +25,51 @@ public class Camera {
 	 * 		<li>A - move left</li>
 	 * </ul>
 	 */
-	public void move() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-			position.z -= 0.2f;
+	/*public void move() {
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) { //zoom out
+			position.z -= 0.5f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-			position.z += 0.2f;
+		if (Keyboard.isKeyDown(Keyboard.KEY_E)) { //zoom in
+			position.z += 0.5f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			position.x += 0.2f;
+		if (Keyboard.isKeyDown(Keyboard.KEY_D)) { //move right
+			position.x += 0.5f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			position.x -= 0.2f;
+		if (Keyboard.isKeyDown(Keyboard.KEY_A)) { //move left
+			position.x -= 0.5f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			position.y += 0.2f;
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)) { //move up
+			position.y += 0.5f;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			position.y -= 0.2f;
+		if (Keyboard.isKeyDown(Keyboard.KEY_S)) { //move down
+			position.y -= 0.5f;
 		}
-	}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_A)) { //rotate left
+			position.x -= 1f;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_D)) { //rotate right
+			position.x -= 1f;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_S)) { //rotate down
+			pitch = (pitch + 2)%360;
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_W)) { //rotate up
+			pitch = (pitch - 2)%360;
+		}
+	}*/
 	
-	/*public void move()
+	public void move()
 	{
 	                
 	            float arg_yaw = Mouse.getDX() ;
-	            System.out.println(arg_yaw) ;
+	            //System.out.println(arg_yaw) ;
 	            yaw += arg_yaw/10 ;
 	            float arg_roll = Mouse.getDY() ;
 	            pitch += -(arg_roll/10) ;
 	            Mouse.setGrabbed(true);
 	            
-	                if (Keyboard.isKeyDown(Keyboard.KEY_W)) 
+	                if (Keyboard.isKeyDown(Keyboard.KEY_Q)) 
 	                {
 	                    float toZ = ((float)Math.sin( Math.toRadians(yaw+90))) ;
 	                    float toX = ((float)Math.cos( Math.toRadians(yaw+90))) ;
@@ -64,7 +77,7 @@ public class Camera {
 	                    position.z -= toZ;
 	                        
 	                }
-	                if (Keyboard.isKeyDown(Keyboard.KEY_S)) 
+	                if (Keyboard.isKeyDown(Keyboard.KEY_E)) 
 	                {
 	                    float toZ = ((float)Math.sin( Math.toRadians(yaw+90))) ;
 	                    float toX = ((float)Math.cos( Math.toRadians(yaw+90))) ;
@@ -87,15 +100,15 @@ public class Camera {
 	                    position.x -= toX;
 	                    position.z -= toZ;
 	                }
-	                if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) 
+	                if (Keyboard.isKeyDown(Keyboard.KEY_W)) 
 	                {
 	                    position.y += 0.2f;
 	                }
-	                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) 
+	                if (Keyboard.isKeyDown(Keyboard.KEY_S)) 
 	                {
 	                    position.y -= 0.2f;
 	                }
-	}*/
+	}
 
 	/**
 	 * @return - the Camera's position as Vector3f

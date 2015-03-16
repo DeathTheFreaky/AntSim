@@ -13,6 +13,9 @@ public class ModelTexture {
 	private float shineDamper = 1; //how strong specular lighting appears when camera is not directly facing the reflected light
 	private float reflectivity = 0; //reflectivity used for specular lighting
 	
+	private boolean hasTransparency = false; //transparent textures need culling to be turned off
+	private boolean useFakeLighting = false; //transparent textures like grass need fake lighting (normals pointing upwards) to avoid weird look
+	
 	public ModelTexture(int id){
 		this.textureID = id;
 	}
@@ -51,6 +54,33 @@ public class ModelTexture {
 	public void setReflectivity(float reflectivity) {
 		this.reflectivity = reflectivity;
 	}
-	
-	
+
+	/**
+	 * @return - true if this texture has transparency
+	 */
+	public boolean isHasTransparency() {
+		return hasTransparency;
+	}
+
+	/**
+	 * @param hasTransparency - indicates whether a texture has transparency<br> 
+	 * (back face culling will be disabled for transparent textures)
+	 */
+	public void setHasTransparency(boolean hasTransparency) {
+		this.hasTransparency = hasTransparency;
+	}
+
+	/**
+	 * @return - true if useFakeLighting is enabled (all normals pointing upwards for transparent textures like grass to avoid weird look)
+	 */
+	public boolean isUseFakeLighting() {
+		return useFakeLighting;
+	}
+
+	/**
+	 * @param useFakeLighting - if set to true, all normals point upwards for transparent textures like grass to avoid weird look
+	 */
+	public void setUseFakeLighting(boolean useFakeLighting) {
+		this.useFakeLighting = useFakeLighting;
+	}
 }
