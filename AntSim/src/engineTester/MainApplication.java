@@ -20,6 +20,8 @@ import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -126,8 +128,23 @@ public class MainApplication {
 		
 		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
 		
-		Terrain terrain = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grassTerrain")));
-		Terrain terrain2 = new Terrain(0,0,loader,new ModelTexture(loader.loadTexture("grassTerrain")));
+		//load the different terrain textures
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
+		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
+		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
+		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
+		
+		//store different terrain textures in a TerrainTexturePack
+		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+		
+		//create a blend map texture
+		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
+		
+		/*Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
+		Terrain terrain2 = new Terrain(0, 0, loader, texturePack, blendMap);*/
+		
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
+		//Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap); //if we need more terrains... thats how to add them as tiles
 		
 		Camera camera = new Camera();
 		
@@ -141,7 +158,7 @@ public class MainApplication {
 			
 			camera.move(); //every single frame check for key inputs which move the camera
 			renderer.processTerrain(terrain);
-			renderer.processTerrain(terrain2);
+			//renderer.processTerrain(terrain2);
 			for (Entity entity : entities) {
 				renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
 			}

@@ -28,7 +28,7 @@ void main(void) { //main is run for every vertex which undergoes vertexShader
 
 	//calculate the final position of vertices onscreen by multiplying its initial position with a projection and a transformation matrix
 	gl_Position = projectionMatrix * positionRelativeToCam; 
-	pass_textureCoords = textureCoords * 40.0; //pass on taxture coordinates to the fragment shader; multiply by 40 to make tiled textures
+	pass_textureCoords = textureCoords; //pass on texture coordinates to the fragment shader; multiply by 40 to make tiled textures
 
 	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz; //save xyz components of resulting 4d vector as a 3d vector in surfaceNormal
 	toLightVector = lightPosition - worldPosition.xyz; //difference between lightPosition and position of vertex in the world

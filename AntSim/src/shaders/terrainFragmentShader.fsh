@@ -10,13 +10,32 @@ in float visibility;
 
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
-uniform sampler2D textureSampler; //basically represents textures we're going to use
+uniform sampler2D backgroundTexture; //grass texture
+
+//three other terrain textures
+uniform sampler2D rTexture; 
+uniform sampler2D gTexture;
+uniform sampler2D bTexture;
+
+uniform sampler2D blendMap; //blendMap determines how much of each of the different terrain textures (meshed together) to use on certain positions of the terrain
+
 uniform vec3 lightColor;
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColor;
 
 void main(void) {
+
+	vec4 blendMapColor = texture(blendMap, pass_textureCoords); //how much of each texture shall be rendered on this particular fragment of the terrain
+
+	float backTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b); //how much of backGroundTexture to render -> 100% when blendMap color is black (r = 0, g = 0, b = 0)
+	vec2 tiledCoords = pass_textureCoords * 40.0; //results in values bigger than 1 -> gpu will scale texture down and draw it repeatedly
+	vec4 backgroundTextureColor = texture(backgroundTexture, tiledCoords) * backTextureAmount; //actual backgroundTexture's color (0% - 100% of original backgroundTExture color) 
+	vec4 rTextureColor = texture(rTexture, tiledCoords) * blendMapColor.r; //how much of the texture corresponding to red on the blendMap shall be drawn on the terrain
+	vec4 gTextureColor = texture(gTexture, tiledCoords) * blendMapColor.g; //how much of the texture corresponding to green on the blendMap shall be drawn on the terrain
+	vec4 bTextureColor = texture(bTexture, tiledCoords) * blendMapColor.b; //how much of the texture corresponding to blue on the blendMap shall be drawn on the terrain
+
+	vec4 totalColor = backgroundTextureColor + rTextureColor + gTextureColor + bTextureColor; //final terrain color = mix of all texture colors
 
 	vec3 unitNormal = normalize(surfaceNormal); //normalizing makes size of vector equal to 1 while direction of the vector stays the same
 	vec3 unitLightVector = normalize(toLightVector);
@@ -34,7 +53,7 @@ void main(void) {
 	float dampedFactor = pow(specularFactor, shineDamper); //raising specularFactor to the power of the damper value makes low dampered values even lower but does not affect strong dempered values so much
 	vec3 finalSpecular = dampedFactor * lightColor * reflectivity; //final specular value is calculated by multiplying dampedFactor with a light color and the reflectivity
 
-	outColor = vec4(diffuse, 1.0) * texture(textureSampler, pass_textureCoords) + vec4(finalSpecular, 1.0) ; //returns color of the pixel on the texture at given coordinates 
-		//by multiplying the texture with the light color and adding the specularLighting value
+	outColor = vec4(diffuse, 1.0) * totalColor + vec4(finalSpecular, 1.0) ; //returns color of the pixel on the texture at given coordinates 
+		//by multiplying the total texture color with the light color and adding the specularLighting value
 	outColor = mix(vec4(skyColor, 1.0), outColor, visibility); //create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility: Out_color (original object color)
 }

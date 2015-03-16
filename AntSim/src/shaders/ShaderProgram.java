@@ -100,7 +100,16 @@ public abstract	class ShaderProgram {
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
 	
-	/**Loads a float value into a uniform.
+	/**Loads an int value into a uniform variable.
+	 * 
+	 * @param location - location of uniform variable in shader code
+	 * @param value - value that we want to load into the uniform
+	 */
+	protected void loadInt(int location, int value) {
+		GL20.glUniform1i(location, value);
+	}
+	
+	/**Loads a float value into a uniform variable.
 	 * 
 	 * @param location - location of uniform variable in shader code
 	 * @param value - value that we want to load into the uniform
@@ -109,7 +118,7 @@ public abstract	class ShaderProgram {
 		GL20.glUniform1f(location, value);
 	}
 	
-	/**Loads a 3floated vector into a uniform.
+	/**Loads a 3floated vector into a uniform variable.
 	 * 
 	 * @param location - location of uniform variable in shader code
 	 * @param vector - vector that we want to load into the uniform
@@ -118,7 +127,8 @@ public abstract	class ShaderProgram {
 		GL20.glUniform3f(location, vector.x, vector.y, vector.z);
 	}
 	
-	/**Since OpenGL does not know boolean, we are going to load up either a 0f (false) or a 1f (true).
+	/**Loads a float representing a boolean into a uniform variable.<br>
+	 * Since OpenGL does not know boolean, we are going to load up either a 0f (false) or a 1f (true).
 	 * 
 	 * @param location - location of uniform variable in shader code
 	 * @param value - 0f (false) or a 1f (true) to load into the uniform
