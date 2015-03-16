@@ -1,5 +1,6 @@
 package terrains;
 
+import engineTester.MainApplication;
 import models.RawModel;
 import renderEngine.Loader;
 import textures.ModelTexture;
@@ -11,7 +12,8 @@ import textures.ModelTexture;
  */
 public class Terrain {
 
-	private static final float SIZE = 800;
+	private final static float sizeX = MainApplication.getWorldSizeX();
+	private final static float sizeZ = MainApplication.getWorldSizeZ();
 	private static final int VERTEX_COUNT = 128; //vertices along each side of the terrain
 	
 	private float x;
@@ -28,8 +30,8 @@ public class Terrain {
 	 */
 	public Terrain(int gridX, int gridZ, Loader loader, ModelTexture texture) {
 		this.texture = texture;
-		this.x = gridX * SIZE;
-		this.z = gridZ * SIZE;
+		this.x = gridX * sizeX;
+		this.z = gridZ * sizeZ;
 		this.model = generateTerrain(loader);
 	}
 	
@@ -47,9 +49,9 @@ public class Terrain {
 		int vertexPointer = 0;
 		for(int i=0;i<VERTEX_COUNT;i++){ //i<128
 			for(int j=0;j<VERTEX_COUNT;j++){ //j<128
-				vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * SIZE - 400;
+				vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * sizeX - sizeX/2;
 				vertices[vertexPointer*3+1] = 0;
-				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE - 800;
+				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * sizeZ - sizeZ;
 				normals[vertexPointer*3] = 0;
 				normals[vertexPointer*3+1] = 1;
 				normals[vertexPointer*3+2] = 0;
@@ -76,8 +78,12 @@ public class Terrain {
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
 
-	public static float getSize() {
-		return SIZE;
+	public static float getSizeX() {
+		return sizeX;
+	}
+	
+	public static float getSizeZ() {
+		return sizeZ;
 	}
 
 	public static int getVertexCount() {

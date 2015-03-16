@@ -54,7 +54,7 @@ public class Loader {
 	 */
 	public int loadTexture(String fileName) {
 		
-		//load a texture in .png format from /res directory
+		//load a texture in .png format from /res directory and store it in raw format
 		Texture texture = null;
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/models/"+fileName+".png"));

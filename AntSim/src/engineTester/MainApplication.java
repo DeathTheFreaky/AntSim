@@ -6,6 +6,8 @@ import java.util.Random;
 
 import models.RawModel;
 import models.TexturedModel;
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
@@ -16,18 +18,18 @@ import entities.Light;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
-import renderEngine.OBJLoader;
 import terrains.Terrain;
 import textures.ModelTexture;
 
-/**MainLoop holds the main game loop containing the main game logic and handles the initialization and destruction of the game.
+/**MainApplication holds the main game loop containing the main game logic.<br>
+ * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
  * <br>
  * The main game loop updates all objects and does the rendering for every frame.
  * 
  * @author Flo
  *
  */
-public class MainLoop {
+public class MainApplication {
 	
 	/* The OpenGL code so far has been written based on the a youtube tutorial series. 
 	 * 
@@ -54,6 +56,9 @@ public class MainLoop {
 	 * 16.) Fog: http://www.youtube.com/watch?v=qslBNLeSPUc
 	 * */
 	
+	private static final float WORLD_SIZE_X = 800;
+	private static final float WORLD_SIZE_Z = 800;
+	
 	public static void main(String[] args) {
 		
 		DisplayManager.createDisplay();
@@ -64,37 +69,57 @@ public class MainLoop {
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
 		 */
 		
-	//load 3d models from .obj files
+		//load 3d models from .obj files into ModelData objects
+		ModelData dragonModelData = OBJFileLoader.loadOBJ("dragon");
+		ModelData treeModelData = OBJFileLoader.loadOBJ("tree");
+		ModelData grassModelData = OBJFileLoader.loadOBJ("grass");
+		ModelData fernModelData = OBJFileLoader.loadOBJ("fern");
 		
-		RawModel dragonRawModel = OBJLoader.loadObjModel("dragon", loader); //loads a 3D model from an .obj file
-		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("dragon")); //load a texture from a png file
+		//load ModelData objects in a VAO and return RawModels
+		RawModel dragonRawModel = loader.loadToVAO(dragonModelData.getVertices(), dragonModelData.getTextureCoords(), 
+				dragonModelData.getNormals(), dragonModelData.getIndices());
+		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), 
+				treeModelData.getNormals(), treeModelData.getIndices());
+		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(), 
+				grassModelData.getNormals(), grassModelData.getIndices());
+		RawModel fernRawModel = loader.loadToVAO(fernModelData.getVertices(), fernModelData.getTextureCoords(), 
+				fernModelData.getNormals(), fernModelData.getIndices());
+		
+		//load textures from png files
+		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("dragon"));
+		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("tree")); 
+		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
+		ModelTexture fernTexture = new ModelTexture(loader.loadTexture("fern"));
+		
+		//set parameters for specular lighting
 		dragonTexture.setShineDamper(10); //set shine damper for specular lighting
 		dragonTexture.setReflectivity(1); //set reflectivity for specular lighting
-		TexturedModel dragonTexturedModel = new TexturedModel(dragonRawModel, dragonTexture); //stick the texture on a RawModel
-		
-		TexturedModel tree = new TexturedModel(OBJLoader.loadObjModel("tree", loader), new ModelTexture(loader.loadTexture("tree")));
-		TexturedModel grass = new TexturedModel(OBJLoader.loadObjModel("grass", loader), new ModelTexture(loader.loadTexture("grass")));
-		TexturedModel fern = new TexturedModel(OBJLoader.loadObjModel("fern", loader), new ModelTexture(loader.loadTexture("fern")));
 		
 		//set transparency and fake lighting for grass and fern (to avoid weird shadow look)
-		grass.getTexture().setHasTransparency(true);
-		grass.getTexture().setUseFakeLighting(true);
-		fern.getTexture().setHasTransparency(true);
-		fern.getTexture().setUseFakeLighting(true);
+		grassTexture.setHasTransparency(true);
+		grassTexture.setUseFakeLighting(true);
+		fernTexture.setHasTransparency(true);
+		fernTexture.setUseFakeLighting(true);
 		
-		List<Entity> entities = new ArrayList<Entity>();
+		//finally, create the TexturedModel sticking ModelTextures to RawModels
+		TexturedModel dragonTexturedModel = new TexturedModel(dragonRawModel, dragonTexture); 
+		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, treeTexture);
+		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, grassTexture);
+		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTexture);
+		
+		List<Entity> entities = new ArrayList<Entity>(); //holds all entities to be rendered
 		Random random = new Random();
 		
 		entities.add(new Entity(dragonTexturedModel, new Vector3f(0,0,-30),0,0,0,1)); 
 		
 		for (int i = 0; i < 500; i++) {
-			entities.add(new Entity(tree, new Vector3f(random.nextFloat() * 800 - 400, 0, 
-					random.nextFloat() * -800), 0, 0, 0, 3));
-			entities.add(new Entity(grass, new Vector3f(random.nextFloat() * 800 - 400, 0, 
-					random.nextFloat() * -800), 0, 0, 0, 1));
-			entities.add(new Entity(fern, new Vector3f(random.nextFloat() * 800 - 400, 0, 
-					random.nextFloat() * -800), 0, 0, 0, 0.6f));
-		} //boarders for vegetation: (-400,400),(0),(-800, 0);
+			entities.add(new Entity(treeTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE_X - WORLD_SIZE_X/2, 0, 
+					random.nextFloat() * -WORLD_SIZE_Z), 0, 0, 0, 3));
+			entities.add(new Entity(grassTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE_X - WORLD_SIZE_X/2, 0, 
+					random.nextFloat() * -WORLD_SIZE_Z), 0, 0, 0, 1));
+			entities.add(new Entity(fernTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE_X - WORLD_SIZE_X/2, 0, 
+					random.nextFloat() * -WORLD_SIZE_Z), 0, 0, 0, 0.6f));
+		} //boarders for vegetation and terrain: x,y,z of (-400,400),(0),(-800, 0);
 		
 		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
 		
@@ -125,5 +150,13 @@ public class MainLoop {
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
+	}
+
+	public static float getWorldSizeX() {
+		return WORLD_SIZE_X;
+	}
+
+	public static float getWorldSizeZ() {
+		return WORLD_SIZE_Z;
 	}
 }

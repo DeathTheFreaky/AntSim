@@ -1,6 +1,7 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import terrains.Terrain;
 import toolbox.Maths;
@@ -25,6 +26,7 @@ public class TerrainShader extends ShaderProgram {
 	private int location_lightColor;
 	private int location_shineDamper;
 	private int location_reflectivity;
+	private int location_skyColor;
 	
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
@@ -49,6 +51,17 @@ public class TerrainShader extends ShaderProgram {
 		location_lightColor = super.getUniformLocation("lightColor");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
+		location_skyColor = super.getUniformLocation("skyColor");
+	}
+	
+	/**Loads r,g,b color values into shader uniform variable skyColor.
+	 * 
+	 * @param r - the red component of the skyColor
+	 * @param g - the green component of the skyColor
+	 * @param b - the blue component of the skyColor
+	 */
+	public void loadSkyColor(float r, float g, float b) {
+		super.loadVector(location_skyColor, new Vector3f(r,g,b));
 	}
 	
 	/**Loads a vertices shineDamper and reflectivity into the shader uniform variable for specular lighting.

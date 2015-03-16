@@ -2,10 +2,12 @@
 
 //FRAGMENT SHADER
 
-in vec2 pass_textureCoords; //input to fragment shader is output from vertexShader -> 2-dim texture coords
+//input to fragment shader is output from vertexShader -> 2-dim texture coords
+in vec2 pass_textureCoords; 
 in vec3 surfaceNormal;
 in vec3 toLightVector;
 in vec3 toCameraVector;
+in float visibility;
 
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
@@ -13,6 +15,7 @@ uniform sampler2D modelTexture; //basically represents textures we're going to u
 uniform vec3 lightColor;
 uniform float shineDamper;
 uniform float reflectivity;
+uniform vec3 skyColor;
 
 void main(void) {
 
@@ -39,4 +42,6 @@ void main(void) {
 
 	outColor = vec4(diffuse, 1.0) * textureColor + vec4(finalSpecular, 1.0) ; //returns color of the pixel on the texture at given coordinates 
 		//by multiplying the texture with the light color and adding the specularLighting value
+	outColor = mix(vec4(skyColor, 1.0), outColor, visibility); //create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility: Out_color (original object color)
+
 }

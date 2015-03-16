@@ -1,6 +1,7 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Light;
@@ -26,6 +27,7 @@ public class StaticShader extends ShaderProgram {
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_useFakeLighting;
+	private int location_skyColor;
 	
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
@@ -51,6 +53,17 @@ public class StaticShader extends ShaderProgram {
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
+		location_skyColor = super.getUniformLocation("skyColor");
+	}
+	
+	/**Loads r,g,b color values into shader uniform variable skyColor.
+	 * 
+	 * @param r - the red component of the skyColor
+	 * @param g - the green component of the skyColor
+	 * @param b - the blue component of the skyColor
+	 */
+	public void loadSkyColor(float r, float g, float b) {
+		super.loadVector(location_skyColor, new Vector3f(r,g,b));
 	}
 	
 	/**Loads a boolean (actually will be converted to float) into the shader uniform variable for useFakeLighting.
