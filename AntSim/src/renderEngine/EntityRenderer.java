@@ -73,6 +73,10 @@ public class EntityRenderer {
 		
 		//load shine variables for specular lighting; load, activate and bind model texture
 		ModelTexture texture = model.getTexture();
+		if (texture.isHasTransparency()) {
+			MasterRenderer.disableCulling(); //disable back face culling for transparent textures
+		}
+		shader.loadFakeLightingVariable(texture.isUseFakeLighting());
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity()); //load shine damper and reflectivity needed for specular lighting in the shader program
 		GL13.glActiveTexture(GL13.GL_TEXTURE0); //activate first texture bank 0 -> bank that's used by default by Sampler2d from fragment shader
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getID()); //bind texture so it can be used
@@ -82,7 +86,7 @@ public class EntityRenderer {
 	 * 
 	 */
 	private void unbindTexturedModel() {
-		
+		MasterRenderer.enableCulling(); //be sure to enable culling before next model
 		//disable attribute lists and unbind VAO
 		GL20.glDisableVertexAttribArray(0); 
 		GL20.glDisableVertexAttribArray(1); 

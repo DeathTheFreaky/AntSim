@@ -31,7 +31,7 @@ public class OBJLoader {
 		//open the .obj file
 		FileReader fr = null;
 		try {
-			fr = new FileReader(new File("res/"+fileName+".obj"));
+			fr = new FileReader(new File("res/models/"+fileName+".obj"));
 		} catch (FileNotFoundException e) {
 			System.err.println("Could not load file!");
 			e.printStackTrace();

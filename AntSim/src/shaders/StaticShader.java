@@ -25,6 +25,7 @@ public class StaticShader extends ShaderProgram {
 	private int location_lightColor;
 	private int location_shineDamper;
 	private int location_reflectivity;
+	private int location_useFakeLighting;
 	
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
@@ -49,6 +50,15 @@ public class StaticShader extends ShaderProgram {
 		location_lightColor = super.getUniformLocation("lightColor");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
+		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
+	}
+	
+	/**Loads a boolean (actually will be converted to float) into the shader uniform variable for useFakeLighting.
+	 * 
+	 * @param useFakeLighting - true enables the use of fake lighting for a transparent texture like grass to avoid weird look
+	 */
+	public void loadFakeLightingVariable(boolean useFakeLighting) {
+		super.loadBoolean(location_useFakeLighting, useFakeLighting);
 	}
 	
 	/**Loads a vertices shineDamper and reflectivity into the shader uniform variable for specular lighting.
