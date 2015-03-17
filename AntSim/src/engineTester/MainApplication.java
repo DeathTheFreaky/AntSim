@@ -68,6 +68,8 @@ public class MainApplication {
 	 * 19.) 3rd Person Camera: http://www.youtube.com/watch?v=PoxDDZmctnU
 	 * 20.) MipMapping: http://www.youtube.com/watch?v=yGjMzIePKNQ //use low - res textures for objects that are far away -> speeds up game
 	 * 21.) Terrain Height Maps: http://www.youtube.com/watch?v=O9v6olrHPwI
+	 * 22.) Terrain Collision Detection: http://www.youtube.com/watch?v=6E2zjfzMs7c
+	 * 
 	 * 
 	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
 	 * */
