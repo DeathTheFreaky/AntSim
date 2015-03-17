@@ -42,6 +42,9 @@ public class MainApplication {
 	 * 
 	 * OpenGL Api: https://www.opengl.org/sdk/docs/man4/index.php
 	 * 
+	 * OpenGL Commands syntax for lots of 3 param - commands:
+	 * 1.: what is affected, 2.: which behaviour to define, 3.: the actual value to set
+	 * 
 	 * In case of questions, refer to the following videos:
 	 * 
 	 * 1.) Setting up Display: http://www.youtube.com/watch?v=VS8wlS9hF8E
@@ -62,7 +65,9 @@ public class MainApplication {
 	 * 16.) Fog: http://www.youtube.com/watch?v=qslBNLeSPUc
 	 * 17.) Multitexturing: http://www.youtube.com/watch?v=-kbal7aGUpk
 	 * 18.) Player Movement: http://www.youtube.com/watch?v=d-kuzyCkjoQ
-	 * 19.) 
+	 * 19.) 3rd Person Camera: http://www.youtube.com/watch?v=PoxDDZmctnU
+	 * 20.) MipMapping: http://www.youtube.com/watch?v=yGjMzIePKNQ //use low - res textures for objects that are far away -> speeds up game
+	 * 21.) Terrain Height Maps: http://www.youtube.com/watch?v=O9v6olrHPwI
 	 * */
 	
 	private static final float WORLD_SIZE_X = 800;
@@ -83,7 +88,7 @@ public class MainApplication {
 		ModelData treeModelData = OBJFileLoader.loadOBJ("tree");
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grass");
 		ModelData fernModelData = OBJFileLoader.loadOBJ("fern");
-		ModelData playerModelData = OBJFileLoader.loadOBJ("stanfordBunny");
+		ModelData playerModelData = OBJFileLoader.loadOBJ("person");
 		
 		//load ModelData objects in a VAO and return RawModels
 		RawModel dragonRawModel = loader.loadToVAO(dragonModelData.getVertices(), dragonModelData.getTextureCoords(), 
@@ -102,7 +107,7 @@ public class MainApplication {
 		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("tree")); 
 		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
 		ModelTexture fernTexture = new ModelTexture(loader.loadTexture("fern"));
-		ModelTexture playerTexture = new ModelTexture(loader.loadTexture("white"));
+		ModelTexture playerTexture = new ModelTexture(loader.loadTexture("playerTexture"));
 		
 		//set parameters for specular lighting
 		dragonTexture.setShineDamper(10); //set shine damper for specular lighting
@@ -155,10 +160,10 @@ public class MainApplication {
 		/*Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
 		Terrain terrain2 = new Terrain(0, 0, loader, texturePack, blendMap);*/
 		
-		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
+		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
 		//Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap); //if we need more terrains... thats how to add them as tiles
 		
-		Camera camera = new Camera(player);
+		Camera camera = new Camera(player); //player camera - make a "ghost" player to simulate cool camera movement
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
