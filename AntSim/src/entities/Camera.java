@@ -10,13 +10,23 @@ import org.lwjgl.util.vector.Vector3f;
  *
  */
 public class Camera {
+	
+	//3rd person Camera
+	private float distanceFromPlayer = 50;
+	private float angleAroundPlayer = 0;
+	
 
-	private Vector3f position = new Vector3f(0,10,-400);
-	private float pitch; //how high or low the camera is aiming
+	//private Vector3f position = new Vector3f(0,10,-400); //world camera
+	private Vector3f position = new Vector3f(0,0,0); //3rd person camera
+	private float pitch = 20; //how high or low the camera is aiming
 	private float yaw; //how much left or right the camera is aiming
 	private float roll; //the camera's tilt - at 180° it is upside down
 	
-	public Camera(){};
+	private Player player;
+	
+	public Camera(Player player){
+		this.player = player;
+	};
 	
 	/**Moves the camera by the following key bindings:<br>
 	 * <ul>
@@ -59,10 +69,21 @@ public class Camera {
 		}
 	}*/
 	
-	public void move()
-	{
+	/**Moves the camera.
+	 * 
+	 */
+	public void move() {
+		
+		calculateZoom();
+		calculatePitch();
+		calculateAngleAroundPlayer();
+		
+		float horizontalDistance = calculateHorizontalDistance();
+		float verticalDistance = calculateVerticalDistance();
+		
+		calculateCameraPosition(horizontalDistance, verticalDistance);
 	                
-	            float arg_yaw = Mouse.getDX() ;
+	           /* float arg_yaw = Mouse.getDX() ;
 	            //System.out.println(arg_yaw) ;
 	            yaw += arg_yaw/10 ;
 	            float arg_roll = Mouse.getDY() ;
@@ -107,7 +128,7 @@ public class Camera {
 	                if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) 
 	                {
 	                    position.y -= 0.2f;
-	                }
+	                }*/
 	}
 
 	/**
@@ -136,5 +157,65 @@ public class Camera {
 	 */
 	public float getRoll() {
 		return roll;
+	}
+	
+	/**Calculates the position of a 3rd person camera in world space.
+	 * 
+	 * @param horizDistance - the horizontal distance between the player and the 3rd person camera
+	 * @param verticDistance - the vertical distance between the player and the 3rd person camera
+	 */
+	private void calculateCameraPosition(float horizDistance, float verticDistance) {
+		
+		//an explanation of what's going on here: http://www.youtube.com/watch?v=PoxDDZmctnU
+		
+		float theta = player.getRotY() + angleAroundPlayer;
+		float offsetX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
+		float offsetZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
+		position.x = player.getPosition().x - offsetX;
+		position.y = player.getPosition().y + verticDistance;
+		position.z = player.getPosition().z - offsetZ; 
+		this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
+	}
+	
+	/**
+	 * @return - the horizontal distance between the player and the 3rd person camera
+	 */
+	private float calculateHorizontalDistance() {
+		return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
+	}
+	
+	/**
+	 * @return - the vertical distance between the player and the 3rd person camera
+	 */
+	private float calculateVerticalDistance() {
+		return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
+	}
+	
+	/**Zooms 3rd person camera out when moving mousewheel down and in when moving mousewheel up.
+	 * 
+	 */
+	private void calculateZoom() {
+		float zoomLevel = Mouse.getDWheel() * 0.1f;
+		distanceFromPlayer -= zoomLevel;
+	}
+	
+	/**Changes 3rd person camera pitch -> rotate Camera up when moving mouse up rotate Camera down when moving mouse down.
+	 * 
+	 */
+	private void calculatePitch() {
+		if (Mouse.isButtonDown(1)) { //right mouse button
+			float pitchChange = Mouse.getDY() * 0.1f;
+			pitch -= pitchChange;
+		}
+	}
+	
+	/**Changes 3rd person camera angle around the player - rotate camera left when moving mouse to the left, move camera righ twhen moving mouse to the right.
+	 * 
+	 */
+	private void calculateAngleAroundPlayer() {
+		if (Mouse.isButtonDown(1)) { //left mouse button
+			float angleChange = Mouse.getDX() * 0.3f;
+			angleAroundPlayer -= angleChange;
+		}
 	}
 }

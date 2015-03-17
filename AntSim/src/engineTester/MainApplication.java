@@ -61,6 +61,8 @@ public class MainApplication {
 	 * 15.) Transparency (Textures): http://www.youtube.com/watch?v=ZyzXBYVvjsg
 	 * 16.) Fog: http://www.youtube.com/watch?v=qslBNLeSPUc
 	 * 17.) Multitexturing: http://www.youtube.com/watch?v=-kbal7aGUpk
+	 * 18.) Player Movement: http://www.youtube.com/watch?v=d-kuzyCkjoQ
+	 * 19.) 
 	 * */
 	
 	private static final float WORLD_SIZE_X = 800;
@@ -156,7 +158,7 @@ public class MainApplication {
 		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap);
 		//Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap); //if we need more terrains... thats how to add them as tiles
 		
-		Camera camera = new Camera();
+		Camera camera = new Camera(player);
 		
 		MasterRenderer renderer = new MasterRenderer();
 		
