@@ -68,10 +68,11 @@ public class MainApplication {
 	 * 19.) 3rd Person Camera: http://www.youtube.com/watch?v=PoxDDZmctnU
 	 * 20.) MipMapping: http://www.youtube.com/watch?v=yGjMzIePKNQ //use low - res textures for objects that are far away -> speeds up game
 	 * 21.) Terrain Height Maps: http://www.youtube.com/watch?v=O9v6olrHPwI
+	 * 
+	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
 	 * */
 	
-	private static final float WORLD_SIZE_X = 800;
-	private static final float WORLD_SIZE_Z = 800;
+	private static final float WORLD_SIZE = 800; //square
 	
 	public static void main(String[] args) {
 		
@@ -127,7 +128,7 @@ public class MainApplication {
 		TexturedModel playerTexturedModel = new TexturedModel(playerRawModel, playerTexture);
 		
 		//create player
-		Player player = new Player(playerTexturedModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
+		Player player = new Player(playerTexturedModel, new Vector3f(0, 0, 0), 0, 0, 0, 1);
 		
 		List<Entity> entities = new ArrayList<Entity>(); //holds all entities to be rendered
 		Random random = new Random();
@@ -135,18 +136,18 @@ public class MainApplication {
 		entities.add(new Entity(dragonTexturedModel, new Vector3f(0,0,-30),0,0,0,1)); 
 		
 		for (int i = 0; i < 500; i++) {
-			entities.add(new Entity(treeTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE_X - WORLD_SIZE_X/2, 0, 
-					random.nextFloat() * -WORLD_SIZE_Z), 0, 0, 0, 3));
-			entities.add(new Entity(grassTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE_X - WORLD_SIZE_X/2, 0, 
-					random.nextFloat() * -WORLD_SIZE_Z), 0, 0, 0, 1));
-			entities.add(new Entity(fernTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE_X - WORLD_SIZE_X/2, 0, 
-					random.nextFloat() * -WORLD_SIZE_Z), 0, 0, 0, 0.6f));
+			entities.add(new Entity(treeTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE, 0, 
+					random.nextFloat() * -WORLD_SIZE), 0, 0, 0, 3));
+			entities.add(new Entity(grassTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE, 0, 
+					random.nextFloat() * -WORLD_SIZE), 0, 0, 0, 1));
+			entities.add(new Entity(fernTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE, 0, 
+					random.nextFloat() * -WORLD_SIZE), 0, 0, 0, 0.6f));
 		} //boarders for vegetation and terrain: x,y,z of (-400,400),(0),(-800, 0);
 		
 		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
 		
 		//load the different terrain textures
-		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy"));
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
@@ -173,8 +174,8 @@ public class MainApplication {
 			//game logic
 			entities.get(0).increaseRotation(0, 0.5f, 0); //rotate the dragon
 			
+			player.move(terrain);
 			camera.move(); //every single frame check for key inputs which move the camera
-			player.move();
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
 			//renderer.processTerrain(terrain2);
@@ -191,11 +192,7 @@ public class MainApplication {
 		DisplayManager.closeDisplay();
 	}
 
-	public static float getWorldSizeX() {
-		return WORLD_SIZE_X;
-	}
-
-	public static float getWorldSizeZ() {
-		return WORLD_SIZE_Z;
+	public static float getWorldSize() {
+		return WORLD_SIZE;
 	}
 }

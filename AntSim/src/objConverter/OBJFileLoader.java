@@ -43,6 +43,7 @@ public class OBJFileLoader {
         } catch (FileNotFoundException e) {
             System.err.println("File not found in " + RES_LOC + "; don't use any extention");
         }
+        System.out.println(objFileName);
         BufferedReader reader = new BufferedReader(isr);
         String line;
         List<Vertex> vertices = new ArrayList<Vertex>(); //will contain: x1, y1, z1, x2, y2, z2, x3, y3, z3...

@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import engineTester.MainApplication;
@@ -14,6 +15,7 @@ import renderEngine.Loader;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.Maths;
 
 /**Respresents a Terrain made up of a {@link RawModel} and a {@link ModelTexture}.
  * 
@@ -22,8 +24,7 @@ import textures.TerrainTexturePack;
  */
 public class Terrain {
 
-	private final static float sizeX = MainApplication.getWorldSizeX();
-	private final static float sizeZ = MainApplication.getWorldSizeZ();
+	private final static float SIZE = MainApplication.getWorldSize();
 	
 	//for 3d terrain
 	private static final float MAX_HEIGHT = 40; //maximum height in positive and negative range of the terrain -> -40 to 40
@@ -37,6 +38,8 @@ public class Terrain {
 	private TerrainTexturePack texturePack;
 	private TerrainTexture blendMap; //yeah, so it's not really a TerrainTexture but it works
 	
+	private float[][] heights; //stores heights of all vertices of the terrain
+	
 	/**Creates a new {@link Terrain}.
 	 * 
 	 * @param gridX - terrain's x position as an int
@@ -49,8 +52,8 @@ public class Terrain {
 	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightMap) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
-		this.x = gridX * sizeX;
-		this.z = gridZ * sizeZ;
+		this.x = gridX * SIZE;
+		this.z = gridZ * SIZE;
 		this.model = generateTerrain(loader, heightMap);
 	}
 	
@@ -71,33 +74,36 @@ public class Terrain {
 		}
 		
 		int VERTEX_COUNT = image.getHeight(); //number of vertices along each side of terrain - each pixel in height map represents one vertex
+		heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 		
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
 		float[] normals = new float[count * 3];
 		float[] textureCoords = new float[count*2];
-		int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT*1)];
+		int[] indices = new int[6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT * 1)];
 		int vertexPointer = 0;
-		for(int i=0;i<VERTEX_COUNT;i++){ //i<128
-			for(int j=0;j<VERTEX_COUNT;j++){ //j<128
-				vertices[vertexPointer*3] = (float)j/((float)VERTEX_COUNT - 1) * sizeX - sizeX/2;
-				vertices[vertexPointer*3+1] = getHeight(j, i, image);
-				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * sizeZ;
+		for(int i = 0; i < VERTEX_COUNT; i++){ //i<128
+			for(int j = 0 ; j < VERTEX_COUNT; j++){ //j<128
+				vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
+				float height = getHeight(j, i, image);
+				heights[j][i] = height;
+				vertices[vertexPointer  * 3 + 1] = height;
+				vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
 				Vector3f normal = calculateNormal(j, i, image);
-				normals[vertexPointer*3] = normal.x;
-				normals[vertexPointer*3+1] = normal.y;
-				normals[vertexPointer*3+2] = normal.z;
-				textureCoords[vertexPointer*2] = (float)j/((float)VERTEX_COUNT - 1);
-				textureCoords[vertexPointer*2+1] = (float)i/((float)VERTEX_COUNT - 1);
+				normals[vertexPointer * 3] = normal.x;
+				normals[vertexPointer * 3 + 1] = normal.y;
+				normals[vertexPointer * 3 + 2] = normal.z;
+				textureCoords[vertexPointer * 2] = (float) j / ((float) VERTEX_COUNT - 1);
+				textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) VERTEX_COUNT - 1);
 				vertexPointer++;
 			}
 		}
 		int pointer = 0;
-		for(int gz=0;gz<VERTEX_COUNT-1;gz++){
-			for(int gx=0;gx<VERTEX_COUNT-1;gx++){
-				int topLeft = (gz*VERTEX_COUNT)+gx;
+		for(int gz = 0; gz < VERTEX_COUNT - 1; gz++){
+			for(int gx = 0 ; gx < VERTEX_COUNT - 1; gx++){
+				int topLeft = (gz * VERTEX_COUNT) + gx;
 				int topRight = topLeft + 1;
-				int bottomLeft = ((gz+1)*VERTEX_COUNT)+gx;
+				int bottomLeft = ((gz + 1) * VERTEX_COUNT) + gx;
 				int bottomRight = bottomLeft + 1;
 				indices[pointer++] = topLeft;
 				indices[pointer++] = bottomLeft;
@@ -108,6 +114,45 @@ public class Terrain {
 			}
 		}
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
+	}
+	
+	/**Gets height of terrain for any given x,z coordinates.
+	 * 
+	 * @param worldX - x coordinate in world space
+	 * @param worldZ - z coordinate in world space
+	 * @return - the height of terrain for any given x,z coordinates
+	 */
+	public float getHeightOfTerrain(float worldX, float worldZ) {
+		
+		//convert world coordinates to positions relative to the terrain
+		float terrainX = worldX - this.x; 
+		float terrainZ = worldZ - this.z;
+		
+		float gridSquareSize = SIZE / ((float)heights.length - 1); //if terrain has 4 vertices along 1 side of terrain it has 3 grid squares
+		int gridX = (int) Math.floor(terrainX / gridSquareSize); //abrunden
+		int gridZ = (int) Math.floor(terrainZ / gridSquareSize);	
+				
+		//return height of 0 if coordinates are outside the terrain -> not a valid grid square
+		if (gridX >= heights.length - 1 || gridZ >= heights.length - 1 || gridX < 0 || gridZ < 0) {
+			return 0;
+		}
+		
+		float xCoord = (terrainX % gridSquareSize)/gridSquareSize; //distance of player to the right from top left corner of grid square -> result between 0 and 1
+		float zCoord = (terrainZ % gridSquareSize)/gridSquareSize; //distance of player to the bottom from top left corner of grid square -> result between 0 and 1
+		
+		//check which of the 2 triangles of a gridSquare the player is on
+		float answer; 
+		if (xCoord <= (1-zCoord)) {
+			answer = Maths.barryCentric(new Vector3f(0, heights[gridX][gridZ], 0), new Vector3f(1,
+							heights[gridX + 1][gridZ], 0), new Vector3f(0,
+							heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
+		} else {
+			answer = Maths.barryCentric(new Vector3f(1, heights[gridX + 1][gridZ], 0), new Vector3f(1,
+							heights[gridX + 1][gridZ + 1], 1), new Vector3f(0,
+							heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
+		}
+		
+		return answer;
 	}
 	
 	/**Caclute normal of vertex based on heights of neighboring vertices.
@@ -150,11 +195,7 @@ public class Terrain {
 	}
 
 	public static float getSizeX() {
-		return sizeX;
-	}
-	
-	public static float getSizeZ() {
-		return sizeZ;
+		return SIZE;
 	}
 
 	/*public static int getVertexCount() {
