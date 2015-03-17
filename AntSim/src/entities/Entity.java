@@ -17,9 +17,18 @@ public class Entity {
 	private float rotX, rotY, rotZ;
 	private float scale;
 	
+	/**Creates a new Entity.
+	 * 
+	 * @param model - 3-dimensional model of the entity with a texture
+	 * @param position - the entity's x,y,z coordinates in world space
+	 * @param rotX - the entity's X rotation in degrees
+	 * @param rotY - the entity's Y rotation in degrees
+	 * @param rotZ - the entity's Z rotation in degrees
+	 * @param scale - the scale applied to the entity's model
+	 */
 	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, 
 			float scale) {
-		super();
+
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;

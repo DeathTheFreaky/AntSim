@@ -3,6 +3,7 @@ package engineTester;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.ObjLongConsumer;
 
 import models.RawModel;
 import models.TexturedModel;
@@ -15,6 +16,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -79,6 +81,7 @@ public class MainApplication {
 		ModelData treeModelData = OBJFileLoader.loadOBJ("tree");
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grass");
 		ModelData fernModelData = OBJFileLoader.loadOBJ("fern");
+		ModelData playerModelData = OBJFileLoader.loadOBJ("stanfordBunny");
 		
 		//load ModelData objects in a VAO and return RawModels
 		RawModel dragonRawModel = loader.loadToVAO(dragonModelData.getVertices(), dragonModelData.getTextureCoords(), 
@@ -89,12 +92,15 @@ public class MainApplication {
 				grassModelData.getNormals(), grassModelData.getIndices());
 		RawModel fernRawModel = loader.loadToVAO(fernModelData.getVertices(), fernModelData.getTextureCoords(), 
 				fernModelData.getNormals(), fernModelData.getIndices());
+		RawModel playerRawModel = loader.loadToVAO(playerModelData.getVertices(), playerModelData.getTextureCoords(), 
+				playerModelData.getNormals(), playerModelData.getIndices());
 		
 		//load textures from png files
 		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("dragon"));
 		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("tree")); 
 		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
 		ModelTexture fernTexture = new ModelTexture(loader.loadTexture("fern"));
+		ModelTexture playerTexture = new ModelTexture(loader.loadTexture("white"));
 		
 		//set parameters for specular lighting
 		dragonTexture.setShineDamper(10); //set shine damper for specular lighting
@@ -111,6 +117,10 @@ public class MainApplication {
 		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, treeTexture);
 		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, grassTexture);
 		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTexture);
+		TexturedModel playerTexturedModel = new TexturedModel(playerRawModel, playerTexture);
+		
+		//create player
+		Player player = new Player(playerTexturedModel, new Vector3f(0, 0, -50), 0, 0, 0, 1);
 		
 		List<Entity> entities = new ArrayList<Entity>(); //holds all entities to be rendered
 		Random random = new Random();
@@ -157,6 +167,8 @@ public class MainApplication {
 			entities.get(0).increaseRotation(0, 0.5f, 0); //rotate the dragon
 			
 			camera.move(); //every single frame check for key inputs which move the camera
+			player.move();
+			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
 			//renderer.processTerrain(terrain2);
 			for (Entity entity : entities) {

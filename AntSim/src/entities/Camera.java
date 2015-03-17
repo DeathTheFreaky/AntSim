@@ -104,7 +104,7 @@ public class Camera {
 	                {
 	                    position.y += 0.2f;
 	                }
-	                if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) 
+	                if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) 
 	                {
 	                    position.y -= 0.2f;
 	                }
