@@ -128,23 +128,8 @@ public class MainApplication {
 		TexturedModel playerTexturedModel = new TexturedModel(playerRawModel, playerTexture);
 		
 		//create player
-		Player player = new Player(playerTexturedModel, new Vector3f(0, 0, 0), 0, 0, 0, 1);
+		Player player = new Player(playerTexturedModel, new Vector3f(WORLD_SIZE/2, 0, -WORLD_SIZE/2), 0, 0, 0, 1);
 		
-		List<Entity> entities = new ArrayList<Entity>(); //holds all entities to be rendered
-		Random random = new Random();
-		
-		entities.add(new Entity(dragonTexturedModel, new Vector3f(0,0,-30),0,0,0,1)); 
-		
-		for (int i = 0; i < 500; i++) {
-			entities.add(new Entity(treeTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE, 0, 
-					random.nextFloat() * -WORLD_SIZE), 0, 0, 0, 3));
-			entities.add(new Entity(grassTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE, 0, 
-					random.nextFloat() * -WORLD_SIZE), 0, 0, 0, 1));
-			entities.add(new Entity(fernTexturedModel, new Vector3f(random.nextFloat() * WORLD_SIZE, 0, 
-					random.nextFloat() * -WORLD_SIZE), 0, 0, 0, 0.6f));
-		} //boarders for vegetation and terrain: x,y,z of (-400,400),(0),(-800, 0);
-		
-		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
 		
 		//load the different terrain textures
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
@@ -163,6 +148,36 @@ public class MainApplication {
 		
 		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
 		//Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap); //if we need more terrains... thats how to add them as tiles
+				
+		
+		List<Entity> entities = new ArrayList<Entity>(); //holds all entities to be rendered
+		Random random = new Random(676452);
+		
+		entities.add(new Entity(dragonTexturedModel, new Vector3f(0,0,0),0,0,0,1)); 
+		
+		for (int i = 0; i < 1200; i++) {
+			if (i % 20 == 0) {
+				float x = random.nextFloat() * WORLD_SIZE;
+				float z = random.nextFloat() * -WORLD_SIZE;
+				float y = terrain.getHeightOfTerrain(x, z);
+				entities.add(new Entity(fernTexturedModel, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
+						0, 0.9f));
+			}
+			if (i % 5 == 0) {
+				float x = random.nextFloat() * WORLD_SIZE;
+				float z = random.nextFloat() * -WORLD_SIZE;
+				float y = terrain.getHeightOfTerrain(x, z);
+				entities.add(new Entity(grassTexturedModel, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
+						0, random.nextFloat() * 0.1f + 0.6f));
+				x = random.nextFloat() * WORLD_SIZE;
+				z = random.nextFloat() * -WORLD_SIZE;
+				y = terrain.getHeightOfTerrain(x, z);
+				entities.add(new Entity(treeTexturedModel, new Vector3f(x, y, z), 0, 0,
+						0, random.nextFloat() * 1 + 4));
+			}
+		} 
+		
+		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
 		
 		Camera camera = new Camera(player); //player camera - make a "ghost" player to simulate cool camera movement
 		
