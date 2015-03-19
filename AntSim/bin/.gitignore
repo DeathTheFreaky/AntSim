@@ -1,14 +1,5 @@
-/entities/
-/models/
 /textures/
-/toolbox/
-/objConverter/
-/renderEngine/
+/entities/
 /engineTester/
 /shaders/
-/terrains/
-/entities/
-/models/
-/textures/
-/toolbox/
-
+/renderEngine/

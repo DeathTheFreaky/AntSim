@@ -1,6 +1,7 @@
 package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
@@ -28,6 +29,8 @@ public class StaticShader extends ShaderProgram {
 	private int location_reflectivity;
 	private int location_useFakeLighting;
 	private int location_skyColor;
+	private int location_numberOfRows;
+	private int location_offset;
 	
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
@@ -54,6 +57,25 @@ public class StaticShader extends ShaderProgram {
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
 		location_skyColor = super.getUniformLocation("skyColor");
+		location_numberOfRows = super.getUniformLocation("numberOfRows");
+		location_offset = super.getUniformLocation("offset");
+	}
+	
+	/**Loads number of rows into shader uniform variable numberOfRows.
+	 * 
+	 * @param numberOfRows - the number of rows in a texture atlas
+	 */
+	public void loadNumberOfRows(int numberOfRows) {
+		super.loadFloat(location_numberOfRows, numberOfRows);
+	}
+	
+	/**Loads x,y offsets for texture's position in texture atlas into shader uniform variable offset.
+	 * 
+	 * @param x - the x offset in columns
+	 * @param y - the y offset in rows
+	 */
+	public void loadOffset(float x, float y) {
+		super.load2DVector(location_offset, new Vector2f(x, y));
 	}
 	
 	/**Loads r,g,b color values into shader uniform variable skyColor.

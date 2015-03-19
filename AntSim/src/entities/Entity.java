@@ -17,8 +17,11 @@ public class Entity {
 	private float rotX, rotY, rotZ;
 	private float scale;
 	
-	/**Creates a new Entity.
+	private int textureIndex = 0; //indicates which texture in texture atlas the entity uses
+	
+	/**Creates a new {@link Entity}.
 	 * 
+	 * @param textureIndex - indicates which texture in texture atlas the entity uses
 	 * @param model - 3-dimensional model of the entity with a texture
 	 * @param position - the entity's x,y,z coordinates in world space
 	 * @param rotX - the entity's X rotation in degrees
@@ -26,15 +29,31 @@ public class Entity {
 	 * @param rotZ - the entity's Z rotation in degrees
 	 * @param scale - the scale applied to the entity's model
 	 */
-	public Entity(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, 
+	public Entity(TexturedModel model, int textureIndex, Vector3f position, float rotX, float rotY, float rotZ, 
 			float scale) {
-
+		this.textureIndex = textureIndex;
 		this.model = model;
 		this.position = position;
 		this.rotX = rotX;
 		this.rotY = rotY;
 		this.rotZ = rotZ;
 		this.scale = scale;
+	}
+	
+	/**
+	 * @return - the Column of this Entitie's textureIndex in the texture atlas
+	 */
+	public float getTextureXOffset() {
+		int column = textureIndex%model.getTexture().getNumberOfRows();
+		return (float)column/(float)model.getTexture().getNumberOfRows();
+	}
+	
+	/**
+	 * @return - the Row of this Entitie's textureIndex in the texture atlas
+	 */
+	public float getTextureYOffset() {
+		int row = textureIndex/model.getTexture().getNumberOfRows();
+		return (float)row/(float)model.getTexture().getNumberOfRows();
 	}
 	
 	/**Moves the Entity in the world.

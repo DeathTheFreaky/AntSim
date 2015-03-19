@@ -16,10 +16,34 @@ public class ModelTexture {
 	private boolean hasTransparency = false; //transparent textures need culling to be turned off
 	private boolean useFakeLighting = false; //transparent textures like grass need fake lighting (normals pointing upwards) to avoid weird look
 	
+	private int numberOfRows = 1; //number of rows in the textureAtlas (since any ModelTExture could be a textureAtlas)
+	
+	/**Creates a new {@link ModelTexture}.
+	 * 
+	 * @param id - the id of the texture to be used for this ModelTexture.
+	 */
 	public ModelTexture(int id){
 		this.textureID = id;
 	}
 	
+	
+	/**
+	 * @return - the number of rows of textures stored inside this texture which will be > 1 for a texture atlas
+	 */
+	public int getNumberOfRows() {
+		return numberOfRows;
+	}
+
+
+
+	/**
+	 * @param numberOfRows - the number of rows of textures stored inside this texture which will be > 1 for a texture atlas
+	 */
+	public void setNumberOfRows(int numberOfRows) {
+		this.numberOfRows = numberOfRows;
+	}
+
+
 	/**
 	 * @return - a texture's ID
 	 */

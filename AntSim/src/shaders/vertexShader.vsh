@@ -20,6 +20,9 @@ uniform vec3 lightPosition; //x,y,z of light in world space
 
 uniform float useFakeLighting; //no booleans in GSLS, set to 0.0 to disable fakeLighting, 1.0 to enable it
 
+uniform float numberOfRows; //number of rows in a texture atlas
+uniform vec2 offset; //x and y offsets of desired texture in texture atlas
+
 const float density = 0.0035; //fog density
 const float gradient = 5.0; //fog gradient
 
@@ -30,7 +33,7 @@ void main(void) { //main is run for every vertex which undergoes vertexShader
 
 	//calculate the final position of vertices onscreen by multiplying its initial position with a projection and a transformation matrix
 	gl_Position = projectionMatrix * positionRelativeToCam; 
-	pass_textureCoords = textureCoords; //pass on texture coordinates to the fragment shader
+	pass_textureCoords = (textureCoords/numberOfRows) + offset; //pass on texture coordinates to the fragment shader (also working with texture atlases)
 
 	//fake lighting for half-transparent textures like grass -> enforce uniform lighting
 	vec3 actualNormal = normal;

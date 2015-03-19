@@ -69,7 +69,8 @@ public class MainApplication {
 	 * 20.) MipMapping: http://www.youtube.com/watch?v=yGjMzIePKNQ //use low - res textures for objects that are far away -> speeds up game
 	 * 21.) Terrain Height Maps: http://www.youtube.com/watch?v=O9v6olrHPwI
 	 * 22.) Terrain Collision Detection: http://www.youtube.com/watch?v=6E2zjfzMs7c
-	 * 
+	 * 23.) Texture Atlases: http://www.youtube.com/watch?v=6T182r4F6J8
+	 * 24.) Rendering GUIs: http://www.youtube.com/watch?v=vOmJ1lyiJ4A
 	 * 
 	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
 	 * */
@@ -109,8 +110,10 @@ public class MainApplication {
 		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("dragon"));
 		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("tree")); 
 		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
-		ModelTexture fernTexture = new ModelTexture(loader.loadTexture("fern"));
+		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
 		ModelTexture playerTexture = new ModelTexture(loader.loadTexture("playerTexture"));
+		
+		fernTextureAtlas.setNumberOfRows(2); //set number of rows inside texture atlas
 		
 		//set parameters for specular lighting
 		dragonTexture.setShineDamper(10); //set shine damper for specular lighting
@@ -119,18 +122,18 @@ public class MainApplication {
 		//set transparency and fake lighting for grass and fern (to avoid weird shadow look)
 		grassTexture.setHasTransparency(true);
 		grassTexture.setUseFakeLighting(true);
-		fernTexture.setHasTransparency(true);
-		fernTexture.setUseFakeLighting(true);
+		fernTextureAtlas.setHasTransparency(true);
+		fernTextureAtlas.setUseFakeLighting(true);
 		
 		//finally, create the TexturedModel sticking ModelTextures to RawModels
 		TexturedModel dragonTexturedModel = new TexturedModel(dragonRawModel, dragonTexture); 
 		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, treeTexture);
 		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, grassTexture);
-		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTexture);
+		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTextureAtlas);
 		TexturedModel playerTexturedModel = new TexturedModel(playerRawModel, playerTexture);
 		
 		//create player
-		Player player = new Player(playerTexturedModel, new Vector3f(WORLD_SIZE/2, 0, -WORLD_SIZE/2), 0, 0, 0, 1);
+		Player player = new Player(playerTexturedModel, 1, new Vector3f(WORLD_SIZE/2, 0, -WORLD_SIZE/2), 0, 0, 0, 1);
 		
 		
 		//load the different terrain textures
@@ -155,26 +158,26 @@ public class MainApplication {
 		List<Entity> entities = new ArrayList<Entity>(); //holds all entities to be rendered
 		Random random = new Random(676452);
 		
-		entities.add(new Entity(dragonTexturedModel, new Vector3f(0,0,0),0,0,0,1)); 
+		entities.add(new Entity(dragonTexturedModel, 1, new Vector3f(0,0,0),0,0,0,1)); 
 		
 		for (int i = 0; i < 1200; i++) {
 			if (i % 20 == 0) {
 				float x = random.nextFloat() * WORLD_SIZE;
 				float z = random.nextFloat() * -WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(fernTexturedModel, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
+				entities.add(new Entity(fernTexturedModel, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, 0.9f));
 			}
 			if (i % 5 == 0) {
 				float x = random.nextFloat() * WORLD_SIZE;
 				float z = random.nextFloat() * -WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(grassTexturedModel, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
+				entities.add(new Entity(grassTexturedModel, 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, random.nextFloat() * 0.1f + 0.6f));
 				x = random.nextFloat() * WORLD_SIZE;
 				z = random.nextFloat() * -WORLD_SIZE;
 				y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(treeTexturedModel, new Vector3f(x, y, z), 0, 0,
+				entities.add(new Entity(treeTexturedModel, 1, new Vector3f(x, y, z), 0, 0,
 						0, random.nextFloat() * 1 + 4));
 			}
 		} 

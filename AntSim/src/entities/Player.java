@@ -37,10 +37,10 @@ public class Player extends Entity {
 	 * @param rotZ
 	 * @param scale
 	 */
-	public Player(TexturedModel model, Vector3f position, float rotX,
+	public Player(TexturedModel model, int textureIndex, Vector3f position, float rotX,
 			float rotY, float rotZ, float scale) {
 		
-		super(model, position, rotX, rotY, rotZ, scale);
+		super(model, textureIndex, position, rotX, rotY, rotZ, scale);
 	}
 	
 	/**Moves the player forward/backward, turns player around, lets player jump.
