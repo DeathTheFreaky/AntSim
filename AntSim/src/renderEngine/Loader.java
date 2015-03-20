@@ -3,6 +3,7 @@ package renderEngine;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -12,12 +13,17 @@ import models.RawModel;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
+
+import textures.TextureData;
+import de.matthiasmann.twl.utils.PNGDecoder;
+import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 /**Loader loads 3D Models into memory by storing positional data about the model in a VAO.
  * 
@@ -52,13 +58,14 @@ public class Loader {
 	 * To be used with <b>GUI Elements</b>.
 	 * 
 	 * @param positions - the vertice's 2D positions
+	 * @param dimensions - can be either 2 or 3 (2D quads, 3D Skybox cubes)
 	 * @return - a RawModel object storing positions' data inside a VAO
 	 */
-	public RawModel loadToVAO(float [] positions) {
+	public RawModel loadToVAO(float [] positions, int dimensions) {
 		int vaoID = createVAO();
-		this.storeDataInAttributeList(0, 2, positions);
+		this.storeDataInAttributeList(0, dimensions, positions);
 		unbindVAO();
-		return new RawModel(vaoID, positions.length/2); //each vertex has 2 coordinates in 2D -> positions.length/2
+		return new RawModel(vaoID, positions.length/dimensions); //each vertex has 2 coordinates in 2D -> positions.length/2
 	}
 	
 	/**Loads up a texture into memory to be used by OpenGL.
@@ -88,6 +95,65 @@ public class Loader {
 		int textureID = texture.getTextureID();
 		
 		return textureID;
+	}
+	
+	/**Loads up a CubeMap into OpenGL.<br>
+	 * The textures used to create the CubeMap must be in the following order:
+	 * <ol>
+	 * 	<li>Right Face</li>
+	 * 	<li>Left Face</li>
+	 * 	<li>Top Face</li>
+	 * 	<li>Bottom Face</li>
+	 * 	<li>Back Face</li>
+	 * 	<li>Front Face</li>
+	 * </ol>
+	 * 
+	 * @param textureFiles - names of the textureFiles to be loaded into the CubeMap
+	 * @return - ID of the CubeMap texture
+	 */
+	public int loadCubeMap(String[] textureFiles) {
+		int texID = GL11.glGenTextures(); //generates completely empty texture
+		GL13.glActiveTexture(texID);
+		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID); //tell OpenGL that this texture is a cubemap
+		
+		for (int i = 0; i < textureFiles.length; i++) {
+			TextureData data = decodeTextureFile("res/models/" + textureFiles[i] + ".png"); 
+			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getWidth(), //first param is actually an integer, the other faces are consecutive integers
+						data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+		}
+		
+		//make textures appear smooth
+		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		
+		textures.add(texID); //make sure textures get deleted when closing the program
+		return texID;
+	}
+	
+	/**Decodes a texture file and stores the raw byte data in a byte buffer within {@link TextureData}.
+	 * 
+	 * @param fileName - name of the texture file
+	 * @return - a new {@link TextureData}
+	 */
+	private TextureData decodeTextureFile(String fileName) {
+		int width = 0;
+		int height = 0;
+		ByteBuffer buffer = null;
+		try {
+			FileInputStream in = new FileInputStream(fileName);
+			PNGDecoder decoder = new PNGDecoder(in);
+			width = decoder.getWidth();
+			height = decoder.getHeight();
+			buffer = ByteBuffer.allocateDirect(4 * width * height);
+			decoder.decodeFlipped(buffer, width * 4, Format.RGBA);
+			buffer.flip();
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Tried to load texture " + fileName + ", did not work");
+			System.exit(-1);
+		}
+		return new TextureData(buffer, width, height);
 	}
 	
 	/**Deletes all VAOS, VBOS and textures stored in the vaos, vbos and textures lists.

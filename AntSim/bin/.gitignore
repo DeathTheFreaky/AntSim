@@ -1,6 +1,6 @@
-/guis/
+/textures/
 /renderEngine/
-/engineTester/
+/guis/
+/skybox/
 /shaders/
-/toolbox/
-/entities/
+/engineTester/

@@ -2,7 +2,7 @@
 
 //VERTEX SHADER
 
-in vec3 position; //takes a vertex's x,y,z positions as inputs (0-1, objectSpace)
+in vec3 position; //takes a vertex's x,y,z positions as inputs (0 to 1, objectSpace)
 in vec2 textureCoords; //takes u,v positions for texture coordinates
 in vec3 normal; //tells us which direction vertices are facing at -> for light calculation
 

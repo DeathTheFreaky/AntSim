@@ -15,6 +15,7 @@ import entities.Light;
 import models.TexturedModel;
 import shaders.StaticShader;
 import shaders.TerrainShader;
+import skybox.SkyboxRenderer;
 import terrains.Terrain;
 
 /**MasterRenderer handles all of the rendering code in the application.
@@ -45,14 +46,18 @@ public class MasterRenderer {
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	private List<Terrain> terrains = new ArrayList<Terrain>();
 	
+	private SkyboxRenderer skyboxRenderer;
+	
 	/**Constructs a {@link MasterRenderer} which manages all rendering and controls sub-renderer classes.
 	 * 
+	 * @param loader - a {@link Loader} used to load data into OpenGL
 	 */
-	public MasterRenderer() {
+	public MasterRenderer(Loader loader) {
 		enableCulling();
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 	
 	/**Enables back face culling for non-transparent textures.<br>
@@ -89,6 +94,7 @@ public class MasterRenderer {
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
+		skyboxRenderer.render(camera);
 		terrains.clear();
 		entities.clear(); //entities needs to be clear every frame, otherwise the entities we build up and up every frame
 	}

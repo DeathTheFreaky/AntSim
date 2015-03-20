@@ -28,7 +28,7 @@ public class GuiRenderer {
 	 */
 	public GuiRenderer(Loader loader) {
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, -1 }; //using triangle strips, only the four corners of a rectangle need to be defined (instead of each corner of both of the two triangles)
-		quad = loader.loadToVAO(positions);
+		quad = loader.loadToVAO(positions, 2);
 		shader = new GuiShader();
 	}
 	

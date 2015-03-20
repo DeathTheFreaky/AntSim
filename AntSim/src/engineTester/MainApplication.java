@@ -76,6 +76,7 @@ public class MainApplication {
 	 * 24.) Rendering GUIs: http://www.youtube.com/watch?v=vOmJ1lyiJ4A
 	 * 25.) Multiple Lights: http://www.youtube.com/watch?v=95WAAYsOifQ
 	 * 26.) Point Lights: http://www.youtube.com/watch?v=KdY0aVDp5G4
+	 * 27.) Skybox: http://www.youtube.com/watch?v=_Ix5oN8eC1E
 	 * 
 	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
 	 * */
@@ -88,7 +89,7 @@ public class MainApplication {
 		
 		Loader loader = new Loader();
 		
-		MasterRenderer renderer = new MasterRenderer();
+		MasterRenderer renderer = new MasterRenderer(loader);
 		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.

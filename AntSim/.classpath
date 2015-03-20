@@ -20,5 +20,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/jbullet-20101010/lib/vecmath/vecmath.jar"/>
+	<classpathentry kind="lib" path="libs/PNGDecoder.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
