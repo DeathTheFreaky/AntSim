@@ -75,6 +75,7 @@ public class MainApplication {
 	 * 23.) Texture Atlases: http://www.youtube.com/watch?v=6T182r4F6J8
 	 * 24.) Rendering GUIs: http://www.youtube.com/watch?v=vOmJ1lyiJ4A
 	 * 25.) Multiple Lights: http://www.youtube.com/watch?v=95WAAYsOifQ
+	 * 26.) Point Lights: http://www.youtube.com/watch?v=KdY0aVDp5G4
 	 * 
 	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
 	 * */
@@ -99,6 +100,7 @@ public class MainApplication {
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grass");
 		ModelData fernModelData = OBJFileLoader.loadOBJ("fern");
 		ModelData playerModelData = OBJFileLoader.loadOBJ("person");
+		ModelData lampModelData = OBJFileLoader.loadOBJ("lamp");
 		
 		//load ModelData objects in a VAO and return RawModels
 		RawModel dragonRawModel = loader.loadToVAO(dragonModelData.getVertices(), dragonModelData.getTextureCoords(), 
@@ -111,6 +113,8 @@ public class MainApplication {
 				fernModelData.getNormals(), fernModelData.getIndices());
 		RawModel playerRawModel = loader.loadToVAO(playerModelData.getVertices(), playerModelData.getTextureCoords(), 
 				playerModelData.getNormals(), playerModelData.getIndices());
+		RawModel lampRawModel = loader.loadToVAO(lampModelData.getVertices(), lampModelData.getTextureCoords(), 
+				lampModelData.getNormals(), lampModelData.getIndices());
 		
 		//load textures from png files
 		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("dragon"));
@@ -118,6 +122,7 @@ public class MainApplication {
 		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
 		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
 		ModelTexture playerTexture = new ModelTexture(loader.loadTexture("playerTexture"));
+		ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lamp"));
 		
 		fernTextureAtlas.setNumberOfRows(2); //set number of rows inside texture atlas
 		
@@ -137,6 +142,7 @@ public class MainApplication {
 		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, grassTexture);
 		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTextureAtlas);
 		TexturedModel playerTexturedModel = new TexturedModel(playerRawModel, playerTexture);
+		TexturedModel lampTexturedModel = new TexturedModel(lampRawModel, lampTexture);
 		
 		//create player
 		Player player = new Player(playerTexturedModel, 1, new Vector3f(WORLD_SIZE/2, 0, -WORLD_SIZE/2), 0, 0, 0, 1);
@@ -189,9 +195,14 @@ public class MainApplication {
 		} 
 		
 		List<Light> lights = new ArrayList<Light>();
-		lights.add(new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1)));
-		lights.add(new Light(new Vector3f(-200,10,-200), new Vector3f(10,0,0)));
-		lights.add(new Light(new Vector3f(200,10,200), new Vector3f(0,0,10)));
+		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); //sun
+		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
+		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f))); //lamp
+		lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
+		
+		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
+		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
+		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(293, -6.6f, -305), 0, 0, 0, 1));
 		
 		Camera camera = new Camera(player); //player camera - make a "ghost" player to simulate cool camera movement
 		

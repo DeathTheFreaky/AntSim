@@ -13,6 +13,7 @@ out vec4 outColor; //outputs color of pixel which the shader is currently proces
 
 uniform sampler2D modelTexture; //basically represents textures we're going to use - the default value is 0, so we do not need to pass the texture id as uniform variable for 1 texture only
 uniform vec3 lightColor[4]; //r,g,b values for lights
+uniform vec3 attenuation[4]; //attunations to be used for the light sources -> pointed lighting - light gets weaker if distance increases
 uniform float shineDamper; //how strong specular lighting appears when camera is not directly facing the reflected light
 uniform float reflectivity; //how much light a surface reflects (roughness of terrain)
 uniform vec3 skyColor; //at the moment this is the color used to clear each frame (r,g,b)
@@ -30,6 +31,8 @@ void main(void) {
 
 	//light calculations
 	for (int i = 0; i < 4; i++) {
+		float distance = length(toLightVector[i]);
+		float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].y * distance * distance); 
 		vec3 unitLightVector = normalize(toLightVector[i]);
 		float nDot1 = dot(unitNormal, unitLightVector); //dot product is used to calculate strength of light reflection on an object: 1 -> vectors are parallel, 0 -> vectors are perpenticular (highest reflection)
 		float brightness = max(nDot1, 0.0); //make sure brightness never drops below 0.0
@@ -40,8 +43,8 @@ void main(void) {
 		float dampedFactor = pow(specularFactor, shineDamper); //raising specularFactor to the power of the damper value makes low dampered values even lower but does not affect strong dempered values so much
 		
 		//sum results of all light sources
-		totalDiffuse = totalDiffuse + brightness * lightColor[i];	//get final lighting color for a pixel (scalar - brightness is multiplied with each component of vector x,y,z)
-		totalSpecular = totalSpecular + dampedFactor * lightColor[i] * reflectivity; //final specular value is calculated by multiplying dampedFactor with a light color and the reflectivity
+		totalDiffuse = totalDiffuse + (brightness * lightColor[i]) / attFactor;	//get final lighting color for a pixel (scalar - brightness is multiplied with each component of vector x,y,z)
+		totalSpecular = totalSpecular + (dampedFactor * reflectivity * lightColor[i]) / attFactor; //final specular value is calculated by multiplying dampedFactor with a light color and the reflectivity
 	}
 	
 	totalDiffuse = max(totalDiffuse, 0.2); //diffuse never below 0.2 -> apply Ambient lighting to ensure that every part of a model gets a little bit of light
