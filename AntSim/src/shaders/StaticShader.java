@@ -131,11 +131,11 @@ public class StaticShader extends ShaderProgram {
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			if (i < lights.size()) {
 				super.loadVector(location_lightPosition[i], lights.get(i).getPosition());
-				super.loadVector(location_lightPosition[i], lights.get(i).getColor());
+				super.loadVector(location_lightColor[i], lights.get(i).getColor());
 			} else {
 				//load up empty lights into shader cause there needs to be some information (lights arrays in shaders are fixed size)
 				super.loadVector(location_lightPosition[i], new Vector3f(0, 0, 0));
-				super.loadVector(location_lightPosition[i], new Vector3f(0, 0, 0));
+				super.loadVector(location_lightColor[i], new Vector3f(0, 0, 0));
 			}
 		}
 	}

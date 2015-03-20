@@ -40,8 +40,8 @@ void main(void) {
 		float dampedFactor = pow(specularFactor, shineDamper); //raising specularFactor to the power of the damper value makes low dampered values even lower but does not affect strong dempered values so much
 		
 		//sum results of all light sources
-		vec3 totalDiffuse = totalDiffuse + brightness * lightColor[i];	//get final lighting color for a pixel (scalar - brightness is multiplied with each component of vector x,y,z)
-		vec3 totalSpecular = totalSpecular + dampedFactor * lightColor[i] * reflectivity; //final specular value is calculated by multiplying dampedFactor with a light color and the reflectivity
+		totalDiffuse = totalDiffuse + brightness * lightColor[i];	//get final lighting color for a pixel (scalar - brightness is multiplied with each component of vector x,y,z)
+		totalSpecular = totalSpecular + dampedFactor * lightColor[i] * reflectivity; //final specular value is calculated by multiplying dampedFactor with a light color and the reflectivity
 	}
 	
 	totalDiffuse = max(totalDiffuse, 0.2); //diffuse never below 0.2 -> apply Ambient lighting to ensure that every part of a model gets a little bit of light
