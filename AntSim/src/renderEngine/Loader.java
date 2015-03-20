@@ -36,7 +36,7 @@ public class Loader {
 	 * @param textureCoords - an array of texture coordinates stored as floats
 	 * @param normals - an array of normals stored as floats
 	 * @param indices - an array integer indices indicating the positions of vertexes
-	 * @return - a RawModel object storing positional data inside a VAO
+	 * @return - a RawModel object storing positions', texture coordinate's and normals' data inside VAOs
 	 */
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
@@ -46,6 +46,19 @@ public class Loader {
 		storeDataInAttributeList(2, 3, normals); //store normals into attribute list 2 of the VAO
 		unbindVAO(); //now that we finished using the VAO, we need to unbind it
 		return new RawModel(vaoID, indices.length); //number of indices equals vertex count
+	}
+	
+	/**Takes in position coordinates of a model's vertexes, loads this data into a VAO and then returns information about the VAO as a RawModel object.<br>
+	 * To be used with <b>GUI Elements</b>.
+	 * 
+	 * @param positions - the vertice's 2D positions
+	 * @return - a RawModel object storing positions' data inside a VAO
+	 */
+	public RawModel loadToVAO(float [] positions) {
+		int vaoID = createVAO();
+		this.storeDataInAttributeList(0, 2, positions);
+		unbindVAO();
+		return new RawModel(vaoID, positions.length/2); //each vertex has 2 coordinates in 2D -> positions.length/2
 	}
 	
 	/**Loads up a texture into memory to be used by OpenGL.

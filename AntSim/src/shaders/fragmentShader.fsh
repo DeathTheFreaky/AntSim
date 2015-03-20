@@ -11,11 +11,14 @@ in float visibility; //invisible = completely foggy if 0; clear if 1
 
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
-uniform sampler2D modelTexture; //basically represents textures we're going to use
+uniform sampler2D modelTexture; //basically represents textures we're going to use - the default value is 0, so we do not need to pass the texture id as uniform variable for 1 texture only
 uniform vec3 lightColor; //r,g,b values for light
 uniform float shineDamper; //how strong specular lighting appears when camera is not directly facing the reflected light
 uniform float reflectivity; //how much light a surface reflects (roughness of terrain)
 uniform vec3 skyColor; //at the moment this is the color used to clear each frame (r,g,b)
+
+//Textures are not passed to a shader. They need to be bound (one or multiple textures) to the GL state, and they stay bound until a different texture is bound.
+//Then the fragment shader samples (i.e. "texture fetch") the texture. The fragment shader uses sampler2D uniforms to determine which texture unit to sample from.
 
 void main(void) {
 

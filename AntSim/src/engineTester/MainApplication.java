@@ -11,12 +11,15 @@ import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
+import guis.GuiRenderer;
+import guis.GuiTexture;
 import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
@@ -82,6 +85,8 @@ public class MainApplication {
 		DisplayManager.createDisplay();
 		
 		Loader loader = new Loader();
+		
+		MasterRenderer renderer = new MasterRenderer();
 		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
@@ -186,7 +191,15 @@ public class MainApplication {
 		
 		Camera camera = new Camera(player); //player camera - make a "ghost" player to simulate cool camera movement
 		
-		MasterRenderer renderer = new MasterRenderer();
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+		GuiTexture gui2 = new GuiTexture(loader.loadTexture("thinmatrix"), new Vector2f(0.30f, 0.74f), new Vector2f(0.4f, 0.4f));
+		
+		//order matters: second texture will be drawn in fron of first texture
+		guis.add(gui);
+		guis.add(gui2);
+		
+		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
 		//main game loop
 		while(!Display.isCloseRequested()) {
@@ -202,11 +215,14 @@ public class MainApplication {
 			for (Entity entity : entities) {
 				renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
 			}
+			
 			renderer.render(light, camera);
+			guiRenderer.render(guis);
 			
 			DisplayManager.updateDisplay();
 		}
 		
+		guiRenderer.cleanUp();
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();

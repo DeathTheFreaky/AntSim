@@ -10,7 +10,11 @@ in float visibility;
 
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
-uniform sampler2D backgroundTexture; //grass texture
+uniform sampler2D backgroundTexture; //grass texture - the default value is 0, so we do not need to pass the texture id as uniform variable for 1 texture only
+
+//Textures are not passed to a shader. They need to be bound (one or multiple textures) to the GL state, and they stay bound until a different texture is bound.
+//Then the fragment shader samples (i.e. "texture fetch") the texture. The fragment shader uses sampler2D uniforms to determine which texture unit to sample from.
+
 
 //three other terrain textures
 uniform sampler2D rTexture; 

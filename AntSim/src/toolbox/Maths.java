@@ -13,7 +13,21 @@ import entities.Camera;
  */
 public class Maths {
 	
-	/**Creates a transformation matrix to be used for the transformation of models.
+	/**Creates a transformation matrix to be used for the transformation of 2D gui element.
+	 * 
+	 * @param translation - an x,y translation
+	 * @param scale - scale for transformation of the gui element
+	 * @return - a 4x4 transformation matrix
+	 */
+	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity();
+		Matrix4f.translate(translation, matrix, matrix);
+		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
+		return matrix;
+	}
+	
+	/**Creates a transformation matrix to be used for the transformation of 3D models.
 	 * 
 	 * @param translation - an x,y,z translation
 	 * @param rx - rotation value for x - axis
