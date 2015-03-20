@@ -8,7 +8,7 @@ in vec3 normal; //tells us which direction vertices are facing at -> for light c
 
 out vec2 pass_textureCoords; //outputs linearly-interpolated textureCoords
 out vec3 surfaceNormal; //direction at which surfaces "between" vertices are facing to
-out vec3 toLightVector; //vector pointing towards the light source
+out vec3 toLightVector[4]; //vector pointing towards the light source, there can be multiple light sources
 out vec3 toCameraVector; //vector point from vertex towards the camera
 out float visibility; //fog
 
@@ -16,7 +16,7 @@ out float visibility; //fog
 uniform mat4 transformationMatrix; 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPosition;
+uniform vec3 lightPosition[4]; //x,y,z of light sources in world space
 
 const float density = 0.0035; //fog density
 const float gradient = 5.0; //fog gradient
@@ -31,7 +31,10 @@ void main(void) { //main is run for every vertex which undergoes vertexShader
 	pass_textureCoords = textureCoords; //pass on texture coordinates to the fragment shader; multiply by 40 to make tiled textures
 
 	surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz; //save xyz components of resulting 4d vector as a 3d vector in surfaceNormal
-	toLightVector = lightPosition - worldPosition.xyz; //difference between lightPosition and position of vertex in the world
+	for (int i = 0; i < 4; i++) {
+		toLightVector[i] = lightPosition[i] - worldPosition.xyz; //difference between lightPosition and position of vertex in world space
+	}
+	
 	toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz; //viewMatrix contains negative inversion of camera position - 
 		// convert this to a 4d vector -> result is camera position; get vector from vertex to camera position by subtracting vertex position from camera position
 

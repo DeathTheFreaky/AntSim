@@ -74,6 +74,7 @@ public class MainApplication {
 	 * 22.) Terrain Collision Detection: http://www.youtube.com/watch?v=6E2zjfzMs7c
 	 * 23.) Texture Atlases: http://www.youtube.com/watch?v=6T182r4F6J8
 	 * 24.) Rendering GUIs: http://www.youtube.com/watch?v=vOmJ1lyiJ4A
+	 * 25.) Multiple Lights: http://www.youtube.com/watch?v=95WAAYsOifQ
 	 * 
 	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
 	 * */
@@ -187,17 +188,18 @@ public class MainApplication {
 			}
 		} 
 		
-		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
+		List<Light> lights = new ArrayList<Light>();
+		lights.add(new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1)));
+		lights.add(new Light(new Vector3f(-200,10,-200), new Vector3f(10,0,0)));
+		lights.add(new Light(new Vector3f(200,10,200), new Vector3f(0,0,10)));
 		
 		Camera camera = new Camera(player); //player camera - make a "ghost" player to simulate cool camera movement
 		
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		GuiTexture gui = new GuiTexture(loader.loadTexture("socuwan"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
-		GuiTexture gui2 = new GuiTexture(loader.loadTexture("thinmatrix"), new Vector2f(0.30f, 0.74f), new Vector2f(0.4f, 0.4f));
+		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f));
 		
 		//order matters: second texture will be drawn in fron of first texture
 		guis.add(gui);
-		guis.add(gui2);
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
@@ -216,7 +218,7 @@ public class MainApplication {
 				renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
 			}
 			
-			renderer.render(light, camera);
+			renderer.render(lights, camera);
 			guiRenderer.render(guis);
 			
 			DisplayManager.updateDisplay();

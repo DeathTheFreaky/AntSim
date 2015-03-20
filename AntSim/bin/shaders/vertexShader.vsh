@@ -8,7 +8,7 @@ in vec3 normal; //tells us which direction vertices are facing at -> for light c
 
 out vec2 pass_textureCoords; //outputs linearly-interpolated textureCoords
 out vec3 surfaceNormal; //direction at which surfaces "between" vertices are facing to
-out vec3 toLightVector; //vector pointing towards the light source
+out vec3 toLightVector[4]; //vector pointing towards the light source, there can be multiple light sources
 out vec3 toCameraVector; //vector point from vertex towards the camera
 out float visibility; //fog
 
@@ -16,7 +16,7 @@ out float visibility; //fog
 uniform mat4 transformationMatrix; //transforms object's coordinates from object space to world space, resulting in world position
 uniform mat4 projectionMatrix; //makes camera frustum into a perfect quad, making close objects appear bigger and further apart...
 uniform mat4 viewMatrix; //contains negative inversion of camera position -> world needs to move left is camera seems to move right
-uniform vec3 lightPosition; //x,y,z of light in world space
+uniform vec3 lightPosition[4]; //x,y,z of light sources in world space
 
 uniform float useFakeLighting; //no booleans in GSLS, set to 0.0 to disable fakeLighting, 1.0 to enable it
 
@@ -42,7 +42,10 @@ void main(void) { //main is run for every vertex which undergoes vertexShader
 	}
 
 	surfaceNormal = (transformationMatrix * vec4(actualNormal, 0.0)).xyz; //save xyz components of resulting 4d vector as a 3d vector in surfaceNormal
-	toLightVector = lightPosition - worldPosition.xyz; //difference between lightPosition and position of vertex in world space
+	for (int i = 0; i < 4; i++) {
+		toLightVector[i] = lightPosition[i] - worldPosition.xyz; //difference between lightPosition and position of vertex in world space
+	}
+	
 	toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz; //viewMatrix contains negative inversion of camera position - 
 		// convert this to a 4d vector -> result is camera position; get vector from vertex to camera position by subtracting vertex position from camera position
 
