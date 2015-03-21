@@ -31,9 +31,9 @@ public class MasterRenderer {
 	private static final float FAR_PLANE = 1000;
 	
 	//define sky colors = frame clear color (like a background color)
-	private static final float RED = 0.4f;
-	private static final float GREEN = 0.75f;
-	private static final float BLUE = 1.0f;
+	private static final float RED = 0.5444f;
+	private static final float GREEN = 0.62f;
+	private static final float BLUE = 0.69f;
 	
 	private Matrix4f projectionMatrix;
 	
@@ -94,7 +94,7 @@ public class MasterRenderer {
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(terrains);
 		terrainShader.stop();
-		skyboxRenderer.render(camera);
+		skyboxRenderer.render(camera, RED, GREEN, BLUE);
 		terrains.clear();
 		entities.clear(); //entities needs to be clear every frame, otherwise the entities we build up and up every frame
 	}

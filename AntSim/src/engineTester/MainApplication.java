@@ -77,6 +77,7 @@ public class MainApplication {
 	 * 25.) Multiple Lights: http://www.youtube.com/watch?v=95WAAYsOifQ
 	 * 26.) Point Lights: http://www.youtube.com/watch?v=KdY0aVDp5G4
 	 * 27.) Skybox: http://www.youtube.com/watch?v=_Ix5oN8eC1E
+	 * 28.) Day/Night: http://www.youtube.com/watch?v=rqx9IDLKV28&list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP&index=28
 	 * 
 	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
 	 * */
