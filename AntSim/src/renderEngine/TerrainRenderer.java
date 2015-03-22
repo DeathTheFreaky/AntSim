@@ -42,8 +42,14 @@ public class TerrainRenderer {
 	/**Renders all terrains in terrains list to the screen.
 	 * 
 	 * @param terrains - a list of {@link Terrain}s
+	 * @param blendfactor - 0 means nighttime, 1 means daytime
+	 * @param dayFog - a Vector3f of r,g,b fog color for daytime
+	 * @param nightFog - a Vector3f of r,g,b fog color for nighttime
 	 */
-	public void render(List<Terrain> terrains) {
+	public void render(List<Terrain> terrains, float blendFactor, Vector3f dayFog, Vector3f nightFog) {
+		shader.start();
+		shader.loadFogColors(dayFog, nightFog);
+		shader.loadBlendFactor(blendFactor);
 		for(Terrain terrain:terrains) {
 			prepareTerrain(terrain);
 			loadModelMatrix(terrain);
@@ -53,6 +59,7 @@ public class TerrainRenderer {
 			GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 
 			unbindTerrain();
 		}
+		shader.stop();
 	}
 	
 	/**Prepares a {@link Terrain} for rendering ONCE for all entity instances of that model.

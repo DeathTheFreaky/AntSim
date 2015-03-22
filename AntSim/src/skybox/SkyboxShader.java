@@ -24,7 +24,8 @@ public class SkyboxShader extends ShaderProgram{
     
     private int location_projectionMatrix;
     private int location_viewMatrix;
-    private int location_fogColor;
+    private int location_fogColor1;
+    private int location_fogColor2;
     private int location_cubeMap;
     private int location_cubeMap2;
     private int location_blendFactor;
@@ -77,21 +78,22 @@ public class SkyboxShader extends ShaderProgram{
 		super.loadInt(location_cubeMap2, 1);
 	}
 	
-	/**Loads a fog color (r,g,b) into shader uniform variable.
+	/**Loads fog colors for day and night into shader uniform variable.
 	 * 
-	 * @param r
-	 * @param g
-	 * @param b
+	 * @param dayFog - a Vector3f of r,g,b fog color for daytime
+	 * @param nightFog - a Vector3f of r,g,b fog color for nighttime
 	 */
-	public void loadFogColor(float r, float g, float b) {
-		super.loadVector(location_fogColor, new Vector3f(r, g, b));
+	public void loadFogColors(Vector3f dayFog, Vector3f nightFog) {
+		super.loadVector(location_fogColor1, dayFog);
+		super.loadVector(location_fogColor2, nightFog);
 	}
      
     @Override
     protected void getAllUniformLocations() {
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
         location_viewMatrix = super.getUniformLocation("viewMatrix");
-        location_fogColor = super.getUniformLocation("fogColor");
+        location_fogColor1 = super.getUniformLocation("fogColor1");
+        location_fogColor2 = super.getUniformLocation("fogColor2");
         location_cubeMap = super.getUniformLocation("cubeMap");
         location_cubeMap2 = super.getUniformLocation("cubeMap2");
         location_blendFactor = super.getUniformLocation("blendFactor");

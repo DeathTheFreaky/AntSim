@@ -8,6 +8,7 @@ import java.util.Map;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
@@ -34,6 +35,15 @@ public class MasterRenderer {
 	private static final float RED = 0.5444f;
 	private static final float GREEN = 0.62f;
 	private static final float BLUE = 0.69f;
+	private static final float NIGHT_RED = 0.03f;
+	private static final float NIGHT_GREEN = 0.04f;
+	private static final float NIGHT_BLUE = 0.05f;
+	
+	private static final Vector3f DAY_FOG = new Vector3f(RED, GREEN, BLUE);
+	private static final Vector3f NIGHT_FOG = new Vector3f(NIGHT_RED, NIGHT_GREEN, NIGHT_BLUE);
+	
+	private static float time = 0;
+	private float blendFactor; //used for blending day/night cycle
 	
 	private Matrix4f projectionMatrix;
 	
@@ -81,20 +91,21 @@ public class MasterRenderer {
 	 * @param camera - for creating a viewMatrix
 	 */
 	public void render(List<Light> lights, Camera camera) {
+		dayNightCycle();
 		prepare();
 		shader.start();
-		shader.loadSkyColor(RED, GREEN, BLUE);
+		shader.loadFogColors(DAY_FOG, NIGHT_FOG);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
-		renderer.render(entities);
+		renderer.render(entities, blendFactor, DAY_FOG, NIGHT_FOG);
 		shader.stop();
 		terrainShader.start();
-		terrainShader.loadSkyColor(RED, GREEN, BLUE);
+		terrainShader.loadFogColors(DAY_FOG, NIGHT_FOG);
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
-		terrainRenderer.render(terrains);
+		terrainRenderer.render(terrains, blendFactor, DAY_FOG, NIGHT_FOG);
 		terrainShader.stop();
-		skyboxRenderer.render(camera, RED, GREEN, BLUE);
+		skyboxRenderer.render(camera, blendFactor, DAY_FOG, NIGHT_FOG);
 		terrains.clear();
 		entities.clear(); //entities needs to be clear every frame, otherwise the entities we build up and up every frame
 	}
@@ -158,5 +169,29 @@ public class MasterRenderer {
 	public void cleanUp() {
 		shader.cleanUp();
 		terrainShader.cleanUp();
+	}
+	
+	/**Simulates a simple day/night cycle by calculating the blendFactor.<br>
+	 * A blendFactor of 1 means day, 0 means night. Dusk and dawn are in between.
+	 * 
+	 */
+	private void dayNightCycle() {
+		
+		time += DisplayManager.getFrameTimeSeconds() * 1000;
+		time %= 24000;
+			
+		if(time >= 0 && time < 5000){
+			blendFactor = 1f;
+		}else if(time >= 5000 && time < 8000){
+			blendFactor = 1 - (time - 5000)/(8000 - 5000);
+		}else if(time >= 8000 && time < 21000){
+			blendFactor = 0f;
+		}else{
+			blendFactor = (time - 21000)/(24000 - 21000);
+		}
+	}
+	
+	public Matrix4f getProjectionMatrix() {
+		return projectionMatrix;
 	}
 }

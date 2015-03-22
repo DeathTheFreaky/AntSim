@@ -124,7 +124,7 @@ public class Terrain {
 	 */
 	public float getHeightOfTerrain(float worldX, float worldZ) {
 		
-		//convert world coordinates to positions relative to the terrain
+		//convert world coordinates to positions relative to the terrain (for multiple terrains)
 		float terrainX = worldX - this.x; 
 		float terrainZ = worldZ - this.z;
 		
@@ -140,12 +140,11 @@ public class Terrain {
 		float xCoord = (terrainX % gridSquareSize)/gridSquareSize; //distance of player to the right from top left corner of grid square -> result between 0 and 1
 		float zCoord = (terrainZ % gridSquareSize)/gridSquareSize; //distance of player to the bottom from top left corner of grid square -> result between 0 and 1
 		
-		//check which of the 2 triangles of a gridSquare the player is on
 		float answer; 
-		if (xCoord <= (1-zCoord)) {
+		if (xCoord <= (1-zCoord)) { //check which of the 2 triangles of a gridSquare the player is on
 			answer = Maths.barryCentric(new Vector3f(0, heights[gridX][gridZ], 0), new Vector3f(1,
 							heights[gridX + 1][gridZ], 0), new Vector3f(0,
-							heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
+							heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord)); //return interpolated height within a triangle of vertices
 		} else {
 			answer = Maths.barryCentric(new Vector3f(1, heights[gridX + 1][gridZ], 0), new Vector3f(1,
 							heights[gridX + 1][gridZ + 1], 1), new Vector3f(0,

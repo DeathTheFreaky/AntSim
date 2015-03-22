@@ -16,7 +16,9 @@ uniform vec3 lightColor[4]; //r,g,b values for lights
 uniform vec3 attenuation[4]; //attunations to be used for the light sources -> pointed lighting - light gets weaker if distance increases
 uniform float shineDamper; //how strong specular lighting appears when camera is not directly facing the reflected light
 uniform float reflectivity; //how much light a surface reflects (roughness of terrain)
-uniform vec3 skyColor; //at the moment this is the color used to clear each frame (r,g,b)
+uniform vec3 fogColor1; //mix terrain with fog color in the distance
+uniform vec3 fogColor2; //mix terrain with fog color in the distance
+uniform float blendFactor; //0: just the first texture, 1: just the second texture
 
 //Textures are not passed to a shader. They need to be bound (one or multiple textures) to the GL state, and they stay bound until a different texture is bound.
 //Then the fragment shader samples (i.e. "texture fetch") the texture. The fragment shader uses sampler2D uniforms to determine which texture unit to sample from.
@@ -53,8 +55,10 @@ void main(void) {
 	if (textureColor.a < 0.5) {
 		discard; //used to discard transparent parts of half-transparent textures (like fern or grass)
 	}
+	
+	vec3 finalFogColor = mix(fogColor1, fogColor2, blendFactor); //adjust fogColor to match daytime    
 
 	outColor = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0) ; //pixels color is created by applying diffuse lighting on the texture color and adding the reflection from specular lighting
-	outColor = mix(vec4(skyColor, 1.0), outColor, visibility); //create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility: Out_color (original object color)
+	outColor = mix(vec4(finalFogColor, 1.0), outColor, visibility); //create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility: Out_color (original object color)
 
 }

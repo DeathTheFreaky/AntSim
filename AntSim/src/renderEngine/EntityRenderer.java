@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import shaders.StaticShader;
 import textures.ModelTexture;
@@ -35,15 +36,22 @@ public class EntityRenderer {
 	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadProjectionMatrix(projectionMatrix); //need to make another entity class for moving objects...
 		shader.stop();
 	}
 	
 	/**Renders all entities in an efficient way by performing certain operations for the same 3d model only once for all instances.
 	 * 
 	 * @param entities - a Hashmap of {@link TexturedModel}s mapped to their entity instances
+	 * @param blendfactor - 0 means nighttime, 1 means daytime
+	 * @param dayFog - a Vector3f of r,g,b fog color for daytime
+	 * @param nightFog - a Vector3f of r,g,b fog color for nighttime
 	 */
-	public void render(Map<TexturedModel,List<Entity>> entities) {
+	public void render(Map<TexturedModel, List<Entity>> entities, float blendFactor, Vector3f dayFog, Vector3f nightFog) {
+		
+		shader.start();
+		shader.loadFogColors(dayFog, nightFog);
+		shader.loadBlendFactor(blendFactor);
 		for (TexturedModel model:entities.keySet()) {
 			prepareTexturedModel(model);
 			List<Entity> batch = entities.get(model);
@@ -56,6 +64,7 @@ public class EntityRenderer {
 			}
 			unbindTexturedModel();
 		}
+		shader.stop();
 	}
 	
 	/**Prepares a {@link TexturedModel} for rendering ONCE for all entity instances of that model.

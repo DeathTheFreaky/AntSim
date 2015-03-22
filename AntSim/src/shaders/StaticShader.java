@@ -33,9 +33,11 @@ public class StaticShader extends ShaderProgram {
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_useFakeLighting;
-	private int location_skyColor;
 	private int location_numberOfRows;
 	private int location_offset;
+	private int location_fogColor1;
+    private int location_fogColor2;
+    private int location_blendFactor;
 	
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
@@ -59,9 +61,12 @@ public class StaticShader extends ShaderProgram {
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_useFakeLighting = super.getUniformLocation("useFakeLighting");
-		location_skyColor = super.getUniformLocation("skyColor");
 		location_numberOfRows = super.getUniformLocation("numberOfRows");
 		location_offset = super.getUniformLocation("offset");
+		
+		location_fogColor1 = super.getUniformLocation("fogColor1");
+        location_fogColor2 = super.getUniformLocation("fogColor2");
+        location_blendFactor = super.getUniformLocation("blendFactor");
 		
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColor = new int[MAX_LIGHTS];
@@ -88,16 +93,6 @@ public class StaticShader extends ShaderProgram {
 	 */
 	public void loadOffset(float x, float y) {
 		super.load2DVector(location_offset, new Vector2f(x, y));
-	}
-	
-	/**Loads r,g,b color values into shader uniform variable skyColor.
-	 * 
-	 * @param r - the red component of the skyColor
-	 * @param g - the green component of the skyColor
-	 * @param b - the blue component of the skyColor
-	 */
-	public void loadSkyColor(float r, float g, float b) {
-		super.loadVector(location_skyColor, new Vector3f(r,g,b));
 	}
 	
 	/**Loads a boolean (actually will be converted to float) into the shader uniform variable for useFakeLighting.
@@ -160,5 +155,23 @@ public class StaticShader extends ShaderProgram {
 	public void loadViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, viewMatrix);
+	}
+	
+	/**Loads fog colors for day and night into shader uniform variable.
+	 * 
+	 * @param dayFog - a Vector3f of r,g,b fog color for daytime
+	 * @param nightFog - a Vector3f of r,g,b fog color for nighttime
+	 */
+	public void loadFogColors(Vector3f dayFog, Vector3f nightFog) {
+		super.loadVector(location_fogColor1, dayFog);
+		super.loadVector(location_fogColor2, nightFog);
+	}
+	
+	/**Loads a blend factor into shader uniform variable.
+	 * 
+	 * @param blend - the blend factor to load into the shader uniform variable
+	 */
+	public void loadBlendFactor(float blend) {
+		super.loadFloat(location_blendFactor, blend);
 	}
 }

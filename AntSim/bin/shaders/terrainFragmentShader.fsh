@@ -11,6 +11,9 @@ in float visibility;
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
 uniform sampler2D backgroundTexture; //grass texture - the default value is 0, so we do not need to pass the texture id as uniform variable for 1 texture only
+uniform vec3 fogColor1; //mix terrain with fog color in the distance
+uniform vec3 fogColor2; //mix terrain with fog color in the distance
+uniform float blendFactor; //0: just the first texture, 1: just the second texture
 
 //Textures are not passed to a shader. They need to be bound (one or multiple textures) to the GL state, and they stay bound until a different texture is bound.
 //Then the fragment shader samples (i.e. "texture fetch") the texture. The fragment shader uses sampler2D uniforms to determine which texture unit to sample from.
@@ -27,7 +30,6 @@ uniform vec3 lightColor[4]; //r,g,b values for lights
 uniform vec3 attenuation[4]; //attunations to be used for the light sources -> pointed lighting - light gets weaker if distance increases
 uniform float shineDamper;
 uniform float reflectivity;
-uniform vec3 skyColor;
 
 void main(void) {
 
@@ -67,7 +69,9 @@ void main(void) {
 	
 	totalDiffuse = max(totalDiffuse, 0.2); //diffuse never below 0.2 -> apply Ambient lighting to ensure that every part of a model gets a little bit of light
 	
+	vec3 finalFogColor = mix(fogColor1, fogColor2, blendFactor); //adjust fogColor to match daytime    
+	
 	outColor = vec4(totalDiffuse, 1.0) * totalColor + vec4(totalSpecular, 1.0) ; //returns color of the pixel on the texture at given coordinates 
 		//by multiplying the total texture color with the light color and adding the specularLighting value
-	outColor = mix(vec4(skyColor, 1.0), outColor, visibility); //create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility: Out_color (original object color)
+	outColor = mix(vec4(finalFogColor, 1.0), outColor, visibility); //create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility: Out_color (original object color)
 }

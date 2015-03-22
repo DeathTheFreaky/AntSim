@@ -27,6 +27,7 @@ import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
+import toolbox.MousePicker;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -47,6 +48,8 @@ public class MainApplication {
 	 * 
 	 * OpenGL Commands syntax for lots of 3 param - commands:
 	 * 1.: what is affected, 2.: which behaviour to define, 3.: the actual value to set
+	 * 
+	 * Explanation for different spaces in OpenGL: http://antongerdelan.net/opengl/raycasting.html
 	 * 
 	 * In case of questions, refer to the following videos:
 	 * 
@@ -77,7 +80,8 @@ public class MainApplication {
 	 * 25.) Multiple Lights: http://www.youtube.com/watch?v=95WAAYsOifQ
 	 * 26.) Point Lights: http://www.youtube.com/watch?v=KdY0aVDp5G4
 	 * 27.) Skybox: http://www.youtube.com/watch?v=_Ix5oN8eC1E
-	 * 28.) Day/Night: http://www.youtube.com/watch?v=rqx9IDLKV28&list=PLRIWtICgwaX0u7Rf9zkZhLoLuZVfUksDP&index=28
+	 * 28.) Day/Night: http://www.youtube.com/watch?v=rqx9IDLKV28
+	 * 29.) Mouse Picking: https://youtu.be/DLKN0jExRIM //using 3d ray representing everything under the ray from the viewer's perspective; bounding spheres
 	 * 
 	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
 	 * */
@@ -148,8 +152,7 @@ public class MainApplication {
 		
 		//create player
 		Player player = new Player(playerTexturedModel, 1, new Vector3f(WORLD_SIZE/2, 0, -WORLD_SIZE/2), 0, 0, 0, 1);
-		
-		
+				
 		//load the different terrain textures
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
@@ -200,11 +203,17 @@ public class MainApplication {
 		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); //sun
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f))); //lamp
-		lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
+		// lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
+		
+		// a lamp freely positionable on the map
+		Entity movingLamp = new Entity(lampTexturedModel, 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
+		entities.add(movingLamp); 
+		Light movingLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f));
+		lights.add(movingLight);
 		
 		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
 		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
-		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(293, -6.6f, -305), 0, 0, 0, 1));
+		//entities.add(new Entity(lampTexturedModel, 1, new Vector3f(293, -6.6f, -305), 0, 0, 0, 1));
 		
 		Camera camera = new Camera(player); //player camera - make a "ghost" player to simulate cool camera movement
 		
@@ -216,6 +225,8 @@ public class MainApplication {
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
+		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
+		
 		//main game loop
 		while(!Display.isCloseRequested()) {
 			
@@ -224,6 +235,14 @@ public class MainApplication {
 			
 			player.move(terrain);
 			camera.move(); //every single frame check for key inputs which move the camera
+			
+			picker.update(); //update mouse picker's ray
+			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+			if (terrainPoint != null) {
+				movingLamp.setPosition(terrainPoint);
+				movingLight.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 12f, terrainPoint.z));
+			}
+			
 			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
 			//renderer.processTerrain(terrain2);
