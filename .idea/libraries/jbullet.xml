@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="jbullet">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/AntSim/libs/jbullet-20101010/dist/jbullet.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/AntSim/libs/jbullet-20101010/dist/javadoc" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

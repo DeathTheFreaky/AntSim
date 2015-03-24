@@ -1,0 +1,1 @@
+Alle Objecte mit KI kommen in dieses Package

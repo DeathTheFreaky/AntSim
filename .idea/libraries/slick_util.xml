@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="slick-util">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/slick-util.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="http://slick.ninjacave.com/javadoc/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
