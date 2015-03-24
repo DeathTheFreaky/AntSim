@@ -36,7 +36,7 @@ void main(void) {
 		float distance = length(toLightVector[i]);
 		float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].y * distance * distance); 
 		vec3 unitLightVector = normalize(toLightVector[i]);
-		float nDot1 = dot(unitNormal, unitLightVector); //dot product is used to calculate strength of light reflection on an object: 1 -> vectors are parallel, 0 -> vectors are perpenticular (highest reflection)
+		float nDot1 = dot(unitNormal, unitLightVector); //dot product (Skalarprodukt) is used to calculate strength of light reflection on an object: 1 -> vectors are parallel, 0 -> vectors are perpenticular (highest reflection)
 		float brightness = max(nDot1, 0.0); //make sure brightness never drops below 0.0
 		vec3 lightDirection = -unitVectorToCamera; //direction where light is coming from is opposite direction of vector pointing towards the light
 		vec3 reflectedLightDirection = reflect(lightDirection, unitNormal); //direction of light reflected from a surface
