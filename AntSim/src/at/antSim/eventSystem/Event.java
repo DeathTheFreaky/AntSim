@@ -7,8 +7,9 @@ import java.lang.reflect.Type;
  */
 public interface Event {
 
-    public void kill();
-    public boolean isKilled();
-    public Type getType();
+    void kill();
+    boolean isKilled();
+    Type getType();
+	Object getSource();
 
 }

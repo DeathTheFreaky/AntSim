@@ -1,6 +1,5 @@
 package at.antSim.eventSystem;
 
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -11,10 +10,10 @@ public class EventManager {
     private static EventManager instance;
 
     private Queue<Event> eventQueue;
-    private Map<Type, Set<EventListener>> eventListenerMap;
+    private Map<Class<? extends Event>, EventListenerManagement> eventListenerMap;
 
     protected EventManager() {
-        eventListenerMap = new HashMap<Type, Set<EventListener>>();
+        eventListenerMap = new HashMap<Class<? extends Event>, EventListenerManagement>();
         eventQueue = new LinkedList<Event>();
     }
 
@@ -23,16 +22,14 @@ public class EventManager {
     }
 
     public void registerEventListener(EventListener listener, EventPriority eventPriority) {
-        Type eventType = listener.getEventType();
+        Class<? extends Event> eventType = listener.getEventType();
         if (eventListenerMap.containsKey(eventType)) {
-            Set<EventListener> eventListeners = eventListenerMap.get(eventType);
-            if (!eventListeners.contains(listener)) {
-                eventListeners.add(listener);
-            }
-        } else {
-            Set<EventListener> eventListeners = new HashSet<EventListener>();
-            eventListeners.add(listener);
-            eventListenerMap.put(listener.getEventType(), eventListeners);
+			EventListenerManagement listenerManagement = eventListenerMap.get(eventType);
+			listenerManagement.add(listener, eventPriority);
+		} else {
+            EventListenerManagement eventListenerManagement = new EventListenerManagement();
+            eventListenerManagement.add(listener, eventPriority);
+            eventListenerMap.put(listener.getEventType(), eventListenerManagement);
         }
     }
 
@@ -40,9 +37,11 @@ public class EventManager {
         eventQueue.offer(event);
     }
 
-    public void workThroughQueue(){
-
-    }
+    public void workThroughQueue() {
+		for (Event event : eventQueue) {
+			eventListenerMap.get(event.getType()).handle(event);
+		}
+	}
 
     public static EventManager getInstance() {
         if (instance == null) {
@@ -50,5 +49,53 @@ public class EventManager {
         }
         return instance;
     }
+
+	private class EventListenerManagement {
+		Map<EventListener, EventPriority> allEventListeners;
+		Map<EventPriority, List<EventListener>> eventListenerMap;
+
+		EventListenerManagement() {
+			allEventListeners = new HashMap<EventListener, EventPriority>();
+			eventListenerMap = new HashMap<EventPriority, List<EventListener>>(3);
+			for (EventPriority priority : EventPriority.values()) {
+				eventListenerMap.put(priority, new LinkedList<EventListener>());
+			}
+		}
+
+		boolean contains(EventListener listener) {
+			return allEventListeners.containsKey(listener);
+		}
+
+		void add(EventListener listener, EventPriority priority) {
+			if (!allEventListeners.containsKey(listener)) {
+				eventListenerMap.get(priority).add(listener);
+				allEventListeners.put(listener, priority);
+			} else if (allEventListeners.get(listener) != priority) {
+				eventListenerMap.get(allEventListeners.get(listener)).remove(listener);
+				eventListenerMap.get(priority).add(listener);
+				allEventListeners.put(listener, priority);
+			}
+		}
+
+		void remove(EventListener listener) {
+			if (allEventListeners.containsKey(listener)) {
+				eventListenerMap.get(allEventListeners.get(listener)).remove(listener);
+				allEventListeners.remove(listener);
+			}
+		}
+
+		void handle(Event event) {
+			List<EventListener> eventListeners;
+			for (EventPriority eventPriority : EventPriority.values()) {
+				eventListeners= eventListenerMap.get(eventPriority);
+				for (EventListener eventListener : eventListeners) {
+					eventListener.handle(event);
+					if (event.isKilled())
+						return;
+				}
+			}
+		}
+
+	}
 
 }
