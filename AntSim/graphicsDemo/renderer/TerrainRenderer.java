@@ -1,4 +1,6 @@
-package renderEngine;
+package renderer;
+
+import graphicsUtils.Maths;
 
 import java.util.List;
 
@@ -15,7 +17,6 @@ import shaders.TerrainShader;
 import terrains.Terrain;
 import textures.ModelTexture;
 import textures.TerrainTexturePack;
-import toolbox.Maths;
 
 /**TerrainRenderer renders terrains.
  * 

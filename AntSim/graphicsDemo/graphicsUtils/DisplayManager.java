@@ -1,4 +1,4 @@
-package renderEngine;
+package graphicsUtils;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;

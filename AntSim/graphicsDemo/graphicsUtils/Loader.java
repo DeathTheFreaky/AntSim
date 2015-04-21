@@ -1,4 +1,4 @@
-package renderEngine;
+package graphicsUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -131,6 +131,7 @@ public class Loader {
 	}
 	
 	/**Decodes a texture file and stores the raw byte data in a byte buffer within {@link TextureData}.
+	 * copied from tutorial
 	 * 
 	 * @param fileName - name of the texture file
 	 * @return - a new {@link TextureData}
@@ -150,7 +151,7 @@ public class Loader {
 			in.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("Tried to load texture " + fileName + ", did not work");
+			System.err.println("Loading texture " + fileName + " failed");
 			System.exit(-1);
 		}
 		return new TextureData(buffer, width, height);

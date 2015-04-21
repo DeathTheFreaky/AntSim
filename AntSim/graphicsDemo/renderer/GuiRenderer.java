@@ -1,4 +1,7 @@
-package guis;
+package renderer;
+
+import graphicsUtils.Loader;
+import graphicsUtils.Maths;
 
 import java.util.List;
 
@@ -8,8 +11,8 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
-import renderEngine.Loader;
-import toolbox.Maths;
+import shaders.GuiShader;
+import textures.GuiTexture;
 import models.RawModel;
 
 /**GuiRenderer is used to render Gui Elements to the screen.

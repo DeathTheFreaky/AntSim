@@ -1,8 +1,6 @@
-package guis;
+package shaders;
 
 import org.lwjgl.util.vector.Matrix4f;
-
-import shaders.ShaderProgram;
 
 /**GuiShader is used to start up a Gui Shader Program and load uniform variables into this shader program.
  * 
@@ -11,8 +9,8 @@ import shaders.ShaderProgram;
  */
 public class GuiShader extends ShaderProgram {
 
-	private static final String VERTEX_FILE = "src/guis/guiVertexShader.vsh";
-    private static final String FRAGMENT_FILE = "src/guis/guiFragmentShader.fsh";
+	private static final String VERTEX_FILE = "graphicsDemo/guis/guiVertexShader.vsh";
+    private static final String FRAGMENT_FILE = "graphicsDemo/guis/guiFragmentShader.fsh";
      
     private int location_transformationMatrix;
  

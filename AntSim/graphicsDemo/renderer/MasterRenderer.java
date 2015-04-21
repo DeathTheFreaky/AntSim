@@ -1,4 +1,4 @@
-package renderEngine;
+package renderer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,10 +13,11 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import graphicsUtils.DisplayManager;
+import graphicsUtils.Loader;
 import models.TexturedModel;
-import shaders.StaticShader;
+import shaders.EntityShader;
 import shaders.TerrainShader;
-import skybox.SkyboxRenderer;
 import terrains.Terrain;
 
 /**MasterRenderer handles all of the rendering code in the application.
@@ -47,7 +48,7 @@ public class MasterRenderer {
 	
 	private Matrix4f projectionMatrix;
 	
-	private StaticShader shader = new StaticShader();
+	private EntityShader shader = new EntityShader();
 	private EntityRenderer renderer;
 	
 	private TerrainRenderer terrainRenderer;

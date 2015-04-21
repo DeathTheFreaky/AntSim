@@ -1,4 +1,4 @@
-package objConverter;
+package models;
  
 /**ModelData is a storage class holding a model's:<br>
  * <ul>

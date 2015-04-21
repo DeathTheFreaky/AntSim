@@ -1,4 +1,4 @@
-package renderEngine;
+package renderer;
 
 import java.util.List;
 import java.util.Map;
@@ -14,10 +14,10 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import shaders.StaticShader;
+import shaders.EntityShader;
 import textures.ModelTexture;
-import toolbox.Maths;
 import entities.Entity;
+import graphicsUtils.Maths;
 
 /**EntityRenderer renders static models.
  * 
@@ -26,14 +26,14 @@ import entities.Entity;
  */
 public class EntityRenderer {
 	
-	private StaticShader shader;
+	private EntityShader shader;
 	
 	/**Creates a new EntityRenderer which can be used by {@link MasterRenderer} to delegate rendering functions.
 	 * 
-	 * @param shader - a {@link StaticShader} used for rendering
+	 * @param shader - a {@link EntityShader} used for rendering
 	 * @param projectionMatrix - a 4x4 projectionMatrix
 	 */
-	public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
+	public EntityRenderer(EntityShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix); //need to make another entity class for moving objects...

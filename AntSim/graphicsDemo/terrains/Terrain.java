@@ -10,14 +10,14 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import engineTester.MainApplication;
+import graphicsUtils.Loader;
+import graphicsUtils.Maths;
 import models.RawModel;
-import renderEngine.Loader;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
-import toolbox.Maths;
 
-/**Respresents a Terrain made up of a {@link RawModel} and a {@link ModelTexture}.
+/**Respresents a Terrain made up of a {@link RawModel}, a Blendmap and a {@link TerrainTexturePack}.
  * 
  * @author Flo
  *

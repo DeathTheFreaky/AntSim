@@ -2,7 +2,7 @@ package textures;
 
 import java.nio.ByteBuffer;
 
-/**TextureData holds the decoded byte data, height and width of an image.
+/**TextureData holds the decoded byte data, height and width of an image for a cube map.
  * 
  * @author Flo
  *
