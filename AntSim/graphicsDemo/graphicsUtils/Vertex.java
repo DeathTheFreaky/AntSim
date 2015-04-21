@@ -1,4 +1,4 @@
-package objConverter;
+package graphicsUtils;
  
 import org.lwjgl.util.vector.Vector3f;
  

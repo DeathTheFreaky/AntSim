@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.ObjLongConsumer;
 
+import models.ModelData;
 import models.RawModel;
 import models.TexturedModel;
-import objConverter.ModelData;
-import objConverter.OBJFileLoader;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
@@ -18,16 +17,17 @@ import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
-import guis.GuiRenderer;
-import guis.GuiTexture;
-import renderEngine.DisplayManager;
-import renderEngine.Loader;
-import renderEngine.MasterRenderer;
+import graphicsUtils.DisplayManager;
+import graphicsUtils.Loader;
+import graphicsUtils.MousePicker;
+import graphicsUtils.OBJFileLoader;
+import renderer.GuiRenderer;
+import renderer.MasterRenderer;
 import terrains.Terrain;
+import textures.GuiTexture;
 import textures.ModelTexture;
 import textures.TerrainTexture;
 import textures.TerrainTexturePack;
-import toolbox.MousePicker;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -251,7 +251,7 @@ public class MainApplication {
 			}
 			
 			renderer.render(lights, camera);
-			guiRenderer.render(guis);
+			guiRenderer.render(guis); //move to master renderer
 			
 			DisplayManager.updateDisplay();
 		}

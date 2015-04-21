@@ -1,4 +1,4 @@
-package objConverter;
+package graphicsUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,10 +11,11 @@ import java.util.List;
 
 
 
+
+import models.ModelData;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-
-import renderEngine.Loader;
 
 //new OBJParser can handle texture themes
 

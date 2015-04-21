@@ -1,4 +1,4 @@
-package skybox;
+package renderer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -8,8 +8,9 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
+import graphicsUtils.Loader;
 import models.RawModel;
-import renderEngine.Loader;
+import shaders.SkyboxShader;
 
 /**SkyboxRenderer is used to render a skybox to the screen.
  * 

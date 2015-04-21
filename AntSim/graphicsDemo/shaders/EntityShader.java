@@ -8,7 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Light;
-import toolbox.Maths;
+import graphicsUtils.Maths;
 
 /**StaticShader is used for the rendering of all static models.<br>
  * 
@@ -16,12 +16,12 @@ import toolbox.Maths;
  * @see ShaderProgram
  *
  */
-public class StaticShader extends ShaderProgram {
+public class EntityShader extends ShaderProgram {
 	
 	private static final int MAX_LIGHTS = 4;
 	
-	private static final String VERTEX_FILE = "src/shaders/vertexShader.vsh";
-	private static final String FRAGMENT_FILE = "src/shaders/fragmentShader.fsh";
+	private static final String VERTEX_FILE = "graphicsDemo/shaders/entityVertexShader.vsh";
+	private static final String FRAGMENT_FILE = "graphicsDemo/shaders/entityFragmentShader.fsh";
 
 	//location of uniform variables in shader code
 	private int location_transformationMatrix; 
@@ -42,7 +42,7 @@ public class StaticShader extends ShaderProgram {
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
 	 */
-	public StaticShader() {
+	public EntityShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
 

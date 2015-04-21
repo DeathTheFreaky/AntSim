@@ -6,9 +6,9 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import terrains.Terrain;
-import toolbox.Maths;
 import entities.Camera;
 import entities.Light;
+import graphicsUtils.Maths;
 
 /**TerrainShader is used for the rendering of {@link Terrain}s.
  * 
@@ -19,8 +19,8 @@ public class TerrainShader extends ShaderProgram {
 
 	private static final int MAX_LIGHTS = 4;
 	
-	private static final String VERTEX_FILE = "src/shaders/terrainVertexShader.vsh";
-	private static final String FRAGMENT_FILE = "src/shaders/terrainFragmentShader.fsh";
+	private static final String VERTEX_FILE = "graphicsDemo/shaders/terrainVertexShader.vsh";
+	private static final String FRAGMENT_FILE = "graphicsDemo/shaders/terrainFragmentShader.fsh";
 
 	//location of uniform variables in shader code
 	private int location_transformationMatrix; 

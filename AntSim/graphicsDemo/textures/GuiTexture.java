@@ -1,4 +1,4 @@
-package guis;
+package textures;
 
 import org.lwjgl.util.vector.Vector2f;
 
