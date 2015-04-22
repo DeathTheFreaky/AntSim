@@ -144,11 +144,11 @@ public class Terrain {
 		if (xCoord <= (1-zCoord)) { //check which of the 2 triangles of a gridSquare the player is on
 			answer = Maths.barryCentric(new Vector3f(0, heights[gridX][gridZ], 0), new Vector3f(1,
 							heights[gridX + 1][gridZ], 0), new Vector3f(0,
-							heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord)); //return interpolated height within a triangle of vertices
+							heights[gridX][gridZ + 1], 1), xCoord, zCoord); //return interpolated height within a triangle of vertices
 		} else {
 			answer = Maths.barryCentric(new Vector3f(1, heights[gridX + 1][gridZ], 0), new Vector3f(1,
 							heights[gridX + 1][gridZ + 1], 1), new Vector3f(0,
-							heights[gridX][gridZ + 1], 1), new Vector2f(xCoord, zCoord));
+							heights[gridX][gridZ + 1], 1),  xCoord, zCoord);
 		}
 		
 		return answer;

@@ -10,7 +10,9 @@ import org.lwjgl.util.vector.Vector4f;
 import terrains.Terrain;
 import entities.Camera;
 
-/**MousePicker can interact with objects in the 3d World using a 3d ray.
+/**MousePicker can interact with objects in the 3d World using a 3d ray.<br>
+ * <br>
+ * CODE EXAMPLES AND THEORY EXPLAINED: http://antongerdelan.net/opengl/raycasting.html
  * 
  * @author Flo
  *

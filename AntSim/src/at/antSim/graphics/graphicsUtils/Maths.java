@@ -1,4 +1,6 @@
-package graphicsUtils;
+package at.antSim.graphics.graphicsUtils;
+
+import java.awt.Point;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
@@ -77,22 +79,6 @@ public class Maths {
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix); //move the viewMatrix in opposite direction of camera's position 
 		
 		return viewMatrix;
-	}
-	
-	/**Returns height of a triangle at a specific position inside the triangle.
-	 * 
-	 * @param p1 - first corner point of triangle
-	 * @param p2 - second corner point of triangle
-	 * @param p3 - third corner point of triangle
-	 * @param pos - x,z position inside the triangle at which to calculate the height (interpolated)
-	 * @return - the height of a triangle at a specific position inside the triangle
-	 */
-	public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) {
-		float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
-		float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
-		float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
-		float l3 = 1.0f - l1 - l2;
-		return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 	}
 	
 	/**Returns height of a triangle at a specific position inside the triangle, using barycentric coordinates of p.<br>
@@ -204,6 +190,5 @@ public class Maths {
         float l3 = 1.0f - l1 - l2;
 
         return l1 * p1.y + l2 * p2.y + l3 * p3.y; //use barycentric coordinates to determine value of y
-	}
-	
+	}	
 }

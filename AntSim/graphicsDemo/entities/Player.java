@@ -1,11 +1,11 @@
 package entities;
 
-import graphicsUtils.DisplayManager;
 import models.TexturedModel;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.graphics.graphicsUtils.DisplayManager;
 import terrains.Terrain;
 
 /**Represents a Player, handling player movement.

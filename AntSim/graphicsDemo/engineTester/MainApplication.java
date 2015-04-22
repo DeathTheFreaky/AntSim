@@ -13,11 +13,11 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.graphics.graphicsUtils.DisplayManager;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import entities.Player;
-import graphicsUtils.DisplayManager;
 import graphicsUtils.Loader;
 import graphicsUtils.MousePicker;
 import graphicsUtils.OBJFileLoader;
@@ -43,8 +43,6 @@ public class MainApplication {
 	 * 
 	 * Also, there is a plugin for writing GLSL shaders in Eclipse: http://sourceforge.net/projects/webglsl/
 	 * -> Extract .zip file to Eclipse installation directory
-	 * 
-	 * OpenGL Api: https://www.opengl.org/sdk/docs/man4/index.php
 	 * 
 	 * OpenGL Commands syntax for lots of 3 param - commands:
 	 * 1.: what is affected, 2.: which behaviour to define, 3.: the actual value to set
@@ -83,7 +81,33 @@ public class MainApplication {
 	 * 28.) Day/Night: http://www.youtube.com/watch?v=rqx9IDLKV28
 	 * 29.) Mouse Picking: https://youtu.be/DLKN0jExRIM //using 3d ray representing everything under the ray from the viewer's perspective; bounding spheres
 	 * 
+	 * Sources:
+	 * OpenGL Api: https://www.opengl.org/sdk/docs/man4/index.php
 	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
+	 * LWJGL: http://wiki.lwjgl.org/index.php?title=Main_Page
+	 * Easy Matrix Explanations: http://www.mathsisfun.com/algebra/matrix-introduction.html
+	 * TransformationMatrix: http://en.wikipedia.org/wiki/Transformation_matrix
+	 * Conversion Matrix to Euler: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/
+	 * More complex matrix explanation: http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
+	 * Projection Matrix explained: http://www.songho.ca/opengl/gl_projectionmatrix.html
+	 * Vector basics: http://www.bbc.co.uk/bitesize/higher/maths/geometry/vectors/revision/1/
+	 * Dot Product: http://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/
+	 * Some basic trigonometry: http://www.mathsisfun.com/algebra/trigonometry.html
+	 * Open GL Textures: https://open.gl/textures
+	 * Mouse Picking with Ray Casting: http://antongerdelan.net/opengl/raycasting.html
+	 * 
+	 * Code sources:
+	 * 14 - Simple Terrain generation code: https://www.dropbox.com/s/47qk4yrz5v9lb61/Terrain%20Generation%20Code.txt?dl=0
+	 * 16 - OBJ File Loader: https://www.dropbox.com/sh/x1fyet1otejxk3z/AAAoCqArl4cIx0THdRk2poW3a?dl=0
+	 * 17 - Example blend Map: https://www.dropbox.com/s/yfd7so1yg0fq4jo/blendMap.png?dl=0
+	 * 18 - Height map: https://www.dropbox.com/s/dcul3fnrnejue7x/heightmap.png?dl=0
+	 * 22 - BarryCentric function: https://www.dropbox.com/s/0md240yyc359ik3/code.txt?dl=0
+	 * 23 - Fern texture atlas: https://www.dropbox.com/s/4m901nauypnsapn/fern.png?dl=0
+	 * 26 - Models and texuters: https://www.dropbox.com/sh/j1zmywbkxqkp0rw/AADx61ZUt48A97xKZUww5YNea?dl=0
+	 * 27 - Skybox: https://www.dropbox.com/sh/phslacd8v9i17wb/AABui_-C-yhKvZ1H2wb3NykIa?dl=0
+	 * 28 - Night Skybox: https://www.dropbox.com/sh/o7ozx1u5qlg7b5v/AACI3zt1a9ZMw5MG2G_rzbKda?dl=0
+	 * 28 - Day/Night example code: https://www.dropbox.com/s/iom1x2c3t0r5owr/Day%20Night%20Example.txt?dl=0
+	 * 29 - Mouse Picker example code: https://www.dropbox.com/s/qkslys3p3xzh8av/MousePicker%20Code.txt?dl=0
 	 * */
 	
 	private static final float WORLD_SIZE = 800; //square
