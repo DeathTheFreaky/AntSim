@@ -10,10 +10,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.graphics.graphicsUtils.DisplayManager;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import graphicsUtils.DisplayManager;
 import graphicsUtils.Loader;
 import models.TexturedModel;
 import shaders.EntityShader;

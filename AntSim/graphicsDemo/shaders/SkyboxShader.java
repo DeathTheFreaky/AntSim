@@ -4,9 +4,9 @@ import org.lwjgl.util.vector.Matrix4f;
  
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.graphics.graphicsUtils.DisplayManager;
 import entities.Camera;
- 
-import graphicsUtils.DisplayManager;
+
 import graphicsUtils.Maths;
  
 /**SkyboxShader is used as a shader program when rendering the skybox.
@@ -15,9 +15,9 @@ import graphicsUtils.Maths;
  *
  */
 public class SkyboxShader extends ShaderProgram{
- 
-    private static final String VERTEX_FILE = "graphicsDemo/skybox/skyboxVertexShader.vsh";
-    private static final String FRAGMENT_FILE = "graphicsDemo/skybox/skyboxFragmentShader.fsh";
+
+    private static final String VERTEX_FILE = "graphicsDemo/shaders/skyboxVertexShader.vsh";
+    private static final String FRAGMENT_FILE = "graphicsDemo/shaders/skyboxFragmentShader.fsh";
      
     private static final float ROTATE_SPEED = 1f; //rotation speed of skybox to simulate cloud movement
     
