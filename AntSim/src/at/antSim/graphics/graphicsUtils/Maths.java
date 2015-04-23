@@ -1,7 +1,5 @@
 package at.antSim.graphics.graphicsUtils;
 
-import java.awt.Point;
-
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -15,23 +13,68 @@ import entities.Camera;
  */
 public class Maths {
 	
-	/**Creates a transformation matrix to be used for the transformation of 2D gui element.
+	/*NOTE ABOUT THE ORDER OF TRANSFORMATIONS IN OPENGL: 
 	 * 
-	 * @param translation - an x,y translation
+	 * OpenGl reads its matrices in a column major order. 
+	 * The result is that each subsequent operation is a pre-multiplication of all the operations before it,
+	 * not a post-multiplication.
+	 * 
+	 * Thus, each subsequent call to an OpenGL transformation operation is the first thing that affects on object,
+	 * and it goes in reverse order from how it is written.
+	 * 
+	 * Thus, if we usually perform a complete transform as:
+	 * 1. scaling
+	 * 2. rotating 
+	 * 3. translating
+	 * 
+	 * we have to change this order to
+	 * 1. translating
+	 * 2. rotating
+	 * 3. scaling
+	 * 
+	 * see: http://stackoverflow.com/questions/15993339/opengl-order-of-matrix-transformations
+	 * see: http://en.wikipedia.org/wiki/Row-major_order#Column-major_order
+	 * see: http://stackoverflow.com/questions/17717600/confusion-between-c-and-opengl-matrix-order-row-major-vs-column-major
+	 * 
+	 * For further information, a quote from :
+	 * 
+	 * Here’s where the confusion starts: https://fgiesen.wordpress.com/2012/02/12/row-major-vs-column-major-row-vectors-vs-column-vectors/ 
+	 * To transform a vector by a matrix, you first need to convert the vector to a matrix (i.e. choose whether it’s supposed to be a column or row vector this time), 
+	 * then multiply the two. In the usual graphics setting, we have a 4×4 matrix T and a 4-vector v. 
+	 * Since the middle dimension in a matrix product must match, we can’t do this arbitrarily. 
+	 * If we write v as a 4×1 matrix (column vector), we can compute Tv but not vT. If v is instead a 1×4 matrix (row vector), only vT works and Tv leads to a “dimension mismatch”. 
+	 * For both column and row vectors, the result of that is again a column or row vector, respectively, which has repercussions: 
+	 * if we want to transform the result again by another matrix, again there’s only one place where we can legally put it. 
+	 * For column vectors, transforming a vector by T then S leads to the expression S(Tv)=STv=(ST)v, so the matrix that represents “first T then S” is given by the matrix ST. 
+	 * For row vectors, we get (vT)S=vTS=v(TS), so the matrix for the concatenation of the two is given by TS. 
+	 * Small difference, big repercussions: whether you choose row or column vectors influences how you concatenate transforms.
+	 * 
+	 * Furthermore, for a "fresh" matrix, we always have to set it to an identity matrix,
+	 * since OpenGL works on the principle of the "current matrix" being calculated by multiplying
+	 * a previous with an operational matrix. Now at the beginning, the previous matrix obviously has to be an identity matrix
+	 * because for a 0-Matrix the multiplication would result in a 0-Result and for all other matrices except for the identity matrix
+	 * the results would be distorted.
+	 */
+	
+	/**Creates a transformation matrix to be used for the transformation of 2D gui element with no rotation.
+	 * 
+	 * @param translation - an x,y translation in world coordinate space
 	 * @param scale - scale for transformation of the gui element
 	 * @return - a 4x4 transformation matrix
 	 */
 	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
 		Matrix4f matrix = new Matrix4f();
-		matrix.setIdentity();
+		matrix.setIdentity(); //start a "fresh" previous matrix for multiplication
+		//perform operations in reverse order due to column-major order post-multiplication equaling row-major order pre-multiplication
 		Matrix4f.translate(translation, matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale.x, scale.y, 1f), matrix, matrix);
+		
 		return matrix;
 	}
 	
 	/**Creates a transformation matrix to be used for the transformation of 3D models.
 	 * 
-	 * @param translation - an x,y,z translation
+	 * @param translation - an x,y,z translation in world coordinate space
 	 * @param rx - rotation value for x - axis
 	 * @param ry - rotation value for y - axis
 	 * @param rz - rotation value for z - axis
@@ -42,16 +85,13 @@ public class Maths {
 			float rx, float ry, float rz, float scale) {
 		
 		Matrix4f matrix = new Matrix4f();
-		matrix.setIdentity(); //resets matrix to identity matrix
-		
-		//translate, rotate around all 3 axis, scale the matrix
+		matrix.setIdentity(); //start a "fresh" previous matrix for multiplication
+		//perform operations in reverse order due to column-major order post-multiplication equaling row-major order pre-multiplication
 		Matrix4f.translate(translation, matrix, matrix); 
 		Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1,0,0), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0,1,0), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0,0,1), matrix, matrix);
-		Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix); //scale uniformly in all 3 axis
-		
-		// this process resembles: TransformedVector = TranslationMatrix * RotationMatrix * ScaleMatrix * OriginalVector;
+		Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix); //scale uniformly in all 3 axis	
 		
 		return matrix;
 	}
@@ -68,14 +108,15 @@ public class Maths {
 	 */
 	public static Matrix4f createViewMatrix(Camera camera) {
 		
+		Vector3f cameraPos = camera.getPosition();
+		Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z); //camera needs to move in opposite direction compared to the desired view direction
+		
 		Matrix4f viewMatrix = new Matrix4f();
 		viewMatrix.setIdentity(); //resets matrix to identity matrix
-		
+		//perform world rotation and translation in reverse order
 		Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1,0,0), viewMatrix, viewMatrix); //rotate viewMatrix around x-Axis by the camera's pitch
 		Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0,1,0), viewMatrix, viewMatrix); //rotate viewMatrix around y-Axis by the camera's yaw
 		Matrix4f.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0,0,1), viewMatrix, viewMatrix); //rotate viewMatrix around z-Axis by the camera's yaw
-		Vector3f cameraPos = camera.getPosition();
-		Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z); //camera needs to move in opposite direction compared to the desired view direction
 		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix); //move the viewMatrix in opposite direction of camera's position 
 		
 		return viewMatrix;
@@ -181,12 +222,14 @@ public class Maths {
 		* l1 = ((p2.z - p3.z) * (px - p3.x) + (p3.x - p2.x) * (pz - p3.z)) / ((p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z))
 		*  
 		* 
+		* calculate l3:
+		* l3 can be easily obtained by substracting (l1 + l2) from 1
 		* */
 		 
-		float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
+		float div = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
 
-        float l1 = ((p2.z - p3.z) * (x - p3.x) + (p3.x - p2.x) * (z - p3.z)) / det;
-        float l2 = ((p3.z - p1.z) * (x - p3.x) + (p1.x - p3.x) * (z - p3.z)) / det;
+        float l1 = ((p2.z - p3.z) * (x - p3.x) + (p3.x - p2.x) * (z - p3.z)) / div;
+        float l2 = ((p3.z - p1.z) * (x - p3.x) + (p1.x - p3.x) * (z - p3.z)) / div;
         float l3 = 1.0f - l1 - l2;
 
         return l1 * p1.y + l2 * p2.y + l3 * p3.y; //use barycentric coordinates to determine value of y
