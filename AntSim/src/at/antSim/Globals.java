@@ -14,7 +14,9 @@ public final class Globals {
 	
 	//global Constants
 	public static String WORKING_DIR = System.getProperty("user.dir");
-	public static final String RESOURCES = WORKING_DIR + "\\res\\models\\";
+	public static final String RESOURCES = WORKING_DIR + "\\res\\";
+	public static final String MODELS = RESOURCES + "models\\";
+	public static final String TEXTURES = RESOURCES + "textures\\";
 	public static final String CONFIG = WORKING_DIR + "\\config";
 	public static final String SHADERS = WORKING_DIR + "\\src\\at\\antSim\\graphics\\shaders\\";
 	public static final int FPS_CAP = 120;

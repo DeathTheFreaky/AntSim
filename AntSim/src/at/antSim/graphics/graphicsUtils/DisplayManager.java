@@ -8,16 +8,14 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 
+import at.antSim.Globals;
+
 /**Manages creation, updating and closing of display.
  * 
  * @author Flo
  *
  */
 public class DisplayManager {
-	
-	private static final int WIDTH = 1280;
-	private static final int HEIGHT = 720;
-	private static final int FPS_CAP = 120;
 	
 	private static long lastFrameTime; //time at the end of the last frame
 	private static float delta; //time taken to render previous frame
@@ -26,20 +24,26 @@ public class DisplayManager {
 	 * 
 	 */
 	public static void createDisplay(){
-		
-		ContextAttribs attribs = new ContextAttribs(3,2) //OpenGL version 3.2
-		.withForwardCompatible(true)
-		.withProfileCore(true);
-		
+				
 		try {
-			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-			Display.create(new PixelFormat(), attribs);
+			
+			//setup up and open Window
+			Display.setDisplayMode(new DisplayMode(Globals.displayWidth, Globals.displayHeight)); 
 			Display.setTitle("AntSim");
+			
+			//setup OpenGL to and run in forward-compatible mode, Ensure that OpenGL is being used
+			PixelFormat pixelFormat = new PixelFormat();
+			ContextAttribs attribs = new ContextAttribs(3,2) //OpenGL version 3.2
+			.withForwardCompatible(true)
+			.withProfileCore(true);
+			Display.create(pixelFormat, attribs);
+			
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
 		
-		GL11.glViewport(0, 0, WIDTH, HEIGHT); //where to render game within the display
+		//initialize glViewport to stretch from upper left to lower right corner of display
+		GL11.glViewport(0, 0, Globals.displayWidth, Globals.displayHeight); //where to render game within the display
 		lastFrameTime = getCurrentTime();
 	};
 	
@@ -47,8 +51,7 @@ public class DisplayManager {
 	 * 
 	 */
 	public static void updateDisplay(){
-		
-		Display.sync(FPS_CAP); //set frame cap for smooth rendering
+		Display.sync(Globals.FPS_CAP); //set frame cap for smooth rendering
 		Display.update();
 		long currentFrameTime = getCurrentTime();
 		delta = (currentFrameTime - lastFrameTime)/1000f; //delta in seconds
@@ -59,7 +62,6 @@ public class DisplayManager {
 	 * 
 	 */
 	public static void closeDisplay(){
-		
 		Display.destroy();
 	};
 	

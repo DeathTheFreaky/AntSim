@@ -1,5 +1,6 @@
 package at.antSim;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,6 +9,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.config.ConfigReader;
+import at.antSim.config.ConfigWriter;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;
@@ -111,6 +114,19 @@ public class EngineTester {
 	private static final float WORLD_SIZE = 800; //square
 	
 	public static void main(String[] args) {
+		
+//		ConfigWriter mywriter = new ConfigWriter();
+//		try {
+//			//mywriter.writeConfig();
+//		} catch (NoSuchFieldException | SecurityException
+//				| IllegalArgumentException | IllegalAccessException
+//				| IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		ConfigReader myreader = new ConfigReader();
+		myreader.readConfig();
 		
 		DisplayManager.createDisplay();
 		

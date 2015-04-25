@@ -7,28 +7,24 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
- 
-
-
-
-
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.AntSim;
+import at.antSim.Globals;
 import at.antSim.graphics.models.ModelData;
-
-//new OBJParser can handle texture themes
 
 /**OBJFileLoader parses .obj files and stores the parsed values into {@link ModelData} objects.<br>
  * This OBJFileLoader can also handle texture themes.
+ * 
+ * THIS CLASS HAS BEEN COPIED FROM "3D GAME DEVELOPMENT SERIES": https://www.dropbox.com/sh/x1fyet1otejxk3z/AAAVdsje7VSnwrS93NT43K3ta/OBJFileLoader.java?dl=0<br>
+ * TO ENSURE COMPREHENSION, EXTENSIVE COMMENTS HAVE BEEN ADDED.
  * 
  * @author Flo
  *
  */
 public class OBJFileLoader {
-	
-	private static final String RES_LOC = "res/models/";
 	
 	/**Takes in an .obj File, extracts all data from it (vertices, texture coordinates, normals, indices)
 	 * and returns a {@link RawModel} built on this data.
@@ -38,20 +34,22 @@ public class OBJFileLoader {
 	 * @return - the {@link RawModel} created from the data in the .obj File
 	 */
 	public static ModelData loadOBJ(String objFileName) {
+		
+		//initialize filereader, bufferedreader and arraylists holding the data
         FileReader isr = null;
-        File objFile = new File(RES_LOC + objFileName + ".obj");
+        File objFile = new File(Globals.MODELS + objFileName + ".obj");
         try {
             isr = new FileReader(objFile);
         } catch (FileNotFoundException e) {
-            System.err.println("File not found in " + RES_LOC + "; don't use any extention");
+            System.err.println("File not found in " + Globals.RESOURCES + "; don't use any extention");
         }
-        System.out.println(objFileName);
         BufferedReader reader = new BufferedReader(isr);
         String line;
         List<Vertex> vertices = new ArrayList<Vertex>(); //will contain: x1, y1, z1, x2, y2, z2, x3, y3, z3...
         List<Vector2f> textures = new ArrayList<Vector2f>(); //will contain: u1, v1, u2, v2, u3, v3...
         List<Vector3f> normals = new ArrayList<Vector3f>(); //will contain: x1, y1, z1, x2, y2, z2, x3, y3, z3...
         List<Integer> indices = new ArrayList<Integer>(); //will contain: vertex1index, texture1index, normal1index, vertex2index, texture2index, normal2index...
+       
         try {
             while (true) {
                 line = reader.readLine();
