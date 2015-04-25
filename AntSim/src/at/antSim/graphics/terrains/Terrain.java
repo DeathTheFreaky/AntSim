@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.EngineTester;
+import at.antSim.Globals;
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.RawModel;
@@ -23,8 +24,6 @@ import at.antSim.graphics.textures.TerrainTexturePack;
  *
  */
 public class Terrain {
-
-	private final static float SIZE = EngineTester.getWorldSize();
 	
 	//for 3d terrain
 	private static final float MAX_HEIGHT = 40; //maximum height in positive and negative range of the terrain -> -40 to 40
@@ -42,8 +41,8 @@ public class Terrain {
 	
 	/**Creates a new {@link Terrain}.
 	 * 
-	 * @param gridX - terrain's x position as an int
-	 * @param gridZ - terrain's z position as an int
+	 * @param gridX - terrain's x position as an int in a grid of terrains
+	 * @param gridZ - terrain's z position as an int in a grid of terrains
 	 * @param loader - a 3d model {@link Loader}
 	 * @param texturePack - a {@link TerrainTexturePack} containing the different {@link TerrainTexture} to be drawn on the {@link Terrain}
 	 * @param blendMap - a blendMap indicating how much of each terrain texture to be used on a specific vertex
@@ -52,8 +51,8 @@ public class Terrain {
 	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightMap) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
-		this.x = gridX * SIZE;
-		this.z = gridZ * SIZE;
+		this.x = gridX * Globals.WORLD_SIZE;
+		this.z = gridZ * Globals.WORLD_SIZE;
 		this.model = generateTerrain(loader, heightMap);
 	}
 	
@@ -84,11 +83,11 @@ public class Terrain {
 		int vertexPointer = 0;
 		for(int i = 0; i < VERTEX_COUNT; i++){ //i<128
 			for(int j = 0 ; j < VERTEX_COUNT; j++){ //j<128
-				vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
+				vertices[vertexPointer * 3] = (float) j / ((float) VERTEX_COUNT - 1) * Globals.WORLD_SIZE;
 				float height = getHeight(j, i, image);
 				heights[j][i] = height;
 				vertices[vertexPointer  * 3 + 1] = height;
-				vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
+				vertices[vertexPointer * 3 + 2] = (float) i / ((float) VERTEX_COUNT - 1) * Globals.WORLD_SIZE;
 				Vector3f normal = calculateNormal(j, i, image);
 				normals[vertexPointer * 3] = normal.x;
 				normals[vertexPointer * 3 + 1] = normal.y;
@@ -128,8 +127,8 @@ public class Terrain {
 		float terrainX = worldX - this.x; 
 		float terrainZ = worldZ - this.z;
 		
-		float gridSquareSize = SIZE / ((float)heights.length - 1); //if terrain has 4 vertices along 1 side of terrain it has 3 grid squares
-		int gridX = (int) Math.floor(terrainX / gridSquareSize); //abrunden
+		float gridSquareSize = Globals.WORLD_SIZE / ((float)heights.length - 1); //size of 1 grid square - if terrain has 4 vertices/points along 1 side of terrain it has 3 grid squares in between the points
+		int gridX = (int) Math.floor(terrainX / gridSquareSize); 
 		int gridZ = (int) Math.floor(terrainZ / gridSquareSize);	
 				
 		//return height of 0 if coordinates are outside the terrain -> not a valid grid square
@@ -194,7 +193,7 @@ public class Terrain {
 	}
 
 	public static float getSizeX() {
-		return SIZE;
+		return Globals.WORLD_SIZE;
 	}
 
 	/*public static int getVertexCount() {

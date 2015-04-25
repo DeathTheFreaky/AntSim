@@ -111,8 +111,6 @@ public class EngineTester {
 	 * 29 - Mouse Picker example code: https://www.dropbox.com/s/qkslys3p3xzh8av/MousePicker%20Code.txt?dl=0
 	 * */
 	
-	private static final float WORLD_SIZE = 800; //square
-	
 	public static void main(String[] args) {
 		
 //		ConfigWriter mywriter = new ConfigWriter();
@@ -189,7 +187,7 @@ public class EngineTester {
 		TexturedModel lampTexturedModel = new TexturedModel(lampRawModel, lampTexture);
 		
 		//create player
-		Player player = new Player(playerTexturedModel, 1, new Vector3f(WORLD_SIZE/2, 0, -WORLD_SIZE/2), 0, 0, 0, 1);
+		Player player = new Player(playerTexturedModel, 1, new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2), 0, 0, 0, 1);
 				
 		//load the different terrain textures
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
@@ -217,20 +215,20 @@ public class EngineTester {
 		
 		for (int i = 0; i < 1200; i++) {
 			if (i % 20 == 0) {
-				float x = random.nextFloat() * WORLD_SIZE;
-				float z = random.nextFloat() * -WORLD_SIZE;
+				float x = random.nextFloat() * Globals.WORLD_SIZE;
+				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
 				entities.add(new Entity(fernTexturedModel, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, 0.9f));
 			}
 			if (i % 5 == 0) {
-				float x = random.nextFloat() * WORLD_SIZE;
-				float z = random.nextFloat() * -WORLD_SIZE;
+				float x = random.nextFloat() * Globals.WORLD_SIZE;
+				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
 				entities.add(new Entity(grassTexturedModel, 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, random.nextFloat() * 0.1f + 0.6f));
-				x = random.nextFloat() * WORLD_SIZE;
-				z = random.nextFloat() * -WORLD_SIZE;
+				x = random.nextFloat() * Globals.WORLD_SIZE;
+				z = random.nextFloat() * -Globals.WORLD_SIZE;
 				y = terrain.getHeightOfTerrain(x, z);
 				entities.add(new Entity(treeTexturedModel, 1, new Vector3f(x, y, z), 0, 0,
 						0, random.nextFloat() * 1 + 4));
@@ -298,9 +296,5 @@ public class EngineTester {
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
-	}
-
-	public static float getWorldSize() {
-		return WORLD_SIZE;
 	}
 }

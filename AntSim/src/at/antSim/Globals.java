@@ -20,6 +20,7 @@ public final class Globals {
 	public static final String CONFIG = WORKING_DIR + "\\config";
 	public static final String SHADERS = WORKING_DIR + "\\src\\at\\antSim\\graphics\\shaders\\";
 	public static final int FPS_CAP = 120;
+	public static final float WORLD_SIZE = 800; //square
 	
 	//config file entries set by config reader
 	private static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
