@@ -140,8 +140,9 @@ public class OBJFileLoader {
         return data;
     }
 	
-	/**Puts vertex data into the correct position in the textureArray and normalsArray.<br>
-	 * These values need to be ordered correctly because in the .obj file they are stored in random order.
+	/**Sets the indices for a {@link Vertex} objects vertex positional coordinates, texture coordinates and normals indices.<br>
+	 * These can later be used to retrieve the respective data at the specified indices from lists and store it in according to the order of vertex indices.<br>
+	 * The actual process of storing the data at the right positions is handled in the convertDataToArrays() function.<br>
 	 * 
 	 * @param vertexData
 	 * @param indices
@@ -179,7 +180,19 @@ public class OBJFileLoader {
         return indicesArray;
     }
 	
-	/**Writes .obj parsed vertex, texture and normal data that is stored inside lists into floatArrays.
+	/**Puts vertex positional coordinates, texture coordinates and normals in float arrays, ensuring that the order of these matches the order of associated vertices.<br>
+	 * These values need to be ordered correctly because in the .obj file they are stored in random order.<br>
+	 * <br>
+	 * Eg: An obj File defines the following indices for a vertex: 5/4/3<br>
+	 * The first number represents the vertex positional index, the second number the texture coordinate index and the third number the normal index of a vertex.<br>
+	 * The function now has to retrieve the respective positional coordinates, texture coordinates and normals at the absolute positions specified in the obj File
+	 * and store them in the same order as the order of vertex indices.<br>
+	 * <br>
+	 * So if our current vertex has an a vertex index of 3, the vertex's positional coordinates will be stored inside an array of floats in consecutive order,
+	 * starting with an offset of 6 (because vertex 1 and 2 took up 3 places each -> x,y,z).<br>
+	 * <br>
+	 * After finishing this operation, the vertex positional coordinate float array will contain:<br>
+	 * vertex1.x, vertex1.y, vertex1.z, vertex2.x, vertex2.y, vertex2.z, vertex3.x, vertex3.y, vertex3.z
 	 * 
 	 * @param vertices - a list of vertexes parsed from an .obj File
 	 * @param textures - a list of textures parsed from an .obj File

@@ -2,8 +2,6 @@ package at.antSim;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.lang.reflect.Field;
-import java.util.LinkedList;
 
 /**Stores global variables, mainly config file entries and constants like resource folder, fps_cap...
  * 

@@ -2,12 +2,13 @@ package at.antSim.graphics.models;
  
 /**ModelData is a storage class holding a model's:<br>
  * <ul>
- * 	<li>float[] vertices</li>
+ * 	<li>float[] vertices positional coordinates</li>
  *  <li>float[] textureCoords</li>
  *  <li>float[] normals</li>
  *  <li>int[] indices</li>
  *  <li>float furthestPoint</li>
  * </ul>
+ * The positional coordinates, texture coordinates and normals are stored in the order defined by indices.
  * 
  * @author Flo
  *
@@ -18,7 +19,7 @@ public class ModelData {
     private float[] textureCoords;
     private float[] normals;
     private int[] indices;
-    private float furthestPoint;
+    private float farthestPoint; //distance of the point farthest away form this model's origin -> useful for creating spheres around the model for collision detection 
  
     /**Constructs a new {@link ModelData} object.
      * 
@@ -30,11 +31,11 @@ public class ModelData {
      */
     public ModelData(float[] vertices, float[] textureCoords, float[] normals, int[] indices,
             float furthestPoint) {
-        this.vertices = vertices;
+        this.vertices = vertices; //a vertex's positional coordinates
         this.textureCoords = textureCoords;
         this.normals = normals;
         this.indices = indices;
-        this.furthestPoint = furthestPoint;
+        this.farthestPoint = furthestPoint;
     }
  
     public float[] getVertices() {
@@ -54,7 +55,7 @@ public class ModelData {
     }
  
     public float getFurthestPoint() {
-        return furthestPoint;
+        return farthestPoint;
     }
  
 }

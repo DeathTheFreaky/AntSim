@@ -17,8 +17,8 @@ package at.antSim.graphics.models;
  */
 public class RawModel {
 	
-	private int vaoID;
-	private int vertexCount; //how many vertexes are inside the model
+	private int vaoID; //id or "name" of the vao used to store this model's vertex indices, positional coordinates, texture coordinates and normals
+	private int vertexCount; //how many vertexes are stored inside the model
 	
 	public RawModel(int vaoID, int vertexCount) {
 		

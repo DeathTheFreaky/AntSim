@@ -2,7 +2,7 @@ package at.antSim.graphics.models;
 
 import at.antSim.graphics.textures.ModelTexture;
 
-/**TexturedModel contains both a RawModel and a ModelTexture.
+/**TexturedModel stores a model's {@link RawModel} and {@link ModelTexture}.
  * 
  * @author Flo
  * @see RawModel

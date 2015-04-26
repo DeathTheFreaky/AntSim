@@ -2,15 +2,15 @@ package at.antSim.graphics.textures;
 
 import org.lwjgl.util.vector.Vector2f;
 
-/**GuiTexture holds all types of texture which are rendered to the screen as part of the Gui.
+/**GuiTexture holds all types of textures which are rendered to the screen as part of the Gui.
  * 
  * @author Flo
  *
  */
 public class GuiTexture {
 
-	private int texture;
-	private Vector2f position;
+	private int texture; //id or "name" of this texture returned by org.newdawn.slick.opengl.Texture.getTextureID()
+	private Vector2f position; //need to store center position of the gui quad since gui Texture has no underlying ModelData storing positional data
 	private Vector2f scale;
 	
 	/**Creates a new {@link GuiTexture}.

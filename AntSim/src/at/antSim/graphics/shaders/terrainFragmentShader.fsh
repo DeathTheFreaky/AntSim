@@ -10,7 +10,6 @@ in float visibility;
 
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
-uniform sampler2D backgroundTexture; //grass texture - the default value is 0, so we do not need to pass the texture id as uniform variable for 1 texture only
 uniform vec3 fogColor1; //mix terrain with fog color in the distance
 uniform vec3 fogColor2; //mix terrain with fog color in the distance
 uniform float blendFactor; //0: just the first texture, 1: just the second texture
@@ -18,8 +17,8 @@ uniform float blendFactor; //0: just the first texture, 1: just the second textu
 //Textures are not passed to a shader. They need to be bound (one or multiple textures) to the GL state, and they stay bound until a different texture is bound.
 //Then the fragment shader samples (i.e. "texture fetch") the texture. The fragment shader uses sampler2D uniforms to determine which texture unit to sample from.
 
-
 //three other terrain textures
+uniform sampler2D backgroundTexture; //grass texture - the default value is 0, so if we had only 1 texture, we would not need to pass the textureid as uniform variable
 uniform sampler2D rTexture; 
 uniform sampler2D gTexture;
 uniform sampler2D bTexture;

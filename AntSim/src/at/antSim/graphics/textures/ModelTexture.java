@@ -8,15 +8,19 @@ package at.antSim.graphics.textures;
  */
 public class ModelTexture {
 
-	private int textureID;
+	private int textureID; //id or "name" of this texture returned by org.newdawn.slick.opengl.Texture.getTextureID()
 	
 	private float shineDamper = 1; //how strong specular lighting appears when camera is not directly facing the reflected light
-	private float reflectivity = 0; //reflectivity used for specular lighting
+	private float reflectivity = 0; //used for specular lighting when camera is directly facing the reflected light - set to values > 0 for "shiny" objects like china
+	/* Transparent textures need backface culling to be turned off, because since we can look through the mesh, 
+	 * we could see that it has no "back" face -> backface would be black.
+	 * 
+	 * More information about face culling: https://www.youtube.com/watch?v=DZXbLk9_NJw and http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-10-transparency/
+	 */
+	private boolean hasTransparency = false; 
+	private boolean useFakeLighting = false; //transparent textures like grass need fake lighting (normals pointing directly upwards) to avoid weird shadow look
 	
-	private boolean hasTransparency = false; //transparent textures need culling to be turned off
-	private boolean useFakeLighting = false; //transparent textures like grass need fake lighting (normals pointing upwards) to avoid weird look
-	
-	private int numberOfRows = 1; //number of rows in the textureAtlas (since any ModelTExture could be a textureAtlas)
+	private int numberOfRows = 1; //number of rows in the textureAtlas (since any ModelTexture could be a textureAtlas)
 	
 	/**Creates a new {@link ModelTexture}.
 	 * 
@@ -26,15 +30,12 @@ public class ModelTexture {
 		this.textureID = id;
 	}
 	
-	
 	/**
-	 * @return - the number of rows of textures stored inside this texture which will be > 1 for a texture atlas
+	 * @return - the number of rows of sub-textures stored inside this texture which will be > 1 for a texture atlas
 	 */
 	public int getNumberOfRows() {
 		return numberOfRows;
 	}
-
-
 
 	/**
 	 * @param numberOfRows - the number of rows of textures stored inside this texture which will be > 1 for a texture atlas
@@ -42,7 +43,6 @@ public class ModelTexture {
 	public void setNumberOfRows(int numberOfRows) {
 		this.numberOfRows = numberOfRows;
 	}
-
 
 	/**
 	 * @return - a texture's ID
@@ -73,7 +73,7 @@ public class ModelTexture {
 	}
 
 	/**
-	 * @param reflectivity - how strongly light is reflected for specular lighting
+	 * @param reflectivity - how strongly light is reflected for specular lighting when camera is aiming directly at the reflected light
 	 */
 	public void setReflectivity(float reflectivity) {
 		this.reflectivity = reflectivity;

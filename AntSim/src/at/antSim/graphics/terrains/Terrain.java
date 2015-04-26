@@ -131,7 +131,7 @@ public class Terrain {
 				int topRight = topLeft + 1;
 				int bottomLeft = ((gz + 1) * VERTEX_COUNT) + gx;
 				int bottomRight = bottomLeft + 1;
-				/* store two triangles for each grid square */
+				/* store two triangles for each grid square in counter-clockwise order -> in context of OpenGL counter-clockwise order means the front face of a triangle */
 				indices[pointer++] = topLeft;
 				indices[pointer++] = bottomLeft;
 				indices[pointer++] = topRight;
