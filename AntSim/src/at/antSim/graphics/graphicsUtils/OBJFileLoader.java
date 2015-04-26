@@ -41,7 +41,7 @@ public class OBJFileLoader {
         try {
             isr = new FileReader(objFile);
         } catch (FileNotFoundException e) {
-            System.err.println("File not found in " + Globals.RESOURCES + "; don't use any extention");
+            System.err.println("File " + objFile + " not found in " + Globals.RESOURCES + ".");
         }
         BufferedReader reader = new BufferedReader(isr);
         String line;
@@ -86,10 +86,14 @@ public class OBJFileLoader {
             }
             
             /* In .obj Files, a vertices positional coords, texture coords and normals are not stored with the same indices.
-             * Hence, for each vertex of of model the information about the indices of its positional coords, texture coords and normals
+             * Hence, for each vertex of a model the information about the indices of its positional coords, texture coords and normals
              * (which line in each "paragraph" of data these are stored in) needs to be stored as well. 
              * 
              * Each of the lines starting with "f" represents a triangle.
+             * It contains a triangle's three vertices, and each of the vertices contains data in the following format: positions/texture coordinates/normals.
+             * The indixes stored in positions/texture coordinates/normals define the absolute position of the order in which the specific data has been defined.
+             * So if a texture coordinate has an index of 2, the index is referring to the 2nd entry of texture coordinates.
+             * 
              * Altogether, this way of storing helps to use up less space by avoiding to store duplicate coordinate values...
              * 
              * For example:
@@ -107,6 +111,8 @@ public class OBJFileLoader {
              *  Vertex3's positional coordinates are stored at index 1 inside the positional coordinates paragraph
              *  Vertex3's texture coordinates are stored at index 3 inside the texture coordinates paragraph
              *  Vertex3's normal coordinates are stored at index 3 inside the normal coordinates paragraph
+             *  
+             *  For more information on the obj file format see: http://www.scratchapixel.com/old/lessons/3d-advanced-lessons/obj-file-format/obj-file-format/
              * */
             while (line != null && line.startsWith("f ")) {
                 String[] currentLine = line.split(" "); 
@@ -145,7 +151,8 @@ public class OBJFileLoader {
 	 * @param normalsArray
 	 */
 	private static void processVertex(String[] vertex, List<Vertex> vertices, List<Integer> indices) {
-        int index = Integer.parseInt(vertex[0]) - 1;
+		/* in obj indices start with 1, we store our indices starting with 0, so we substract 1 from all indices */
+        int index = Integer.parseInt(vertex[0]) - 1; 
         Vertex currentVertex = vertices.get(index);
         int textureIndex = Integer.parseInt(vertex[1]) - 1;
         int normalIndex = Integer.parseInt(vertex[2]) - 1;

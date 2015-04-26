@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
 import at.antSim.graphics.entities.Camera;
-import at.antSim.graphics.graphicUtilsNew.DisplayManager;
+import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Maths;
  
 /**SkyboxShader is used as a shader program when rendering the skybox.
