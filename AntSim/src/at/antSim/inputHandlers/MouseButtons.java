@@ -1,7 +1,8 @@
 package at.antSim.inputHandlers;
 
 /**
- * Created by Clemens on 24.04.2015.
+ * Created on 24.04.2015.
+ * @author Clemens
  */
 public enum MouseButtons {
 	LEFT, RIGHT, MIDDLE;

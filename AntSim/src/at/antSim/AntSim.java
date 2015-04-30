@@ -1,13 +1,13 @@
 package at.antSim;
 
-import java.io.IOException;
-
 import at.antSim.config.ConfigReader;
 import at.antSim.config.ConfigWriter;
-import at.antSim.eventSystem.EventManager;
+
+import java.io.IOException;
 
 /**
- * Created by Clemens on 24.03.2015.
+ * Created on 24.03.2015.
+ * @author Clemens, Flo
  */
 public class AntSim {
 	

@@ -1,13 +1,10 @@
 package at.antSim;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.lang.reflect.Field;
-import java.util.LinkedList;
+import java.awt.*;
 
 /**Stores global variables, mainly config file entries and constants like resource folder, fps_cap...
  * 
- * @author Flo
+ * @author Flo, Clemens
  *
  */
 public final class Globals {
@@ -17,6 +14,7 @@ public final class Globals {
 	public static final String RESOURCES = WORKING_DIR + "\\res\\models\\";
 	public static final String CONFIG = WORKING_DIR + "\\config";
 	public static final int FPS_CAP = 120;
+	public static final int FPS_60_DURATION_NANONS = (int) ((1.0 / 60) * 100 * 100 * 100); //duration of 1/60 second in nanoseconds
 	
 	//config file entries set by config reader
 	private static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();

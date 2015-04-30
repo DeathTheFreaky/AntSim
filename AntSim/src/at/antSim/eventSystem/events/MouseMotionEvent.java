@@ -4,7 +4,8 @@ import at.antSim.eventSystem.AbstractEvent;
 import at.antSim.eventSystem.Event;
 
 /**
- * Created by Clemens on 24.04.2015.
+ * Created on 24.04.2015.
+ * @author Clemens
  */
 public class MouseMotionEvent extends AbstractEvent {
 

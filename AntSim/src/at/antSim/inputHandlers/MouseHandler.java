@@ -1,5 +1,6 @@
 package at.antSim.inputHandlers;
 
+import at.antSim.Globals;
 import at.antSim.eventSystem.Event;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
@@ -10,7 +11,8 @@ import org.lwjgl.input.Mouse;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Created by Clemens on 24.04.2015.
+ * Created on 24.04.2015.
+ * @author Clemens
  */
 public class MouseHandler extends Thread{
 
@@ -22,8 +24,6 @@ public class MouseHandler extends Thread{
 
 	@Override
 	public void run() {
-		final long iterationDuration = (long) ((1.0 / 60) * 100 * 100 * 100); // 1/60 seconds in nanoseconds
-
 		long iterationStartTime = 0;
 
 		int lastPosX = 0;
@@ -85,8 +85,8 @@ public class MouseHandler extends Thread{
 			lastRightButtonDown = currentRightButtonDown;
 			lastMiddleButtonDown = currentMiddleButtonDown;
 
-			if ((System.nanoTime() - iterationStartTime) < iterationDuration) {
-				long waitTime = iterationDuration - (System.nanoTime() - iterationStartTime);
+			if ((System.nanoTime() - iterationStartTime) < Globals.FPS_60_DURATION_NANONS) {
+				long waitTime = Globals.FPS_60_DURATION_NANONS - (System.nanoTime() - iterationStartTime);
 				try {
 					sleep(waitTime / 100, (int) waitTime % 100);
 				} catch (InterruptedException e) {

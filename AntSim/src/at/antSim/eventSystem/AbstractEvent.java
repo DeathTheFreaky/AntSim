@@ -1,7 +1,8 @@
 package at.antSim.eventSystem;
 
 /**
- * Created by Clemens on 25.03.2015.
+ * Created on 25.03.2015.
+ * @author Clemens
  */
 public abstract class AbstractEvent implements Event {
 

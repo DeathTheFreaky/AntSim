@@ -3,7 +3,8 @@ package at.antSim.eventSystem;
 import java.util.*;
 
 /**
- * Created by Clemens on 24.03.2015.
+ * Created on 24.03.2015.
+ * @author Clemens
  */
 public class EventManager {
 

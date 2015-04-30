@@ -1,7 +1,8 @@
 package at.antSim.eventSystem;
 
 /**
- * Created by Clemens on 31.03.2015.
+ * Created on 31.03.2015.
+ * @author Clemens
  */
 public enum EventPriority {
     HIGH, NORMAL, LOW;

@@ -6,7 +6,8 @@ import at.antSim.inputHandlers.MouseButtons;
 import com.sun.istack.internal.NotNull;
 
 /**
- * Created by Clemens on 24.04.2015.
+ * Created on 24.04.2015.
+ * @author Clemens
  */
 public class MouseButtonReleasedEvent extends AbstractEvent {
 
