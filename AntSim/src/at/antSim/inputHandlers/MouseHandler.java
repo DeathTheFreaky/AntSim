@@ -22,6 +22,8 @@ public class MouseHandler extends Thread{
 
 	@Override
 	public void run() {
+		final long iterationDuration = (long) ((1.0 / 60) * 100 * 100 * 100); // 1/60 seconds in nanoseconds
+
 		long iterationStartTime = 0;
 
 		int lastPosX = 0;
@@ -49,15 +51,15 @@ public class MouseHandler extends Thread{
 			currentMiddleButtonDown = Mouse.isButtonDown(2);
 
 			if (lastLeftButtonDown == false && lastLeftButtonDown != currentLeftButtonDown) {
-				inputQueue.offer(new MouseButtonPressedEvent(MouseButtons.LEFT));
+				inputQueue.offer(new MouseButtonPressedEvent(MouseButtons.LEFT, currentPosX, currentPosY));
 			}
 
 			if (lastRightButtonDown == false && lastRightButtonDown != currentRightButtonDown) {
-				inputQueue.offer(new MouseButtonPressedEvent(MouseButtons.RIGHT));
+				inputQueue.offer(new MouseButtonPressedEvent(MouseButtons.RIGHT, currentPosX, currentPosY));
 			}
 
 			if (lastMiddleButtonDown == false && lastMiddleButtonDown != currentMiddleButtonDown) {
-				inputQueue.offer(new MouseButtonPressedEvent(MouseButtons.MIDDLE));
+				inputQueue.offer(new MouseButtonPressedEvent(MouseButtons.MIDDLE, currentPosX, currentPosY));
 			}
 
 			if(lastPosX != currentPosX || lastPosY != currentPosY) {
@@ -65,15 +67,15 @@ public class MouseHandler extends Thread{
 			}
 
 			if (lastLeftButtonDown == true && lastLeftButtonDown != currentLeftButtonDown) {
-				inputQueue.offer(new MouseButtonReleasedEvent(MouseButtons.LEFT));
+				inputQueue.offer(new MouseButtonReleasedEvent(MouseButtons.LEFT, currentPosX, currentPosY));
 			}
 
 			if (lastRightButtonDown == true && lastRightButtonDown != currentRightButtonDown) {
-				inputQueue.offer(new MouseButtonReleasedEvent(MouseButtons.RIGHT));
+				inputQueue.offer(new MouseButtonReleasedEvent(MouseButtons.RIGHT, currentPosX, currentPosY));
 			}
 
 			if (lastMiddleButtonDown == true && lastMiddleButtonDown != currentMiddleButtonDown) {
-				inputQueue.offer(new MouseButtonReleasedEvent(MouseButtons.MIDDLE));
+				inputQueue.offer(new MouseButtonReleasedEvent(MouseButtons.MIDDLE, currentPosX, currentPosY));
 			}
 
 			lastPosX = currentPosX;
@@ -83,10 +85,10 @@ public class MouseHandler extends Thread{
 			lastRightButtonDown = currentRightButtonDown;
 			lastMiddleButtonDown = currentMiddleButtonDown;
 
-			if ((System.nanoTime() - iterationStartTime) < (1 / 60) * 100 * 100 * 100) {
-				long waitTime = (1/60)*100*100*100 - (System.nanoTime() - iterationStartTime);
+			if ((System.nanoTime() - iterationStartTime) < iterationDuration) {
+				long waitTime = iterationDuration - (System.nanoTime() - iterationStartTime);
 				try {
-					sleep(waitTime/100, (int)waitTime%100);
+					sleep(waitTime / 100, (int) waitTime % 100);
 				} catch (InterruptedException e) {
 					//do nothing --> will jump out of loop
 				}

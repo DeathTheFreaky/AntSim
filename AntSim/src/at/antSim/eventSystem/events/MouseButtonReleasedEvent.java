@@ -12,8 +12,13 @@ public class MouseButtonReleasedEvent extends AbstractEvent {
 
 	final MouseButtons pressedButton;
 
-	public MouseButtonReleasedEvent(@NotNull MouseButtons pressedButton) {
+	final int x;
+	final int y;
+
+	public MouseButtonReleasedEvent(@NotNull MouseButtons pressedButton, int x, int y) {
 		this.pressedButton = pressedButton;
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
@@ -23,5 +28,13 @@ public class MouseButtonReleasedEvent extends AbstractEvent {
 
 	public MouseButtons getPressedButton() {
 		return pressedButton;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
 	}
 }
