@@ -15,7 +15,7 @@ import at.antSim.graphics.terrains.Terrain;
 public class Camera {
 	
 	//Reference Point Camera
-	private float distanceFromReferencePoint = 50;
+	private float distanceFromReferencePoint = 100;
 	private float angleAroundReferencePoint = 0;
 	
 	//determine how fast to rotate camera around x,y,z axis
@@ -32,7 +32,7 @@ public class Camera {
 	
 	//camera's position and rotation
 	private Vector3f position = new Vector3f(0,0,0);
-	private float pitch = 20; //how high or low the camera is aiming
+	private float pitch = 30; //how high or low the camera is aiming
 	private float yaw; //how much left or right the camera is aiming
 	private float roll; //the camera's tilt - at 180° it is upside down
 	
