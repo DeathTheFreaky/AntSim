@@ -16,7 +16,6 @@ public class Camera {
 	
 	//Reference Point Camera
 	private float distanceFromReferencePoint = 100;
-	private float angleAroundReferencePoint = 0;
 	
 	//determine how fast to rotate camera around x,y,z axis
 	private static final float ZOOM_FACTOR = 0.1f;
@@ -149,15 +148,21 @@ public class Camera {
 	 */
 	private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
 		
-		//an explanation of what's going on here: http://www.youtube.com/watch?v=PoxDDZmctnU
-		
-		float theta = rotY + angleAroundReferencePoint;
-		float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
-		float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
+		/*
+		 * horizontalDistance is our camera triangle's hypotenuse.
+		 * The rotY angle defines the angle between the camera triangle's hypotenuse and the z-axis.
+		 * The z-axis distance from our camera to its referencePoint is the camera triangle's adjacent.
+		 * The x-axis distance from our camera to its referencePoint is the camera triangle's opposite.
+		 * 
+		 * Since we know that adjacent/hypotenuse = cos(rotY) and that opposite/hypotenuse = sin(rotY),
+		 * we can calculate the adjacent's length as hypotenuse * cos(rotY) and the opposite's length as hypotenuse * sin(rotY).
+		 */
+		float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(rotY)));
+		float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(rotY)));
 		position.x = refPointPosition.x - offsetX;
 		position.y = refPointPosition.y + verticalDistance;
 		position.z = refPointPosition.z - offsetZ; 
-		this.yaw = 180 - (rotY + angleAroundReferencePoint);
+		this.yaw = 180 - rotY;
 	}
 	
 	/*
