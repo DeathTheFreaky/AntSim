@@ -4,133 +4,198 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
-/**A Camera is used for moving around the world.
+import at.antSim.graphics.graphicsUtils.DisplayManager;
+import at.antSim.graphics.terrains.Terrain;
+
+/**A virtual camera, pretending camera movement by moving the whole world in the opposite direction.
  * 
  * @author Flo
  *
  */
 public class Camera {
 	
-	//3rd person Camera
-	private float distanceFromPlayer = 50;
-	private float angleAroundPlayer = 0;
+	//Reference Point Camera
+	private float distanceFromReferencePoint = 50;
+	private float angleAroundReferencePoint = 0;
 	
-
-	//private Vector3f position = new Vector3f(0,10,-400); //world camera
-	private Vector3f position = new Vector3f(0,0,0); //3rd person camera
+	//determine how fast to rotate camera around x,y,z axis
+	private static final float ZOOM_FACTOR = 0.1f;
+	private static final float PITCH_FACTOR = 0.1f;
+	private static final float YAW_FACTOR = 0.3f;
+	
+	private static final float MOVE_SPEED = 20; //units per second
+	private static final float TURN_SPEED = 150; //degrees per second
+	
+	//determine how fast camera is currently moving
+	private float currentSpeed = 0;
+	private float currentTurnSpeed = 0;
+	
+	//camera's position and rotation
+	private Vector3f position = new Vector3f(0,0,0);
 	private float pitch = 20; //how high or low the camera is aiming
 	private float yaw; //how much left or right the camera is aiming
 	private float roll; //the camera's tilt - at 180° it is upside down
 	
-	private Player player;
+	//reference point's position and rotation
+	private Vector3f refPointPosition;
+	private float rotX, rotY, rotZ; //rotation of the reference point
 	
-	public Camera(Player player){
-		this.player = player;
-	};
-	
-	/**Moves the camera by the following key bindings:<br>
-	 * <ul>
-	 * 		<li>W - zoom in</li>
-	 * 		<li>D - move right</li>
-	 * 		<li>A - move left</li>
-	 * </ul>
+	/**Creates a new reference point camera, passing the reference point's initial position.
+	 * 
+	 * @param refPointPosition
 	 */
-	/*public void move() {
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) { //zoom out
-			position.z -= 0.5f;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_E)) { //zoom in
-			position.z += 0.5f;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) { //move right
-			position.x += 0.5f;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_A)) { //move left
-			position.x -= 0.5f;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) { //move up
-			position.y += 0.5f;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_S)) { //move down
-			position.y -= 0.5f;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_A)) { //rotate left
-			position.x -= 1f;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_D)) { //rotate right
-			position.x -= 1f;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_S)) { //rotate down
-			pitch = (pitch + 2)%360;
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) && Keyboard.isKeyDown(Keyboard.KEY_W)) { //rotate up
-			pitch = (pitch - 2)%360;
-		}
-	}*/
+	public Camera(Vector3f refPointPosition) {
+		this.refPointPosition = refPointPosition;
+	}
+	
 	
 	/**Moves the camera.
 	 * 
+	 * @param terrain - the {@link Terrain} the {@link Camera} moves on
 	 */
-	public void move() {
+	public void move(Terrain terrain) {
+		
+		//move the reference point of movement keys have been triggered
+		checkKeyInputs();
+		//takes into account the actual time passed, making movement independent from frame rate
+		increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0); 
+		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+		System.out.println("distance: " + distance);
+		float dx = (float) (distance * Math.sin(Math.toRadians(rotY)));
+		float dz = (float) (distance * Math.cos(Math.toRadians(rotY)));
+		System.out.println("dx: " + dx);
+		System.out.println("dz: " + dz);
+		increasePosition(dx, 0, dz);
+		refPointPosition.y = terrain.getHeightOfTerrain(refPointPosition.x, refPointPosition.z);
 		
 		calculateZoom();
 		calculatePitch();
-		calculateAngleAroundPlayer();
+		calculateAngleAroundReferencePoint();
 		
 		float horizontalDistance = calculateHorizontalDistance();
 		float verticalDistance = calculateVerticalDistance();
 		
 		calculateCameraPosition(horizontalDistance, verticalDistance);
 	                
-	           /* float arg_yaw = Mouse.getDX() ;
-	            //System.out.println(arg_yaw) ;
-	            yaw += arg_yaw/10 ;
-	            float arg_roll = Mouse.getDY() ;
-	            pitch += -(arg_roll/10) ;
-	            Mouse.setGrabbed(true);
-	            
-	                if (Keyboard.isKeyDown(Keyboard.KEY_W)) 
-	                {
-	                    float toZ = ((float)Math.sin( Math.toRadians(yaw+90))) ;
-	                    float toX = ((float)Math.cos( Math.toRadians(yaw+90))) ;
-	                    position.x -= toX;
-	                    position.z -= toZ;
-	                        
-	                }
-	                if (Keyboard.isKeyDown(Keyboard.KEY_S)) 
-	                {
-	                    float toZ = ((float)Math.sin( Math.toRadians(yaw+90))) ;
-	                    float toX = ((float)Math.cos( Math.toRadians(yaw+90))) ;
-	                    position.x += toX;
-	                    position.z += toZ;
-	                }
-
-	                if (Keyboard.isKeyDown(Keyboard.KEY_D)) 
-	                {
-	                    float toZ = ((float)Math.sin( Math.toRadians(yaw))) ;
-	                    float toX = ((float)Math.cos( Math.toRadians(yaw))) ;
-	                    position.x += toX;
-	                    position.z += toZ;
-	                }
-
-	                if (Keyboard.isKeyDown(Keyboard.KEY_A)) 
-	                {
-	                    float toZ = ((float)Math.sin( Math.toRadians(yaw))) ;
-	                    float toX = ((float)Math.cos( Math.toRadians(yaw))) ;
-	                    position.x -= toX;
-	                    position.z -= toZ;
-	                }
-	                if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) 
-	                {
-	                    position.y += 0.2f;
-	                }
-	                if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) 
-	                {
-	                    position.y -= 0.2f;
-	                }*/
 	}
-
+	
+	/**Checks if the camera movement keys have been pressed on the keyboard and sets movement variables accordingly.
+	 * 
+	 */
+	private void checkKeyInputs(){
+		
+		if(Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+			this.currentSpeed = MOVE_SPEED;
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+			this.currentSpeed = -MOVE_SPEED;
+		} else {
+			this.currentSpeed = 0;
+		}
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			this.currentTurnSpeed = TURN_SPEED;
+		} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+			this.currentTurnSpeed = -TURN_SPEED;
+		} else {
+			this.currentTurnSpeed = 0;
+		}
+	}
+	
+	/**Moves the Entity in the world.
+	 * 
+	 * @param dx - how far to move the Entity on the x-Axis
+	 * @param dy - how far to move the Entity on the y-Axis
+	 * @param dz - how far to move the Entity on the z-Axis
+	 */
+	public void increasePosition(float dx, float dy, float dz) {
+		refPointPosition.x += dx;
+		refPointPosition.y += dy;
+		refPointPosition.z += dz;
+	}
+	
+	/**Rotates the Entity in the world.
+	 * 
+	 * @param dx - how far to rotate the Entity around the x-Axis
+	 * @param dy - how far to rotate the Entity around the y-Axis
+	 * @param dz - how far to rotate the Entity around the z-Axis
+	 */
+	public void increaseRotation(float dx, float dy, float dz) {
+		this.rotX += dx;
+		this.rotY += dy;
+		this.rotZ += dz;
+	}
+	
+	/**Calculates the position of a 3rd person camera in world space.
+	 * 
+	 * @param horizontalDistance - the horizontal distance between the player and the 3rd person camera
+	 * @param verticalDistance - the vertical distance between the player and the 3rd person camera
+	 */
+	private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {
+		
+		//an explanation of what's going on here: http://www.youtube.com/watch?v=PoxDDZmctnU
+		
+		float theta = rotY + angleAroundReferencePoint;
+		float offsetX = (float) (horizontalDistance * Math.sin(Math.toRadians(theta)));
+		float offsetZ = (float) (horizontalDistance * Math.cos(Math.toRadians(theta)));
+		position.x = refPointPosition.x - offsetX;
+		position.y = refPointPosition.y + verticalDistance;
+		position.z = refPointPosition.z - offsetZ; 
+		this.yaw = 180 - (rotY + angleAroundReferencePoint);
+	}
+	
+	/*
+	 * distanceFromReferencePoint is our camera triangle's hypotenuse.
+	 * The pitch angle defines the angle between the camera triangle's hypotenuse and the horizontal axis(z).
+	 * The horizontal distance from our camera to our referencePoint is the camera triangle's adjacent.
+	 * The vertical distance from our camera to our referencePoint is the camera triangle's opposite.
+	 * 
+	 * Since we know that adjacent/hypotenuse = cos(pitch) and that opposite/hypotenuse = sin(pitch),
+	 * we can calculate the adjacent's length as hypotenuse * cos(pitch) and the opposite's length as hypotenuse * sin(pitch).
+	 * 
+	 */		
+	
+	/**
+	 * @return - the horizontal distance between the reference point and the camera
+	 */
+	private float calculateHorizontalDistance() {
+		return (float) (distanceFromReferencePoint * Math.cos(Math.toRadians(pitch)));
+	}
+	
+	/**
+	 * @return - the vertical distance between the reference point and the camera
+	 */
+	private float calculateVerticalDistance() {
+		return (float) (distanceFromReferencePoint * Math.sin(Math.toRadians(pitch)));
+	}
+	
+	/**Zooms camera out when moving mousewheel down and in when moving mousewheel up.
+	 * 
+	 */
+	private void calculateZoom() {
+		float zoomLevel = Mouse.getDWheel() * ZOOM_FACTOR; //calculate how for to zoom in and out, determined by mousewheel movement
+		distanceFromReferencePoint -= zoomLevel; //move in when moving mousewheel up (Mouse.getDWheel() returns > 0)
+	}
+	
+	/**Changes camera pitch -> rotates Camera downwards when moving mouse upwards and rotates Camera upwards when moving mouse downwards.
+	 * 
+	 */
+	private void calculatePitch() {
+		if (Mouse.isButtonDown(1)) { //right mouse button pressed
+			float pitchChange = Mouse.getDY() * PITCH_FACTOR; //calculate how far to rotate camera up and down, determined by the mouse's movement along the y-Axis
+			pitch -= pitchChange; //rotate camera downwards when moving mouse upwards the y-Axis
+		}
+	}
+	
+	/**Changes camera angle around the player - rotate camera to the right when moving mouse to the left, move camera to the left when moving mouse to the right.
+	 * 
+	 */
+	private void calculateAngleAroundReferencePoint() {
+		if (Mouse.isButtonDown(1)) { //right mouse button pressed
+			float angleChange = Mouse.getDX() * YAW_FACTOR; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
+			angleAroundReferencePoint -= angleChange; //rotate camera to the left when moving mouse to the right
+		}
+	}
+	
 	/**
 	 * @return - the Camera's position as Vector3f
 	 */
@@ -157,65 +222,5 @@ public class Camera {
 	 */
 	public float getRoll() {
 		return roll;
-	}
-	
-	/**Calculates the position of a 3rd person camera in world space.
-	 * 
-	 * @param horizDistance - the horizontal distance between the player and the 3rd person camera
-	 * @param verticDistance - the vertical distance between the player and the 3rd person camera
-	 */
-	private void calculateCameraPosition(float horizDistance, float verticDistance) {
-		
-		//an explanation of what's going on here: http://www.youtube.com/watch?v=PoxDDZmctnU
-		
-		float theta = player.getRotY() + angleAroundPlayer;
-		float offsetX = (float) (horizDistance * Math.sin(Math.toRadians(theta)));
-		float offsetZ = (float) (horizDistance * Math.cos(Math.toRadians(theta)));
-		position.x = player.getPosition().x - offsetX;
-		position.y = player.getPosition().y + verticDistance;
-		position.z = player.getPosition().z - offsetZ; 
-		this.yaw = 180 - (player.getRotY() + angleAroundPlayer);
-	}
-	
-	/**
-	 * @return - the horizontal distance between the player and the 3rd person camera
-	 */
-	private float calculateHorizontalDistance() {
-		return (float) (distanceFromPlayer * Math.cos(Math.toRadians(pitch)));
-	}
-	
-	/**
-	 * @return - the vertical distance between the player and the 3rd person camera
-	 */
-	private float calculateVerticalDistance() {
-		return (float) (distanceFromPlayer * Math.sin(Math.toRadians(pitch)));
-	}
-	
-	/**Zooms 3rd person camera out when moving mousewheel down and in when moving mousewheel up.
-	 * 
-	 */
-	private void calculateZoom() {
-		float zoomLevel = Mouse.getDWheel() * 0.1f;
-		distanceFromPlayer -= zoomLevel;
-	}
-	
-	/**Changes 3rd person camera pitch -> rotate Camera up when moving mouse up rotate Camera down when moving mouse down.
-	 * 
-	 */
-	private void calculatePitch() {
-		if (Mouse.isButtonDown(1)) { //right mouse button
-			float pitchChange = Mouse.getDY() * 0.1f;
-			pitch -= pitchChange;
-		}
-	}
-	
-	/**Changes 3rd person camera angle around the player - rotate camera left when moving mouse to the left, move camera righ twhen moving mouse to the right.
-	 * 
-	 */
-	private void calculateAngleAroundPlayer() {
-		if (Mouse.isButtonDown(1)) { //left mouse button
-			float angleChange = Mouse.getDX() * 0.3f;
-			angleAroundPlayer -= angleChange;
-		}
 	}
 }

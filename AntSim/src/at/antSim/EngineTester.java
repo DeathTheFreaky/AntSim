@@ -14,7 +14,6 @@ import at.antSim.config.ConfigWriter;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;
-import at.antSim.graphics.entities.Player;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.graphicsUtils.MousePicker;
@@ -137,24 +136,18 @@ public class EngineTester {
 		 */
 		
 		//load 3d models from .obj files into ModelData objects
-		ModelData dragonModelData = OBJFileLoader.loadOBJ("dragon");
 		ModelData treeModelData = OBJFileLoader.loadOBJ("tree");
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grass");
 		ModelData fernModelData = OBJFileLoader.loadOBJ("fern");
-		ModelData playerModelData = OBJFileLoader.loadOBJ("person");
 		ModelData lampModelData = OBJFileLoader.loadOBJ("lamp");
 		
 		//load ModelData objects in a VAO and return RawModels
-		RawModel dragonRawModel = loader.loadToVAO(dragonModelData.getVertices(), dragonModelData.getTextureCoords(), 
-				dragonModelData.getNormals(), dragonModelData.getIndices());
 		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), 
 				treeModelData.getNormals(), treeModelData.getIndices());
 		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(), 
 				grassModelData.getNormals(), grassModelData.getIndices());
 		RawModel fernRawModel = loader.loadToVAO(fernModelData.getVertices(), fernModelData.getTextureCoords(), 
 				fernModelData.getNormals(), fernModelData.getIndices());
-		RawModel playerRawModel = loader.loadToVAO(playerModelData.getVertices(), playerModelData.getTextureCoords(), 
-				playerModelData.getNormals(), playerModelData.getIndices());
 		RawModel lampRawModel = loader.loadToVAO(lampModelData.getVertices(), lampModelData.getTextureCoords(), 
 				lampModelData.getNormals(), lampModelData.getIndices());
 		
@@ -163,7 +156,6 @@ public class EngineTester {
 		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("tree")); 
 		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
 		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
-		ModelTexture playerTexture = new ModelTexture(loader.loadTexture("playerTexture"));
 		ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lamp"));
 		
 		fernTextureAtlas.setNumberOfRows(2); //set number of rows inside texture atlas
@@ -179,16 +171,11 @@ public class EngineTester {
 		fernTextureAtlas.setUseFakeLighting(true);
 		
 		//finally, create the TexturedModel sticking ModelTextures to RawModels
-		TexturedModel dragonTexturedModel = new TexturedModel(dragonRawModel, dragonTexture); 
 		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, treeTexture);
 		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, grassTexture);
 		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTextureAtlas);
-		TexturedModel playerTexturedModel = new TexturedModel(playerRawModel, playerTexture);
 		TexturedModel lampTexturedModel = new TexturedModel(lampRawModel, lampTexture);
-		
-		//create player
-		Player player = new Player(playerTexturedModel, 1, new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2), 0, 0, 0, 1);
-				
+						
 		//load the different terrain textures
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
@@ -210,9 +197,7 @@ public class EngineTester {
 		
 		List<Entity> entities = new ArrayList<Entity>(); //holds all entities to be rendered
 		Random random = new Random(676452);
-		
-		entities.add(new Entity(dragonTexturedModel, 1, new Vector3f(0,0,0),0,0,0,1)); 
-		
+				
 		for (int i = 0; i < 1200; i++) {
 			if (i % 20 == 0) {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
@@ -251,12 +236,12 @@ public class EngineTester {
 		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
 		//entities.add(new Entity(lampTexturedModel, 1, new Vector3f(293, -6.6f, -305), 0, 0, 0, 1));
 		
-		Camera camera = new Camera(player); //player camera - make a "ghost" player to simulate cool camera movement
+		Camera camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2)); //player camera - make a "ghost" player to simulate cool camera movement
 		
 		List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f));
 		
-		//order matters: second texture will be drawn in fron of first texture
+		//order matters: second texture will be drawn in front of first texture
 		guis.add(gui);
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
@@ -269,8 +254,7 @@ public class EngineTester {
 			//game logic
 			entities.get(0).increaseRotation(0, 0.5f, 0); //rotate the dragon
 			
-			player.move(terrain);
-			camera.move(); //every single frame check for key inputs which move the camera
+			camera.move(terrain); //every single frame check for key inputs which move the camera
 			
 			picker.update(); //update mouse picker's ray
 			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
@@ -279,7 +263,6 @@ public class EngineTester {
 				movingLight.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 12f, terrainPoint.z));
 			}
 			
-			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
 			//renderer.processTerrain(terrain2);
 			for (Entity entity : entities) {
