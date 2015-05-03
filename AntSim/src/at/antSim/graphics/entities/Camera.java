@@ -23,7 +23,7 @@ public class Camera {
 	private static final float PITCH_FACTOR = 0.1f;
 	private static final float YAW_FACTOR = 0.3f;
 	
-	private static final float MOVE_SPEED = 20; //units per second
+	private static final float MOVE_SPEED = 50; //units per second
 	private static final float TURN_SPEED = 150; //degrees per second
 	
 	//determine how fast camera is currently moving
@@ -38,7 +38,7 @@ public class Camera {
 	
 	//reference point's position and rotation
 	private Vector3f refPointPosition;
-	private float rotX, rotY, rotZ; //rotation of the reference point
+	private float rotY; //rotation of the reference point
 	
 	/**Creates a new reference point camera, passing the reference point's initial position.
 	 * 
@@ -58,19 +58,17 @@ public class Camera {
 		//move the reference point of movement keys have been triggered
 		checkKeyInputs();
 		//takes into account the actual time passed, making movement independent from frame rate
-		increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0); 
+		increaseKeyRotation(currentTurnSpeed * DisplayManager.getFrameTimeSeconds()); 
+		increaseMouseRotation();
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
 		System.out.println("distance: " + distance);
 		float dx = (float) (distance * Math.sin(Math.toRadians(rotY)));
 		float dz = (float) (distance * Math.cos(Math.toRadians(rotY)));
-		System.out.println("dx: " + dx);
-		System.out.println("dz: " + dz);
 		increasePosition(dx, 0, dz);
 		refPointPosition.y = terrain.getHeightOfTerrain(refPointPosition.x, refPointPosition.z);
 		
 		calculateZoom();
 		calculatePitch();
-		calculateAngleAroundReferencePoint();
 		
 		float horizontalDistance = calculateHorizontalDistance();
 		float verticalDistance = calculateVerticalDistance();
@@ -101,28 +99,36 @@ public class Camera {
 		}
 	}
 	
-	/**Moves the Entity in the world.
+	/**Moves the referencePoint in the world.
 	 * 
 	 * @param dx - how far to move the Entity on the x-Axis
 	 * @param dy - how far to move the Entity on the y-Axis
 	 * @param dz - how far to move the Entity on the z-Axis
 	 */
-	public void increasePosition(float dx, float dy, float dz) {
+	private void increasePosition(float dx, float dy, float dz) {
 		refPointPosition.x += dx;
 		refPointPosition.y += dy;
 		refPointPosition.z += dz;
 	}
 	
-	/**Rotates the Entity in the world.
+	/**Rotates the referencePoint around the world's y-Axis when the left/right buttons are pressed.
 	 * 
-	 * @param dx - how far to rotate the Entity around the x-Axis
 	 * @param dy - how far to rotate the Entity around the y-Axis
-	 * @param dz - how far to rotate the Entity around the z-Axis
 	 */
-	public void increaseRotation(float dx, float dy, float dz) {
-		this.rotX += dx;
-		this.rotY += dy;
-		this.rotZ += dz;
+	private void increaseKeyRotation(float dy) {
+		rotY += dy;
+	}
+	
+	/**Rotates the reference Point around the world's y-Axis when the mouse is moved to the left or the right (inverted).
+	 * 
+	 */
+	private void increaseMouseRotation() {
+		
+		//since camera is supposed to always stay directly behind the reference point (at 0 degree angle), need to update rotY when mouse rotate around y-axis
+		if (Mouse.isButtonDown(1)) { //right mouse button pressed
+			float angleChange = Mouse.getDX() * YAW_FACTOR; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
+			rotY += angleChange; //update reference point rotation
+		}
 	}
 	
 	/**Calculates the position of a 3rd person camera in world space.
@@ -183,16 +189,6 @@ public class Camera {
 		if (Mouse.isButtonDown(1)) { //right mouse button pressed
 			float pitchChange = Mouse.getDY() * PITCH_FACTOR; //calculate how far to rotate camera up and down, determined by the mouse's movement along the y-Axis
 			pitch -= pitchChange; //rotate camera downwards when moving mouse upwards the y-Axis
-		}
-	}
-	
-	/**Changes camera angle around the player - rotate camera to the right when moving mouse to the left, move camera to the left when moving mouse to the right.
-	 * 
-	 */
-	private void calculateAngleAroundReferencePoint() {
-		if (Mouse.isButtonDown(1)) { //right mouse button pressed
-			float angleChange = Mouse.getDX() * YAW_FACTOR; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
-			angleAroundReferencePoint -= angleChange; //rotate camera to the left when moving mouse to the right
 		}
 	}
 	
