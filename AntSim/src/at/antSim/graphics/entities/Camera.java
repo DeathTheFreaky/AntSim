@@ -162,7 +162,7 @@ public class Camera {
 		position.x = refPointPosition.x - offsetX;
 		position.y = refPointPosition.y + verticalDistance;
 		position.z = refPointPosition.z - offsetZ; 
-		this.yaw = 180 - rotY;
+		this.yaw = 180 - rotY; //add 180 degrees to make camera look along the negative z-axis (forwards) instead of the positive z-axis 
 	}
 	
 	/*
