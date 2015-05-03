@@ -57,11 +57,22 @@ public class Camera {
 		
 		//move the reference point of movement keys have been triggered
 		checkKeyInputs();
+		
 		//takes into account the actual time passed, making movement independent from frame rate
 		increaseKeyRotation(currentTurnSpeed * DisplayManager.getFrameTimeSeconds()); 
 		increaseMouseRotation();
+		
+		/*
+		 * distance is our referncePoints movement triangle's hypotenuse.
+		 * The rotY angle defines the angle between the movement triangle's hypotenuse and the z-axis.
+		 * The z-axis distance from our referencePoint to its previous position is the movement triangle's adjacent.
+		 * The x-axis distance from our referencePoint to its previous position is the movement triangle's opposite.
+		 * 
+		 * Since we know that adjacent/hypotenuse = cos(rotY) and that opposite/hypotenuse = sin(rotY),
+		 * we can calculate the adjacent's length as hypotenuse * cos(rotY) and the opposite's length as hypotenuse * sin(rotY).
+		 * 
+		 */
 		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-		System.out.println("distance: " + distance);
 		float dx = (float) (distance * Math.sin(Math.toRadians(rotY)));
 		float dz = (float) (distance * Math.cos(Math.toRadians(rotY)));
 		increasePosition(dx, 0, dz);
