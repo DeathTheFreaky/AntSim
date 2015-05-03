@@ -4,8 +4,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.models.TexturedModel;
 
-/**An Entity represents an instance of a TexturedModel.<br>
- * In addition to the TexturedModel, an Entity also contains the position, rotation and scale of this model.
+/**An Entity represents a representation of a real-world object.<br>
+ * It consists of a {@link TexturedModel}, a PhysicsObject and the position, rotation and scale of its model.<br>
+ * Additional behavior may be defined by extending this {@link Entity} class.
  * 
  * @author Flo
  * @see TexturedModel
@@ -17,7 +18,7 @@ public class Entity {
 	private float rotX, rotY, rotZ;
 	private float scale;
 	
-	private int textureIndex = 0; //indicates which texture in texture atlas the entity uses
+	private int textureIndex = 0; //indicates which texture in a texture atlas the entity uses
 	
 	/**Creates a new {@link Entity}.
 	 * 
@@ -41,19 +42,19 @@ public class Entity {
 	}
 	
 	/**
-	 * @return - the Column of this Entitie's textureIndex in the texture atlas
+	 * @return - the u-texture coordinate of this Entitie's textureIndex in the texture atlas
 	 */
 	public float getTextureXOffset() {
-		int column = textureIndex%model.getTexture().getNumberOfRows();
-		return (float)column/(float)model.getTexture().getNumberOfRows();
+		int column = textureIndex % model.getTexture().getNumberOfRows(); //get column index of texture in texture atlas
+		return (float)column/(float)model.getTexture().getNumberOfRows(); //calculate u-texture coordinate offset in texture atlas
 	}
 	
 	/**
-	 * @return - the Row of this Entitie's textureIndex in the texture atlas
+	 * @return - the v-texture coordinate of this Entitie's textureIndex in the texture atlas
 	 */
 	public float getTextureYOffset() {
-		int row = textureIndex/model.getTexture().getNumberOfRows();
-		return (float)row/(float)model.getTexture().getNumberOfRows();
+		int row = textureIndex/model.getTexture().getNumberOfRows(); //get row index of texture in texture atlas
+		return (float)row/(float)model.getTexture().getNumberOfRows(); //calculate v-texture coordinate offset in texture atlas
 	}
 	
 	/**Moves the Entity in the world.
@@ -87,9 +88,6 @@ public class Entity {
 		return model;
 	}
 
-	/**
-	 * @return - the Entitie's position
-	 */
 	public Vector3f getPosition() {
 		return position;
 	}
@@ -98,30 +96,18 @@ public class Entity {
 		this.position = position;
 	}
 
-	/**
-	 * @return - the Entitie's X rotation
-	 */
 	public float getRotX() {
 		return rotX;
 	}
 
-	/**
-	 * @return - the Entitie's Y rotation
-	 */
 	public float getRotY() {
 		return rotY;
 	}
 
-	/**
-	 * @return - the Entitie's Z rotation
-	 */
 	public float getRotZ() {
 		return rotZ;
 	}
 
-	/**
-	 * @return - the Entitie's scale
-	 */
 	public float getScale() {
 		return scale;
 	}
