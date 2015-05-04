@@ -107,8 +107,8 @@ public class MasterRenderer {
 		entities.clear(); 
 	}
 	
-	/**
-	 * @param terrain
+	/**Processed a terrain, adding it to the list of used terrains.
+	 * @param terrain - terrain to be processed
 	 */
 	public void processTerrain(Terrain terrain) {
 		terrains.add(terrain);
@@ -143,168 +143,145 @@ public class MasterRenderer {
 		}
 	}
 	
-	/**Creates a Projection Matrix with the parameters set in Renderer.
-	 * 
+	/**Creates a Projection Matrix with the parameters set in Renderer.<br>
+	 * <br>
+	 * The following guide on how to set up a projection matrix originates from http://www.songho.ca/opengl/gl_projectionmatrix.html<br>
+	 * For additional information on creating a projection matrix see: http://ogldev.atspace.co.uk/www/tutorial12/tutorial12.html<br>
+	 * <br>
+	 * In perspective projection, a 3D point in a truncated pyramid frustum (eye coordinates) is mapped to a cube (NDC);
+	 * the range of x-coordinate from [l, r] to [-1, 1], the y-coordinate from [b, t] to [-1, 1] and the z-coordinate from [n, f] to [-1, 1].<br>
+	 * <img src="doc-files/gl_projectionmatrix01.png">
+	 * <br>
+	 * Note that the eye coordinates are defined in the right-handed coordinate system, but NDC uses the left-handed coordinate system. 
+	 * That is, the camera at the origin is looking along -Z axis in eye space, but it is looking along +Z axis in NDC. 
+	 * Since glFrustum() accepts only positive values of near and far distances, we need to negate them during the construction of GL_PROJECTION matrix.<br>
+	 * <br>
+	 * In OpenGL, a 3D point in eye space is projected onto the near plane (projection plane). 
+	 * The following diagrams show how a point (xe, ye, ze) in eye space is projected to (xp, yp, zp) on the near plane.<br>
+	 * <img src="doc-files/gl_projectionmatrix03.png">
+	 * <img src="doc-files/gl_projectionmatrix04.png">
+	 * <br>
+	 * From the top view of the frustum, the x-coordinate of eye space, xe is mapped to xp, which is calculated by using the ratio of similar triangles;<br><br> 
+	 * <img src="doc-files/gl_projectionmatrix_eq01.png"><br>
+	 * <br>
+	 * From the side view of the frustum, yp is also calculated in a similar way;<br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq02.png"><br>
+	 * <br>
+	 * Note that both xp and yp depend on ze; they are inversely propotional to -ze. In other words, they are both divided by -ze. 
+	 * It is a very first clue to construct GL_PROJECTION matrix. 
+	 * After the eye coordinates are transformed by multiplying GL_PROJECTION matrix, the clip coordinates are still a homogeneous coordinates. 
+	 * It finally becomes the normalized device coordinates (NDC) by dividing by the w-component of the clip coordinates. <br>
+	 * <br>
+	 * <img src="doc-files/gl_transform08.png"><img src="doc-files/gl_transform12.png"><br>
+	 * <br>
+	 * Therefore, we can set the w-component of the clip coordinates as -ze. And, the 4th of GL_PROJECTION matrix becomes (0, 0, -1, 0).<br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq03.png"><br>
+	 * <br>
+	 * Next, we map xp and yp to xn and yn of NDC with linear relationship; [l, r] ⇒ [-1, 1] and [b, t] ⇒ [-1, 1].<br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix05.png">
+	 * <img src="doc-files/gl_projectionmatrix_eq04.png">
+	 * <br><br>
+	 * <img src="doc-files/gl_projectionmatrix06.png">
+	 * <img src="doc-files/gl_projectionmatrix_eq05.png"><br>
+	 * <br>
+	 * Then, we substitute xp and yp into the above equations.<br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq06.png">
+	 * <img src="doc-files/gl_projectionmatrix_eq07.png"><br>
+	 * <br>
+	 * Note that we make both terms of each equation divisible by -ze for perspective division (xc/wc, yc/wc). 
+	 * And we set wc to -ze earlier, and the terms inside parentheses become xc and yc of the clip coordinates.<br>
+	 * <br>
+	 * From these equations, we can find the 1st and 2nd rows of GL_PROJECTION matrix. <br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq08.png"><br>
+	 * <br>
+	 * Now, we only have the 3rd row of GL_PROJECTION matrix to solve. 
+	 * Finding zn is a little different from others because ze in eye space is always projected to -n on the near plane. 
+	 * But we need unique z value for the clipping and depth test. Plus, we should be able to unproject (inverse transform) it. 
+	 * Since we know z does not depend on x or y value, we borrow w-component to find the relationship between zn and ze. 
+	 * Therefore, we can specify the 3rd row of GL_PROJECTION matrix like this.<br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq10.png"><br>
+	 * <br>
+	 * In eye space, we equals to 1. Therefore, the equation becomes <br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq11.png"><br>
+	 * <br>
+	 * To map the eyespace coordinates to normalized device coordinates, we need to use a mapping operation composed of two parts: 
+	 * First we scale down the range [NearZ, FarZ] down to any range with a width of 2. Then we move (or translate) the range such that it will start at -1. 
+	 * Scaling the Z value and then translating it is represented by the general function:<br><br>
+	 * <img src="doc-files/12_07.png"><br>
+	 * <br>
+	 * We know that when Z equals NearZ the result must be -1 and that when Z equals FarZ the result must be 1.<br>
+	 * So to find the coefficients, A and B, we use the (ze, zn) relation: (-n, -1) and (-f, 1), and put them into the above equation: <br>
+	 * (substituting zn with -1 and ze with -n and substituting zn with 1 and ze with -f; 
+	 * notice that we have to negate near n and far f because in eye coordinates the negative z-axis equals the positive z-axis in normalized device coordinates) <br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq12.png"><br>
+	 * <br>
+	 * To solve the equations for A and B, rewrite eq.(1) for B:<br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq13.png"><br>
+	 * <br>
+	 * Substitute eq.(1') to B in eq.(2), then solve for A: <br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq14.png"><br>
+	 * <br>
+	 * Put A into eq.(1) to find B: <br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq15.png"><br>
+	 * <br>
+	 * We found A and B. Therefore, the relation between ze and zn becomes: <br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq17.png"><br>
+	 * <br>
+	 * Finally, we found all entries of GL_PROJECTION matrix. The complete projection matrix is:<br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq16.png"><br>
+	 * <br>
+	 * This projection matrix is for a general frustum. If the viewing volume is symmetric, which is r = -l and t = -b, then it can be simplified as: <br>
+	 * <br>
+	 * <img src="doc-files/gl_projectionmatrix_eq20.png"><br>
+	 * <br>
+	 * Finally, we take a look at the relation between ze and zn, once again. 
+	 * The relationship between ze and zn is a rational function and is non-linear. 
+	 * This means there is very high precision at the near plane, but very little precision at the far plane. 
+	 * If the range [-n, -f] is getting larger, it causes a depth precision problem (z-fighting): 
+	 * a small change of ze around the far plane does not affect on zn value. 
+	 * The distance between n and f should be short as possible to minimize the depth buffer precision problem.<br>
+	 * <br> 
+	 * <img src="doc-files/gl_projectionmatrix07.png">
 	 */
-	private void createProjectionMatrix(){
-		
-		//for further information on creating a projection matrix see: http://ogldev.atspace.co.uk/www/tutorial12/tutorial12.html
-		
-		/* When we look at our screen, we usually cannot see all the 3D - World at once,
-		 * but a rectangular area (called projection window) that has the same proportions as our screen.
-		 * 
-		 * The aspect ration for this window can be calculated as: aspectRatio = screenWidth / screenHeight.
-		 *  
-		 * We can choose one dimension (width or height) of our projection window as we wish, and need to adapt the second dimension
-		 * according to the aspect ratio (at first). We do so by conveniently defining the projection window's height as 2 (-1 to 1),
-		 * since the supposed output of our projection are normalized device coordinates, which range from -1 to 1 
-		 * in both the vertical and the horizontal dimension.
-		 * 
-		 * But wait... that sounds strange! If both dimensions of our output normalized device coordinates range from -1 to 1, 
-		 * doesn't this mean that our screen has to be a square? 
-		 * Well obviously, no, I cannot think of any screen ratio being 1:1. But how can we then achieve normalized device coordinates?
-		 * The answer is not too difficult: we simply have to fit in more information in one of the dimensions, so that a 1 in vertical dimension
-		 * does not match a 1 in horizontal dimension in "real" units. The normalized device coordinate units rather function as relative 
-		 * relations rather than absolute measured data. This means that a horizontal value of 0.5 does not mean that the resulting coordinate 
-		 * is 0.5 centimeters, or inches or whatever to the right of the middle of the screen, but it means that the resulting coordinate
-		 * is located at half of the right half of the screen, or 3/4 from the left border of the screen.
-		 * 
-		 * But we will deal with this mystery later on.
-		 * 
-		 * First we need to find the distance of the projection window (near plane) from the camera,
-		 * since we will need this value for further calculations.
-		 * If we look at our projection window from the side (Z-Y plane), we notice that a triangle is spanned by
-		 * the distance and half of the window's height (which we defined as 1), denoted by half of the opening angle of alpha.
-		 * We can freely chose alpha (we go with 45�), and using some basic trigonometry, we find that 
-		 * in our side-way looking projection plane triangle, the distance from the camera to the projection window
-		 * functions as the adjacent and half of the window's height as opposite of half our opening angle alpha.
-		 * 
-		 * Thus, tan(alpha/2) = 1/distance -> and distance = 1/tan(alpha/2).
-		 * 
-		 * Now we need to find the projected coordinates of a point in the 3D world.
-		 * Again we look at our Projection Plane from the side (Z-Y plane). 
-		 * We can place our point anywhere inside the triangle spanned by the opening angle,
-		 * and between the near plane (which has the distance previously calculated from the camera) and the far plane.
-		 * 
-		 * According to the rule of similar triangle's, we know that the relations of a triangle's sides to each other do not change,
-		 * regardless of the triangle's size, of the triangle's angles stay the same (which is the case here).
-		 * 
-		 * So our point's y coordinate divided by its distance from the camera equals the y coordinate where the ray from our point to our camera
-		 * intersects the Projection window (near plane) divided by the Projection window's distance from the camera, 
-		 * or a little more clearly visualized:
-		 * 
-		 * Point p; (some point in our 3D world visible in our projection frustum)
-		 * Point i; (intersection of ray connection Point p and the camera with the near plane)
-		 * p.z; (horizontal distance from our camera to the Point p)
-		 * i.z = distance d = 1/tan(alpha/2); (horizontal distance from our camera to the near plane)
-		 * 
-		 * -> i.y / i.z = p.y / p.z = i.y * tan(alpha/2) (they both are spanned under the same angle).
-		 * -> i.x / i.z = p.x / p.z = i.x * tan(alpha/2)
-		 * 
-		 * Now we can calculate p.y and p.z as:
-		 * i.y = p.y * i.z / p.z = p.y / (p.z * tan(alpha/2)
-		 * i.x = p.x * i.z / p.z = p.x / (p.z * tan(alpha/2)
-		 * 
-		 * "Since our projection window is 2*aspectRatio (width) by 2 (height) in size we know that a point in the 3D world is inside the window
-		 * if it is projected to a point whose projected X component is between -ar and +ar and the projected Y component is between -1 and +1.
-		 * So on the Y component we are normalized but on the X component we are not. 
-		 * We can get Xp normalized as well by further dividing it by the aspect ratio. 
-		 * This means that a point whose projected X component was +ar is now +1 which places it on the right hand side of the normalized box. 
-		 * If its projected X component was +0.5 and the aspect ratio was 1.333 (which is what we get on an 1024x768 screen) the new projected X component is 0.375. 
-		 * To summarize, the division by the aspect ratio has the effect of condensing the points on the X axis." 
-		 * 
-		 * We have reached the following projection equations for the X and Y components:
-		 * 
-		 * i.x = p.x / (aspectRatio * p.z * tan(alpha/2))
-		 * i.y = p.y / (p.z * tan(alpha/2))
-		 * 
-		 * "Before completing the full process let's try to see how the projection matrix would look like at this point. 
-		 * This means representing the above using a matrix. Now we run into a problem. 
-		 * In both equations we need to divide X and Y by Z which is part of the vector that represents position. 
-		 * However, the value of Z changes from one vertex to the next so you cannot place it into one matrix that projects all vertices. 
-		 * To understand this better think about the top row vector of the matrix (a, b, c, d). 
-		 * We need to select the values of the vector such that the following will hold true: "
-		 * 
-		 * a*x + b*y + c*z + d*w = x / (z * tan(alpha/2))
-		 * 
-		 * "This is the dot product operation between the top row vector of the matrix with the vertex position which yields the final X component. 
-		 * We can select 'b' and 'd' to be zero but we cannot find an 'a' and 'c' that can be plugged into the left hand side and provide the results on the right hand side. 
-		 * The solution adopted by OpenGL is to seperate the transformation into two parts: a multiplication by a projection matrix followed by a division by the Z value as an independant step. 
-		 * The matrix is provided by the application and the shader must include the multiplication of the position by it. 
-		 * The division by the Z is hard wired into the GPU and takes place in the rasterizer (somewhere between the vertex shader and the fragment shader). 
-		 * How does the GPU know which vertex shader output to divide by its Z value? simple - the built-in variable gl_Position is designated for that job. 
-		 * Now we only need to find a matrix that represents the projection equations of X & Y above.
-		 * 
-		 * After multiplying by that matrix the GPU can divide by Z automatically for us and we get the result we want. 
-		 * But here's another complexity: if we multiply the matrix by the vertex position and then divide it by Z we literally loose the Z value because it becomes 1 for all vertices. 
-		 * The original Z value must be saved in order to perform the depth test later on. 
-		 * So the trick is to copy the original Z value into the W component of the resulting vector and divide only XYZ by W instead of Z. 
-		 * W maintains the original Z which can be used for depth test. The automatic step of dividing gl_Position by its W is called 'perspective divide'. 
-		 * 
-		 * As mentioned earlier, we want to include the normalization of the Z value as well to make it easier for the clipper to work without knowing the near and far Z values. 
-		 * However, the matrix above turns Z into zero. Knowing that after transforming the vector the system will automatically do perspective divide we need to select the values
-		 * of the third row of the matrix such that following the division any Z value within viewing range (i.e. NearZ <= Z <= FarZ) will be mapped to the [-1,1] range. 
-		 * Such a mapping operation is composed of two parts. 
-		 * First we scale down the range [NearZ, FarZ] down to any range with a width of 2. 
-		 * Then we move (or translate) the range such that it will start at -1. 
-		 * Scaling the Z value and then translating it is represented by the general function: "
-		 * 
-		 * f(z) = A*z + B
-		 * 
-		 * "But following perspective divide the right hand side of the function becomes:"
-		 * 
-		 * A + B/z
-		 * 
-		 * "Now we need to find the values of A and B that will perform the maping to [-1,1]. 
-		 * We know that when Z equals NearZ the result must be -1 and that when Z equals FarZ the result must be 1. 
-		 * Therefore we can write: "
-		 * 
-		 * A + B/NearZ = -1 -> A = -1 - B /NearZ
-		 * A + B/FarZ = 1 -> B/FarZ - 1 - B/NearZ = 1 -> (B*NearZ - B*FarZ) /  (FarZ*NearZ) = 2 
-		 * -> (B * (NearZ - FarZ)) / (FarZ * NearZ) = 2 -> B * (NearZ - FarZ) = 2 * FarZ * NearZ -> 
-		 * B = (2 * FarZ * NearZ) / (NearZ - FarZ)
-		 * 
-		 * A = -1 - B/NearZ = -1 - (2 * FarZ * NearZ) / (NearZ * (NearZ - FarZ)) = 
-		 * -1 - (2 * FarZ) / (NearZ - FarZ) = (-NearZ + FarZ - 2*FarZ) / (NearZ - FarZ) ->
-		 * A = (-NearZ - FarZ) / (NearZ - FarZ)
-		 * 
-		 * "Now we need to select the third row of the matrix as the vector (a b c d) that will satisfy:"
-		 * 
-		 * a*X + b*Y + c*Z + d*W = A*Z + B
-		 * 
-		 * "We can immediately set 'a' and 'b' to be zero because we don't want X and Y to have any effect on the transformation of Z. 
-		 * Then our A value can become 'c' and the B value can become 'd' (since W is known to be 1).
-		 * Therefore, the final transformation matrix is:"
-		 * 
-		 * (all except the explicitly stated elements are 0)
-		 * m00 = 1 / (aspectRatio * tan(alpha/2))
-		 * m11 = 1 / tan(alpha/2)
-		 * m22 = (-NearZ - FarZ) / (NearZ - FarZ)
-		 * m23 = (2 * FarZ * NearZ) / (NearZ - FarZ)
-		 * m32 = 1
-		 * 
-		 * "After multiplying the vertex position by the projection matrix the coordinates are said to be in Clip Space 
-		 * and after performing the perspective divide the coordinates are in NDC Space (Normalized Device Coordinates)."
-		 */
-		
-		float openingAngle = 45; //vertical opening angle of our camera
-		
+	private void createProjectionMatrix() {
+			
 		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight(); //get aspect ratio defined by the screen's dimensions
 		
-		float distanceFromCamera = (float) (1 / Math.tan(Math.toRadians(openingAngle)/2));
+		//float distanceFromCamera = (float) (1 / Math.tan(Math.toRadians(openingAngle)/2));
 		
-		System.out.println("distanceFromCamera: " + distanceFromCamera);
+		//System.out.println("distanceFromCamera: " + distanceFromCamera);
 		
 		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
 		float x_scale = y_scale / aspectRatio;
 		float frustum_length = FAR_PLANE - NEAR_PLANE;
-
+		
+		//tan(FOV/2) = top/near; -> top = tan(FOV/2) * near
+		
+		float near = NEAR_PLANE; //-n
+		float far = FAR_PLANE; //f
+		float top = (float) (near * Math.tan(Math.toRadians(FOV/2))); //t
+		float right = aspectRatio * top; //r
+		
+		
 		projectionMatrix = new Matrix4f(); //creates a new 4x4 matrix, setting all elements to 0 by default
-		projectionMatrix.m00 = (float) (1 / (aspectRatio * Math.tan(Math.toRadians(openingAngle/2))));
-		projectionMatrix.m11 = (float) (1 / Math.tan(Math.toRadians(openingAngle/2)));
-		projectionMatrix.m22 = (-NEAR_PLANE - FAR_PLANE) / (FAR_PLANE - NEAR_PLANE);
-		projectionMatrix.m23 = -1;
-		projectionMatrix.m32 = (2 * FAR_PLANE * NEAR_PLANE) / (NEAR_PLANE - FAR_PLANE);
+		projectionMatrix.m00 = near/right;
+		projectionMatrix.m11 = near/top;
+		projectionMatrix.m22 = -(far + near) / (far - near);
+		projectionMatrix.m23 = -2 * far * near / (far - near);
+		projectionMatrix.m32 = -1;
 		
 		/*projectionMatrix = new Matrix4f();
 		projectionMatrix.m00 = (float) (1 / (aspectRatio * Math.tan(Math.toRadians(openingAngle/2))));

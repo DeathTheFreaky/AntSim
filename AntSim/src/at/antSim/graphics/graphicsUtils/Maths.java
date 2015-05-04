@@ -54,10 +54,10 @@ public class Maths {
 	 * To transform a vector by a matrix, you first need to convert the vector to a matrix (i.e. choose whether it’s supposed to be a column or row vector this time), 
 	 * then multiply the two. In the usual graphics setting, we have a 4×4 matrix T and a 4-vector v. 
 	 * Since the middle dimension in a matrix product must match, we can’t do this arbitrarily. 
-	 * If we write v as a 4×1 matrix (column vector), we can compute Tv but not vT. If v is instead a 1×4 matrix (row vector), only vT works and Tv leads to a “dimension mismatch”. 
+	 * If we write v as a 4×1 matrix (column vector), we can compute Tv but not vT. If v is instead a 1×4 matrix (row vector), only vT works and Tv leads to a "dimension mismatch". 
 	 * For both column and row vectors, the result of that is again a column or row vector, respectively, which has repercussions: 
 	 * if we want to transform the result again by another matrix, again there’s only one place where we can legally put it. 
-	 * For column vectors, transforming a vector by T then S leads to the expression S(Tv)=STv=(ST)v, so the matrix that represents “first T then S” is given by the matrix ST. 
+	 * For column vectors, transforming a vector by T then S leads to the expression S(Tv)=STv=(ST)v, so the matrix that represents "first T then S" is given by the matrix ST. 
 	 * For row vectors, we get (vT)S=vTS=v(TS), so the matrix for the concatenation of the two is given by TS. 
 	 * Small difference, big repercussions: whether you choose row or column vectors influences how you concatenate transforms.
 	 * 
