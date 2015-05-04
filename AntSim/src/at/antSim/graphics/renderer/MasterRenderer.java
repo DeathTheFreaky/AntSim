@@ -28,7 +28,7 @@ import at.antSim.graphics.terrains.Terrain;
 public class MasterRenderer {
 	
 	//set projection matrix parameters
-	private static final float FOV = 70; 
+	private static final float FOV = 70; //horizontal (y-Axis) camera opening angle
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000;
 	
@@ -257,39 +257,22 @@ public class MasterRenderer {
 	 * <img src="doc-files/gl_projectionmatrix07.png">
 	 */
 	private void createProjectionMatrix() {
-			
+					
 		float aspectRatio = (float) Display.getWidth() / (float) Display.getHeight(); //get aspect ratio defined by the screen's dimensions
-		
-		//float distanceFromCamera = (float) (1 / Math.tan(Math.toRadians(openingAngle)/2));
-		
-		//System.out.println("distanceFromCamera: " + distanceFromCamera);
-		
-		float y_scale = (float) ((1f / Math.tan(Math.toRadians(FOV / 2f))) * aspectRatio);
-		float x_scale = y_scale / aspectRatio;
-		float frustum_length = FAR_PLANE - NEAR_PLANE;
-		
-		//tan(FOV/2) = top/near; -> top = tan(FOV/2) * near
-		
-		float near = NEAR_PLANE; //-n
+				
+		float near = NEAR_PLANE; //n
 		float far = FAR_PLANE; //f
-		float top = (float) (near * Math.tan(Math.toRadians(FOV/2))); //t
-		float right = aspectRatio * top; //r
 		
+		//looking at frustum from above, right and near span a triangle under the angle FOV/2 with near being the adjacent and right being the opposite
+		float right = (float) (near * Math.tan(Math.toRadians(FOV/2))); //t
+		float top = right/aspectRatio; //t: according to screen size, height = width/aspectRatio -> top = height/2, right = width/2 for symmetric frustum
 		
 		projectionMatrix = new Matrix4f(); //creates a new 4x4 matrix, setting all elements to 0 by default
 		projectionMatrix.m00 = near/right;
 		projectionMatrix.m11 = near/top;
 		projectionMatrix.m22 = -(far + near) / (far - near);
-		projectionMatrix.m23 = -2 * far * near / (far - near);
-		projectionMatrix.m32 = -1;
-		
-		/*projectionMatrix = new Matrix4f();
-		projectionMatrix.m00 = (float) (1 / (aspectRatio * Math.tan(Math.toRadians(openingAngle/2))));
-		projectionMatrix.m11 = (float) (1 / Math.tan(Math.toRadians(openingAngle/2)));
-	    projectionMatrix.m22 = (-NEAR_PLANE - FAR_PLANE) / (NEAR_PLANE - FAR_PLANE);
-	    projectionMatrix.m23 = (2 * FAR_PLANE * NEAR_PLANE) / (NEAR_PLANE - FAR_PLANE);
-	    projectionMatrix.m32 = 1.0f;*/
-		
+		projectionMatrix.m23 = -1;
+		projectionMatrix.m32 = -2 * far * near / (far - near);
 	}
 	
 	/**Call cleanUp in MasterRenderer before closing the game to free resources.
