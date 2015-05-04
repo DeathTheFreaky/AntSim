@@ -11,7 +11,9 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
+import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.models.TexturedModel;
@@ -45,11 +47,15 @@ public class EntityRenderer {
 	 * @param blendfactor - 0 means nighttime, 1 means daytime
 	 * @param dayFog - a Vector3f of r,g,b fog color for daytime
 	 * @param nightFog - a Vector3f of r,g,b fog color for nighttime
+	 * @param lights - a list of lightsources
+	 * @param camera - for creating a viewMatrix
 	 */
-	public void render(Map<TexturedModel, List<Entity>> entities, float blendFactor, Vector3f dayFog, Vector3f nightFog) {
+	public void render(Map<TexturedModel, List<Entity>> entities, float blendFactor, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
 		
 		shader.start();
 		shader.loadFogColors(dayFog, nightFog);
+		shader.loadLights(lights);
+		shader.loadViewMatrix(camera);
 		shader.loadBlendFactor(blendFactor);
 		for (TexturedModel model:entities.keySet()) {
 			prepareTexturedModel(model);

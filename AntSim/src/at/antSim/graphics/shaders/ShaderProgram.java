@@ -59,7 +59,7 @@ public abstract	class ShaderProgram {
 	 * 
 	 */
 	public void start() {
-		
+		//see: https://www.opengl.org/sdk/docs/man/html/glUseProgram.xhtml
 		GL20.glUseProgram(programID);
 	}
 	
