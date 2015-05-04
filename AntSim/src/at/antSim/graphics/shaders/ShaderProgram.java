@@ -59,7 +59,30 @@ public abstract	class ShaderProgram {
 	 * 
 	 */
 	public void start() {
-		//see: https://www.opengl.org/sdk/docs/man/html/glUseProgram.xhtml
+		
+		//see: https://www.opengl.org/sdk/docs/man/html/glUseProgram.xhtml:
+		
+		/* glUseProgram installs the program object specified by program as part of current rendering state. 
+		 * One or more executables are created in a program object by successfully attaching shader objects to it with glAttachShader, 
+		 * successfully compiling the shader objects with glCompileShader, and successfully linking the program object with glLinkProgram.
+		 * 
+		 * A program object will contain an executable that will run on the vertex processor 
+		 * if it contains one or more shader objects of type GL_VERTEX_SHADER that have been successfully compiled and linked. 
+		 * A program object will contain an executable that will run on the geometry processor 
+		 * if it contains one or more shader objects of type GL_GEOMETRY_SHADER that have been successfully compiled and linked. 
+		 * Similarly, a program object will contain an executable that will run on the fragment processor 
+		 * if it contains one or more shader objects of type GL_FRAGMENT_SHADER that have been successfully compiled and linked.
+		 * 
+		 * While a program object is in use, applications are free to modify attached shader objects, compile attached shader objects, 
+		 * attach additional shader objects, and detach or delete shader objects. 
+		 * None of these operations will affect the executables that are part of the current state. 
+		 * However, relinking the program object that is currently in use will install the program object as part of the current rendering state 
+		 * if the link operation was successful (see glLinkProgram ). 
+		 * If the program object currently in use is relinked unsuccessfully, its link status will be set to GL_FALSE, 
+		 * but the executables and associated state will remain part of the current state until a subsequent call to glUseProgram removes it from use. 
+		 * After it is removed from use, it cannot be made part of current state until it has been successfully relinked.
+		 */
+		
 		GL20.glUseProgram(programID);
 	}
 	
