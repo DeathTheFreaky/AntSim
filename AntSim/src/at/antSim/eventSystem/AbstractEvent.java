@@ -6,15 +6,15 @@ package at.antSim.eventSystem;
  */
 public abstract class AbstractEvent implements Event {
 
-    private boolean killed = false;
+    private boolean consumed = false;
 
     @Override
     public void consume() {
-        killed = true;
+        consumed = true;
     }
 
     @Override
     public boolean isConsumed() {
-        return killed;
+        return consumed;
     }
 }

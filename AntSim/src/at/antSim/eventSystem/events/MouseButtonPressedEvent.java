@@ -1,7 +1,5 @@
 package at.antSim.eventSystem.events;
 
-import com.sun.istack.internal.NotNull;
-
 /**
  * Created on 24.04.2015.<br />
  * Represents a mouse button pressed.
@@ -10,7 +8,7 @@ import com.sun.istack.internal.NotNull;
  */
 public class MouseButtonPressedEvent extends AbstractMouseButtonEvent {
 
-	public MouseButtonPressedEvent(@NotNull int button, @NotNull int posX, @NotNull int posY) {
+	public MouseButtonPressedEvent(int button, int posX, int posY) {
 		super(button, posX, posY);
 	}
 

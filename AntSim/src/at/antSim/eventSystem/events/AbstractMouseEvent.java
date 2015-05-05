@@ -1,7 +1,6 @@
 package at.antSim.eventSystem.events;
 
 import at.antSim.eventSystem.AbstractEvent;
-import com.sun.istack.internal.NotNull;
 
 /**
  * Created on 04.05.2015.<br />
@@ -9,13 +8,13 @@ import com.sun.istack.internal.NotNull;
  *
  * @author Clemens
  */
-public abstract class AbstractMouseEvent extends AbstractEvent{
+public abstract class AbstractMouseEvent extends AbstractEvent {
 
 	//Cursor position
 	final int posX;
 	final int posY;
 
-	protected AbstractMouseEvent(@NotNull int posX, @NotNull int posY) {
+	protected AbstractMouseEvent(int posX, int posY) {
 		this.posX = posX;
 		this.posY = posY;
 	}
