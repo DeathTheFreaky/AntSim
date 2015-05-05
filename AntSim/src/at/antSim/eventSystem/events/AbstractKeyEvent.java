@@ -1,7 +1,6 @@
 package at.antSim.eventSystem.events;
 
 import at.antSim.eventSystem.AbstractEvent;
-import com.sun.istack.internal.NotNull;
 
 /**
  * Created on 04.05.2015.<br />
@@ -15,7 +14,7 @@ public abstract class AbstractKeyEvent extends AbstractEvent {
 	final char keyCharacter;
 
 
-	protected AbstractKeyEvent(@NotNull int key, @NotNull char keyCharacter) {
+	protected AbstractKeyEvent(int key, char keyCharacter) {
 		this.key = key;
 		this.keyCharacter = keyCharacter;
 	}

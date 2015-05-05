@@ -1,7 +1,5 @@
 package at.antSim.eventSystem.events;
 
-import com.sun.istack.internal.NotNull;
-
 /**
  * Created on 04.05.2015.
  * Represents a pressed Key.
@@ -10,7 +8,7 @@ import com.sun.istack.internal.NotNull;
  */
 public class KeyPressedEvent extends AbstractKeyEvent {
 
-	public KeyPressedEvent(@NotNull int key, @NotNull char keyCharacter) {
+	public KeyPressedEvent(int key, char keyCharacter) {
 		super(key, keyCharacter);
 	}
 

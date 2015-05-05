@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import entities.Camera;
+import at.antSim.graphics.entities.Camera;
 
 /**Maths contains useful mathematical methods.
  * 
@@ -32,9 +32,21 @@ public class Maths {
 	 * 2. rotating
 	 * 3. scaling
 	 * 
+	 * The rotation order is defined by the Euler Transform as: 
+	 * 1. Roll (rotate around z-Axis)
+	 * 2. Pitch (rotate around x-Axis)
+	 * 3. Yaw (rotate around y-Axis)
+	 * 
+	 * Since we need to reverse this order for the reasons mentioned above, we have to perform our rotating operations in the order:
+	 * 1. Yaw (rotate around y-Axis)
+	 * 2. Pitch (rotate around x-Axis)
+	 * 3. Roll (rotate around z-Axis)
+	 * 
+	 * see: http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
 	 * see: http://stackoverflow.com/questions/15993339/opengl-order-of-matrix-transformations
 	 * see: http://en.wikipedia.org/wiki/Row-major_order#Column-major_order
 	 * see: http://stackoverflow.com/questions/17717600/confusion-between-c-and-opengl-matrix-order-row-major-vs-column-major
+	 * see: CG_04_Transforms.pdf
 	 * 
 	 * For further information, a quote from :
 	 * 
@@ -42,10 +54,10 @@ public class Maths {
 	 * To transform a vector by a matrix, you first need to convert the vector to a matrix (i.e. choose whether it’s supposed to be a column or row vector this time), 
 	 * then multiply the two. In the usual graphics setting, we have a 4×4 matrix T and a 4-vector v. 
 	 * Since the middle dimension in a matrix product must match, we can’t do this arbitrarily. 
-	 * If we write v as a 4×1 matrix (column vector), we can compute Tv but not vT. If v is instead a 1×4 matrix (row vector), only vT works and Tv leads to a “dimension mismatch”. 
+	 * If we write v as a 4×1 matrix (column vector), we can compute Tv but not vT. If v is instead a 1×4 matrix (row vector), only vT works and Tv leads to a "dimension mismatch". 
 	 * For both column and row vectors, the result of that is again a column or row vector, respectively, which has repercussions: 
 	 * if we want to transform the result again by another matrix, again there’s only one place where we can legally put it. 
-	 * For column vectors, transforming a vector by T then S leads to the expression S(Tv)=STv=(ST)v, so the matrix that represents “first T then S” is given by the matrix ST. 
+	 * For column vectors, transforming a vector by T then S leads to the expression S(Tv)=STv=(ST)v, so the matrix that represents "first T then S" is given by the matrix ST. 
 	 * For row vectors, we get (vT)S=vTS=v(TS), so the matrix for the concatenation of the two is given by TS. 
 	 * Small difference, big repercussions: whether you choose row or column vectors influences how you concatenate transforms.
 	 * 
@@ -54,9 +66,17 @@ public class Maths {
 	 * a previous with an operational matrix. Now at the beginning, the previous matrix obviously has to be an identity matrix
 	 * because for a 0-Matrix the multiplication would result in a 0-Result and for all other matrices except for the identity matrix
 	 * the results would be distorted.
+	 * 
+	 * 
+	 * Last note: the order of multiplications of matrices is very important.
+	 * If we multiply our 4x4 matrix with a vector, we have to ensure the order is like this: M*v.
+	 * 
+	 * Otherwise we would not be able to calculate the result since a 4x1 matrix (mxn) cannot be multiplied with a 4x4 matrix (!nxp) because the two n's have to match
+	 * (remember: row times column... -> does not work if row has 1 element but column has 4 elements).
 	 */
 	
-	/**Creates a transformation matrix to be used for the transformation of 2D gui element with no rotation.
+	/**Creates a transformation matrix to be used for the transformation of 2D gui element with no rotation.<br>
+	 * The matrix is going to be applied to the model each frame.
 	 * 
 	 * @param translation - an x,y translation in world coordinate space
 	 * @param scale - scale for transformation of the gui element
@@ -72,7 +92,8 @@ public class Maths {
 		return matrix;
 	}
 	
-	/**Creates a transformation matrix to be used for the transformation of 3D models.
+	/**Creates a transformation matrix to be used for the transformation of 3D models.<br>
+	 * The matrix is going to be applied to the model each frame.
 	 * 
 	 * @param translation - an x,y,z translation in world coordinate space
 	 * @param rx - rotation value for x - axis
@@ -88,8 +109,8 @@ public class Maths {
 		matrix.setIdentity(); //start a "fresh" previous matrix for multiplication
 		//perform operations in reverse order due to column-major order post-multiplication equaling row-major order pre-multiplication
 		Matrix4f.translate(translation, matrix, matrix); 
-		Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1,0,0), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0,1,0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1,0,0), matrix, matrix);
 		Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0,0,1), matrix, matrix);
 		Matrix4f.scale(new Vector3f(scale, scale, scale), matrix, matrix); //scale uniformly in all 3 axis	
 		
@@ -113,12 +134,27 @@ public class Maths {
 		
 		Matrix4f viewMatrix = new Matrix4f();
 		viewMatrix.setIdentity(); //resets matrix to identity matrix
-		//perform world rotation and translation in reverse order
+		/* ok... so now it gets a little complicated. 
+		 * As mentioned earlier, due to openGL using column-major order, post-multiplication is applied.
+		 * This means that the last-issued transforms will take effect first. 
+		 * Additionally, by the use of a view matrix, we simulate a camera which does not actually move cause the OpenGL coordinate system is fixed (0,0 is middle of screen).
+		 * To simulate camera movement, we have to apply the reverse translation direction (mulitply with -1) and perform our transformations in the opposite order.
+		 * That is why translate is, in text context, written after rotate (being logically before rotate), although it is normally the other way around.
+		 * 
+		 * The reason why we don't negate the pitch, yaw and roll is, that we want to have an inverted camera, so when we move the mouse to the left, the camera turns right.
+		 * 
+		 * The order of the three rotate transformations is defined as an Euler Transformation, in the order: Roll, Pitch, Yaw.
+		 * Usually, in a transformation matrix the order would actually have to by Yaw, Pitch, Roll, since due to Column-major order the last column takes effect first.
+		 * However, since in a view matrix is kind of an inverted transformation matrix of the world compared to the camera position, 
+		 * we once again have to change the order of our rotations which results in Roll, Pitch, Yaw.
+		 * 
+		 * For more information on matrixes, visit: http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/.
+		 */
+		Matrix4f.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0,0,1), viewMatrix, viewMatrix); //rotate viewMatrix around z-Axis by the camera's roll
 		Matrix4f.rotate((float) Math.toRadians(camera.getPitch()), new Vector3f(1,0,0), viewMatrix, viewMatrix); //rotate viewMatrix around x-Axis by the camera's pitch
 		Matrix4f.rotate((float) Math.toRadians(camera.getYaw()), new Vector3f(0,1,0), viewMatrix, viewMatrix); //rotate viewMatrix around y-Axis by the camera's yaw
-		Matrix4f.rotate((float) Math.toRadians(camera.getRoll()), new Vector3f(0,0,1), viewMatrix, viewMatrix); //rotate viewMatrix around z-Axis by the camera's yaw
-		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix); //move the viewMatrix in opposite direction of camera's position 
-		
+		Matrix4f.translate(negativeCameraPos, viewMatrix, viewMatrix); //move the viewMatrix in opposite direction of camera's position +
+
 		return viewMatrix;
 	}
 	

@@ -1,7 +1,6 @@
 package at.antSim.eventSystem;
 
 import at.antSim.utils.ClassUtils;
-import com.sun.istack.internal.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,7 +32,7 @@ public class EventManager {
 	 *
 	 * @param listener The instance of a class that implements a method annotated with {@link EventListener}.
 	 */
-	public void registerEventListener(@NotNull Object listener) {
+	public void registerEventListener(Object listener) {
 		registerEventListener(listener, EventPriority.NORMAL);
 	}
 
@@ -45,7 +44,7 @@ public class EventManager {
 	 * @param eventPriority The priority with which the listener should be notified about a event. This does not guarantee the order. If more then one EventListener is registered for the same Event
 	 *                         and with the same priority they will be notified in registration order.
 	 */
-	public void registerEventListener(@NotNull Object listener, @NotNull EventPriority eventPriority) {
+	public void registerEventListener(Object listener, EventPriority eventPriority) {
 
 		Method[] methods = listener.getClass().getMethods();
 
@@ -87,7 +86,7 @@ public class EventManager {
 	 *
 	 * @param event Event to handle.
 	 */
-	public void handleEvent(@NotNull Event event) {
+	public void handleEvent(Event event) {
 		eventListenerMap.get(event.getClass()).handle(event);
 	}
 
@@ -96,7 +95,7 @@ public class EventManager {
 	 *
 	 * @param event Event to handle.
 	 */
-	public synchronized void addEventToQueue(@NotNull Event event) {
+	public synchronized void addEventToQueue(Event event) {
 		eventQueue.offer(event);
 	}
 
@@ -135,7 +134,7 @@ public class EventManager {
 			return allEventListeners.containsKey(listenerInformation);
 		}
 
-		void add(@NotNull ListenerInformation listenerInformation, @NotNull EventPriority priority) {
+		void add(ListenerInformation listenerInformation, EventPriority priority) {
 			if (!allEventListeners.containsKey(listenerInformation)) {
 				eventListenerMap.get(priority).add(listenerInformation);
 				allEventListeners.put(listenerInformation, priority);
@@ -153,7 +152,7 @@ public class EventManager {
 			}
 		}
 
-		void handle(@NotNull Event event) {
+		void handle(Event event) {
 			List<ListenerInformation> listenerInformations;
 			for (EventPriority eventPriority : EventPriority.values()) {
 				listenerInformations = eventListenerMap.get(eventPriority);

@@ -7,20 +7,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
- 
-
-
-
-
-
-
-import models.ModelData;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.AntSim;
 import at.antSim.Globals;
+import at.antSim.graphics.models.ModelData;
 
 /**OBJFileLoader parses .obj files and stores the parsed values into {@link ModelData} objects.<br>
  * This OBJFileLoader can also handle texture themes.
@@ -44,11 +37,11 @@ public class OBJFileLoader {
 		
 		//initialize filereader, bufferedreader and arraylists holding the data
         FileReader isr = null;
-        File objFile = new File(Globals.RESOURCES + objFileName + ".obj");
+        File objFile = new File(Globals.MODELS + objFileName + ".obj");
         try {
             isr = new FileReader(objFile);
         } catch (FileNotFoundException e) {
-            System.err.println("File not found in " + Globals.RESOURCES + "; don't use any extention");
+            System.err.println("File " + objFile + " not found in " + Globals.RESOURCES + ".");
         }
         BufferedReader reader = new BufferedReader(isr);
         String line;
@@ -93,10 +86,14 @@ public class OBJFileLoader {
             }
             
             /* In .obj Files, a vertices positional coords, texture coords and normals are not stored with the same indices.
-             * Hence, for each vertex of of model the information about the indices of its positional coords, texture coords and normals
+             * Hence, for each vertex of a model the information about the indices of its positional coords, texture coords and normals
              * (which line in each "paragraph" of data these are stored in) needs to be stored as well. 
              * 
              * Each of the lines starting with "f" represents a triangle.
+             * It contains a triangle's three vertices, and each of the vertices contains data in the following format: positions/texture coordinates/normals.
+             * The indixes stored in positions/texture coordinates/normals define the absolute position of the order in which the specific data has been defined.
+             * So if a texture coordinate has an index of 2, the index is referring to the 2nd entry of texture coordinates.
+             * 
              * Altogether, this way of storing helps to use up less space by avoiding to store duplicate coordinate values...
              * 
              * For example:
@@ -114,6 +111,8 @@ public class OBJFileLoader {
              *  Vertex3's positional coordinates are stored at index 1 inside the positional coordinates paragraph
              *  Vertex3's texture coordinates are stored at index 3 inside the texture coordinates paragraph
              *  Vertex3's normal coordinates are stored at index 3 inside the normal coordinates paragraph
+             *  
+             *  For more information on the obj file format see: http://www.scratchapixel.com/old/lessons/3d-advanced-lessons/obj-file-format/obj-file-format/
              * */
             while (line != null && line.startsWith("f ")) {
                 String[] currentLine = line.split(" "); 
@@ -141,8 +140,9 @@ public class OBJFileLoader {
         return data;
     }
 	
-	/**Puts vertex data into the correct position in the textureArray and normalsArray.<br>
-	 * These values need to be ordered correctly because in the .obj file they are stored in random order.
+	/**Sets the indices for a {@link Vertex} objects vertex positional coordinates, texture coordinates and normals indices.<br>
+	 * These can later be used to retrieve the respective data at the specified indices from lists and store it in according to the order of vertex indices.<br>
+	 * The actual process of storing the data at the right positions is handled in the convertDataToArrays() function.<br>
 	 * 
 	 * @param vertexData
 	 * @param indices
@@ -152,7 +152,8 @@ public class OBJFileLoader {
 	 * @param normalsArray
 	 */
 	private static void processVertex(String[] vertex, List<Vertex> vertices, List<Integer> indices) {
-        int index = Integer.parseInt(vertex[0]) - 1;
+		/* in obj indices start with 1, we store our indices starting with 0, so we substract 1 from all indices */
+        int index = Integer.parseInt(vertex[0]) - 1; 
         Vertex currentVertex = vertices.get(index);
         int textureIndex = Integer.parseInt(vertex[1]) - 1;
         int normalIndex = Integer.parseInt(vertex[2]) - 1;
@@ -179,7 +180,19 @@ public class OBJFileLoader {
         return indicesArray;
     }
 	
-	/**Writes .obj parsed vertex, texture and normal data that is stored inside lists into floatArrays.
+	/**Puts vertex positional coordinates, texture coordinates and normals in float arrays, ensuring that the order of these matches the order of associated vertices.<br>
+	 * These values need to be ordered correctly because in the .obj file they are stored in random order.<br>
+	 * <br>
+	 * Eg: An obj File defines the following indices for a vertex: 5/4/3<br>
+	 * The first number represents the vertex positional index, the second number the texture coordinate index and the third number the normal index of a vertex.<br>
+	 * The function now has to retrieve the respective positional coordinates, texture coordinates and normals at the absolute positions specified in the obj File
+	 * and store them in the same order as the order of vertex indices.<br>
+	 * <br>
+	 * So if our current vertex has an a vertex index of 3, the vertex's positional coordinates will be stored inside an array of floats in consecutive order,
+	 * starting with an offset of 6 (because vertex 1 and 2 took up 3 places each -> x,y,z).<br>
+	 * <br>
+	 * After finishing this operation, the vertex positional coordinate float array will contain:<br>
+	 * vertex1.x, vertex1.y, vertex1.z, vertex2.x, vertex2.y, vertex2.z, vertex3.x, vertex3.y, vertex3.z
 	 * 
 	 * @param vertices - a list of vertexes parsed from an .obj File
 	 * @param textures - a list of textures parsed from an .obj File

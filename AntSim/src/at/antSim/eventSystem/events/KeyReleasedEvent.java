@@ -1,7 +1,5 @@
 package at.antSim.eventSystem.events;
 
-import com.sun.istack.internal.NotNull;
-
 /**
  * Created on 04.05.2015.
  * Represents a released Key.
@@ -10,7 +8,7 @@ import com.sun.istack.internal.NotNull;
  */
 public class KeyReleasedEvent extends AbstractKeyEvent {
 
-	public KeyReleasedEvent(@NotNull int key, @NotNull char keyCharacter) {
+	public KeyReleasedEvent(int key, char keyCharacter) {
 		super(key, keyCharacter);
 	}
 
