@@ -10,12 +10,13 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.entities.Camera;
+import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.RawModel;
+import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.shaders.TerrainShader;
 import at.antSim.graphics.terrains.Terrain;
-import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
 
 /**TerrainRenderer renders terrains.
@@ -35,7 +36,7 @@ public class TerrainRenderer {
 	public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
-		shader.loadProjectionMatrix(projectionMatrix);
+		shader.loadProjectionMatrix(projectionMatrix); //projectionMatrix does not change - needs to be calculated only once
 		shader.connectTextureUnits(); //connect sample2Ds to texture units only once - stay connected throughout the application
 		shader.stop();
 	}
@@ -50,20 +51,31 @@ public class TerrainRenderer {
 	 * @param camera - for creating a viewMatrix
 	 */
 	public void render(List<Terrain> terrains, float blendFactor, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
+		
 		shader.start();
+		
+		//load uniform variable into shader program
 		shader.loadFogColors(dayFog, nightFog);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		shader.loadBlendFactor(blendFactor);
-		for(Terrain terrain:terrains) {
-			prepareTerrain(terrain);
-			loadModelMatrix(terrain);
+		
+		for(Terrain terrain : terrains) {
 			
-			// render triangles, draw all vertexes, 																					 
-			// the indices are stored as unsigned ints and start rendering at the beginning of the data
+			/*load terrain's textures (by binding them to texture banks) and positions, normals, texture coordinates (as VBOs inside VAO) into OpenGL 
+			* and load other model attributes as uniform variables into shader program */
+			prepareTerrain(terrain);
+			
+			/*Create and load a terrain's transformation matrix into the shader program */
+			loadTransformationMatrix(terrain);
+			
+			//Render vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 			GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 
+			
+			//"restore the defaults" -> disable vertexAttributeArrays (VBOS holding position, normals, texture coords) and unbind VAO
 			unbindTerrain();
 		}
+		
 		shader.stop();
 	}
 	
@@ -80,6 +92,7 @@ public class TerrainRenderer {
 		GL20.glEnableVertexAttribArray(1); //enable the attributelist with ID of 1 to access texture coords
 		GL20.glEnableVertexAttribArray(2); //enable the attributelist with ID of 2 to access normals
 		
+		//a terrain may have several different textures and they need to be bound to different texture banks
 		bindTextures(terrain);
 		
 		//load shine variables for specular lighting; load, activate and bind model texture
@@ -106,7 +119,8 @@ public class TerrainRenderer {
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, terrain.getBlendMap().getTextureID());
 	}
 	
-	/**Unbinds an active {@link Terrain} once it's finished rendering.
+	/**Unbinds an active {@link Terrain} once it's finished rendering by disabled its VertexAttribArrays 
+	 * (which hold VBOs storing positions, normals, texture coords) and unbinding the VAO.
 	 * 
 	 */
 	private void unbindTerrain() {
@@ -122,9 +136,12 @@ public class TerrainRenderer {
 	 * 
 	 * @param entity - the {@link Terrain} to be rendered
 	 */
-	private void loadModelMatrix(Terrain terrain) {
+	private void loadTransformationMatrix(Terrain terrain) {
+		
+		//create transformation matrix to be applied to the terrain
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(new Vector3f(terrain.getX(),0,terrain.getZ()), 
-				0, 0, 0, 1); //transformation matrix to be applied in the shader program
-		shader.loadTransformationMatrix(transformationMatrix); //load transformation matrix into the shader program
+				0, 0, 0, 1);
+		//load transformation matrix into the shader program
+		shader.loadTransformationMatrix(transformationMatrix); 
 	}
 }
