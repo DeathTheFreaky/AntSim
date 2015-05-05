@@ -4,6 +4,7 @@ import at.antSim.Globals;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.events.KeyPressedEvent;
 import at.antSim.eventSystem.events.KeyReleasedEvent;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -14,7 +15,13 @@ import org.lwjgl.input.Keyboard;
  */
 public class KeyboardHandler extends Thread {
 
-	public KeyboardHandler() {
+	public KeyboardHandler() throws KeyboardHandlerException {
+		if (!Keyboard.isCreated())
+			try {
+				Keyboard.create();
+			} catch (LWJGLException e) {
+				throw new KeyboardHandlerException(e);
+			}
 		Keyboard.enableRepeatEvents(true);
 	}
 

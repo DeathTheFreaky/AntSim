@@ -5,6 +5,7 @@ import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.eventSystem.events.MouseMotionEvent;
+import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 
 /**
@@ -15,7 +16,13 @@ import org.lwjgl.input.Mouse;
  */
 public class MouseHandler extends Thread {
 
-	public MouseHandler() {
+	public MouseHandler() throws MouseHandlerException {
+		if (!Mouse.isCreated())
+			try {
+				Mouse.create();
+			} catch (LWJGLException e) {
+				throw new MouseHandlerException(e);
+			}
 		Mouse.setClipMouseCoordinatesToWindow(true);
 	}
 
