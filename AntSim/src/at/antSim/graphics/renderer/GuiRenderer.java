@@ -21,7 +21,7 @@ import at.antSim.graphics.textures.GuiTexture;
  */
 public class GuiRenderer {
 
-	private final RawModel quad;
+	private final RawModel quad; //gui elements are usually stored as flat quads / rectangles
 	private GuiShader shader;
 	
 	/**Create a new {@link GuiRenderer}, loading a quad to hold the gui element's texture.
@@ -39,7 +39,10 @@ public class GuiRenderer {
 	 * @param guis - a list of {@link GuiTexture}s to be rendered to the screen.
 	 */
 	public void render(List<GuiTexture> guis) {
+		
 		shader.start();
+		
+		//bind the gui element's VAO (set it as "active"), enable the gui element's positions VBO, bind and activate the cube map's textures
 		GL30.glBindVertexArray(quad.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		
@@ -49,6 +52,8 @@ public class GuiRenderer {
 		
 		//disable depth test for gui drawing -> otherwise a texture behind a transparent texture will not be rendered
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		
+		//gui does not need a view matrix -> view on gui elements stays the same / they are shown in a "static 2d plane"
 		
 		for (GuiTexture gui: guis) {
 			GL13.glActiveTexture(GL13.GL_TEXTURE0); 
