@@ -69,7 +69,7 @@ public class SkyboxShader extends ShaderProgram{
 		super.loadFloat(location_blendFactor, blend);
 	}
 	
-	/**Loads up integers into 2Dsamplers to tell them in which texture units to look in.
+	/**Loads up integers into 2Dsamplers to tell them in which texture banks the cube map's textures are stored.
 	 * 
 	 */
 	public void connectTextureUnits() {

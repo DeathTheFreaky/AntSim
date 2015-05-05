@@ -127,7 +127,7 @@ public class Loader {
 		return textureID;
 	}
 	
-	/**Loads up a CubeMap into OpenGL.<br>
+	/**Loads up a CubeMap's textures into OpenGL.<br>
 	 * The textures used to create the CubeMap must be in the following order:
 	 * <ol>
 	 * 	<li>Right Face</li>
