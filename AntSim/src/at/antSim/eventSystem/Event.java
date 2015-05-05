@@ -6,8 +6,8 @@ package at.antSim.eventSystem;
  */
 public interface Event {
 
-    void kill();
-    boolean isKilled();
+    void consume();
+    boolean isConsumed();
     Class<? extends Event> getType();
 
 }

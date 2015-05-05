@@ -9,12 +9,12 @@ public abstract class AbstractEvent implements Event {
     private boolean killed = false;
 
     @Override
-    public void kill() {
+    public void consume() {
         killed = true;
     }
 
     @Override
-    public boolean isKilled() {
+    public boolean isConsumed() {
         return killed;
     }
 }

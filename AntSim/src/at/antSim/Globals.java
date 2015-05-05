@@ -14,7 +14,10 @@ public final class Globals {
 	public static final String RESOURCES = WORKING_DIR + "\\res\\models\\";
 	public static final String CONFIG = WORKING_DIR + "\\config";
 	public static final int FPS_CAP = 120;
-	public static final int FPS_60_DURATION_NANONS = (int) ((1.0 / 60) * 100 * 100 * 100); //duration of 1/60 second in nanoseconds
+	/**
+	 * duration of 1/60 second in nanoseconds
+	 */
+	public static final int FPS_60_DURATION_NANONS = (int) ((1.0 / 60) * 1000 * 1000 * 1000);
 	
 	//config file entries set by config reader
 	private static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();

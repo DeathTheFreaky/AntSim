@@ -11,79 +11,36 @@ import org.lwjgl.input.Mouse;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * Created on 24.04.2015.
+ * Created on 24.04.2015.<br />
+ * Converts in an interval of 1/60 second every LWJGL Mouse Event into an MouseMotion-, MouseButtonPressed- or MouseButtonReleasedEvent
+ *
  * @author Clemens
  */
-public class MouseHandler extends Thread{
+public class MouseHandler extends Thread {
 
-	private BlockingQueue<Event> inputQueue;
+	final BlockingQueue<Event> inputQueue;
 
 	public MouseHandler(@NotNull BlockingQueue<Event> inputQueue) {
 		this.inputQueue = inputQueue;
+		Mouse.setClipMouseCoordinatesToWindow(true);
 	}
 
 	@Override
 	public void run() {
 		long iterationStartTime = 0;
 
-		int lastPosX = 0;
-		int lastPosY = 0;
-
-		int currentPosX = 0;
-		int currentPosY = 0;
-
-		boolean lastLeftButtonDown = false;
-		boolean lastRightButtonDown = false;
-		boolean lastMiddleButtonDown = false;
-
-		boolean currentLeftButtonDown = false;
-		boolean currentRightButtonDown = false;
-		boolean currentMiddleButtonDown = false;
-
 		while (!isInterrupted()) {
 			iterationStartTime = System.nanoTime();
 
-			currentPosX = Mouse.getX();
-			currentPosY = Mouse.getY();
-
-			currentLeftButtonDown = Mouse.isButtonDown(0);
-			currentRightButtonDown = Mouse.isButtonDown(1);
-			currentMiddleButtonDown = Mouse.isButtonDown(2);
-
-			if (lastLeftButtonDown == false && lastLeftButtonDown != currentLeftButtonDown) {
-				inputQueue.offer(new MouseButtonPressedEvent(MouseButtons.LEFT, currentPosX, currentPosY));
+			while (Mouse.next()) {
+				if (Mouse.getEventButton() == -1) {
+					inputQueue.offer(new MouseMotionEvent(Mouse.getEventDX(), Mouse.getEventDY(), Mouse.getEventX(), Mouse.getEventY()));
+				} else if (Mouse.getEventButtonState()) {
+					inputQueue.offer(new MouseButtonPressedEvent(Mouse.getEventButton(), Mouse.getEventX(), Mouse.getEventY()));
+				} else {
+					inputQueue.offer(new MouseButtonReleasedEvent(Mouse.getEventButton(), Mouse.getEventX(), Mouse.getEventY()));
+				}
 			}
-
-			if (lastRightButtonDown == false && lastRightButtonDown != currentRightButtonDown) {
-				inputQueue.offer(new MouseButtonPressedEvent(MouseButtons.RIGHT, currentPosX, currentPosY));
-			}
-
-			if (lastMiddleButtonDown == false && lastMiddleButtonDown != currentMiddleButtonDown) {
-				inputQueue.offer(new MouseButtonPressedEvent(MouseButtons.MIDDLE, currentPosX, currentPosY));
-			}
-
-			if(lastPosX != currentPosX || lastPosY != currentPosY) {
-				inputQueue.offer(new MouseMotionEvent(lastPosX, lastPosY, currentPosX, currentPosY));
-			}
-
-			if (lastLeftButtonDown == true && lastLeftButtonDown != currentLeftButtonDown) {
-				inputQueue.offer(new MouseButtonReleasedEvent(MouseButtons.LEFT, currentPosX, currentPosY));
-			}
-
-			if (lastRightButtonDown == true && lastRightButtonDown != currentRightButtonDown) {
-				inputQueue.offer(new MouseButtonReleasedEvent(MouseButtons.RIGHT, currentPosX, currentPosY));
-			}
-
-			if (lastMiddleButtonDown == true && lastMiddleButtonDown != currentMiddleButtonDown) {
-				inputQueue.offer(new MouseButtonReleasedEvent(MouseButtons.MIDDLE, currentPosX, currentPosY));
-			}
-
-			lastPosX = currentPosX;
-			lastPosY = currentPosY;
-
-			lastLeftButtonDown = currentLeftButtonDown;
-			lastRightButtonDown = currentRightButtonDown;
-			lastMiddleButtonDown = currentMiddleButtonDown;
 
 			if ((System.nanoTime() - iterationStartTime) < Globals.FPS_60_DURATION_NANONS) {
 				long waitTime = Globals.FPS_60_DURATION_NANONS - (System.nanoTime() - iterationStartTime);
@@ -95,5 +52,6 @@ public class MouseHandler extends Thread{
 			}
 		}
 
+		inputQueue.clear();
 	}
 }
