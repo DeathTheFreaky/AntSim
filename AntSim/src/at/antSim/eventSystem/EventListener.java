@@ -1,13 +1,16 @@
 package at.antSim.eventSystem;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
- * Created on 31.03.2015.
+ * Created on 05.05.2015.
+ *
  * @author Clemens
  */
-public interface EventListener<E extends Event>{
-
-    public void handle(E event);
-
-    public Class<E> getEventType();
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface EventListener {
 }

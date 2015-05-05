@@ -1,102 +1,165 @@
 package at.antSim.eventSystem;
 
+import at.antSim.utils.ClassUtils;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
  * Created on 24.03.2015.
+ *
  * @author Clemens
  */
 public class EventManager {
 
-    private static EventManager instance;
+	private static EventManager instance;
 
-    private Queue<Event> eventQueue;
-    private Map<Class<? extends Event>, EventListenerManagement> eventListenerMap;
+	private Queue<Event> eventQueue;
+	private Map<Class<? extends Event>, EventListenerManagement> eventListenerMap;
 
-    protected EventManager() {
-        eventListenerMap = new HashMap<Class<? extends Event>, EventListenerManagement>();
-        eventQueue = new LinkedList<Event>();
-    }
+	protected EventManager() {
+		eventListenerMap = new HashMap<Class<? extends Event>, EventListenerManagement>();
+		eventQueue = new LinkedList<Event>();
+	}
 
-    public void registerEventListener(EventListener listener) {
-        registerEventListener(listener, EventPriority.NORMAL);
-    }
+	public void registerEventListener(Object listener) {
+		registerEventListener(listener, EventPriority.NORMAL);
+	}
 
-    public void registerEventListener(EventListener listener, EventPriority eventPriority) {
-        Class<? extends Event> eventType = listener.getEventType();
-        if (eventListenerMap.containsKey(eventType)) {
-			EventListenerManagement listenerManagement = eventListenerMap.get(eventType);
-			listenerManagement.add(listener, eventPriority);
-		} else {
-            EventListenerManagement eventListenerManagement = new EventListenerManagement();
-            eventListenerManagement.add(listener, eventPriority);
-            eventListenerMap.put(listener.getEventType(), eventListenerManagement);
-        }
-    }
+	public void registerEventListener(Object listener, EventPriority eventPriority) {
 
-    public void addEventToQueue(Event event) {
-        eventQueue.offer(event);
-    }
+		Method[] methods = listener.getClass().getMethods();
 
-    public void workThroughQueue() {
-		for (Event event : eventQueue) {
-			eventListenerMap.get(event.getType()).handle(event);
+		for (int i = 0; i < methods.length; i++) {
+			EventListener eventListener = methods[i].getAnnotation(EventListener.class);
+			if (eventListener != null) {
+				Class[] methodParams = methods[i].getParameterTypes();
+
+				if (methodParams.length < 1)
+					continue;
+
+				List<Class<?>> paramInterfaces = ClassUtils.getAllInterfaces(methodParams[0]);
+				boolean found = false;
+				for (Class<?> interf : paramInterfaces) {
+					if (interf == Event.class) {
+						found = true;
+						break;
+					}
+				}
+
+				if (!found)
+					continue;
+
+				Class<? extends Event> eventType = methodParams[0];
+				if (eventListenerMap.containsKey(eventType)) {
+					EventListenerManagement listenerManagement = eventListenerMap.get(eventType);
+					listenerManagement.add(new ListenerInformation(listener, methods[i]), eventPriority);
+				} else {
+					EventListenerManagement eventListenerManagement = new EventListenerManagement();
+					eventListenerManagement.add(new ListenerInformation(listener, methods[i]), eventPriority);
+					eventListenerMap.put(eventType, eventListenerManagement);
+				}
+			}
 		}
 	}
 
-    public static EventManager getInstance() {
-        if (instance == null) {
-            instance = new EventManager();
-        }
-        return instance;
-    }
+	public void handleEvent(Event event) {
+		eventListenerMap.get(event.getClass()).handle(event);
+	}
+
+	public void addEventToQueue(Event event) {
+		eventQueue.offer(event);
+	}
+
+	public void workThroughQueue() {
+		for (Event event : eventQueue) {
+			eventListenerMap.get(event.getClass()).handle(event);
+		}
+	}
+
+	public static EventManager getInstance() {
+		if (instance == null) {
+			instance = new EventManager();
+		}
+		return instance;
+	}
 
 	private class EventListenerManagement {
-		Map<EventListener, EventPriority> allEventListeners;
-		Map<EventPriority, List<EventListener>> eventListenerMap;
+		Map<ListenerInformation, EventPriority> allEventListeners;
+		Map<EventPriority, List<ListenerInformation>> eventListenerMap;
 
 		EventListenerManagement() {
-			allEventListeners = new HashMap<EventListener, EventPriority>();
-			eventListenerMap = new HashMap<EventPriority, List<EventListener>>(3);
+			allEventListeners = new HashMap<ListenerInformation, EventPriority>();
+			eventListenerMap = new HashMap<EventPriority, List<ListenerInformation>>(3);
 			for (EventPriority priority : EventPriority.values()) {
-				eventListenerMap.put(priority, new LinkedList<EventListener>());
+				eventListenerMap.put(priority, new LinkedList<ListenerInformation>());
 			}
 		}
 
-		boolean contains(EventListener listener) {
-			return allEventListeners.containsKey(listener);
+		boolean contains(ListenerInformation listenerInformation) {
+			return allEventListeners.containsKey(listenerInformation);
 		}
 
-		void add(EventListener listener, EventPriority priority) {
-			if (!allEventListeners.containsKey(listener)) {
-				eventListenerMap.get(priority).add(listener);
-				allEventListeners.put(listener, priority);
-			} else if (allEventListeners.get(listener) != priority) {
-				eventListenerMap.get(allEventListeners.get(listener)).remove(listener);
-				eventListenerMap.get(priority).add(listener);
-				allEventListeners.put(listener, priority);
+		void add(ListenerInformation listenerInformation, EventPriority priority) {
+			if (!allEventListeners.containsKey(listenerInformation)) {
+				eventListenerMap.get(priority).add(listenerInformation);
+				allEventListeners.put(listenerInformation, priority);
+			} else if (allEventListeners.get(listenerInformation) != priority) {
+				eventListenerMap.get(allEventListeners.get(listenerInformation)).remove(listenerInformation);
+				eventListenerMap.get(priority).add(listenerInformation);
+				allEventListeners.put(listenerInformation, priority);
 			}
 		}
 
-		void remove(EventListener listener) {
-			if (allEventListeners.containsKey(listener)) {
-				eventListenerMap.get(allEventListeners.get(listener)).remove(listener);
-				allEventListeners.remove(listener);
+		void remove(ListenerInformation listenerInformation) {
+			if (allEventListeners.containsKey(listenerInformation)) {
+				eventListenerMap.get(allEventListeners.get(listenerInformation)).remove(listenerInformation);
+				allEventListeners.remove(listenerInformation);
 			}
 		}
 
 		void handle(Event event) {
-			List<EventListener> eventListeners;
+			List<ListenerInformation> listenerInformations;
 			for (EventPriority eventPriority : EventPriority.values()) {
-				eventListeners= eventListenerMap.get(eventPriority);
-				for (EventListener eventListener : eventListeners) {
-					eventListener.handle(event);
-					if (event.isKilled())
+				listenerInformations = eventListenerMap.get(eventPriority);
+				for (ListenerInformation listenerInformation : listenerInformations) {
+					try {
+						listenerInformation.method.invoke(listenerInformation.listener, event);
+					} catch (IllegalAccessException | InvocationTargetException e) {
+						e.printStackTrace();
+					}
+					if (event.isConsumed())
 						return;
 				}
 			}
 		}
+	}
 
+	private class ListenerInformation {
+		final Object listener;
+		final Method method;
+
+		private ListenerInformation(Object listener, Method method) {
+			this.listener = listener;
+			this.method = method;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+
+			if (obj == null)
+				return false;
+
+			if (this.getClass() != obj.getClass())
+				return false;
+
+			ListenerInformation other = (ListenerInformation)obj;
+
+			return (this.listener.equals(other.listener) && this.method.equals(other.method));
+		}
 	}
 
 }

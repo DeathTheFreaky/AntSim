@@ -1,6 +1,5 @@
 package at.antSim.eventSystem.events;
 
-import at.antSim.eventSystem.Event;
 import com.sun.istack.internal.NotNull;
 
 /**
@@ -13,11 +12,6 @@ public class MouseButtonReleasedEvent extends AbstractMouseButtonEvent {
 
 	public MouseButtonReleasedEvent(@NotNull int button, @NotNull int posX, @NotNull int posY) {
 		super(button, posX, posY);
-	}
-
-	@Override
-	public Class<? extends Event> getType() {
-		return MouseButtonReleasedEvent.class;
 	}
 
 }

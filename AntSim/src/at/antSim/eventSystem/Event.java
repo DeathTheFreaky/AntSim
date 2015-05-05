@@ -8,6 +8,5 @@ public interface Event {
 
     void consume();
     boolean isConsumed();
-    Class<? extends Event> getType();
 
 }

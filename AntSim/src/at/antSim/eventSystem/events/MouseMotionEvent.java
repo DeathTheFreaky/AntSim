@@ -1,7 +1,5 @@
 package at.antSim.eventSystem.events;
 
-import at.antSim.eventSystem.Event;
-
 /**
  * Created on 24.04.2015.
  *
@@ -17,11 +15,6 @@ public class MouseMotionEvent extends AbstractMouseEvent {
 		super(posX, posY);
 		this.DX = DX;
 		this.DY = DY;
-	}
-
-	@Override
-	public Class<? extends Event> getType() {
-		return MouseMotionEvent.class;
 	}
 
 	public int getDX() {
