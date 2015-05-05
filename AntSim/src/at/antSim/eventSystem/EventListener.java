@@ -6,7 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created on 05.05.2015.
+ * Created on 05.05.2015.<br />
+ * This Annotation is used to flag a method as listener method for an Event.
  *
  * @author Clemens
  */

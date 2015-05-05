@@ -1,5 +1,7 @@
 package at.antSim.utils;
 
+import com.sun.istack.internal.NotNull;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
  */
 public class ClassUtils {
 
-	public static List<Class<?>> getAllInterfaces(Class<?> clazz) {
+	public static List<Class<?>> getAllInterfaces(@NotNull Class<?> clazz) {
 		List<Class<?>> interfaceList = new LinkedList<Class<?>>();
 
 		Class<?> cls = clazz;

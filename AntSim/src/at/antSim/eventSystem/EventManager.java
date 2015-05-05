@@ -1,13 +1,16 @@
 package at.antSim.eventSystem;
 
 import at.antSim.utils.ClassUtils;
+import com.sun.istack.internal.NotNull;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
 /**
- * Created on 24.03.2015.
+ * Created on 24.03.2015.<br />
+ * The EventManager is passing all Events to the respective Listeners.<br />
+ * It is a Singleton.
  *
  * @author Clemens
  */
@@ -23,11 +26,25 @@ public class EventManager {
 		eventQueue = new LinkedList<Event>();
 	}
 
-	public void registerEventListener(Object listener) {
+	/**
+	 * Registers an EventListener with the default {@link EventPriority} (NORMAL).<br />
+	 * If the EventListener class defines more then one method annotated with {@link EventListener} all methods will be registered with the same EventPriority.
+	 *
+	 * @param listener The instance of a class that implements a method annotated with {@link EventListener}.
+	 */
+	public void registerEventListener(@NotNull Object listener) {
 		registerEventListener(listener, EventPriority.NORMAL);
 	}
 
-	public void registerEventListener(Object listener, EventPriority eventPriority) {
+	/**
+	 * Registers an EventListener with the passed {@link EventPriority}.<br />
+	 * If the EventListener class defines more then one method annotated with {@link EventListener} all methods will be registered with the same EventPriority.
+	 *
+	 * @param listener The instance of a class that implements a method annotated with {@link EventListener}.
+	 * @param eventPriority The priority with which the listener should be notified about a event. This does not guarantee the order. If more then one EventListener is registered for the same Event
+	 *                         and with the same priority they will be notified in registration order.
+	 */
+	public void registerEventListener(@NotNull Object listener, @NotNull EventPriority eventPriority) {
 
 		Method[] methods = listener.getClass().getMethods();
 
@@ -64,20 +81,36 @@ public class EventManager {
 		}
 	}
 
-	public void handleEvent(Event event) {
+	/**
+	 * Handles an passed Event immediately.
+	 *
+	 * @param event Event to handle.
+	 */
+	public void handleEvent(@NotNull Event event) {
 		eventListenerMap.get(event.getClass()).handle(event);
 	}
 
-	public void addEventToQueue(Event event) {
+	/**
+	 * Stores the passed Event to be handled as {@link #workThroughQueue() workThroughQueue} is called.
+	 *
+	 * @param event Event to handle.
+	 */
+	public void addEventToQueue(@NotNull Event event) {
 		eventQueue.offer(event);
 	}
 
+	/**
+	 * Handles all stored Events.
+	 */
 	public void workThroughQueue() {
 		for (Event event : eventQueue) {
 			eventListenerMap.get(event.getClass()).handle(event);
 		}
 	}
 
+	/**
+	 * @return Returns instance of EventManager.
+	 */
 	public static EventManager getInstance() {
 		if (instance == null) {
 			instance = new EventManager();
@@ -101,7 +134,7 @@ public class EventManager {
 			return allEventListeners.containsKey(listenerInformation);
 		}
 
-		void add(ListenerInformation listenerInformation, EventPriority priority) {
+		void add(@NotNull ListenerInformation listenerInformation, @NotNull EventPriority priority) {
 			if (!allEventListeners.containsKey(listenerInformation)) {
 				eventListenerMap.get(priority).add(listenerInformation);
 				allEventListeners.put(listenerInformation, priority);
@@ -119,7 +152,7 @@ public class EventManager {
 			}
 		}
 
-		void handle(Event event) {
+		void handle(@NotNull Event event) {
 			List<ListenerInformation> listenerInformations;
 			for (EventPriority eventPriority : EventPriority.values()) {
 				listenerInformations = eventListenerMap.get(eventPriority);
@@ -147,11 +180,11 @@ public class EventManager {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-
 			if (obj == null)
 				return false;
+
+			if (this == obj)
+				return true;
 
 			if (this.getClass() != obj.getClass())
 				return false;
