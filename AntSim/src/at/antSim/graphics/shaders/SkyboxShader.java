@@ -38,6 +38,27 @@ public class SkyboxShader extends ShaderProgram{
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
     
+    @Override
+    protected void getAllUniformLocations() {
+    	
+    	/* Uniform variables do not change for each shader call but stay the same for all vertices of a model.
+		 * Basically, all data we pass to the shader are uniform variables, except for the positions, texture coords and normals of the vertices.
+		 */
+    	
+        location_projectionMatrix = super.getUniformLocation("projectionMatrix");
+        location_viewMatrix = super.getUniformLocation("viewMatrix");
+        location_fogColor1 = super.getUniformLocation("fogColor1");
+        location_fogColor2 = super.getUniformLocation("fogColor2");
+        location_cubeMap = super.getUniformLocation("cubeMap");
+        location_cubeMap2 = super.getUniformLocation("cubeMap2");
+        location_blendFactor = super.getUniformLocation("blendFactor");
+    }
+ 
+    @Override
+    protected void bindAttributes() {
+        super.bindAttribute(0, "position");
+    }
+    
     /**Loads 4x4 projection Matrix into shader uniform variable for setting the projection.
 	 * 
 	 * @param projection - the projection matrix to load into the uniform variable
@@ -51,13 +72,18 @@ public class SkyboxShader extends ShaderProgram{
 	 * @param camera - the Camera to use for creating the view matrix
 	 */
 	public void loadViewMatrix(Camera camera) {
+		
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
-		//only rotate skybox 
+		
+		//ignore the camera's view matrix' translation - skybox should stay in same position if camera moves
 		viewMatrix.m30 = 0;
 		viewMatrix.m31 = 0;
 		viewMatrix.m32 = 0;
 		rotation += ROTATE_SPEED * DisplayManager.getFrameTimeSeconds();
+		
+		//in addition to the camera's view matrix' rotation, further rotate the skybox to simulate cloud movement
 		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0),  viewMatrix,  viewMatrix);
+		
 		super.loadMatrix(location_viewMatrix, viewMatrix);
 	}
 	
@@ -69,7 +95,7 @@ public class SkyboxShader extends ShaderProgram{
 		super.loadFloat(location_blendFactor, blend);
 	}
 	
-	/**Loads up integers into 2Dsamplers to tell them in which texture banks the cube map's textures are stored.
+	/**Loads up integers into 2Dsamplers to tell them in which texture banks the cube maps' textures (day/night) are stored.
 	 * 
 	 */
 	public void connectTextureUnits() {
@@ -86,21 +112,4 @@ public class SkyboxShader extends ShaderProgram{
 		super.loadVector(location_fogColor1, dayFog);
 		super.loadVector(location_fogColor2, nightFog);
 	}
-     
-    @Override
-    protected void getAllUniformLocations() {
-        location_projectionMatrix = super.getUniformLocation("projectionMatrix");
-        location_viewMatrix = super.getUniformLocation("viewMatrix");
-        location_fogColor1 = super.getUniformLocation("fogColor1");
-        location_fogColor2 = super.getUniformLocation("fogColor2");
-        location_cubeMap = super.getUniformLocation("cubeMap");
-        location_cubeMap2 = super.getUniformLocation("cubeMap2");
-        location_blendFactor = super.getUniformLocation("blendFactor");
-    }
- 
-    @Override
-    protected void bindAttributes() {
-        super.bindAttribute(0, "position");
-    }
- 
 }

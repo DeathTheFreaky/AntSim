@@ -19,7 +19,7 @@ import at.antSim.graphics.graphicsUtils.Maths;
  */
 public class EntityShader extends ShaderProgram {
 	
-	private static final int MAX_LIGHTS = 4;
+	private static final int MAX_LIGHTS = 4; //maximum number of different light sources to use
 	
 	private static final String VERTEX_FILE = Globals.SHADERS + "entityVertexShader.vsh";
 	private static final String FRAGMENT_FILE = Globals.SHADERS + "entityFragmentShader.fsh";
@@ -56,6 +56,11 @@ public class EntityShader extends ShaderProgram {
 
 	@Override
 	protected void getAllUniformLocations() {
+		
+		/* Uniform variables do not change for each shader call but stay the same for all vertices of a model.
+		 * Basically, all data we pass to the shader are uniform variables, except for the positions, texture coords and normals of the vertices.
+		 */
+		
 		location_transformationMatrix = super.getUniformLocation("transformationMatrix");
 		location_projectionMatrix = super.getUniformLocation("projectionMatrix");
 		location_viewMatrix = super.getUniformLocation("viewMatrix");
@@ -79,7 +84,7 @@ public class EntityShader extends ShaderProgram {
 		}
 	}
 	
-	/**Loads number of rows into shader uniform variable numberOfRows.
+	/**Loads number of rows of a texture atlas into shader uniform variable numberOfRows.
 	 * 
 	 * @param numberOfRows - the number of rows in a texture atlas
 	 */

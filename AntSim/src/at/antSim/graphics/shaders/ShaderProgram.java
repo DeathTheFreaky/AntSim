@@ -66,7 +66,7 @@ public abstract	class ShaderProgram {
 		getAllUniformLocations(); 
 	}
 	
-	/**Makes sure that all ShaderProgram classes have a method that gets all the uniform locations.
+	/**Load the indices of all uniform variables used by this shader program.
 	 * 
 	 */
 	protected abstract void getAllUniformLocations();
