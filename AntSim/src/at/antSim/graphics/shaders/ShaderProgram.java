@@ -14,6 +14,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 /**This class represents a generic shader program containing all attributes and methods that every shader program needs to have.
  * 
+ * Note: 
+ * Information about Shader Programming has been gained from OpenGL Programming Guide, p.33 and the following.
+ * 
  * @author Flo
  *
  */
@@ -25,20 +28,42 @@ public abstract	class ShaderProgram {
 	
 	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16); //buffer reused everytime we want to load up a matrix into shader code
 	
+	/**Creates a new shader program, attaches the appropriate shader objects to the shader program,
+	 * links the shader program, verifies that the shader link phase completed successfully
+	 * and obtain the indices of all uniform variables. 
+	 * 
+	 * See OpenGl Programming Guide: p.72
+	 * 
+	 * @param vertexFile
+	 * @param fragmentFile
+	 */
 	public ShaderProgram(String vertexFile, String fragmentFile) {
 		
-		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER); //load vertex shader into OpenGL
-		fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER); //load fragment shader into OpenGL
+		//load vertex and fragment shaders into openGL
+		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
+		fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER); 
 		
 		//create new program that will tie vertex shader and fragment shader together
 		programID = GL20.glCreateProgram(); 
+		
+		//attach vertex shader and fragment shader to the shader program
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
+		
+		//bind attributes/VBOs (positions, normals, texture coords) from a VAO's attribute list to the input parameters of the shader program
 		bindAttributes();
+		
+		//process all shader objects attached to program to generate a complete shader program
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
+		if (GL20.glGetProgrami(programID, GL20.GL_VALIDATE_STATUS) == GL11.GL_FALSE) {
+			System.out.println(GL20.glGetProgramInfoLog(programID, 500));
+			System.err.println("Could not link shader program.");
+			System.exit(-1);
+		}
 		
-		getAllUniformLocations(); //do not forget to get the uniform variable locations in the shader code
+		//find indices of all uniform variable locations in the shader code
+		getAllUniformLocations(); 
 	}
 	
 	/**Makes sure that all ShaderProgram classes have a method that gets all the uniform locations.
@@ -46,12 +71,15 @@ public abstract	class ShaderProgram {
 	 */
 	protected abstract void getAllUniformLocations();
 	
-	/**Finds the location of a uniform variable in the shader code.
+	/**Returns the index of the uniform variable name associated with the
+	 * shader program.
 	 * 
 	 * @param uniformName - name of uniform variable
 	 * @return - an int representing the location of the uniform variable in the shader code
 	 */
 	protected int getUniformLocation(String uniformName) {
+		
+		//see: OpenGL Programming Guide p. 47
 		return GL20.glGetUniformLocation(programID, uniformName);
 	}
 	
@@ -121,13 +149,18 @@ public abstract	class ShaderProgram {
 	 */
 	protected void bindAttribute(int attribute, String variableName) {
 		
+		/* Assigns the given attribute (by its id) to the (vertex) shader's input variable with the given variableName.
+		 * 
+		 * see: https://www.opengl.org/wiki/Vertex_Shader#Inputs
+		 */
+		
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
 	
 	/**Loads an int value into a uniform variable.
 	 * 
 	 * @param location - location of uniform variable in shader code
-	 * @param value - value that we want to load into the uniform
+	 * @param value - value to be loaded into the uniform variable
 	 */
 	protected void loadInt(int location, int value) {
 		GL20.glUniform1i(location, value);
@@ -136,7 +169,7 @@ public abstract	class ShaderProgram {
 	/**Loads a float value into a uniform variable.
 	 * 
 	 * @param location - location of uniform variable in shader code
-	 * @param value - value that we want to load into the uniform
+	 * @param value - value to be loaded into the uniform variable
 	 */
 	protected void loadFloat(int location, float value) {
 		GL20.glUniform1f(location, value);
@@ -145,7 +178,7 @@ public abstract	class ShaderProgram {
 	/**Loads a 3-dimensional floated vector into a uniform variable.
 	 * 
 	 * @param location - location of uniform variable in shader code
-	 * @param vector - vector that we want to load into the uniform
+	 * @param vector - vector to be loaded into the uniform variable
 	 */
 	protected void loadVector(int location, Vector3f vector) {
 		GL20.glUniform3f(location, vector.x, vector.y, vector.z);
@@ -154,17 +187,18 @@ public abstract	class ShaderProgram {
 	/**Loads a 2-dimensional floated vector into a uniform variable.
 	 * 
 	 * @param location - location of uniform variable in shader code
-	 * @param vector - vector that we want to load into the uniform
+	 * @param vector - vector to be loaded into the uniform variable
 	 */
 	protected void load2DVector(int location, Vector2f vector) {
 		GL20.glUniform2f(location, vector.x, vector.y);
 	}
 	
 	/**Loads a float representing a boolean into a uniform variable.<br>
-	 * Since OpenGL does not know boolean, we are going to load up either a 0f (false) or a 1f (true).
+	 * <br>
+	 * See: http://www.gamedev.net/topic/469620-gluniform-for-bool/
 	 * 
 	 * @param location - location of uniform variable in shader code
-	 * @param value - 0f (false) or a 1f (true) to load into the uniform
+	 * @param value - 0f (false) or a 1f (true) to be loaded into the uniform variable
 	 */
 	protected void loadBoolean(int location, boolean value) {
 		float toLoad = 0;
@@ -177,7 +211,7 @@ public abstract	class ShaderProgram {
 	/**Loads a 4x4 matrix into a uniform.
 	 * 
 	 * @param location - location of uniform variable in shader code
-	 * @param matrix - 4x4 matrix that we want to load into the uniform
+	 * @param matrix - 4x4 matrix to be loaded into the uniform variable
 	 */
 	protected void loadMatrix(int location, Matrix4f matrix) {
 		matrix.store(matrixBuffer); //store matrix into matrix buffer
@@ -194,6 +228,10 @@ public abstract	class ShaderProgram {
 	 * @return - the shaderID
 	 */
 	private static int loadShader(String file, int type) {
+		
+		/*See OpenGL Programming Guide p. 72 for information on how to create and compile a shader.
+		 * 
+		 */
 		
 		//read contents of Shader into one long string
 		StringBuilder shaderSource = new StringBuilder();
