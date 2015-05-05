@@ -6,6 +6,7 @@ import com.sun.istack.internal.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created on 24.03.2015.<br />
@@ -23,7 +24,7 @@ public class EventManager {
 
 	protected EventManager() {
 		eventListenerMap = new HashMap<Class<? extends Event>, EventListenerManagement>();
-		eventQueue = new LinkedList<Event>();
+		eventQueue = new LinkedBlockingQueue<Event>();
 	}
 
 	/**
@@ -82,7 +83,7 @@ public class EventManager {
 	}
 
 	/**
-	 * Handles an passed Event immediately.
+	 * Handles an passed Event immediately. Is not thread safe.
 	 *
 	 * @param event Event to handle.
 	 */
@@ -91,11 +92,11 @@ public class EventManager {
 	}
 
 	/**
-	 * Stores the passed Event to be handled as {@link #workThroughQueue() workThroughQueue} is called.
+	 * Stores the passed Event to be handled as {@link #workThroughQueue() workThroughQueue} is called. Is thread safe.
 	 *
 	 * @param event Event to handle.
 	 */
-	public void addEventToQueue(@NotNull Event event) {
+	public synchronized void addEventToQueue(@NotNull Event event) {
 		eventQueue.offer(event);
 	}
 

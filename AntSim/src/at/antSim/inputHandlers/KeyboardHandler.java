@@ -1,13 +1,10 @@
 package at.antSim.inputHandlers;
 
 import at.antSim.Globals;
-import at.antSim.eventSystem.Event;
+import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.events.KeyPressedEvent;
 import at.antSim.eventSystem.events.KeyReleasedEvent;
-import com.sun.istack.internal.NotNull;
 import org.lwjgl.input.Keyboard;
-
-import java.util.concurrent.BlockingQueue;
 
 /**
  * Created on 24.04.2015.<br />
@@ -17,25 +14,23 @@ import java.util.concurrent.BlockingQueue;
  */
 public class KeyboardHandler extends Thread {
 
-	final BlockingQueue<Event> inputQueue;
-
-	public KeyboardHandler(@NotNull BlockingQueue<Event> inputQueue) {
-		this.inputQueue = inputQueue;
+	public KeyboardHandler() {
 		Keyboard.enableRepeatEvents(true);
 	}
 
 	@Override
 	public void run() {
 		long iterationStartTime = 0;
+		EventManager eventManager = EventManager.getInstance();
 
 		while (!interrupted()) {
 			iterationStartTime = System.nanoTime();
 
 			while (Keyboard.next()) {
 				if (Keyboard.getEventKeyState()) {
-					inputQueue.offer(new KeyPressedEvent(Keyboard.getEventKey(), Keyboard.getEventCharacter()));
+					eventManager.addEventToQueue(new KeyPressedEvent(Keyboard.getEventKey(), Keyboard.getEventCharacter()));
 				} else {
-					inputQueue.offer(new KeyReleasedEvent(Keyboard.getEventKey(), Keyboard.getEventCharacter()));
+					eventManager.addEventToQueue(new KeyReleasedEvent(Keyboard.getEventKey(), Keyboard.getEventCharacter()));
 				}
 			}
 
@@ -49,6 +44,5 @@ public class KeyboardHandler extends Thread {
 			}
 		}
 
-		inputQueue.clear();
 	}
 }
