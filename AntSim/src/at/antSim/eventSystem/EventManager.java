@@ -27,24 +27,11 @@ public class EventManager {
 	}
 
 	/**
-	 * Registers an EventListener with the default {@link EventPriority} (NORMAL).<br />
-	 * If the EventListener class defines more then one method annotated with {@link EventListener} all methods will be registered with the same EventPriority.
+	 * Registers an EventListener with the {@link EventPriority} passed by the {@link EventListener}.<br />
 	 *
 	 * @param listener The instance of a class that implements a method annotated with {@link EventListener}.
 	 */
 	public void registerEventListener(Object listener) {
-		registerEventListener(listener, EventPriority.NORMAL);
-	}
-
-	/**
-	 * Registers an EventListener with the passed {@link EventPriority}.<br />
-	 * If the EventListener class defines more then one method annotated with {@link EventListener} all methods will be registered with the same EventPriority.
-	 *
-	 * @param listener The instance of a class that implements a method annotated with {@link EventListener}.
-	 * @param eventPriority The priority with which the listener should be notified about a event. This does not guarantee the order. If more then one EventListener is registered for the same Event
-	 *                         and with the same priority they will be notified in registration order.
-	 */
-	public void registerEventListener(Object listener, EventPriority eventPriority) {
 
 		Method[] methods = listener.getClass().getMethods();
 
@@ -52,6 +39,7 @@ public class EventManager {
 			EventListener eventListener = methods[i].getAnnotation(EventListener.class);
 			if (eventListener != null) {
 				Class[] methodParams = methods[i].getParameterTypes();
+				EventPriority eventPriority = eventListener.priority();
 
 				if (methodParams.length < 1)
 					continue;
