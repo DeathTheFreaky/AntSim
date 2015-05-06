@@ -69,9 +69,11 @@ void main(void) {
 		discard; //used to discard transparent parts of half-transparent textures (like fern or grass) - otherwise they will appear black
 	}
 	
-	vec3 finalFogColor = mix(fogColor1, fogColor2, blendFactor); //adjust fogColor to match daytime    
+	vec3 finalFogColor = mix(fogColor1, fogColor2, blendFactor); //adjust fogColor to match daytime/nightime cycle   
 
-	outColor = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0) ; //pixels color is created by applying diffuse lighting on the texture color and adding the reflection from specular lighting
-	outColor = mix(vec4(finalFogColor, 1.0), outColor, visibility); //create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility: Out_color (original object color)
+	//original pixel color is created by applying diffuse lighting on the texture color and adding the reflection from specular lighting
+	outColor = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0) ; 
+	//apply fog: create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility:  original pixel color
+	outColor = mix(vec4(finalFogColor, 1.0), outColor, visibility); 
 
 }
