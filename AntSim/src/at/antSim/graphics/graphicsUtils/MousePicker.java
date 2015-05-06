@@ -1,7 +1,5 @@
 package at.antSim.graphics.graphicsUtils;
 
-import javax.vecmath.Vector2d;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;

@@ -23,10 +23,12 @@ public class Camera {
 	private static final float YAW_FACTOR = 0.3f;
 	
 	private static final float MOVE_SPEED = 50; //units per second
+	private static final float STRAY_SPEED = 50; //units per second
 	private static final float TURN_SPEED = 150; //degrees per second
 	
 	//determine how fast camera is currently moving
 	private float currentSpeed = 0;
+	private float currentStraySpeed = 0;
 	private float currentTurnSpeed = 0;
 	
 	//camera's position and rotation
@@ -71,9 +73,22 @@ public class Camera {
 		 * we can calculate the adjacent's length as hypotenuse * cos(rotY) and the opposite's length as hypotenuse * sin(rotY).
 		 * 
 		 */
-		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-		float dx = (float) (distance * Math.sin(Math.toRadians(rotY)));
-		float dz = (float) (distance * Math.cos(Math.toRadians(rotY)));
+		
+		float distance = 0;
+		float dx = 0;
+		float dz = 0;
+		
+		if (currentSpeed != 0) {
+			distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+			dx += (float) (distance * Math.sin(Math.toRadians(rotY)));
+			dz += (float) (distance * Math.cos(Math.toRadians(rotY)));
+		}
+		if (currentStraySpeed != 0) {
+			distance = currentStraySpeed * DisplayManager.getFrameTimeSeconds();
+			dz += (float) (distance * Math.sin(Math.toRadians(rotY)));
+			dx -= (float) (distance * Math.cos(Math.toRadians(rotY)));
+		}
+		
 		increasePosition(dx, 0, dz);
 		refPointPosition.y = terrain.getHeightOfTerrain(refPointPosition.x, refPointPosition.z);
 		
@@ -92,21 +107,29 @@ public class Camera {
 	 */
 	private void checkKeyInputs(){
 		
+		this.currentTurnSpeed = 0;
+		this.currentSpeed = 0;
+		this.currentStraySpeed = 0;
+		
 		if(Keyboard.isKeyDown(Keyboard.KEY_UP)) {
 			this.currentSpeed = MOVE_SPEED;
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
 			this.currentSpeed = -MOVE_SPEED;
-		} else {
-			this.currentSpeed = 0;
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-			this.currentTurnSpeed = TURN_SPEED;
+			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+				this.currentTurnSpeed = TURN_SPEED;
+			} else {
+				this.currentStraySpeed = -STRAY_SPEED;
+			}
 		} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-			this.currentTurnSpeed = -TURN_SPEED;
-		} else {
-			this.currentTurnSpeed = 0;
-		}
+			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+				this.currentTurnSpeed = -TURN_SPEED;
+			} else {
+				this.currentStraySpeed = STRAY_SPEED;
+			}
+		} 
 	}
 	
 	/**Moves the referencePoint in the world.
