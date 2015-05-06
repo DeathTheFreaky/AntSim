@@ -13,7 +13,7 @@ public class Light {
 	private Vector3f color;
 	/*attenuation -> pointed lighting - light gets weaker if distance increases
 	* the below causes no attenuation (param 2 and 3 are 0) -> sunlight = infinte
-	* attenuation factor = (att1) + (att2*d) + (att3*d*d); d = distance from light */
+	* attenuation factor = (att1) + (att2*d) + (att3*d*d); d = distance from light - see: http://www.ozone3d.net/tutorials/glsl_lighting_phong_p4.php*/
 	private Vector3f attenuation = new Vector3f(1, 0, 0);
 	
 	/**Constructs a light source.

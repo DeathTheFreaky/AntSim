@@ -25,35 +25,48 @@ uniform float blendFactor; //0: just the first texture, 1: just the second textu
 
 void main(void) {
 
+	//normalize vectors so that their size does not affect the result of the dot product calculations used to determine the angle between two vectors -> strength of light, either reflected of diffused
 	vec3 unitNormal = normalize(surfaceNormal); //normalizing makes size of vector equal to 1 while direction of the vector stays the same
 	vec3 unitVectorToCamera = normalize(toCameraVector); //normalize sets size of toCameraVector to 1 but keeps its direction	
 
 	vec3 totalDiffuse = vec3(0.0);
 	vec3 totalSpecular = vec3(0.0);
 
-	//light calculations
+	//light calculations for all light sources
+	//see: http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/
 	for (int i = 0; i < 4; i++) {
+
+		//pointed light sources: light gets weaker if distance form vertex to light source increases
 		float distance = length(toLightVector[i]);
-		float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].y * distance * distance); 
+		//Attenuation method taken from http://www.ozone3d.net/tutorials/glsl_lighting_phong_p4.php:
+		//attenutation factor = constantAttenuation + LinearAttenuation + QuadraticAttenuation
+		float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance); 
+		
+		//diffuse lighting
 		vec3 unitLightVector = normalize(toLightVector[i]);
-		float nDot1 = dot(unitNormal, unitLightVector); //dot product (Skalarprodukt) is used to calculate strength of light reflection on an object: 1 -> vectors are parallel, 0 -> vectors are perpenticular (highest reflection)
+		float nDot1 = dot(unitNormal, unitLightVector); //dot product is used to calculate strength of light reflection on an object: 1 -> vectors are parallel (highest reflection), 0 -> vectors are perpenticular 
 		float brightness = max(nDot1, 0.0); //make sure brightness never drops below 0.0
+
+		//specular lighting
 		vec3 lightDirection = -unitVectorToCamera; //direction where light is coming from is opposite direction of vector pointing towards the light
 		vec3 reflectedLightDirection = reflect(lightDirection, unitNormal); //direction of light reflected from a surface
-		float specularFactor = dot(reflectedLightDirection, unitVectorToCamera); //dot product is used to calculate strength of light reflection on an object
-		specularFactor = max(specularFactor, 0.0); //dot product might return negative values but there are is no negative brightness
+		float specularFactor = dot(reflectedLightDirection, unitVectorToCamera); //dot product is used to calculate strength of specular light reflection on an object
+		specularFactor = max(specularFactor, 0.0); //dot product might return negative values (if angle > 90°) but there are is no negative brightness
 		float dampedFactor = pow(specularFactor, shineDamper); //raising specularFactor to the power of the damper value makes low dampered values even lower but does not affect strong dempered values so much
 		
-		//sum results of all light sources
+		//sum results of all light sources - the larger the attenuation, the less brighter the light
 		totalDiffuse = totalDiffuse + (brightness * lightColor[i]) / attFactor;	//get final lighting color for a pixel (scalar - brightness is multiplied with each component of vector x,y,z)
 		totalSpecular = totalSpecular + (dampedFactor * reflectivity * lightColor[i]) / attFactor; //final specular value is calculated by multiplying dampedFactor with a light color and the reflectivity
 	}
 	
+	//ambient lighting
 	totalDiffuse = max(totalDiffuse, 0.2); //diffuse never below 0.2 -> apply Ambient lighting to ensure that every part of a model gets a little bit of light
 
+	//samples the texture given by sampler (modelTexture), at the location texCoord (pass_textureCoords)
+	//see: https://www.opengl.org/wiki/Sampler_%28GLSL%29
 	vec4 textureColor = texture(modelTexture, pass_textureCoords); //retrieves texels from the texture bout to sampler by its texture coordinates
 	if (textureColor.a < 0.5) {
-		discard; //used to discard transparent parts of half-transparent textures (like fern or grass)
+		discard; //used to discard transparent parts of half-transparent textures (like fern or grass) - otherwise they will appear black
 	}
 	
 	vec3 finalFogColor = mix(fogColor1, fogColor2, blendFactor); //adjust fogColor to match daytime    
