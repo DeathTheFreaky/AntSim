@@ -10,7 +10,7 @@ in vec3 textureCoords;
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
 //uniform variables used to pass parameters from javacode which stay the same for all vertices of an object
-uniform samplerCube cubeMap; //sample texture as a cube
+uniform samplerCube cubeMap; //sample texture (daytime) as a cube
 uniform samplerCube cubeMap2; //second sample texture (for night) as a cube
 uniform float blendFactor; //0: just the first texture, 1: just the second texture
 uniform vec3 fogColor1; //lower section of skybox shall fade into the fog
@@ -27,7 +27,8 @@ void main(void){
 
 	vec3 finalFogColor = mix(fogColor1, fogColor2, blendFactor); //adjust fogColor to match daytime    
 	
-	float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit); //factor of 0: below lower limit, factor of 1: abouve upper limit
+	//make lower section of skybox fade into fog color -> lower limit (final color = fogcolor), upper limit (final color = texture color), interpolate in between
+	float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit); //factor of 0: below lower limit, factor of 1: above upper limit
 	factor = clamp(factor, 0.0, 1.0); //anything outside lower/upper range does not really affect us
-	out_Color = mix(vec4(finalFogColor, 1.0), finalColor, factor); //calculate color of final pixel onscreen
+	outColor = mix(vec4(finalFogColor, 1.0), finalColor, factor); //calculate color of final pixel onscreen
 }

@@ -82,11 +82,10 @@ void main(void) {
 	//ambient lighting
 	totalDiffuse = max(totalDiffuse, 0.2); //diffuse never below 0.2 -> apply Ambient lighting to ensure that every part of a model gets a little bit of light
 
-	
 	vec3 finalFogColor = mix(fogColor1, fogColor2, blendFactor); //adjust fogColor to match daytime/nightime cycle   
 	
 	//original pixel color is created by applying diffuse lighting on the texture color and adding the reflection from specular lighting
-	outColor = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0) ; 
+	outColor = vec4(totalDiffuse, 1.0) * totalColor + vec4(totalSpecular, 1.0) ; 
 	//apply fog: create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility:  original pixel color
-	outColor = mix(vec4(finalFogColor, 1.0), outColor, visibility);
+	outColor = mix(vec4(finalFogColor, 1.0), outColor, visibility);	
 }

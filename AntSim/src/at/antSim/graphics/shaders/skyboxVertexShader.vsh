@@ -18,6 +18,8 @@ void main(void){
 	/*For more info about gl_Position see: https://www.opengl.org/sdk/docs/man/html/gl_Position.xhtml*/
 	//write position of current vertex into gl_Position, to be used for clipping, culling and other fixed functionality operations	
 	gl_Position = projectionMatrix * viewMatrix * vec4(position, 1.0);  //apply projection and camera view to the skybox's positions
-	textureCoords = position; //texture coordinates match vertices positions since its a cube
+ 	//texture directions match vertices positions since its a cube	
+	//see: http://antongerdelan.net/opengl/cubemaps.html
+	textureCoords = position;
 	
 }
