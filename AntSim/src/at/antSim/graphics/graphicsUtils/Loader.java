@@ -143,6 +143,9 @@ public class Loader {
 	 * @return - ID of the CubeMap texture
 	 */
 	public int loadCubeMap(String[] textureFiles) {
+		
+		//for more information on cubemaps, see OpenGL Programming Guide p.309
+		
 		int texID = GL11.glGenTextures(); //generates completely empty texture - see OpenGL Programming Guide p.263
 		GL13.glActiveTexture(texID); //change the selector referring the active texture unit - see OpenGL Programming Guide p.265
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID); //bind active texture as a cubemap - see OpenGL Programming Guide p.264
