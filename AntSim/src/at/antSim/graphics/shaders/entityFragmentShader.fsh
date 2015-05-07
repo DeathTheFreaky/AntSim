@@ -2,7 +2,7 @@
 
 //FRAGMENT SHADER
 
-//input to fragment shader is output from vertexShader -> 2-dim texture coords
+//input to fragment shader is output of vertexShader
 in vec2 pass_textureCoords; //u,v positions for texture coordinates
 in vec3 surfaceNormal; //direction at which surfaces "between" vertices are facing to
 in vec3 toLightVector[4]; //vector from vertex to light sources in world space
@@ -11,6 +11,7 @@ in float visibility; //invisible = completely foggy if 0; clear if 1
 
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
+//uniform variables used to pass parameters from javacode which stay the same for all vertices of an object
 uniform sampler2D modelTexture; //basically represents textures we're going to use - the default value is 0, so we do not need to pass the texture id as uniform variable for 1 texture only
 uniform vec3 lightColor[4]; //r,g,b values for lights
 uniform vec3 attenuation[4]; //attunations to be used for the light sources -> pointed lighting - light gets weaker if distance increases

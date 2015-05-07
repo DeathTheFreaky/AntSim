@@ -17,9 +17,7 @@ uniform mat4 transformationMatrix; //transforms object's coordinates from object
 uniform mat4 viewMatrix; //position objects in world space relative to camera - negative inversion of camera position -> world needs to move left if camera seems to move right
 uniform mat4 projectionMatrix; //projects a 3D camera frustum on a 2D plane (near plane)
 uniform vec3 lightPosition[4]; //x,y,z of light sources in world space
-
 uniform float useFakeLighting; //set to 0.0 to disable fakeLighting, 1.0 to enable it -> uniform booleans in GLSL?: http://www.gamedev.net/topic/469620-gluniform-for-bool/
-
 uniform float numberOfRows; //number of rows in a texture atlas
 uniform vec2 offset; //x and y offsets of desired texture in texture atlas
 
@@ -64,7 +62,7 @@ void main(void) { //main is run for every vertex which undergoes vertexShader
 	toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz; 
 		
 	//calculate vertex' visibility when fog is applied
-	float distance = length(positionRelativeToCam.xyz); //length of relativePosition Vector indicates distance of a vertex from the camera
+	float distance = length(positionRelativeToCam.xyz); //length of relativePosition vector indicates distance of a vertex from the camera
 	visibility = exp(-pow((distance*density), gradient)); //calculate visibility of vertex in fog
 	visibility = clamp(visibility,0.0,1.0); //ensure that visibility stays between 0 and 1
 }
