@@ -6,7 +6,7 @@ in vec3 position; //vertex's x,y,z positions as inputs (0 to 1, objectSpace)
 in vec2 textureCoords; //takes u,v positions for texture coordinates
 in vec3 normal; //tells us which direction vertices are facing at -> for light calculation
 
-out vec2 pass_textureCoords; //outputs linearly-interpolated textureCoords
+out vec2 pass_textureCoords;
 out vec3 surfaceNormal; //direction at which surfaces "between" vertices are facing to
 out vec3 toLightVector[4]; //vector pointing towards the light source, there can be multiple light sources
 out vec3 toCameraVector; //vector point from vertex towards the camera for specular lighting calculation//vector point from vertex towards the camera
