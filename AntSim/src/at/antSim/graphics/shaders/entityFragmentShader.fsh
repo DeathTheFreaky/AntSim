@@ -9,6 +9,8 @@ in vec3 toLightVector[4]; //vector from vertex to light sources in world space
 in vec3 toCameraVector; //vector form vertex to camera in world space
 in float visibility; //invisible = completely foggy if 0; clear if 1
 
+//output: color values to be potentially written to the buffers in the current framebuffers
+//see: https://www.opengl.org/wiki/Fragment_Shader
 out vec4 outColor; //outputs color of pixel which the shader is currently processing -> 4d because of RGBA
 
 //uniform variables used to pass parameters from javacode which stay the same for all vertices of an object
