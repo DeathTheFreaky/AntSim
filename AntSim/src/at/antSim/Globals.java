@@ -1,8 +1,6 @@
 package at.antSim;
 
 import java.awt.*;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 
 /**Stores global variables, mainly config file entries and constants like resource folder, fps_cap...
  * 
@@ -20,9 +18,9 @@ public final class Globals {
 	public static final String SHADERS = WORKING_DIR + "\\src\\at\\antSim\\graphics\\shaders\\";
 	public static final int FPS_CAP = 120;
 	/**
-	 * duration of 1/60 second in nanoseconds
+	 * duration of 1/FPS second in nanoseconds
 	 */
-	public static final int FPS_60_DURATION_NANONS = (int) ((1.0 / 60) * 1000 * 1000 * 1000);
+	public static final int FPS_DURATION_NANONS = (int) ((1.0 / FPS_CAP) * 1000 * 1000 * 1000);
 	public static final float WORLD_SIZE = 800; //square
 	
 	//config file entries set by config reader

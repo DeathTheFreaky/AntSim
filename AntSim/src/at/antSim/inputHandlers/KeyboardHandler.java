@@ -41,8 +41,8 @@ public class KeyboardHandler extends Thread {
 				}
 			}
 
-			if ((System.nanoTime() - iterationStartTime) < Globals.FPS_60_DURATION_NANONS) {
-				long waitTime = Globals.FPS_60_DURATION_NANONS - (System.nanoTime() - iterationStartTime);
+			if ((System.nanoTime() - iterationStartTime) < Globals.FPS_DURATION_NANONS) {
+				long waitTime = Globals.FPS_DURATION_NANONS - (System.nanoTime() - iterationStartTime);
 				try {
 					sleep(waitTime / 100, (int) waitTime % 100);
 				} catch (InterruptedException e) {
