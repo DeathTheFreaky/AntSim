@@ -73,7 +73,7 @@ public class EntityRenderer {
 			for(Entity entity:batch) {
 				prepareInstance(entity); //load transformation matrix and texture atlas offset
 				
-				//Render vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
+				//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 
 			}
 			

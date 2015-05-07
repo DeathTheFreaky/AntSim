@@ -69,7 +69,7 @@ public class TerrainRenderer {
 			/*Create and load a terrain's transformation matrix into the shader program */
 			loadTransformationMatrix(terrain);
 			
-			//Render vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
+			//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 			GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 
 			
 			//"restore the defaults" -> disable vertexAttributeArrays (VBOS holding position, normals, texture coords) and unbind VAO
