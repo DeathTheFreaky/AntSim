@@ -1,21 +1,15 @@
 package at.antSim;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.nulldevice.NullSoundDevice;
-import de.lessvoid.nifty.renderer.lwjgl.input.LwjglInputSystem;
-import de.lessvoid.nifty.renderer.lwjgl.render.LwjglRenderDevice;
-import de.lessvoid.nifty.spi.time.TimeProvider;
-import at.antSim.config.ConfigReader;
-import at.antSim.config.ConfigWriter;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;
@@ -117,49 +111,7 @@ public class EngineTester {
 	 * 29 - Mouse Picker example code: https://www.dropbox.com/s/qkslys3p3xzh8av/MousePicker%20Code.txt?dl=0
 	 * */
 	
-	public static void main(String[] args) {
-		
-//		ConfigWriter mywriter = new ConfigWriter();
-//		try {
-//			//mywriter.writeConfig();
-//		} catch (NoSuchFieldException | SecurityException
-//				| IllegalArgumentException | IllegalAccessException
-//				| IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		ConfigReader myreader = new ConfigReader();
-		myreader.readConfig();
-		
-		DisplayManager.createDisplay();
-		
-		Loader loader = new Loader();
-		
-		MasterRenderer renderer = new MasterRenderer(loader);
-		
-		//initialize nifty
-		final LwjglInputSystem inputSystem = new LwjglInputSystem();
-		try {
-			inputSystem.startup();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		final TimeProvider timeProvider = new TimeProvider() {
-			@Override
-			public long getMsTime() {
-				return DisplayManager.getCurrentTime();
-			}
-		};
-		final LwjglRenderDevice renderDevice = new LwjglRenderDevice();
-		final NullSoundDevice soundDevice = new NullSoundDevice();
-		
-		Nifty nifty = new Nifty(
-			renderDevice,
-			soundDevice,
-			inputSystem,
-			timeProvider);
-		
+	public static void launch(Loader loader, MasterRenderer renderer, Nifty nifty) {
 		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
@@ -278,6 +230,9 @@ public class EngineTester {
 		
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 		
+		
+		DisplayManager.initializeOpenGL();
+		
 		//main game loop
 		while(!Display.isCloseRequested()) {
 			
@@ -301,6 +256,20 @@ public class EngineTester {
 			
 			renderer.render(lights, camera);
 			guiRenderer.render(guis); //move to master renderer
+			
+		
+			// render and update Nifty
+			/*boolean done = false;
+			while (!done) {
+				
+				// update Nifty
+				if (nifty.update()) {
+				done = true;
+				}
+				
+				// render Nifty
+				nifty.render(false);
+			}*/
 			
 			DisplayManager.updateDisplay();
 		}

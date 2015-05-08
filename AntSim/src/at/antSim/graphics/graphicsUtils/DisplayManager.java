@@ -7,6 +7,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.util.glu.GLU;
 
 import at.antSim.Globals;
 
@@ -77,5 +78,36 @@ public class DisplayManager {
 	 */
 	public static long getCurrentTime() {
 		return Sys.getTime()*1000/Sys.getTimerResolution();
+	}
+	
+	public static void initializeOpenGL() {
+
+	    //Enabling OpenGL functions
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_BLEND);
+
+	    //Using them
+		GL11.glCullFace(GL11.GL_BACK);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+	}
+	
+	public static void make2D() {
+	    GL11.glEnable(GL11.GL_BLEND);
+	    GL11.glMatrixMode(GL11.GL_PROJECTION);
+	    GL11.glLoadIdentity();
+	    GL11.glOrtho(0.0f, Globals.displayWidth, Globals.displayHeight, 0.0f, 0.0f, 1.0f);
+
+	    GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	    GL11.glLoadIdentity();
+	}
+
+	public static void make3D() {
+	    GL11.glDisable(GL11.GL_BLEND);
+	    GL11.glMatrixMode(GL11.GL_PROJECTION);
+	    GL11.glLoadIdentity(); // Reset The Projection Matrix
+	    //GLU.gluPerspective(45.0f, ((float) Globals.displayWidth / (float) Globals.displayHeight), 0.1f, 100.0f); // Calculate The Aspect Ratio Of The Window
+	    GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	    GL11.glLoadIdentity();
 	}
 }

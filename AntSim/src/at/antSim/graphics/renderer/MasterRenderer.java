@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import de.lessvoid.nifty.Nifty;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;
@@ -96,7 +97,7 @@ public class MasterRenderer {
 		
 		dayNightCycle(); //simulate a day/night cycle, using a blend factor to blend the two settings
 		prepare(); //enable depth test and clear screen and depth buffer
-		
+			
 		//run all sub-renderers' render methods
 		entityRenderer.render(entities, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);		
 		terrainRenderer.render(terrains, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);
