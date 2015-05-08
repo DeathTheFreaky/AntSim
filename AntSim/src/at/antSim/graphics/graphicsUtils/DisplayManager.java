@@ -75,7 +75,7 @@ public class DisplayManager {
 	/**
 	 * @return - time in milliseconds
 	 */
-	private static long getCurrentTime() {
+	public static long getCurrentTime() {
 		return Sys.getTime()*1000/Sys.getTimerResolution();
 	}
 }

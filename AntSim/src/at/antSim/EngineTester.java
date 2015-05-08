@@ -9,6 +9,11 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.nulldevice.NullSoundDevice;
+import de.lessvoid.nifty.renderer.lwjgl.input.LwjglInputSystem;
+import de.lessvoid.nifty.renderer.lwjgl.render.LwjglRenderDevice;
+import de.lessvoid.nifty.spi.time.TimeProvider;
 import at.antSim.config.ConfigReader;
 import at.antSim.config.ConfigWriter;
 import at.antSim.graphics.entities.Camera;
@@ -132,6 +137,29 @@ public class EngineTester {
 		Loader loader = new Loader();
 		
 		MasterRenderer renderer = new MasterRenderer(loader);
+		
+		//initialize nifty
+		final LwjglInputSystem inputSystem = new LwjglInputSystem();
+		try {
+			inputSystem.startup();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		final TimeProvider timeProvider = new TimeProvider() {
+			@Override
+			public long getMsTime() {
+				return DisplayManager.getCurrentTime();
+			}
+		};
+		final LwjglRenderDevice renderDevice = new LwjglRenderDevice();
+		final NullSoundDevice soundDevice = new NullSoundDevice();
+		
+		Nifty nifty = new Nifty(
+			renderDevice,
+			soundDevice,
+			inputSystem,
+			timeProvider);
+		
 		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
