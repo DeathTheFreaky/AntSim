@@ -10,6 +10,9 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.dynamic.PanelCreator;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.screen.Screen;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;
@@ -229,12 +232,10 @@ public class EngineTester {
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
-		
-		
-		DisplayManager.initializeOpenGL();
-		
+				
 		//main game loop
-		while(!Display.isCloseRequested()) {
+		boolean done = false;
+		while(!Display.isCloseRequested() && !done) {
 			
 			//game logic
 			entities.get(0).increaseRotation(0, 0.5f, 0); //rotate the dragon
@@ -257,19 +258,27 @@ public class EngineTester {
 			renderer.render(lights, camera);
 			guiRenderer.render(guis); //move to master renderer
 			
-		
-			// render and update Nifty
-			/*boolean done = false;
-			while (!done) {
-				
-				// update Nifty
-				if (nifty.update()) {
+			//render 2d gui using nifty library
+			DisplayManager.make2D();
+						
+			nifty.fromXml(Globals.WORKING_DIR + "\\src\\at\\antSim\\guiTest.xml", "start");
+			
+			Screen screen = nifty.getCurrentScreen();
+			Element layer = screen.findElementByName("baseLayer");
+			
+			// create a 8px height red panel
+			PanelCreator createPanel = new PanelCreator();
+			createPanel.setHeight("8px");
+			createPanel.setBackgroundColor("#f00f");
+			Element newPanel = createPanel.create(nifty, screen, layer);
+			
+			
+			if (nifty.update()) {
 				done = true;
-				}
-				
-				// render Nifty
-				nifty.render(false);
-			}*/
+			}
+			nifty.render(false);
+			
+			DisplayManager.make3D();
 			
 			DisplayManager.updateDisplay();
 		}
