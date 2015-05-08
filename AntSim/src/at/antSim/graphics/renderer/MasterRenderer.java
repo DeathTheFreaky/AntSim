@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
-import de.lessvoid.nifty.Nifty;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;

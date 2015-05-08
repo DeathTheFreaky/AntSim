@@ -9,10 +9,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.controls.dynamic.PanelCreator;
-import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.screen.Screen;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;
@@ -114,7 +110,7 @@ public class EngineTester {
 	 * 29 - Mouse Picker example code: https://www.dropbox.com/s/qkslys3p3xzh8av/MousePicker%20Code.txt?dl=0
 	 * */
 	
-	public static void launch(Loader loader, MasterRenderer renderer, Nifty nifty) {
+	public static void launch(Loader loader, MasterRenderer renderer) {
 		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
@@ -256,29 +252,7 @@ public class EngineTester {
 			}
 			
 			renderer.render(lights, camera);
-			guiRenderer.render(guis); //move to master renderer
-			
-			//render 2d gui using nifty library
-			DisplayManager.make2D();
-						
-			nifty.fromXml(Globals.WORKING_DIR + "\\src\\at\\antSim\\guiTest.xml", "start");
-			
-			Screen screen = nifty.getCurrentScreen();
-			Element layer = screen.findElementByName("baseLayer");
-			
-			// create a 8px height red panel
-			PanelCreator createPanel = new PanelCreator();
-			createPanel.setHeight("8px");
-			createPanel.setBackgroundColor("#f00f");
-			Element newPanel = createPanel.create(nifty, screen, layer);
-			
-			
-			if (nifty.update()) {
-				done = true;
-			}
-			nifty.render(false);
-			
-			DisplayManager.make3D();
+			guiRenderer.render(guis); 
 			
 			DisplayManager.updateDisplay();
 		}

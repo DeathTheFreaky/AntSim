@@ -8,12 +8,6 @@ import at.antSim.graphics.renderer.MasterRenderer;
 
 import java.io.IOException;
 
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.nulldevice.NullSoundDevice;
-import de.lessvoid.nifty.renderer.lwjgl.input.LwjglInputSystem;
-import de.lessvoid.nifty.renderer.lwjgl.render.LwjglRenderDevice;
-import de.lessvoid.nifty.spi.time.TimeProvider;
-
 /**
  * Created on 24.03.2015.
  * @author Clemens, Flo
@@ -21,7 +15,6 @@ import de.lessvoid.nifty.spi.time.TimeProvider;
 public class AntSim {
 	
 	Loader loader;
-	Nifty nifty;
 	MasterRenderer masterRenderer;
 	
     public AntSim(){}
@@ -61,34 +54,12 @@ public class AntSim {
     	DisplayManager.createDisplay();
 		loader = new Loader();
 		
-		//initialize nifty gui
-		final LwjglInputSystem inputSystem = new LwjglInputSystem();
-		try {
-			inputSystem.startup();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		final TimeProvider timeProvider = new TimeProvider() {
-			@Override
-			public long getMsTime() {
-				return DisplayManager.getCurrentTime();
-			}
-		};
-		final LwjglRenderDevice renderDevice = new LwjglRenderDevice();
-		final NullSoundDevice soundDevice = new NullSoundDevice();
-		
-		nifty = new Nifty(
-			renderDevice,
-			soundDevice,
-			inputSystem,
-			timeProvider);
-		
 		//initialize render engine
 		masterRenderer = new MasterRenderer(loader);
     }
 
     private void postInit() {
-    	EngineTester.launch(loader, masterRenderer, nifty);
+    	EngineTester.launch(loader, masterRenderer);
     }
     
 //	ConfigWriter mywriter = new ConfigWriter();
