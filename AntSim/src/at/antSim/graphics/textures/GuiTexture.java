@@ -2,6 +2,11 @@ package at.antSim.graphics.textures;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import at.antSim.eventSystem.EventListener;
+import at.antSim.eventSystem.EventPriority;
+import at.antSim.eventSystem.events.MouseButtonPressedEvent;
+import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
+
 /**GuiTexture holds all types of textures which are rendered to the screen as part of the Gui.
  * 
  * @author Flo
@@ -35,5 +40,15 @@ public class GuiTexture {
 	
 	public Vector2f getScale() {
 		return scale;
+	}
+	
+	@EventListener(priority = EventPriority.HIGH)
+	public void onMousePress(MouseButtonPressedEvent event){
+		
+	}
+	
+	@EventListener
+	public void onMouseReleased(MouseButtonReleasedEvent event){
+		
 	}
 }

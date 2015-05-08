@@ -44,6 +44,8 @@ public class EngineTester {
 	 * Also, there is a plugin for writing GLSL shaders in Eclipse: http://sourceforge.net/projects/webglsl/
 	 * -> Extract .zip file to Eclipse installation directory
 	 * 
+	 * NiftyGUI: http://sourceforge.net/projects/nifty-gui/files/nifty-gui/1.3.2/
+	 * 
 	 * OpenGL Commands syntax for lots of 3 param - commands:
 	 * 1.: what is affected, 2.: which behaviour to define, 3.: the actual value to set
 	 * 
