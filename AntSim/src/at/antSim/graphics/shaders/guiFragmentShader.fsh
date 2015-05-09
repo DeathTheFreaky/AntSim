@@ -3,7 +3,7 @@
 //FRAGMENT SHADER
 
 //input to fragment shader is output of vertexShader
-in vec2 textureCoords; //u,v positions for texture coordinates
+in vec2 pass_textureCoords; //u,v positions for texture coordinates
 
 //output: color values to be potentially written to the buffers in the current framebuffers
 //see: https://www.opengl.org/wiki/Fragment_Shader
@@ -17,5 +17,5 @@ uniform sampler2D guiTexture; //the texture of the gui element - the default val
 
 void main(void){
 
-	outColor = texture(guiTexture,textureCoords); //calculate color of pixels onscreen by the given element's texture and its coordinates
+	outColor = texture(guiTexture,pass_textureCoords); //calculate color of pixels onscreen by the given element's texture and its coordinates
 }

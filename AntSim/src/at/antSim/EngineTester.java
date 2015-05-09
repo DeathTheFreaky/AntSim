@@ -1,13 +1,14 @@
 package at.antSim;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.TrueTypeFont;
 
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
@@ -16,16 +17,22 @@ import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.graphicsUtils.MousePicker;
 import at.antSim.graphics.graphicsUtils.OBJFileLoader;
+import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
 import at.antSim.graphics.models.ModelData;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.renderer.GuiRenderer;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
-import at.antSim.graphics.textures.GuiTexture;
+import at.antSim.graphics.textures.GuiTexturedModel;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
+import at.antSim.guiWrapper.GuiContainer;
+import at.antSim.guiWrapper.GuiImage;
+import at.antSim.guiWrapper.GuiState;
+import at.antSim.guiWrapper.GuiText;
+import at.antSim.guiWrapper.GuiWrapper;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -219,15 +226,31 @@ public class EngineTester {
 		
 		Camera camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2)); //player camera - make a "ghost" player to simulate cool camera movement
 		
-		List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f));
+		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 		
-		//order matters: second texture will be drawn in front of first texture
-		guis.add(gui);
+		//gui
+		GuiWrapper guiWrapper = new GuiWrapper();
+		GuiState testState = new GuiState();
+		
+		float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
+		float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
+		RawModel testContainerQuad = loader.loadToVAO(positions, 2);
+		GuiContainer testContainer = new GuiContainer(new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f), testContainerQuad, "testContainer");
+		
+		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
+		GuiImage testImage = new GuiImage(new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f), testImageQuad, "testImage", loader.loadTexture("health"));
+		
+		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader);
+		GuiText testText = new GuiText(new Vector2f(-0.8f, 0.95f), new Vector2f(0.04f, (float) (0.04/9*16)), textDrawer.createTextQuad("F"), "testText", loader.loadTexture("font"));
+		
+		testContainer.getChildren().add(testImage);
+		testContainer.getChildren().add(testText);
+		testState.addContainer(testContainer);
+		 
+		guiWrapper.addState("testState", testState);
+		guiWrapper.setCurrentState("testState");
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
-		
-		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 				
 		//main game loop
 		boolean done = false;
@@ -252,8 +275,8 @@ public class EngineTester {
 			}
 			
 			renderer.render(lights, camera);
-			guiRenderer.render(guis); 
-			
+			guiRenderer.render(guiWrapper.getCurrentState()); 
+						
 			DisplayManager.updateDisplay();
 		}
 		

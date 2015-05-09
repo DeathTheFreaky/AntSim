@@ -1,12 +1,9 @@
 package at.antSim;
 
 import at.antSim.config.ConfigReader;
-import at.antSim.config.ConfigWriter;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.renderer.MasterRenderer;
-
-import java.io.IOException;
 
 /**
  * Created on 24.03.2015.
@@ -32,19 +29,8 @@ public class AntSim {
 
     private void preInit() {
     	
-    	
+    	//read config
         ConfigReader myreader = new ConfigReader();
-        
-        /* ConfigWriter mywriter = new ConfigWriter();
-         try {
-			mywriter.writeConfig(); 
-			myreader.readConfig();
-		} catch (NoSuchFieldException | SecurityException
-				| IllegalArgumentException | IllegalAccessException
-				| IOException e) {
-			e.printStackTrace();
-		} */ 	
-        
         myreader.readConfig();
     }
 
@@ -59,6 +45,8 @@ public class AntSim {
     }
 
     private void postInit() {
+    	
+    	//launch main game
     	EngineTester.launch(loader, masterRenderer);
     }
     

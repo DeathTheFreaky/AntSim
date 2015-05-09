@@ -7,7 +7,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
-import org.lwjgl.util.glu.GLU;
 
 import at.antSim.Globals;
 
@@ -34,11 +33,10 @@ public class DisplayManager {
 			
 			//setup OpenGL to and run in forward-compatible mode, Ensure that OpenGL is being used
 			PixelFormat pixelFormat = new PixelFormat();
-			/*ContextAttribs attribs = new ContextAttribs(3,2) //OpenGL version 3.2
+			ContextAttribs attribs = new ContextAttribs(3,2) //OpenGL version 3.2
 			.withForwardCompatible(true)
 			.withProfileCore(true);
-			Display.create(pixelFormat, attribs);*/
-			Display.create(); //cannot use fixed function gui in 3.2 context :-(
+			Display.create(pixelFormat, attribs);
 			
 		} catch (LWJGLException e) {
 			e.printStackTrace();
@@ -46,7 +44,6 @@ public class DisplayManager {
 		
 		//initialize glViewport to stretch from upper left to lower right corner of display
 		GL11.glViewport(0, 0, Globals.displayWidth, Globals.displayHeight); //where to render game within the display
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		lastFrameTime = getCurrentTime();
 	};
 	

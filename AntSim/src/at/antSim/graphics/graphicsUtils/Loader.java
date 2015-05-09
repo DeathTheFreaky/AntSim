@@ -80,7 +80,24 @@ public class Loader {
 	 */
 	public RawModel loadToVAO(float [] positions, int dimensions) {
 		int vaoID = createVAO();
-		this.storeDataInAttributeList(0, dimensions, positions);
+		this.storeDataInAttributeList(0, dimensions, positions); //store positional data into attribute list 0 of the activated VAO
+		unbindVAO();
+		return new RawModel(vaoID, positions.length/dimensions); //for 2d models there are 2 number per vertex, for 3d models there are 3
+	}
+	
+	/**Takes in position coordinates of a model's vertexes, loads this data into a VAO and then returns information about the VAO as a RawModel object.<br>
+	 * No texture Coordinates, normals or indices are passed, making this function ideal for simple 3d models (such as a skybox cube with no duplicate vertices)
+	 * or 2D GUI Elements.
+	 *  
+	 * @param positions - the vertice's 2D positions
+	 * @param textureCoorder - texture coordinates of the vertices
+	 * @param dimensions - can be either 2 or 3 (2D quads, 3D Skybox cubes)
+	 * @return - a RawModel object storing positions' data inside a VAO
+	 */
+	public RawModel loadToVAO(float [] positions, float[] textureCoords, int dimensions) {
+		int vaoID = createVAO();
+		this.storeDataInAttributeList(0, dimensions, positions); //store positional data into attribute list 0 of the activated VAO
+		storeDataInAttributeList(1, 2, textureCoords); //store texture coordinates into attribute list 1 of the activated VAO
 		unbindVAO();
 		return new RawModel(vaoID, positions.length/dimensions); //for 2d models there are 2 number per vertex, for 3d models there are 3
 	}
