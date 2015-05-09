@@ -238,13 +238,11 @@ public class EngineTester {
 		GuiContainer testContainer = new GuiContainer(new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f), testContainerQuad, "testContainer");
 		
 		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
-		GuiImage testImage = new GuiImage(new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f), testImageQuad, "testImage", loader.loadTexture("health"));
+		GuiImage testImage = new GuiImage(new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f), testImageQuad, "testImage", loader.loadTexture("health"), testContainer);
 		
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader);
-		GuiText testText = new GuiText(new Vector2f(-0.8f, 0.95f), new Vector2f(0.04f, (float) (0.04/9*16)), textDrawer.createTextQuad("F"), "testText", loader.loadTexture("font"));
+		GuiText testText = new GuiText(new Vector2f(0f, 0f), 12, textDrawer.createTextQuad("F"), "testText", loader.loadTexture("font"), testContainer);
 		
-		testContainer.getChildren().add(testImage);
-		testContainer.getChildren().add(testText);
 		testState.addContainer(testContainer);
 		 
 		guiWrapper.addState("testState", testState);
