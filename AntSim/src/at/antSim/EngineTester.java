@@ -33,6 +33,8 @@ import at.antSim.guiWrapper.GuiImage;
 import at.antSim.guiWrapper.GuiState;
 import at.antSim.guiWrapper.GuiText;
 import at.antSim.guiWrapper.GuiWrapper;
+import at.antSim.guiWrapper.HorPositions;
+import at.antSim.guiWrapper.VerPositions;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -234,14 +236,14 @@ public class EngineTester {
 		
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
 		float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
-		RawModel testContainerQuad = loader.loadToVAO(positions, 2);
-		GuiContainer testContainer = new GuiContainer(new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f), testContainerQuad, "testContainer");
+		RawModel testContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
+		GuiContainer testContainer = new GuiContainer(new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f), testContainerQuad, loader.loadTexture("white"), "testContainer", null);
 		
-		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
-		GuiImage testImage = new GuiImage(new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f), testImageQuad, "testImage", loader.loadTexture("health"), testContainer);
+		/*RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
+		GuiImage testImage = new GuiImage(new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f), testImageQuad, "testImage", loader.loadTexture("health"), testContainer); */
 		
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader);
-		GuiText testText = new GuiText(new Vector2f(0f, 0f), 12, textDrawer.createTextQuad("F"), "testText", loader.loadTexture("font"), testContainer);
+		GuiText testText = new GuiText(HorPositions.LEFT, 10, VerPositions.TOP, 10 , 42, textDrawer.createTextQuad("F"), "testText", loader.loadTexture("font"), testContainer);
 		
 		testState.addContainer(testContainer);
 		 

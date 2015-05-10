@@ -16,7 +16,6 @@ import at.antSim.graphics.textures.GuiTexturedModel;
 import at.antSim.guiWrapper.GuiContainer;
 import at.antSim.guiWrapper.GuiElement;
 import at.antSim.guiWrapper.GuiState;
-import at.antSim.guiWrapper.GuiTexturedElement;
 
 /**GuiRenderer is used to render Gui Elements to the screen.
  * 
@@ -52,28 +51,13 @@ public class GuiRenderer {
 		
 		//gui does not need a view matrix -> view on gui elements stays the same / they are shown in a "static 2d plane"
 		for (GuiContainer container : state.getElements()) {
+						
+			drawGuiElement(container);
 			
-			for (GuiTexturedElement element : container.getChildren()) {
-				
-				//bind the gui element's VAO (set it as "active"), enable the gui element's positions VBO, bind and activate the cube map's textures
-				GL30.glBindVertexArray(element.getRawModel().getVaoID());
-				GL20.glEnableVertexAttribArray(0);
-				GL20.glEnableVertexAttribArray(1);
-				
-				//activate first texture bank 0 -> bank that's used by default by Sampler2d from fragment shader
-				GL13.glActiveTexture(GL13.GL_TEXTURE0); 
-				//bind texture so it can be used
-				GL11.glBindTexture(GL11.GL_TEXTURE_2D, element.getTextureId());
-				
-				//create and load the texture's transformation matrix
-				Matrix4f matrix = Maths.createTransformationMatrix(element.getPosition(), element.getScale());
-				shader.loadTransformationMatrix(matrix);
-				
-				//Render vertices as triangle strip, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
-				GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, element.getRawModel().getVertexCount()); //treat positions array as triangle strips
+			for (GuiElement element : container.getChildren()) {
+				drawGuiElement(element);
 			}
 		}
-		
 		
 		GL11.glEnable(GL11.GL_DEPTH_TEST); //reenable depth test once we're done with drawing our textures
 		GL11.glDisable(GL11.GL_BLEND); //disable alpha blending after we're done with our (transparent) textures
@@ -86,6 +70,35 @@ public class GuiRenderer {
 		shader.stop();
 	}
 	
+	/**Draws a gui element on the screen.
+	 * 
+	 * @param container
+	 */
+	private void drawGuiElement (GuiElement element) {
+		
+		System.out.println("drawing " + element + " with textureID " + element.getTextureId());
+		
+		if (element.getTextureId() >= 0) {
+						
+			//bind the gui element's VAO (set it as "active"), enable the gui element's positions VBO, bind and activate the cube map's textures
+			GL30.glBindVertexArray(element.getRawModel().getVaoID());
+			GL20.glEnableVertexAttribArray(0);
+			GL20.glEnableVertexAttribArray(1);
+			
+			//activate first texture bank 0 -> bank that's used by default by Sampler2d from fragment shader
+			GL13.glActiveTexture(GL13.GL_TEXTURE0); 
+			//bind texture so it can be used
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, element.getTextureId());
+			
+			//create and load the texture's transformation matrix
+			Matrix4f matrix = Maths.createTransformationMatrix(element.getPosition(), element.getScale());
+			shader.loadTransformationMatrix(matrix);
+			
+			//Render vertices as triangle strip, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
+			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, element.getRawModel().getVertexCount()); //treat positions array as triangle strips
+		}
+	}
+
 	/**Cleans up the shader program for this renderer.
 	 * 
 	 */

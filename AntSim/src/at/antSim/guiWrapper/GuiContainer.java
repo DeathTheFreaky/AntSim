@@ -9,14 +9,22 @@ import at.antSim.graphics.models.RawModel;
 
 public class GuiContainer extends GuiElement {
 	
-	List<GuiTexturedElement> children = new LinkedList<>();
+	List<GuiElement> children = new LinkedList<>();
 
-	public GuiContainer(Vector2f position, Vector2f scale, RawModel model,
-			String id) {
-		super(position, scale, model, id);
+	/**Creates a new Gui Container. 
+	 * 
+	 * @param position
+	 * @param scale
+	 * @param model
+	 * @param textureId - -1 if no texture shall be applied
+	 * @param id
+	 */
+	public GuiContainer(Vector2f position, Vector2f scale, RawModel model, int textureId,
+			String id, GuiContainer parent) {
+		super(position, scale, model, textureId, id, parent);
 	}
 	
-	public List<GuiTexturedElement> getChildren() {
+	public List<GuiElement> getChildren() {
 		return children;
 	}
 }
