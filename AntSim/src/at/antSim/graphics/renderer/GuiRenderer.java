@@ -36,34 +36,37 @@ public class GuiRenderer {
 	 */
 	public void render(GuiState state) {
 		
-		shader.start();
+		if (state != null) {
 		
-		//enable alpha blending for transparency
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		//disable depth test for gui drawing -> otherwise a texture behind a transparent texture will not be rendered
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		
-		//gui does not need a view matrix -> view on gui elements stays the same / they are shown in a "static 2d plane"
-		for (GuiContainer container : state.getElements()) {
-						
-			drawGuiElement(container);
+			shader.start();
 			
-			for (GuiElement element : container.getChildren()) {
-				drawGuiElement(element);
+			//enable alpha blending for transparency
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			
+			//disable depth test for gui drawing -> otherwise a texture behind a transparent texture will not be rendered
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
+					
+			//gui does not need a view matrix -> view on gui elements stays the same / they are shown in a "static 2d plane"
+			for (GuiContainer container : state.getElements()) {
+							
+				drawGuiElement(container);
+				
+				for (GuiElement element : container.getChildren()) {
+					drawGuiElement(element);
+				}
 			}
+			
+			GL11.glEnable(GL11.GL_DEPTH_TEST); //reenable depth test once we're done with drawing our textures
+			GL11.glDisable(GL11.GL_BLEND); //disable alpha blending after we're done with our (transparent) textures
+			
+			//disable vertexAttributeArrays (VBOS holding positions and texture coords) and unbind VAO
+			GL20.glDisableVertexAttribArray(0);
+			GL20.glEnableVertexAttribArray(1);
+			GL30.glBindVertexArray(0);
+			
+			shader.stop();
 		}
-		
-		GL11.glEnable(GL11.GL_DEPTH_TEST); //reenable depth test once we're done with drawing our textures
-		GL11.glDisable(GL11.GL_BLEND); //disable alpha blending after we're done with our (transparent) textures
-		
-		//disable vertexAttributeArrays (VBOS holding positions and texture coords) and unbind VAO
-		GL20.glDisableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-		GL30.glBindVertexArray(0);
-		
-		shader.stop();
 	}
 	
 	/**Draws a gui element on the screen.
@@ -84,9 +87,12 @@ public class GuiRenderer {
 			//bind texture so it can be used
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, element.getTextureId());
 			
-			//create and load the texture's transformation matrix
+			//create and load the texture's transformation matrix, load other uniform variables
 			Matrix4f matrix = Maths.createTransformationMatrix(element.getPosition(), element.getScale());
 			shader.loadTransformationMatrix(matrix);
+			shader.loadBlendFactor(element.getBlendFactor());
+			shader.loadBlendColor(element.getBlendColor());
+			shader.loadTransparency(element.getTransparency());
 			
 			//Render vertices as triangle strip, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, element.getRawModel().getVertexCount()); //treat positions array as triangle strips

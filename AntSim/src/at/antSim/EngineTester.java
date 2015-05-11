@@ -21,6 +21,7 @@ import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.renderer.GuiRenderer;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
+import at.antSim.graphics.textures.GuiTexture;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
@@ -30,7 +31,9 @@ import at.antSim.guiWrapper.GuiState;
 import at.antSim.guiWrapper.GuiText;
 import at.antSim.guiWrapper.GuiWrapper;
 import at.antSim.guiWrapper.HorPositions;
+import at.antSim.guiWrapper.HorReference;
 import at.antSim.guiWrapper.VerPositions;
+import at.antSim.guiWrapper.VerReference;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -234,13 +237,16 @@ public class EngineTester {
 		float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
 		RawModel testContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
 		
-		GuiContainer testContainer = new GuiContainer(HorPositions.CENTER, 0, VerPositions.MIDDLE, 0, 640, 360, testContainerQuad, loader.loadGuiTexture("white"), "testContainer", null);
-		
-		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
-		GuiImage testImage = new GuiImage(HorPositions.RIGHT, 20, VerPositions.TOP, 0, 500, 280, testImageQuad, loader.loadGuiTexture("health"), "testImage", testContainer);
+		GuiContainer testContainer = new GuiContainer("testContainer", null, testContainerQuad, loader.loadGuiTexture("white"), 640, 360, 
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(0,0,0), 0f);
 		
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
-		GuiText testText = new GuiText(HorPositions.LEFT, 10, VerPositions.TOP, 10 , 42, textDrawer.createTextQuad("Flo war da!\nWhohooooo"), "testText", testContainer);
+		GuiText testText = new GuiText("testText", textDrawer.createTextQuad("Flo war da!\nWhohoooo"), testContainer, 42, HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.TOP, 0,
+				0f, new Vector3f(0f, 1f, 0f), 0.5f);
+		
+		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
+		GuiImage testImage = new GuiImage("testImage", testContainer, testImageQuad, loader.loadGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0,
+				0f, new Vector3f(1f, 0f, 0f), 0.2f);
 		
 		testState.addContainer(testContainer);
 		 
