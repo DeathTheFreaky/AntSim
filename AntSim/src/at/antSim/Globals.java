@@ -27,6 +27,8 @@ public final class Globals {
 	private static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	public static int displayWidth = gd.getDisplayMode().getWidth();
 	public static int displayHeight = gd.getDisplayMode().getHeight();
+	public static int fontRows = 16;
+	public static int fontCols = 16;
 	
 	private Globals() {}; //do not allow instances of this class
 }

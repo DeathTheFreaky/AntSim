@@ -1,7 +1,9 @@
 package at.antSim.guiWrapper;
 
+import org.lwjgl.util.Point;
 import org.lwjgl.util.vector.Vector2f;
 
+import at.antSim.Globals;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
@@ -18,27 +20,42 @@ public abstract class GuiElement {
 	private GuiContainer parent;
 	
 	//positional values in pixel
-	private Vector2f topLeft;
-	private Vector2f width;
-	private Vector2f height;
+	private Point topLeft;
+	private Point middle;
+	private int width;
+	private int height;
 	
-	/**Creates a new {@link GuiElement}.
-	 * 
-	 * 
-	 * @param position - center of the gui quad in the openGl coordinate system
-	 * @param scale - size of the gui quad in relation to the size of the screen
-	 * @param model - {@link RawModel} holding the geometry data for this gui element
-	 * @param textureId - id of the texture to use for this gui element
-	 * @param id - unique identifier of this gui element stored as a string
-	 * @param parent - parent of this gui element
-	 */
-	public GuiElement(Vector2f position, Vector2f scale, RawModel model, int textureId, String id, GuiContainer parent) {
-		this.position = position;
-		this.scale = scale;
+	private HorPositions horPos;
+	private int horOffset;
+	private VerPositions verPos;
+	private int verOffset;
+	private int textureWidth;
+	private int textureHeight;
+
+	public GuiElement(HorPositions horPos, int horOffset, VerPositions verPos, int verOffset, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, RawModel model, int textureId, String id, GuiContainer parent) {
+		
+		this.width = desiredWidth;
+		this.height = desiredHeight;
 		this.model = model;
 		this.textureId = textureId;
 		this.id = id;
 		this.parent = parent;
+		this.horPos = horPos;
+		this.horOffset = horOffset;
+		this.verPos = verPos;
+		this.verOffset = verOffset;
+		this.textureWidth = textureWidth;
+		this.textureHeight = textureHeight;
+		
+		this.scale = new Vector2f(((float) textureWidth/Globals.displayWidth) * ((float) desiredWidth/textureWidth), ((float) textureHeight/Globals.displayHeight) * ((float) desiredHeight/textureHeight));
+		//this.scale = new Vector2f((float) desiredWidth/textureWidth*desiredWidth/Globals.displayWidth, (float) desiredHeight/textureHeight*desiredHeight/Globals.displayHeight/9*16);
+		
+		System.out.println("desired width: " + desiredWidth + ", texture width: " + textureWidth);
+		System.out.println("desired height: " + desiredHeight + ", texture height: " + textureHeight);
+		System.out.println("scale x: " + scale.x);
+		System.out.println("scale y: " + scale.y);
+				
+		calculatePos();
 		
 		if (parent != null) {
 			parent.getChildren().add(this);
@@ -68,16 +85,68 @@ public abstract class GuiElement {
 		return textureId;
 	}
 	
-	public Vector2f getTopLeft() {
+	public Point getTopLeft() {
 		return topLeft;
 	}
 
-	public Vector2f getWidth() {
+	public int getWidth() {
 		return width;
 	}
 
-	public Vector2f getHeight() {
+	public int getHeight() {
 		return height;
+	}
+	
+	public void calculatePos() {
+		
+		int top = 0;
+		int left = 0;
+		
+		int parentWidth;
+		int parentHeight;
+		Point parentTopLeft;
+		
+		if (parent != null) {
+			parentWidth = parent.getWidth();
+			parentHeight = parent.getHeight();
+			parentTopLeft = parent.getTopLeft();
+		} else {
+			parentWidth = Globals.displayWidth;
+			parentHeight = Globals.displayHeight;
+			parentTopLeft = new Point(0,0);
+		}
+		
+		switch (horPos) {
+			case LEFT:
+				left = (int) (parentTopLeft.getX() + horOffset); 
+				break;
+			case CENTER:
+				left = (int) (parentTopLeft.getX() + parentWidth/2 - width/2);
+				break;
+			case RIGHT:
+				left = (int) (parentTopLeft.getX() + parentWidth - horOffset - width);
+				break;
+		}
+		
+		switch (verPos) {
+			case TOP:
+				top = (int) (parentTopLeft.getY() + verOffset); 
+				break;
+			case MIDDLE:
+				top = (int) (parentTopLeft.getY() + parentHeight/2 - height/2);
+				break;
+			case BOTTOM:
+				top = (int) (parentTopLeft.getY() + parentHeight - verOffset - height);
+				break;
+		}
+				
+		this.topLeft = new Point(left, top);
+		this.middle = new Point(left + width/2, top + height/2);
+		this.position = new Vector2f((float) middle.getX()/Globals.displayWidth * 2 - 1, ((float) middle.getY()/Globals.displayHeight * 2 - 1) * -1f);
+		
+		System.out.println("topLeft: " + topLeft.getX() + ", " + topLeft.getY());
+		System.out.println("middle: " + middle.getX() + ", " + middle.getY());
+		System.out.println("position: " + position.x + ", " + position.y);
 	}
 
 	@EventListener(priority = EventPriority.HIGH)

@@ -3,9 +3,8 @@ package at.antSim.guiWrapper;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import at.antSim.graphics.models.RawModel;
+import at.antSim.graphics.textures.GuiTexture;
 
 public class GuiContainer extends GuiElement {
 	
@@ -19,9 +18,10 @@ public class GuiContainer extends GuiElement {
 	 * @param textureId - -1 if no texture shall be applied
 	 * @param id
 	 */
-	public GuiContainer(Vector2f position, Vector2f scale, RawModel model, int textureId,
-			String id, GuiContainer parent) {
-		super(position, scale, model, textureId, id, parent);
+	public GuiContainer(HorPositions horPos, int horOffset, VerPositions verPos, int verOffset,	int desiredWidth, 
+			int desiredHeight, RawModel model, GuiTexture texture, String id, GuiContainer parent) {
+		
+		super(horPos, horOffset, verPos, verOffset, texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, model, texture.getTextureId(), id, parent);
 	}
 	
 	public List<GuiElement> getChildren() {

@@ -1,7 +1,5 @@
 package at.antSim.graphics.renderer;
 
-import java.util.List;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -10,9 +8,7 @@ import org.lwjgl.util.vector.Matrix4f;
 
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.graphicsUtils.Maths;
-import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.shaders.GuiShader;
-import at.antSim.graphics.textures.GuiTexturedModel;
 import at.antSim.guiWrapper.GuiContainer;
 import at.antSim.guiWrapper.GuiElement;
 import at.antSim.guiWrapper.GuiState;
@@ -75,9 +71,7 @@ public class GuiRenderer {
 	 * @param container
 	 */
 	private void drawGuiElement (GuiElement element) {
-		
-		System.out.println("drawing " + element + " with textureID " + element.getTextureId());
-		
+				
 		if (element.getTextureId() >= 0) {
 						
 			//bind the gui element's VAO (set it as "active"), enable the gui element's positions VBO, bind and activate the cube map's textures

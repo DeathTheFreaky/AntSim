@@ -1,12 +1,13 @@
 package at.antSim.guiWrapper;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import at.antSim.graphics.models.RawModel;
+import at.antSim.graphics.textures.GuiTexture;
 
 public class GuiImage extends GuiElement {
 
-	public GuiImage(Vector2f position, Vector2f scale, RawModel model, String id, int textureId, GuiContainer parent) {
-		super(position, scale, model, textureId, id, parent);
+	public GuiImage(HorPositions horPos, int horOffset, VerPositions verPos, int verOffset, int desiredWidth, 
+			int desiredHeight, RawModel model, GuiTexture texture, String id, GuiContainer parent) {
+		
+		super(horPos, horOffset, verPos, verOffset, texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, model, texture.getTextureId(), id, parent);
 	}
 }

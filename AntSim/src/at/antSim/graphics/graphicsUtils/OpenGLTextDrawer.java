@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import at.antSim.graphics.entities.Light;
+import at.antSim.Globals;
 import at.antSim.graphics.models.RawModel;
+import at.antSim.graphics.textures.GuiTexture;
+import at.antSim.guiWrapper.GuiTextData;
 
 /**Used to draw bitmap font text on a 3d screen with gui Renderer.
  * 
@@ -16,6 +18,7 @@ import at.antSim.graphics.models.RawModel;
 public class OpenGLTextDrawer {
 	
 	Loader loader;
+	GuiTexture texture;
 
 	//2d texture is supposed to be a square with NUM_SIDE columns and rows of characters in a texture atlas
 	final int NUM_SIDE = 16;
@@ -31,8 +34,9 @@ public class OpenGLTextDrawer {
 	/**Creates a new {@link OpenGLTextDrawer}.
 	 * 
 	 */
-	public OpenGLTextDrawer(Loader loader) {
+	public OpenGLTextDrawer(Loader loader, GuiTexture texture) {
 		this.loader = loader;
+		this.texture = texture;
 		initCoords();
 	}
 
@@ -56,7 +60,7 @@ public class OpenGLTextDrawer {
 	 * @param text - text to be rendered
 	 * @return - a {@link RawModel} containing the positional and texture coordinates for the passed text
 	 */
-	public RawModel createTextQuad(String text) {
+	public GuiTextData createTextQuad(String text) {
 		
 		LinkedList<Vector2f> quadPositions = new LinkedList<>();
 		LinkedList<Vector2f> quadTextCoords = new LinkedList<>();
@@ -130,7 +134,10 @@ public class OpenGLTextDrawer {
 			System.out.println(" " + f);
 		}
 		
-		return loader.loadToVAO(convertListToArray(quadPositions), convertListToArray(quadTextCoords), 2); 
+		
+		GuiTextData textData = new GuiTextData(loader.loadToVAO(convertListToArray(quadPositions), convertListToArray(quadTextCoords), 2), rows, cols, texture.getWidth()/Globals.fontCols, texture.getTextureId());
+		
+		return textData; 
 	}
 	
 	/**Converts a list of Vector2fs to an array of floats.
