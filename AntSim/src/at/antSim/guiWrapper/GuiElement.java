@@ -2,6 +2,7 @@ package at.antSim.guiWrapper;
 
 import org.lwjgl.util.Point;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
 import at.antSim.eventSystem.EventListener;
@@ -10,6 +11,11 @@ import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.graphics.models.RawModel;
 
+/**Represents an abstract class for Element's which shall be drawn in the GUI.
+ * 
+ * @author Flo
+ *
+ */
 public abstract class GuiElement {
 
 	private RawModel model; //holds geometry data
@@ -25,14 +31,44 @@ public abstract class GuiElement {
 	private int width;
 	private int height;
 	
+	private HorReference horRef;
 	private HorPositions horPos;
 	private int horOffset;
+	private VerReference verRef;
 	private VerPositions verPos;
 	private int verOffset;
 	private int textureWidth;
 	private int textureHeight;
+	
+	//transparency
+	private float transparency; //0: will be non-transparent, opaque; 1: will be fully transparent
+	
+	//blend color and factor
+	private Vector3f blendColor;
+	private float blendFactor;
 
-	public GuiElement(HorPositions horPos, int horOffset, VerPositions verPos, int verOffset, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, RawModel model, int textureId, String id, GuiContainer parent) {
+	/**Constructs a new {@link GuiElement}.
+	 * 
+	 * @param id - the {@link GuiElement}'s id as String
+	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param model - the {@link GuiElement}'s geometric model
+	 * @param textureId - id of the {@link GuiElement}'s texture as assigned by OpenGL
+	 * @param textureWidth - width of the {@link GuiElement}'s texture
+	 * @param textureHeight - height of the {@link GuiElement}'s texture
+	 * @param desiredWidth - desired width of the Gui element in pixels
+	 * @param desiredHeight - desired height of the Gui element in pixels
+	 * @param horRef - {@link HorReference} of the {@link GuiElement}
+	 * @param horPos - {@link HorPosition} of the {@link GuiElement}
+	 * @param horOffset - horizontal offset in pixels
+	 * @param verRef - {@link VerReference} of the {@link GuiElement}
+	 * @param verPos - {@link VerPosition} of the {@link GuiElement}
+	 * @param verOffset - vertical offset in pixels
+	 * @param transparency - 0: opaque, 1: fully transparent
+	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
+	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
+	 */
+	public GuiElement(String id, GuiContainer parent, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
+			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 		
 		this.width = desiredWidth;
 		this.height = desiredHeight;
@@ -40,12 +76,17 @@ public abstract class GuiElement {
 		this.textureId = textureId;
 		this.id = id;
 		this.parent = parent;
+		this.horRef = horRef;
 		this.horPos = horPos;
 		this.horOffset = horOffset;
+		this.verRef = verRef;
 		this.verPos = verPos;
 		this.verOffset = verOffset;
 		this.textureWidth = textureWidth;
 		this.textureHeight = textureHeight;
+		this.transparency = transparency;
+		this.blendColor = blendColor;
+		this.blendFactor = blendFactor;
 		
 		this.scale = new Vector2f(((float) textureWidth/Globals.displayWidth) * ((float) desiredWidth/textureWidth), ((float) textureHeight/Globals.displayHeight) * ((float) desiredHeight/textureHeight));
 		//this.scale = new Vector2f((float) desiredWidth/textureWidth*desiredWidth/Globals.displayWidth, (float) desiredHeight/textureHeight*desiredHeight/Globals.displayHeight/9*16);
@@ -97,46 +138,87 @@ public abstract class GuiElement {
 		return height;
 	}
 	
+	/**Calculates the position of this Gui Element in OpenGl -1 to 1 normalized device coordinates.
+	 * 
+	 */
 	public void calculatePos() {
 		
 		int top = 0;
 		int left = 0;
 		
-		int parentWidth;
-		int parentHeight;
-		Point parentTopLeft;
+		int refWidth;
+		int refHeight;
+		int refTop;
+		int refLeft;
+		
+		GuiElement horRefElem;
+		GuiElement verRefElem;
 		
 		if (parent != null) {
-			parentWidth = parent.getWidth();
-			parentHeight = parent.getHeight();
-			parentTopLeft = parent.getTopLeft();
+			if (horRef == HorReference.PARENT) {
+				horRefElem = parent;
+			}
+			else {
+				if (parent.getChildren().size() > 0) {
+					horRefElem = parent.getChildren().get(parent.getChildren().size() - 1);
+				} else {
+					horRefElem = parent;
+				}
+			}
+			if (verRef == VerReference.PARENT) {
+				verRefElem = parent;
+			}
+			else {
+				if (parent.getChildren().size() > 0) {
+					verRefElem = parent.getChildren().get(parent.getChildren().size() - 1);
+				} else {
+					verRefElem = parent;
+				}
+			}
+			refWidth = horRefElem.getWidth();
+			refHeight = verRefElem.getHeight();
+			refTop = verRefElem.getTopLeft().getY();
+			refLeft = horRefElem.getTopLeft().getX();
 		} else {
-			parentWidth = Globals.displayWidth;
-			parentHeight = Globals.displayHeight;
-			parentTopLeft = new Point(0,0);
+			refWidth = Globals.displayWidth;
+			refHeight = Globals.displayHeight;
+			refTop = 0;
+			refLeft = 0;
 		}
 		
 		switch (horPos) {
 			case LEFT:
-				left = (int) (parentTopLeft.getX() + horOffset); 
+				left = (int) (refLeft + horOffset); 
 				break;
 			case CENTER:
-				left = (int) (parentTopLeft.getX() + parentWidth/2 - width/2);
+				left = (int) (refLeft + refWidth/2 - width/2);
 				break;
 			case RIGHT:
-				left = (int) (parentTopLeft.getX() + parentWidth - horOffset - width);
+				left = (int) (refLeft + refWidth - horOffset - width);
+				break;
+			case LEFT_OF:
+				left = (int) (refLeft - width - horOffset);
+				break;
+			case RIGHT_OF:
+				left = (int) (refLeft + refWidth + horOffset);
 				break;
 		}
 		
 		switch (verPos) {
 			case TOP:
-				top = (int) (parentTopLeft.getY() + verOffset); 
+				top = (int) (refTop + verOffset); 
 				break;
 			case MIDDLE:
-				top = (int) (parentTopLeft.getY() + parentHeight/2 - height/2);
+				top = (int) (refTop + refHeight/2 - height/2);
 				break;
 			case BOTTOM:
-				top = (int) (parentTopLeft.getY() + parentHeight - verOffset - height);
+				top = (int) (refTop + refHeight - verOffset - height);
+				break;
+			case ABOVE:
+				top = (int) (refTop - verOffset - height);
+				break;
+			case BELOW:
+				top = (int) (refTop + refHeight + verOffset);
 				break;
 		}
 				
@@ -149,13 +231,29 @@ public abstract class GuiElement {
 		System.out.println("position: " + position.x + ", " + position.y);
 	}
 
+	public float getTransparency() {
+		return transparency;
+	}
+
+	public void setTransparency(float transparency) {
+		this.transparency = transparency;
+	}
+
+	public Vector3f getBlendColor() {
+		return blendColor;
+	}
+
+	public float getBlendFactor() {
+		return blendFactor;
+	}
+
 	@EventListener(priority = EventPriority.HIGH)
 	public void onMousePress(MouseButtonPressedEvent event){
-		
+		System.out.println("mouse pressed");
 	}
 	
 	@EventListener
 	public void onMouseReleased(MouseButtonReleasedEvent event){
-		
+		System.out.println("mouse released");
 	}
 }

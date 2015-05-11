@@ -10,6 +10,12 @@ public class GuiTexture {
 	int width;
 	int height;
 	
+	/**Creates a new Gui Texture.
+	 * 
+	 * @param textureId
+	 * @param width
+	 * @param height
+	 */
 	public GuiTexture(int textureId, int width, int height) {
 		this.textureId = textureId;
 		this.width = width;

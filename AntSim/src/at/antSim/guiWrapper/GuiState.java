@@ -3,7 +3,11 @@ package at.antSim.guiWrapper;
 import java.util.LinkedList;
 import java.util.List;
 
-/**Elements are put above each other depending on the order of insertion. 
+/**A GuiState represents a Gui's appearance at a certain state<br>
+ * <br>
+ * {@link GuiState} holds a list of Gui elements and each element can be positioned relatively to the previous element,
+ * so the order of insertion is significant -> elements should be added in the order they should be rendered.<br>
+ * If two Gui elements have the same position, the later added one will be drawn above the earlier added one.
  * 
  * @author Flo
  *

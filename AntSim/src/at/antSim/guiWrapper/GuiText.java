@@ -1,25 +1,59 @@
 package at.antSim.guiWrapper;
 
-import at.antSim.graphics.models.RawModel;
+import org.lwjgl.util.vector.Vector3f;
 
+/**Represents a text drawn as 2d quad in the GUI.
+ * 
+ * @author Flo
+ *
+ */
 public class GuiText extends GuiElement {
 	
-	int size;
-
-//	public GuiText(HorPositions horPos, int horOffset, VerPositions verPos, int verOffset, int textureWidth, int textureHeight, int size, RawModel model, String id, int textureId, GuiContainer parent) {
-//
-//		/*super(parent.getTopLeft()
-//				
-//				
-//				new Vector2f(position.x,  position.y - (float) 0.17 * size/Globals.displayHeight), //by default, our font's characters are not placed in the middle of the screen but a little higher
-//				new Vector2f((float) (1.0 * size/Globals.displayHeight), (float) (1.0 * size/Globals.displayHeight/9*16)), model, textureId, id, parent);*/
-//		
-//		super(horPos, horOffset, verPos, verOffset, textureWidth, textureHeight, size, size, model, textureId, id, parent);
-//	}
-
-	public GuiText(HorPositions horPos, int horOffset, VerPositions verPos, int verOffset, int size, GuiTextData textData, String id, GuiContainer parent) {
+	/**Constructs a new {@link GuiText}.
+	 * 
+	 * @param id - the {@link GuiElement}'s id as String
+	 * @param textData - the {@link GuiText}'s {@link GuiTextData}
+	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param size - size of a character in pixels
+	 * @param horRef - {@link HorReference} of the {@link GuiElement}
+	 * @param horPos - {@link HorPosition} of the {@link GuiElement}
+	 * @param horOffset - horizontal offset in pixels
+	 * @param verRef - {@link VerReference} of the {@link GuiElement}
+	 * @param verPos - {@link VerPosition} of the {@link GuiElement}
+	 * @param verOffset - vertical offset in pixels
+	 * @param transparency - 0: opaque, 1: fully transparent
+	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
+	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
+	 */
+	public GuiText(String id, GuiTextData textData, GuiContainer parent, int size, HorReference horRef, HorPositions horPos, int horOffset, 
+			VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 		
-		super(horPos, horOffset, verPos, verOffset, textData.getCharSize() * textData.getCols(), textData.getCharSize() * textData.getRows(), 
-				size * textData.getCols(), size * textData.getRows(), textData.getModel(), textData.getTextureId(), id, parent);
+		super(id, parent, textData.getModel(), textData.getTextureId(), textData.getCharSize() * textData.getCols(), textData.getCharSize() * textData.getRows(), 
+				size * textData.getCols(), size * textData.getRows(), horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
+	}
+	
+	/**Constructs a new {@link GuiText}.<br>
+	 * <br>
+	 * Transparency will be set to 0, blendFactor to 1 and blendColor to black by default.
+	 * 
+	 * @param id - the {@link GuiElement}'s id as String
+	 * @param textData - the {@link GuiText}'s {@link GuiTextData}
+	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param size - size of a character in pixels
+	 * @param horRef - {@link HorReference} of the {@link GuiElement}
+	 * @param horPos - {@link HorPosition} of the {@link GuiElement}
+	 * @param horOffset - horizontal offset in pixels
+	 * @param verRef - {@link VerReference} of the {@link GuiElement}
+	 * @param verPos - {@link VerPosition} of the {@link GuiElement}
+	 * @param verOffset - vertical offset in pixels
+	 * @param transparency - 0: opaque, 1: fully transparent
+	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
+	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
+	 */
+	public GuiText(String id, GuiTextData textData, GuiContainer parent, int size, HorReference horRef, HorPositions horPos, int horOffset, 
+			VerReference verRef, VerPositions verPos, int verOffset) {
+		
+		super(id, parent, textData.getModel(), textData.getTextureId(), textData.getCharSize() * textData.getCols(), textData.getCharSize() * textData.getRows(), 
+				size * textData.getCols(), size * textData.getRows(), horRef, horPos, horOffset, verRef, verPos, verOffset, 0f, new Vector3f(0, 0, 0), 1f);
 	}
 }
