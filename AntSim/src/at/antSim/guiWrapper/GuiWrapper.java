@@ -12,19 +12,26 @@ import java.util.Map;
  */
 public class GuiWrapper {
 	
+	private static GuiWrapper INSTANCE = null;
+	
 	Map<String, GuiState> states = new HashMap<>();
 	
 	GuiState currentState;
 	
+	static {
+		INSTANCE = new GuiWrapper();
+	}
+	
+	private GuiWrapper() {};
+	
 	/**Adds a new State to the GUI.<br>
 	 * <br>
 	 * In case a state with the same name was already present, the old state will be replaced by the new state.
-	 * 
-	 * @param name - name of the GUI state to be added
+	 *
 	 * @param state - the GUI state to be added
 	 */
-	public void addState(String name, GuiState state) {
-		states.put(name, state);
+	public void addState(GuiState state) {
+		states.put(state.getName(), state);
 	}
 	
 	/**Sets the currently activated {@link GuiState}.<br>
@@ -32,7 +39,7 @@ public class GuiWrapper {
 	 * 
 	 * @param name - name of the GUI State to be set active
 	 */
-	public void setCurrentState(String name) {
+	public synchronized void setCurrentState(String name) {
 		currentState = states.get(name);
 	}
 	
@@ -50,6 +57,10 @@ public class GuiWrapper {
 	 */
 	public GuiState getState(String name) {
 		return states.get(name);
+	}
+	
+	public static GuiWrapper getInstance() {
+		return INSTANCE;
 	}
 	
 }
