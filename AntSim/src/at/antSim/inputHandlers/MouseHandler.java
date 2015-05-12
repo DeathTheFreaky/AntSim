@@ -37,9 +37,9 @@ public class MouseHandler extends Thread {
 			while (Mouse.next()) {
 				if (Mouse.getEventButton() == -1 && (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0)) {
 					eventManager.addEventToQueue(new MouseMotionEvent(Mouse.getEventDX(), Mouse.getEventDY(), Mouse.getEventX(), Mouse.getEventY()));
-				} else if (Mouse.getEventButtonState()) {
+				} else if (Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
 					eventManager.addEventToQueue(new MouseButtonPressedEvent(Mouse.getEventButton(), Mouse.getEventX(), Mouse.getEventY()));
-				} else {
+				} else if (Mouse.getEventButton() != -1){
 					eventManager.addEventToQueue(new MouseButtonReleasedEvent(Mouse.getEventButton(), Mouse.getEventX(), Mouse.getEventY()));
 				}
 			}
