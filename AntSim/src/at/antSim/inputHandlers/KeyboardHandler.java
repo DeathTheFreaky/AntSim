@@ -34,7 +34,6 @@ public class KeyboardHandler extends Thread {
 			iterationStartTime = System.nanoTime();
 
 			while (Keyboard.next()) {
-				System.out.println("keyboard reading next");
 				if (Keyboard.getEventKeyState()) {
 					eventManager.addEventToQueue(new KeyPressedEvent(Keyboard.getEventKey(), Keyboard.getEventCharacter()));
 				} else {

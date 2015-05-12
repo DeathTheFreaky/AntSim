@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 
 /**
@@ -18,14 +17,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class EventManager {
 
-	private static EventManager instance;
+	private static EventManager instance = new EventManager();
 
 	private Queue<Event> eventQueue;
 	private Map<Class<? extends Event>, EventListenerManagement> eventListenerMap;
 
 	protected EventManager() {
 		eventListenerMap = new HashMap<Class<? extends Event>, EventListenerManagement>();
-		eventQueue = new LinkedList<Event>();
+		eventQueue = new ConcurrentLinkedQueue<Event>();
 	}
 
 	/**
@@ -86,56 +85,14 @@ public class EventManager {
 	 * @param event Event to handle.
 	 */
 	public synchronized void addEventToQueue(Event event) {
-		System.out.println("added to queue: " + event);
 		eventQueue.offer(event);
-		if(eventQueue.size()>0){
-			System.out.println(eventQueue.size() + ": " + eventQueue);
-			printAddresses("Address", eventQueue);
-		}
 	}
-	
-	
-	
-	public static void printAddresses(String label, Object... objects) {
-	    System.out.print(label + ": 0x");
-	    long last = 0;
-	    int offset = unsafe.arrayBaseOffset(objects.getClass());
-	    int scale = unsafe.arrayIndexScale(objects.getClass());
-	    switch (scale) {
-	    case 4:
-	        long factor = is64bit ? 8 : 1;
-	        final long i1 = (unsafe.getInt(objects, offset) & 0xFFFFFFFFL) * factor;
-	        System.out.print(Long.toHexString(i1));
-	        last = i1;
-	        for (int i = 1; i < objects.length; i++) {
-	            final long i2 = (unsafe.getInt(objects, offset + i * 4) & 0xFFFFFFFFL) * factor;
-	            if (i2 > last)
-	                System.out.print(", +" + Long.toHexString(i2 - last));
-	            else
-	                System.out.print(", -" + Long.toHexString( last - i2));
-	            last = i2;
-	        }
-	        break;
-	    case 8:
-	        throw new AssertionError("Not supported");
-	    }
-	    System.out.println();
-	}
-	
-	
-	
-	
-	
-	
 
 	/**
 	 * Handles all stored Events.
 	 */
 	public void workThroughQueue() {
-		if(eventQueue.size()>0)
-			System.out.println(eventQueue.size());
 		for (Event event = eventQueue.poll(); event != null; event = eventQueue.poll()) {
-			System.out.println("event in queue: " + event);
 			EventListenerManagement management = eventListenerMap.get(event.getClass());
 			if (management != null) {
 				management.handle(event);
@@ -147,9 +104,6 @@ public class EventManager {
 	 * @return Returns instance of EventManager.
 	 */
 	public static EventManager getInstance() {
-		if (instance == null) {
-			instance = new EventManager();
-		}
 		return instance;
 	}
 
