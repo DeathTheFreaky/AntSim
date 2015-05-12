@@ -8,6 +8,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 
+import at.antSim.AntSim;
 import at.antSim.Globals;
 
 /**Manages creation, updating and closing of display.
@@ -62,6 +63,7 @@ public class DisplayManager {
 	 * 
 	 */
 	public static void closeDisplay(){
+		AntSim.getInstance().onClose();
 		Display.destroy();
 	};
 	
