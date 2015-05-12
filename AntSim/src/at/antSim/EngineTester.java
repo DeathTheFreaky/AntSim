@@ -260,7 +260,6 @@ public class EngineTester {
 		//main game loop
 		boolean done = false;
 		while(!Display.isCloseRequested() && !done) {
-			
 			EventManager.getInstance().workThroughQueue();
 			
 			//game logic
