@@ -2,23 +2,20 @@
 <component jdk="1.8" jdk_type="JavaSDK">
 	<exclude-output/>
 	<contentEntry url="file://$MODULE_DIR$"/>
-	<lib name="lwjgl_util.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/jar/lwjgl_util.jar!/"/>
-	</lib>
-	<lib name="lwjgl.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/jar/lwjgl.jar!/"/>
+	<lib name="PNGDecoder.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/PNGDecoder.jar!/"/>
 	</lib>
 	<lib name="slick-util.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/slick-util.jar!/"/>
 	</lib>
+	<lib name="lwjgl.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/jar/lwjgl.jar!/"/>
+	</lib>
+	<lib name="lwjgl_util.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/jar/lwjgl_util.jar!/"/>
+	</lib>
 	<lib name="jbullet.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/jbullet-20101010/dist/jbullet.jar!/"/>
-	</lib>
-	<lib name="vecmath.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/jbullet-20101010/lib/vecmath/vecmath.jar!/"/>
-	</lib>
-	<lib name="PNGDecoder.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/PNGDecoder.jar!/"/>
 	</lib>
 	<levels>
 		<level name="log4j-core-2.2.jar" value="project"/>
