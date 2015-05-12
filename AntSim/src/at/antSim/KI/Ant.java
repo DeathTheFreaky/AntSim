@@ -1,4 +1,4 @@
-package at.antSim.KI;
+  package at.antSim.KI;
 
 public class Ant {
 	// search 1, food 2, war 3, nothing 0
@@ -14,6 +14,14 @@ public class Ant {
 	private String job;
 	
 	public void move(){
+		//check Odor stacks
+		/*
+		 * if (oderStacks > 0){
+		 * 		followTrail();
+		 * }else{
+		 * 		randomMove(x,y)
+		 * }
+		 */
 		
 	}
 	

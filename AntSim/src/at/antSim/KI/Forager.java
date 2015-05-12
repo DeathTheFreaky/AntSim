@@ -2,12 +2,19 @@ package at.antSim.KI;
 
 public class Forager extends Ant implements Runnable {
 	private int threshold;
+	private int foodtransport;
 	
 	public Forager(){
 		setHp(100);
 		setAttack(20);
 		threshold = 2;
 		setOdorStatus(1);
+	}
+	
+	public void foundFood(){
+		setOdorStatus(2);
+		//extractfood from Enemy
+		foodtransport = 1;
 	}
 	
 	@Override
