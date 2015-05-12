@@ -96,12 +96,6 @@ public abstract class GuiElement {
 		this.blendFactor = blendFactor;
 		
 		this.scale = new Vector2f(((float) textureWidth/Globals.displayWidth) * ((float) desiredWidth/textureWidth), ((float) textureHeight/Globals.displayHeight) * ((float) desiredHeight/textureHeight));
-		//this.scale = new Vector2f((float) desiredWidth/textureWidth*desiredWidth/Globals.displayWidth, (float) desiredHeight/textureHeight*desiredHeight/Globals.displayHeight/9*16);
-		
-//		System.out.println("desired width: " + desiredWidth + ", texture width: " + textureWidth);
-//		System.out.println("desired height: " + desiredHeight + ", texture height: " + textureHeight);
-//		System.out.println("scale x: " + scale.x);
-//		System.out.println("scale y: " + scale.y);
 				
 		calculatePos();
 		
@@ -233,9 +227,6 @@ public abstract class GuiElement {
 		this.middle = new Point(left + width/2, top + height/2);
 		this.position = new Vector2f((float) middle.getX()/Globals.displayWidth * 2 - 1, ((float) middle.getY()/Globals.displayHeight * 2 - 1) * -1f);
 		
-//		System.out.println("topLeft: " + topLeft.getX() + ", " + topLeft.getY());
-//		System.out.println("middle: " + middle.getX() + ", " + middle.getY());
-//		System.out.println("position: " + position.x + ", " + position.y);
 	}
 
 	public float getTransparency() {
@@ -271,10 +262,10 @@ public abstract class GuiElement {
 	public void onMouseReleased(MouseButtonReleasedEvent event){
 		if (state == GuiWrapper.getInstance().getCurrentState() && command != null) {
 			if (event.getPosX() >= topLeft.getX() && event.getPosX() <= (topLeft.getX() + width) &&
-					event.getPosY() >= topLeft.getY() && event.getPosY() <= (topLeft.getY() + height)) {
+					(Globals.displayHeight - event.getPosY()) >= topLeft.getY() && (Globals.displayHeight - event.getPosY()) <= (topLeft.getY() + height)) {
 				command.execute();
 				event.consume();
-			}
+			} 
 		}
 	}
 }

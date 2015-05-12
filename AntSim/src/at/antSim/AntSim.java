@@ -27,7 +27,7 @@ public class AntSim {
 	
 	Loader loader;
 	MasterRenderer masterRenderer;
-	List<Thread> threads = new LinkedList<>();
+	static List<Thread> threads = new LinkedList<>();
 	
     private AntSim(){}
 
@@ -43,12 +43,12 @@ public class AntSim {
 
     private void preInit() {
     	
-    	Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("entered shutdown hook at " + LocalTime.now());
-				System.out.println("finished shutdown hook at " + LocalTime.now());
-			}
-		});
+//    	Runtime.getRuntime().addShutdownHook(new Thread() {
+//			public void run() {
+//				System.out.println("entered shutdown hook at " + LocalTime.now());
+//				System.out.println("finished shutdown hook at " + LocalTime.now());
+//			}
+//		});
     	
     	//read config
         ConfigReader myreader = new ConfigReader();
@@ -86,8 +86,10 @@ public class AntSim {
 
     private void postInit() {
     	
+    	EngineTester tester = new EngineTester();
+    	
     	//launch main game
-    	EngineTester.launch(loader, masterRenderer);
+    	tester.launch(loader, masterRenderer);
     }
     
     /**Close all threads.
@@ -118,5 +120,9 @@ public class AntSim {
 //			| IOException e) {
 //		e.printStackTrace();
 //	}
+    
+    public static List<Thread> getThreads() {
+    	return threads;
+    }
 
 }

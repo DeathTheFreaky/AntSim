@@ -26,8 +26,8 @@ public class GuiRenderer {
 	 * 
 	 * @param loader - an instance of {@link Loader} class
 	 */
-	public GuiRenderer(Loader loader) {		 
-		shader = new GuiShader();
+	public GuiRenderer(GuiShader shader) {		 
+		this.shader = shader;
 	}
 	
 	/**Renders a list of {}s to the screen.
@@ -35,6 +35,7 @@ public class GuiRenderer {
 	 * @param state - a list of {}s to be rendered to the screen.
 	 */
 	public void render(GuiState state) {
+				
 		if (state != null) {
 		
 			shader.start();
@@ -101,12 +102,5 @@ public class GuiRenderer {
 			//Render vertices as triangle strip, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, element.getRawModel().getVertexCount()); //treat positions array as triangle strips
 		}
-	}
-
-	/**Cleans up the shader program for this renderer.
-	 * 
-	 */
-	public void cleanUp() {
-		shader.cleanUp();
 	}
 }

@@ -39,7 +39,7 @@ public class GuiWrapper {
 	 * 
 	 * @param name - name of the GUI State to be set active
 	 */
-	public void setCurrentState(String name) {
+	public synchronized void setCurrentState(String name) {
 		currentState = states.get(name);
 	}
 	

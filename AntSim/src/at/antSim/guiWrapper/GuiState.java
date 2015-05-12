@@ -5,7 +5,7 @@ import java.util.List;
 
 /**A GuiState represents a Gui's appearance at a certain state<br>
  * <br>
- * {@link GuiState} holds a list of Gui elements and each element can be positioned relatively to the previous element,
+ * {@link GuiState} holds a list of {@link GuiElement} and each element can be positioned relatively to the previous element,
  * so the order of insertion is significant -> elements should be added in the order they should be rendered.<br>
  * If two Gui elements have the same position, the later added one will be drawn above the earlier added one.
  * 
@@ -24,6 +24,7 @@ public class GuiState {
 
 	/**Adds a container for positioning and scaling a group of gui elements and sets the {@link GuiState} associated with the passed {@link GuiElement}.
 	 * 
+	 * @param container
 	 */
 	public void addContainer(GuiContainer container) {
 		container.setGuiState(this);

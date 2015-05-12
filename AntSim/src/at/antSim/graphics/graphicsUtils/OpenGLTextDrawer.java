@@ -58,7 +58,7 @@ public class OpenGLTextDrawer {
 	/**Creates one quad per line in the text, consisting of 1 sub-quad per character, with the appropriate texture coordinates for the passed text.
 	 * 
 	 * @param text - text to be rendered
-	 * @return - a {@link RawModel} containing the positional and texture coordinates for the passed text
+	 * @return - a {@link GuiTextData}
 	 */
 	public GuiTextData createTextQuad(String text) {
 		

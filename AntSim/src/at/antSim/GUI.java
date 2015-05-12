@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import at.antSim.guiWrapper.commands.*;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -119,88 +120,134 @@ public class GUI {
 	 * 29 - Mouse Picker example code: https://www.dropbox.com/s/qkslys3p3xzh8av/MousePicker%20Code.txt?dl=0
 	 * */
 
-	public static void launch(Loader loader, MasterRenderer renderer) {
+	Camera camera;
+	Terrain terrain;
+	MousePicker picker;
+	List<Entity> entities;
+	List<Light> lights;
+	
+	Entity movingLamp;
+	Light movingLight;
+	
+	public void launch(Loader loader, MasterRenderer renderer) {
+		
+		loadWorld(loader, renderer);
+				
+		//main game loop
+		boolean done = false;
+		while(!Display.isCloseRequested() && !done) {
+			
+			EventManager.getInstance().workThroughQueue();
+			
+			//game logic
+			
+			camera.move(terrain); //every single frame check for key inputs which move the camera
+			
+			picker.update(); //update mouse picker's ray
+			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+			if (terrainPoint != null) {
+				movingLamp.setPosition(terrainPoint);
+				movingLight.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 12f, terrainPoint.z));
+			}
+			
+			renderer.processTerrain(terrain);
+			//renderer.processTerrain(terrain2);
+			for (Entity entity : entities) {
+				renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
+			}
+			
+			renderer.render(lights, camera, false);
+									
+			DisplayManager.updateDisplay();
+		}
+		
+		renderer.cleanUp();
+		loader.cleanUp();
+		DisplayManager.closeDisplay();
+	}
+	
+	private void loadWorld(Loader loader, MasterRenderer renderer) {
 		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
 		 */
-
+		
 		//load 3d models from .obj files into ModelData objects
 		ModelData treeModelData = OBJFileLoader.loadOBJ("tree");
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grass");
 		ModelData fernModelData = OBJFileLoader.loadOBJ("fern");
 		ModelData lampModelData = OBJFileLoader.loadOBJ("lamp");
-
+		
 		//load ModelData objects in a VAO and return RawModels
-		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(),
+		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), 
 				treeModelData.getNormals(), treeModelData.getIndices());
-		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(),
+		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(), 
 				grassModelData.getNormals(), grassModelData.getIndices());
-		RawModel fernRawModel = loader.loadToVAO(fernModelData.getVertices(), fernModelData.getTextureCoords(),
+		RawModel fernRawModel = loader.loadToVAO(fernModelData.getVertices(), fernModelData.getTextureCoords(), 
 				fernModelData.getNormals(), fernModelData.getIndices());
-		RawModel lampRawModel = loader.loadToVAO(lampModelData.getVertices(), lampModelData.getTextureCoords(),
+		RawModel lampRawModel = loader.loadToVAO(lampModelData.getVertices(), lampModelData.getTextureCoords(), 
 				lampModelData.getNormals(), lampModelData.getIndices());
-
+		
 		//load textures from png files
 		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("dragon"));
-		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("tree"));
+		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("tree")); 
 		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
 		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
 		ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lamp"));
-
+		
 		fernTextureAtlas.setNumberOfRows(2); //set number of rows inside texture atlas
-
+		
 		//set parameters for specular lighting
 		dragonTexture.setShineDamper(10); //set shine damper for specular lighting
 		dragonTexture.setReflectivity(1); //set reflectivity for specular lighting
-
+		
 		//set transparency and fake lighting for grass and fern (to avoid weird shadow look)
 		grassTexture.setHasTransparency(true);
 		grassTexture.setUseFakeLighting(true);
 		fernTextureAtlas.setHasTransparency(true);
 		fernTextureAtlas.setUseFakeLighting(true);
-
+		
 		//finally, create the TexturedModel sticking ModelTextures to RawModels
 		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, treeTexture);
 		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, grassTexture);
 		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTextureAtlas);
 		TexturedModel lampTexturedModel = new TexturedModel(lampRawModel, lampTexture);
-
+						
 		//load the different terrain textures
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("pinkFlowers"));
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("path"));
-
+		
 		//store different terrain textures in a TerrainTexturePack
 		TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-
+		
 		//create a blend map texture
 		TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 		
 		/*Terrain terrain = new Terrain(0, 0, loader, texturePack, blendMap);
 		Terrain terrain2 = new Terrain(0, 0, loader, texturePack, blendMap);*/
-
-		Terrain terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
-		//Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap); //if we need more terrains... thats how to add them as tiles
-
-
-		List<Entity> entities = new ArrayList<Entity>(); //holds all entities to be rendered
+		
+		terrain = new Terrain(0, -1, loader, texturePack, blendMap, "heightmap");
+		//Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap); //if we need more terrains... thats how to add them as tiles	
+		
+		entities = new ArrayList<Entity>(); //holds all entities to be rendered
+		lights = new ArrayList<Light>();
 		Random random = new Random(676452);
-
+				
 		for (int i = 0; i < 1200; i++) {
 			if (i % 20 == 0) {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(fernTexturedModel, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360,
+				entities.add(new Entity(fernTexturedModel, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, 0.9f));
 			}
 			if (i % 5 == 0) {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(grassTexturedModel, 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360,
+				entities.add(new Entity(grassTexturedModel, 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, random.nextFloat() * 0.1f + 0.6f));
 				x = random.nextFloat() * Globals.WORLD_SIZE;
 				z = random.nextFloat() * -Globals.WORLD_SIZE;
@@ -208,28 +255,27 @@ public class GUI {
 				entities.add(new Entity(treeTexturedModel, 1, new Vector3f(x, y, z), 0, 0,
 						0, random.nextFloat() * 1 + 4));
 			}
-		}
-
-		List<Light> lights = new ArrayList<Light>();
+		} 
+		
 		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); //sun
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		// lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
-
+		
 		// a lamp freely positionable on the map
-		Entity movingLamp = new Entity(lampTexturedModel, 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
-		entities.add(movingLamp);
-		Light movingLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f));
+		movingLamp = new Entity(lampTexturedModel, 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
+		entities.add(movingLamp); 
+		movingLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f));
 		lights.add(movingLight);
-
+		
 		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
 		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
 		//entities.add(new Entity(lampTexturedModel, 1, new Vector3f(293, -6.6f, -305), 0, 0, 0, 1));
-
-		Camera camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2)); //player camera - make a "ghost" player to simulate cool camera movement
-
-		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
-
+		
+		camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2)); //player camera - make a "ghost" player to simulate cool camera movement
+		
+		picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
+		
 		//gui
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
 		float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
@@ -244,37 +290,36 @@ public class GUI {
 		GuiState optionsControls = new GuiState("optionsControl");
 		GuiState mainGame = new GuiState("mainGame");
 
-		Command newGameCmd = new NewGameCmd("testState");
+		Command newGameCmd = new NewGameCmd(new EngineTester(), loader, renderer);
 		Command optionsCmd = new OptionsCmd("optionsDisplay");
 		Command quitGameCmd = new QuitGameCmd();
 
-		GuiContainer startContainer = new GuiContainer("startContainer", null, newGameCmd, standardContainerQuad, loader.loadGuiTexture("white"),
+		GuiContainer startContainer = new GuiContainer("startContainer", null, null, standardContainerQuad, loader.loadGuiTexture("white"),
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 
 		Command cmd = new TestCommand();
-
-		GuiContainer testContainer = new GuiContainer("testContainer", null, cmd, standardContainerQuad, loader.loadGuiTexture("white"), 640, 360,
+		
+		GuiContainer testContainer = new GuiContainer("testContainer", null, cmd, standardContainerQuad, loader.loadGuiTexture("white"), 640, 360, 
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(0,0,0), 0f);
-
+		
 		//nur einmal, außer für andere Fonts
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
 		GuiText testText = new GuiText("testText", textDrawer.createTextQuad("Flo war da!\nWhohoooo"), testContainer, null, 42, HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.TOP, 0,
 				0f, new Vector3f(0f, 1f, 0f), 0.5f);
-
+		
 		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
 		GuiImage testImage = new GuiImage("testImage", testContainer, null, testImageQuad, loader.loadGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0,
 				0f, new Vector3f(1f, 0f, 0f), 0.2f);
 		EventManager.getInstance().registerEventListener(testContainer);
-
-
+		
 		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), startContainer, null, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, VerReference.SIBLING, VerPositions.TOP, 20);
 		GuiText antSim2 = new GuiText("antSim2", textDrawer.createTextQuad("Sim"), startContainer, null, 36, HorReference.PARENT, HorPositions.RIGHT, Globals.displayWidth/2 - 100, VerReference.SIBLING, VerPositions.BELOW, -15);
 
-		GuiContainer newGameContainer = new GuiContainer("newGamebutton", startContainer, null, standardContainerQuad, loader.loadGuiTexture("white"), 300, 35,
+		GuiContainer newGameContainer = new GuiContainer("newGamebutton", startContainer, newGameCmd, standardContainerQuad, loader.loadGuiTexture("white"), 300, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35, 0, new Vector3f(0, 0, 0), 0.8f);
 		GuiText newGameText = new GuiText("newGame", textDrawer.createTextQuad("Start new game"), newGameContainer, null, 25,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		EventManager.getInstance().registerEventListener(startContainer);
+		EventManager.getInstance().registerEventListener(newGameContainer);
 
 		testState.addContainer(testContainer);
 		//MEINS
@@ -284,42 +329,6 @@ public class GUI {
 		guiWrapper.addState(testState);
 		//MEINS
 		guiWrapper.addState(startMenu);
-		guiWrapper.setCurrentState("startMenu");
-
-		GuiRenderer guiRenderer = new GuiRenderer(loader);
-
-		//main game loop
-		boolean done = false;
-		while(!Display.isCloseRequested() && !done) {
-			EventManager.getInstance().workThroughQueue();
-
-			//game logic
-			entities.get(0).increaseRotation(0, 0.5f, 0); //rotate the dragon
-
-			camera.move(terrain); //every single frame check for key inputs which move the camera
-
-			picker.update(); //update mouse picker's ray
-			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-			if (terrainPoint != null) {
-				movingLamp.setPosition(terrainPoint);
-				movingLight.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 12f, terrainPoint.z));
-			}
-
-			renderer.processTerrain(terrain);
-			//renderer.processTerrain(terrain2);
-			for (Entity entity : entities) {
-				renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
-			}
-
-			renderer.render(lights, camera);
-			guiRenderer.render(guiWrapper.getCurrentState());
-
-			DisplayManager.updateDisplay();
-		}
-
-		guiRenderer.cleanUp();
-		renderer.cleanUp();
-		loader.cleanUp();
-		DisplayManager.closeDisplay();
+		guiWrapper.setCurrentState("startMenu");		
 	}
 }

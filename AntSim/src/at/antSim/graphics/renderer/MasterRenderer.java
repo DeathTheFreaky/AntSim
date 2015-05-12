@@ -17,8 +17,10 @@ import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.shaders.EntityShader;
+import at.antSim.graphics.shaders.GuiShader;
 import at.antSim.graphics.shaders.TerrainShader;
 import at.antSim.graphics.terrains.Terrain;
+import at.antSim.guiWrapper.GuiWrapper;
 
 /**MasterRenderer handles all of the rendering code in the application.
  * 
@@ -52,6 +54,8 @@ public class MasterRenderer {
 	private TerrainRenderer terrainRenderer;
 	private TerrainShader terrainShader = new TerrainShader();
 	private SkyboxRenderer skyboxRenderer;
+	private GuiRenderer guiRenderer;
+	private GuiShader guiShader = new GuiShader();
 	
 	//all entities and terrains to be rendered
 	/* map of texturedModels, each containing a list of entities using this TexturedModel - 
@@ -70,6 +74,7 @@ public class MasterRenderer {
 		entityRenderer = new EntityRenderer(entitiyShader, projectionMatrix);
 		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
 		skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
+		guiRenderer = new GuiRenderer(guiShader);
 	}
 	
 	/**Enables back face culling for non-transparent textures.<br>
@@ -92,19 +97,25 @@ public class MasterRenderer {
 	 * @param lights - a list of lightsources
 	 * @param camera - for creating a viewMatrix
 	 */
-	public void render(List<Light> lights, Camera camera) {
+	public void render(List<Light> lights, Camera camera, boolean worldLoaded) {
 		
-		dayNightCycle(); //simulate a day/night cycle, using a blend factor to blend the two settings
-		prepare(); //enable depth test and clear screen and depth buffer
+		if (worldLoaded) {
 			
-		//run all sub-renderers' render methods
-		entityRenderer.render(entities, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);		
-		terrainRenderer.render(terrains, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);
-		skyboxRenderer.render(camera, blendFactor, DAY_FOG, NIGHT_FOG);
+			dayNightCycle(); //simulate a day/night cycle, using a blend factor to blend the two settings
+			prepare(); //enable depth test and clear screen and depth buffer
+				
+			//run all sub-renderers' render methods
+
+			entityRenderer.render(entities, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);		
+			terrainRenderer.render(terrains, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);
+			skyboxRenderer.render(camera, blendFactor, DAY_FOG, NIGHT_FOG);
+			
+			//clear list of terrains and map of entities each frame so they do not build up and up
+			terrains.clear();
+			entities.clear(); 
+		}
 		
-		//clear list of terrains and map of entities each frame so they do not build up and up
-		terrains.clear();
-		entities.clear(); 
+		guiRenderer.render(GuiWrapper.getInstance().getCurrentState());
 	}
 	
 	/**Processed a terrain, adding it to the list of used terrains.
@@ -281,6 +292,7 @@ public class MasterRenderer {
 	public void cleanUp() {
 		entitiyShader.cleanUp();
 		terrainShader.cleanUp();
+		guiShader.cleanUp();
 	}
 	
 	/**Simulates a simple day/night cycle by calculating the blendFactor.<br>
