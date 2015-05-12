@@ -19,5 +19,6 @@
 			<attribute name="javadoc_location" value="file:/C:/Users/Flo/git/AntSim/AntSim/libs/jbullet-20101010/dist/javadoc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/vecmath"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
