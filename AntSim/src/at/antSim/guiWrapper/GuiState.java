@@ -16,6 +16,12 @@ public class GuiState {
 	
 	List<GuiContainer> elements = new LinkedList<GuiContainer>();
 
+	String name;
+
+	public GuiState(String name) {
+		this.name = name;
+	}
+
 	/**Adds a container for positioning and scaling a group of gui elements and sets the {@link GuiState} associated with the passed {@link GuiElement}.
 	 * 
 	 */
@@ -34,5 +40,8 @@ public class GuiState {
 	public List<GuiContainer> getElements() {
 		return elements;
 	}
-	
+
+	public String getName() {
+		return name;
+	}
 }

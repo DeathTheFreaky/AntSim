@@ -30,12 +30,11 @@ public class GuiRenderer {
 		shader = new GuiShader();
 	}
 	
-	/**Renders a list of {@link GuiTexturedModel}s to the screen.
+	/**Renders a list of {}s to the screen.
 	 * 
-	 * @param guis - a list of {@link GuiTexturedModel}s to be rendered to the screen.
+	 * @param state - a list of {}s to be rendered to the screen.
 	 */
 	public void render(GuiState state) {
-		
 		if (state != null) {
 		
 			shader.start();
@@ -48,13 +47,10 @@ public class GuiRenderer {
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 					
 			//gui does not need a view matrix -> view on gui elements stays the same / they are shown in a "static 2d plane"
+
 			for (GuiContainer container : state.getElements()) {
-							
 				drawGuiElement(container);
-				
-				for (GuiElement element : container.getChildren()) {
-					drawGuiElement(element);
-				}
+				drawChildren(container);
 			}
 			
 			GL11.glEnable(GL11.GL_DEPTH_TEST); //reenable depth test once we're done with drawing our textures
@@ -68,13 +64,21 @@ public class GuiRenderer {
 			shader.stop();
 		}
 	}
-	
+
+	private void drawChildren(GuiContainer container) {
+		for (GuiElement element : container.getChildren()) {
+			drawGuiElement(element);
+			if (element instanceof GuiContainer) {
+				drawChildren((GuiContainer) element);
+			}
+		}
+	}
+
 	/**Draws a gui element on the screen.
 	 * 
-	 * @param container
+	 * @param element
 	 */
 	private void drawGuiElement (GuiElement element) {
-				
 		if (element.getTextureId() >= 0) {
 						
 			//bind the gui element's VAO (set it as "active"), enable the gui element's positions VBO, bind and activate the cube map's textures
