@@ -22,6 +22,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import at.antSim.Globals;
 import at.antSim.graphics.models.RawModel;
+import at.antSim.graphics.textures.GuiTexture;
 import at.antSim.graphics.textures.TextureData;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
@@ -80,7 +81,24 @@ public class Loader {
 	 */
 	public RawModel loadToVAO(float [] positions, int dimensions) {
 		int vaoID = createVAO();
-		this.storeDataInAttributeList(0, dimensions, positions);
+		this.storeDataInAttributeList(0, dimensions, positions); //store positional data into attribute list 0 of the activated VAO
+		unbindVAO();
+		return new RawModel(vaoID, positions.length/dimensions); //for 2d models there are 2 number per vertex, for 3d models there are 3
+	}
+	
+	/**Takes in position coordinates of a model's vertexes, loads this data into a VAO and then returns information about the VAO as a RawModel object.<br>
+	 * No texture Coordinates, normals or indices are passed, making this function ideal for simple 3d models (such as a skybox cube with no duplicate vertices)
+	 * or 2D GUI Elements.
+	 *  
+	 * @param positions - the vertice's 2D positions
+	 * @param textureCoorder - texture coordinates of the vertices
+	 * @param dimensions - can be either 2 or 3 (2D quads, 3D Skybox cubes)
+	 * @return - a RawModel object storing positions' data inside a VAO
+	 */
+	public RawModel loadToVAO(float [] positions, float[] textureCoords, int dimensions) {
+		int vaoID = createVAO();
+		this.storeDataInAttributeList(0, dimensions, positions); //store positional data into attribute list 0 of the activated VAO
+		storeDataInAttributeList(1, 2, textureCoords); //store texture coordinates into attribute list 1 of the activated VAO
 		unbindVAO();
 		return new RawModel(vaoID, positions.length/dimensions); //for 2d models there are 2 number per vertex, for 3d models there are 3
 	}
@@ -126,6 +144,49 @@ public class Loader {
 		}
 		int textureID = texture.getTextureID();
 		return textureID;
+	}
+	
+	/**Loads up a GUI texture into memory to be used by OpenGL, providing the texture's height and width for gui positioning.
+	 * 
+	 * @param filename - the filename of the texture 
+	 * @return - a {@link GuiTexture}
+	 */
+	public GuiTexture loadGuiTexture(String fileName) {
+			
+		//load a texture in .png format from /res/models directory and store it in raw format
+		Texture texture = null;
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream(Globals.TEXTURES + fileName + ".png")); //texture is being bound for GL30.glGenerateMipMap(int target)
+			/* 
+			 * To avoid artifacts produced by the undersampling of textures, with the texture changed abruptly at certain transition points,
+			 * we create lower res versions of the texture, called mipmaps. OpenGL automatically chooses the right texture version,
+			 * according to the distance from and hence the effective size of a texture.
+			 * The GL30.glGenerateMipmap() method automatically creates all needed smaller resolution version of the original texture.
+			 * Since we are using 2D textures only, we can set the target parameter to GL11.GL_TEXTURE_2D.
+			 * 
+			 * For more information, see OpenGL Programming Guide on page 333.
+			 */
+			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+			 /* 
+			  * tell openGl to use these lower res textures:
+			  * param1: texture type,
+			  * param2: defining openGl's behaviour for when the texture is rendered onto a surface with smaller dimensions than the texture
+			  * param3: when the above happens, use the mipmaps that we generated -> linear: transition smoothly between different resolution versions
+			  */
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
+			/*
+			 * Set texture's level of detail bias: texture will be rendered in more detail (higher mipmap levels) for higher negative numbers.
+			 * 
+			 * See OpenGL Programming Guide on page 338.
+			 */
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f); 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return new GuiTexture(texture.getTextureID(), texture.getTextureWidth(), texture.getTextureHeight());
 	}
 	
 	/**Loads up a CubeMap's textures into OpenGL.<br>

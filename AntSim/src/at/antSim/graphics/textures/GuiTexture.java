@@ -1,54 +1,36 @@
 package at.antSim.graphics.textures;
 
-import org.lwjgl.util.vector.Vector2f;
-
-import at.antSim.eventSystem.EventListener;
-import at.antSim.eventSystem.EventPriority;
-import at.antSim.eventSystem.events.MouseButtonPressedEvent;
-import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
-
-/**GuiTexture holds all types of textures which are rendered to the screen as part of the Gui.
- * 
+/**Used to store a Gui Texture's id, width and height.
  * @author Flo
  *
  */
 public class GuiTexture {
-
-	private int texture; //id or "name" of this texture returned by org.newdawn.slick.opengl.Texture.getTextureID()
-	private Vector2f position; //need to store center position of the gui quad since gui Texture has no underlying ModelData storing positional data
-	private Vector2f scale;
 	
-	/**Creates a new {@link GuiTexture}.
+	int textureId;
+	int width;
+	int height;
+	
+	/**Creates a new Gui Texture.
 	 * 
-	 * @param texture - id of the texture to use for this gui element
-	 * @param position - center of the gui quad in the openGl coordinate system
-	 * @param scale - size of the gui quad in relation to the size of the screen
+	 * @param textureId
+	 * @param width
+	 * @param height
 	 */
-	public GuiTexture(int texture, Vector2f position, Vector2f scale) {
-		this.texture = texture;
-		this.position = position;
-		this.scale = scale;
+	public GuiTexture(int textureId, int width, int height) {
+		this.textureId = textureId;
+		this.width = width;
+		this.height = height;
 	}
-	
-	public int getTexture() {
-		return texture;
+
+	public int getTextureId() {
+		return textureId;
 	}
-	
-	public Vector2f getPosition() {
-		return position;
+
+	public int getWidth() {
+		return width;
 	}
-	
-	public Vector2f getScale() {
-		return scale;
-	}
-	
-	@EventListener(priority = EventPriority.HIGH)
-	public void onMousePress(MouseButtonPressedEvent event){
-		
-	}
-	
-	@EventListener
-	public void onMouseReleased(MouseButtonReleasedEvent event){
-		
+
+	public int getHeight() {
+		return height;
 	}
 }

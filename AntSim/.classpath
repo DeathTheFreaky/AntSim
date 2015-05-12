@@ -3,22 +3,30 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="graphicsDemo"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/log4j-core-2.2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/log4j-api-2.2.jar"/>
-	<classpathentry kind="lib" path="libs/PNGDecoder.jar"/>
-	<classpathentry kind="lib" path="libs/lwjgl-2.9.3/lwjgl-2.9.3/slick-util.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-2.9.3/lwjgl-2.9.3/jar/lwjgl_util.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/Flo/git/AntSim/AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="libs/lwjgl-2.9.3/lwjgl-2.9.3/jar/lwjgl.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/Users/Flo/git/AntSim/AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/javadoc/"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/native/windows"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/lwjgl-2.9.3/lwjgl-2.9.3/jar/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="libs/lwjgl-2.9.3/lwjgl-2.9.3/slick-util.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://slick.ninjacave.com/javadoc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="libs/jbullet-20101010/dist/jbullet.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/Users/Flo/git/AntSim/AntSim/libs/jbullet-20101010/dist/javadoc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/jbullet-20101010/lib/vecmath/vecmath.jar"/>
+	<classpathentry kind="lib" path="libs/PNGDecoder.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/log4j-core-2.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/log4j-api-2.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/vecmath"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

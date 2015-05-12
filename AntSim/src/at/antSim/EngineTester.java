@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.Random;
 
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;
@@ -16,6 +15,7 @@ import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.graphicsUtils.MousePicker;
 import at.antSim.graphics.graphicsUtils.OBJFileLoader;
+import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
 import at.antSim.graphics.models.ModelData;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.models.TexturedModel;
@@ -26,6 +26,15 @@ import at.antSim.graphics.textures.GuiTexture;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
+import at.antSim.guiWrapper.GuiContainer;
+import at.antSim.guiWrapper.GuiImage;
+import at.antSim.guiWrapper.GuiState;
+import at.antSim.guiWrapper.GuiText;
+import at.antSim.guiWrapper.GuiWrapper;
+import at.antSim.guiWrapper.HorPositions;
+import at.antSim.guiWrapper.HorReference;
+import at.antSim.guiWrapper.VerPositions;
+import at.antSim.guiWrapper.VerReference;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -219,19 +228,39 @@ public class EngineTester {
 		
 		Camera camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2)); //player camera - make a "ghost" player to simulate cool camera movement
 		
-		List<GuiTexture> guis = new ArrayList<GuiTexture>();
-		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f));
+		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 		
-		//order matters: second texture will be drawn in front of first texture
-		guis.add(gui);
+		//gui
+		GuiWrapper guiWrapper = new GuiWrapper();
+		GuiState testState = new GuiState();
+		
+		float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
+		float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
+		RawModel testContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
+		
+		GuiContainer testContainer = new GuiContainer("testContainer", null, testContainerQuad, loader.loadGuiTexture("white"), 640, 360, 
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(0,0,0), 0f);
+		
+		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
+		GuiText testText = new GuiText("testText", textDrawer.createTextQuad("Flo war da!\nWhohoooo"), testContainer, 42, HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.TOP, 0,
+				0f, new Vector3f(0f, 1f, 0f), 0.5f);
+		
+		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
+		GuiImage testImage = new GuiImage("testImage", testContainer, testImageQuad, loader.loadGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0,
+				0f, new Vector3f(1f, 0f, 0f), 0.2f);
+		EventManager.getInstance().registerEventListener(testImage);
+		
+		testState.addContainer(testContainer);
+		 
+		guiWrapper.addState("testState", testState);
+		guiWrapper.setCurrentState("testState");
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
-		
-		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 				
 		//main game loop
 		boolean done = false;
 		while(!Display.isCloseRequested() && !done) {
+			EventManager.getInstance().workThroughQueue();
 			
 			//game logic
 			entities.get(0).increaseRotation(0, 0.5f, 0); //rotate the dragon
@@ -252,8 +281,8 @@ public class EngineTester {
 			}
 			
 			renderer.render(lights, camera);
-			guiRenderer.render(guis); 
-			
+			guiRenderer.render(guiWrapper.getCurrentState()); 
+									
 			DisplayManager.updateDisplay();
 		}
 		

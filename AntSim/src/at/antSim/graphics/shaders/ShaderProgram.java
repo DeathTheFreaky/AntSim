@@ -1,16 +1,16 @@
 package at.antSim.graphics.shaders;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.FloatBuffer;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.FloatBuffer;
 
 /**This class represents a generic shader program containing all attributes and methods that every shader program needs to have.
  * 
@@ -256,7 +256,7 @@ public abstract	class ShaderProgram {
 		GL20.glCompileShader(shaderID);
 		if(GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
 			System.out.println(GL20.glGetShaderInfoLog(shaderID, 500));
-			System.err.println("Could not compile shader.");
+			System.err.println("Could not compile shader " + file);
 			System.exit(-1);
 		}
 		
