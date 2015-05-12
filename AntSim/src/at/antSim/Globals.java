@@ -20,7 +20,8 @@ public final class Globals {
 	/**
 	 * duration of 1/FPS second in nanoseconds
 	 */
-	public static final int FPS_DURATION_NANONS = (int) ((1.0 / FPS_CAP) * 1000 * 1000 * 1000);
+	public static final int MILIS_TO_NANOS_RATIO = 1000 * 1000;
+	public static final int FPS_DURATION_NANONS = (int) ((1.0 / FPS_CAP) * 1000 * MILIS_TO_NANOS_RATIO);
 	public static final float WORLD_SIZE = 800; //square
 	
 	//config file entries set by config reader

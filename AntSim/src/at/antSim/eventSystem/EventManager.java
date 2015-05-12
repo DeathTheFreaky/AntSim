@@ -5,6 +5,7 @@ import at.antSim.utils.ClassUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -23,7 +24,7 @@ public class EventManager {
 
 	protected EventManager() {
 		eventListenerMap = new HashMap<Class<? extends Event>, EventListenerManagement>();
-		eventQueue = new LinkedBlockingQueue<Event>();
+		eventQueue = new LinkedList<Event>();
 	}
 
 	/**
@@ -84,6 +85,7 @@ public class EventManager {
 	 * @param event Event to handle.
 	 */
 	public synchronized void addEventToQueue(Event event) {
+		System.out.println("added to queue: " + event);
 		eventQueue.offer(event);
 	}
 
@@ -91,8 +93,12 @@ public class EventManager {
 	 * Handles all stored Events.
 	 */
 	public void workThroughQueue() {
-		for (Event event : eventQueue) {
-			eventListenerMap.get(event.getClass()).handle(event);
+		for (Event event = eventQueue.poll(); event != null; event = eventQueue.poll()) {
+			System.out.println("event in queue: " + event);
+			EventListenerManagement management = eventListenerMap.get(event.getClass());
+			if (management != null) {
+				management.handle(event);
+			}
 		}
 	}
 

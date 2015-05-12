@@ -7,6 +7,7 @@ import java.util.Random;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Entity;
 import at.antSim.graphics.entities.Light;
@@ -247,6 +248,7 @@ public class EngineTester {
 		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
 		GuiImage testImage = new GuiImage("testImage", testContainer, testImageQuad, loader.loadGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0,
 				0f, new Vector3f(1f, 0f, 0f), 0.2f);
+		EventManager.getInstance().registerEventListener(testImage);
 		
 		testState.addContainer(testContainer);
 		 
@@ -258,6 +260,8 @@ public class EngineTester {
 		//main game loop
 		boolean done = false;
 		while(!Display.isCloseRequested() && !done) {
+			
+			EventManager.getInstance().workThroughQueue();
 			
 			//game logic
 			entities.get(0).increaseRotation(0, 0.5f, 0); //rotate the dragon
@@ -279,7 +283,7 @@ public class EngineTester {
 			
 			renderer.render(lights, camera);
 			guiRenderer.render(guiWrapper.getCurrentState()); 
-						
+									
 			DisplayManager.updateDisplay();
 		}
 		
