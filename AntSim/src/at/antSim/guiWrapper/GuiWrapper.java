@@ -12,9 +12,17 @@ import java.util.Map;
  */
 public class GuiWrapper {
 	
+	private static GuiWrapper INSTANCE = null;
+	
 	Map<String, GuiState> states = new HashMap<>();
 	
 	GuiState currentState;
+	
+	static {
+		INSTANCE = new GuiWrapper();
+	}
+	
+	private GuiWrapper() {};
 	
 	/**Adds a new State to the GUI.<br>
 	 * <br>
@@ -50,6 +58,10 @@ public class GuiWrapper {
 	 */
 	public GuiState getState(String name) {
 		return states.get(name);
+	}
+	
+	public static GuiWrapper getInstance() {
+		return INSTANCE;
 	}
 	
 }

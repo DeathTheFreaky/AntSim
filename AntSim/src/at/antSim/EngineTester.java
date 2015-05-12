@@ -237,7 +237,7 @@ public class EngineTester {
 		float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
 		RawModel standardContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
 
-		GuiWrapper guiWrapper = new GuiWrapper();
+		GuiWrapper guiWrapper = GuiWrapper.getInstance();
 		GuiState testState = new GuiState();
 
 		//MEINS
@@ -246,21 +246,12 @@ public class EngineTester {
 		GuiState optionsControls = new GuiState();
 		GuiState mainGame = new GuiState();
 
-		GuiContainer startContainer = new GuiContainer("startContainer", null, standardContainerQuad, loader.loadGuiTexture("white"),
+		GuiContainer startContainer = new GuiContainer("startContainer", null, null, standardContainerQuad, loader.loadGuiTexture("white"),
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 
-
-		GuiContainer testContainer = new GuiContainer("testContainer", null, standardContainerQuad, loader.loadGuiTexture("white"), 640, 360,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(1,0,1), 1f);
-		
-		float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
-		float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
-		RawModel testContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
-		
 		Command cmd = new TestCommand();
-		System.out.println("engineTester: " + cmd);
 		
-		GuiContainer testContainer = new GuiContainer("testContainer", null, cmd, testContainerQuad, loader.loadGuiTexture("white"), 640, 360, 
+		GuiContainer testContainer = new GuiContainer("testContainer", null, cmd, standardContainerQuad, loader.loadGuiTexture("white"), 640, 360, 
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(0,0,0), 0f);
 		
 		//nur einmal, außer für andere Fonts
@@ -274,8 +265,8 @@ public class EngineTester {
 		EventManager.getInstance().registerEventListener(testContainer);
 		
 
-		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), startContainer, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, VerReference.SIBLING, VerPositions.TOP, 20);
-		GuiText antSim2 = new GuiText("antSim2", textDrawer.createTextQuad("Sim"), startContainer, 36, HorReference.PARENT, HorPositions.RIGHT, Globals.displayWidth/2 - 100, VerReference.SIBLING, VerPositions.BELOW, -15);
+		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), startContainer, null, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, VerReference.SIBLING, VerPositions.TOP, 20);
+		GuiText antSim2 = new GuiText("antSim2", textDrawer.createTextQuad("Sim"), startContainer, null, 36, HorReference.PARENT, HorPositions.RIGHT, Globals.displayWidth/2 - 100, VerReference.SIBLING, VerPositions.BELOW, -15);
 
 
 

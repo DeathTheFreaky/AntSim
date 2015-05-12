@@ -48,6 +48,9 @@ public abstract class GuiElement {
 	//blend color and factor
 	private Vector3f blendColor;
 	private float blendFactor;
+	
+	//associate gui state
+	private GuiState state;
 
 	/**Constructs a new {@link GuiElement}.
 	 * 
@@ -250,6 +253,14 @@ public abstract class GuiElement {
 	public float getBlendFactor() {
 		return blendFactor;
 	}
+	
+	public void setGuiState(GuiState state) {
+		this.state = state;
+	}
+	
+	public GuiState getGuiState() {
+		return state;
+	}
 
 	@EventListener(priority = EventPriority.HIGH)
 	public void onMousePress(MouseButtonPressedEvent event){
@@ -258,7 +269,7 @@ public abstract class GuiElement {
 	
 	@EventListener
 	public void onMouseReleased(MouseButtonReleasedEvent event){
-		if (command != null) {
+		if (state == GuiWrapper.getInstance().getCurrentState() && command != null) {
 			if (event.getPosX() >= topLeft.getX() && event.getPosX() <= (topLeft.getX() + width) &&
 					event.getPosY() >= topLeft.getY() && event.getPosY() <= (topLeft.getY() + height)) {
 				command.execute();
