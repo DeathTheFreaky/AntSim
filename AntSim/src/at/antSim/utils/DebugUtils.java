@@ -9,8 +9,10 @@ import java.lang.reflect.Field;
  *
  * @author Clemens
  */
+@SuppressWarnings("restriction")
 public class DebugUtils {
 
+	@SuppressWarnings("deprecation")
 	public static void printAddresses(String label, Object... objects) {
 		Field f = null;
 		Unsafe unsafe = null;

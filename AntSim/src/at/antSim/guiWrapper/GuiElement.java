@@ -10,6 +10,7 @@ import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.graphics.models.RawModel;
+import at.antSim.guiWrapper.commands.Command;
 
 /**Represents an abstract class for Element's which shall be drawn in the GUI.
  * 
@@ -24,6 +25,7 @@ public abstract class GuiElement {
 	private String id;
 	private int textureId;
 	private GuiContainer parent;
+	private Command command;
 	
 	//positional values in pixel
 	private Point topLeft;
@@ -51,6 +53,7 @@ public abstract class GuiElement {
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
 	 * @param model - the {@link GuiElement}'s geometric model
 	 * @param textureId - id of the {@link GuiElement}'s texture as assigned by OpenGL
 	 * @param textureWidth - width of the {@link GuiElement}'s texture
@@ -67,12 +70,13 @@ public abstract class GuiElement {
 	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
 	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
 	 */
-	public GuiElement(String id, GuiContainer parent, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
+	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
-		
+				
 		this.width = desiredWidth;
 		this.height = desiredHeight;
 		this.model = model;
+		this.command = command;
 		this.textureId = textureId;
 		this.id = id;
 		this.parent = parent;
@@ -91,10 +95,10 @@ public abstract class GuiElement {
 		this.scale = new Vector2f(((float) textureWidth/Globals.displayWidth) * ((float) desiredWidth/textureWidth), ((float) textureHeight/Globals.displayHeight) * ((float) desiredHeight/textureHeight));
 		//this.scale = new Vector2f((float) desiredWidth/textureWidth*desiredWidth/Globals.displayWidth, (float) desiredHeight/textureHeight*desiredHeight/Globals.displayHeight/9*16);
 		
-		System.out.println("desired width: " + desiredWidth + ", texture width: " + textureWidth);
-		System.out.println("desired height: " + desiredHeight + ", texture height: " + textureHeight);
-		System.out.println("scale x: " + scale.x);
-		System.out.println("scale y: " + scale.y);
+//		System.out.println("desired width: " + desiredWidth + ", texture width: " + textureWidth);
+//		System.out.println("desired height: " + desiredHeight + ", texture height: " + textureHeight);
+//		System.out.println("scale x: " + scale.x);
+//		System.out.println("scale y: " + scale.y);
 				
 		calculatePos();
 		
@@ -226,9 +230,9 @@ public abstract class GuiElement {
 		this.middle = new Point(left + width/2, top + height/2);
 		this.position = new Vector2f((float) middle.getX()/Globals.displayWidth * 2 - 1, ((float) middle.getY()/Globals.displayHeight * 2 - 1) * -1f);
 		
-		System.out.println("topLeft: " + topLeft.getX() + ", " + topLeft.getY());
-		System.out.println("middle: " + middle.getX() + ", " + middle.getY());
-		System.out.println("position: " + position.x + ", " + position.y);
+//		System.out.println("topLeft: " + topLeft.getX() + ", " + topLeft.getY());
+//		System.out.println("middle: " + middle.getX() + ", " + middle.getY());
+//		System.out.println("position: " + position.x + ", " + position.y);
 	}
 
 	public float getTransparency() {
@@ -249,11 +253,17 @@ public abstract class GuiElement {
 
 	@EventListener(priority = EventPriority.HIGH)
 	public void onMousePress(MouseButtonPressedEvent event){
-		System.out.println("mouse pressed");
+		
 	}
 	
 	@EventListener
 	public void onMouseReleased(MouseButtonReleasedEvent event){
-		System.out.println("mouse released");
+		if (command != null) {
+			if (event.getPosX() >= topLeft.getX() && event.getPosX() <= (topLeft.getX() + width) &&
+					event.getPosY() >= topLeft.getY() && event.getPosY() <= (topLeft.getY() + height)) {
+				command.execute();
+				event.consume();
+			}
+		}
 	}
 }

@@ -87,12 +87,12 @@ public class OpenGLTextDrawer {
 				
 				int character = lines[i].charAt(j);
 				
-				System.out.println(text.charAt(i) + ": " + character);
+//				System.out.println(text.charAt(i) + ": " + character);
 				
-				System.out.println(" top left: " + textureCoords[character * 4].x + ", " + textureCoords[character * 4].y);
-				System.out.println(" bottom left: " + textureCoords[character * 4 + 1].x + ", " + textureCoords[character * 4 + 1].y);
-				System.out.println(" top right: " + textureCoords[character * 4 + 2].x + ", " + textureCoords[character * 4 + 2].y);
-				System.out.println(" bottom right: " + textureCoords[character * 4 + 3].x + ", " + textureCoords[character * 4 + 3].y);
+//				System.out.println(" top left: " + textureCoords[character * 4].x + ", " + textureCoords[character * 4].y);
+//				System.out.println(" bottom left: " + textureCoords[character * 4 + 1].x + ", " + textureCoords[character * 4 + 1].y);
+//				System.out.println(" top right: " + textureCoords[character * 4 + 2].x + ", " + textureCoords[character * 4 + 2].y);
+//				System.out.println(" bottom right: " + textureCoords[character * 4 + 3].x + ", " + textureCoords[character * 4 + 3].y);
 				
 				//calculate positions of vertices
 				float top = 1 - i * height;
@@ -100,10 +100,10 @@ public class OpenGLTextDrawer {
 				float left = -1 + j * width;
 				float right = left + width;
 				
-				System.out.println(" top: " + top);
-				System.out.println(" bottom: " + bottom);
-				System.out.println(" left: " + left);
-				System.out.println(" right: " + right);
+//				System.out.println(" top: " + top);
+//				System.out.println(" bottom: " + bottom);
+//				System.out.println(" left: " + left);
+//				System.out.println(" right: " + right);
 				
 				//add vertices and texture coords in the following order: T1: left top, left bottom, right top, T2: right top, left bottom, right bottom
 				quadPositions.add(new Vector2f(left, top));
@@ -124,15 +124,15 @@ public class OpenGLTextDrawer {
 		float[] quadPosArray = convertListToArray(quadPositions);
 		float[] quadTextCoordArray = convertListToArray(quadTextCoords);
 		
-		System.out.println("Positions: ");
-		for (float f: quadPosArray) {
-			System.out.println(" " + f);
-		}
-		
-		System.out.println("TextureCoords: ");
-		for (float f: quadTextCoordArray) {
-			System.out.println(" " + f);
-		}
+//		System.out.println("Positions: ");
+//		for (float f: quadPosArray) {
+//			System.out.println(" " + f);
+//		}
+//		
+//		System.out.println("TextureCoords: ");
+//		for (float f: quadTextCoordArray) {
+//			System.out.println(" " + f);
+//		}
 		
 		
 		GuiTextData textData = new GuiTextData(loader.loadToVAO(convertListToArray(quadPositions), convertListToArray(quadTextCoords), 2), rows, cols, texture.getWidth()/Globals.fontCols, texture.getTextureId());

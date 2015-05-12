@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.textures.GuiTexture;
+import at.antSim.guiWrapper.commands.Command;
 
 /**Represents an image to be drawn in the GUI.
  * 
@@ -16,6 +17,7 @@ public class GuiImage extends GuiElement {
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
 	 * @param model - the {@link GuiElement}'s geometric model
 	 * @param texture - the {@link GuiElement}'s {@link GuiTexture}
 	 * @param desiredWidth - desired width of the Gui element in pixels
@@ -30,10 +32,10 @@ public class GuiImage extends GuiElement {
 	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
 	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
 	 */
-	public GuiImage(String id, GuiContainer parent, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
+	public GuiImage(String id, GuiContainer parent, Command command, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 		
-		super(id, parent, model, texture.getTextureId(), texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, 
+		super(id, parent, command, model, texture.getTextureId(), texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, 
 				horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
 	}
 	
@@ -43,6 +45,7 @@ public class GuiImage extends GuiElement {
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
 	 * @param model - the {@link GuiElement}'s geometric model
 	 * @param texture - the {@link GuiElement}'s {@link GuiTexture}
 	 * @param desiredWidth - desired width of the Gui element in pixels
@@ -57,10 +60,10 @@ public class GuiImage extends GuiElement {
 	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
 	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
 	 */
-	public GuiImage(String id, GuiContainer parent, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
+	public GuiImage(String id, GuiContainer parent, Command command, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset) {
 		
-		super(id, parent, model, texture.getTextureId(), texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, 
+		super(id, parent, command, model, texture.getTextureId(), texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, 
 				horRef, horPos, horOffset, verRef, verPos, verOffset, 0f, new Vector3f(0,0,0), 0f);
 	}
 }
