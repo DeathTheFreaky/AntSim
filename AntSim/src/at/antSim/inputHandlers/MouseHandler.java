@@ -5,6 +5,7 @@ import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.eventSystem.events.MouseMotionEvent;
+import at.antSim.eventSystem.events.MouseScrollEvent;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 
@@ -41,6 +42,8 @@ public class MouseHandler extends Thread {
 					eventManager.addEventToQueue(new MouseButtonPressedEvent(Mouse.getEventButton(), Mouse.getEventX(), Mouse.getEventY()));
 				} else if (Mouse.getEventButton() != -1){
 					eventManager.addEventToQueue(new MouseButtonReleasedEvent(Mouse.getEventButton(), Mouse.getEventX(), Mouse.getEventY()));
+				}else if (Mouse.getEventDWheel() != 0) {
+					eventManager.addEventToQueue(new MouseScrollEvent(Mouse.getEventDWheel(), Mouse.getEventX(), Mouse.getEventY()));
 				}
 			}
 			if ((System.nanoTime() - iterationStartTime) < Globals.FPS_DURATION_NANONS) {
