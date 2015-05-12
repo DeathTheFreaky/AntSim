@@ -230,28 +230,49 @@ public class EngineTester {
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 		
 		//gui
-		GuiWrapper guiWrapper = new GuiWrapper();
-		GuiState testState = new GuiState();
-		
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
 		float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
-		RawModel testContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
+		RawModel standardContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
+
+		GuiWrapper guiWrapper = new GuiWrapper();
+		GuiState testState = new GuiState();
+
+		//MEINS
+		GuiState startMenu = new GuiState();
+		GuiState optionsDisplay = new GuiState();
+		GuiState optionsControls = new GuiState();
+		GuiState mainGame = new GuiState();
+
+		GuiContainer startContainer = new GuiContainer("startContainer", null, standardContainerQuad, loader.loadGuiTexture("white"),
+				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+
+
+		GuiContainer testContainer = new GuiContainer("testContainer", null, standardContainerQuad, loader.loadGuiTexture("white"), 640, 360,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(1,0,1), 1f);
 		
-		GuiContainer testContainer = new GuiContainer("testContainer", null, testContainerQuad, loader.loadGuiTexture("white"), 640, 360, 
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(0,0,0), 0f);
-		
+		//nur einmal, außer für andere Fonts
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
+
 		GuiText testText = new GuiText("testText", textDrawer.createTextQuad("Flo war da!\nWhohoooo"), testContainer, 42, HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.TOP, 0,
 				0f, new Vector3f(0f, 1f, 0f), 0.5f);
 		
 		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
 		GuiImage testImage = new GuiImage("testImage", testContainer, testImageQuad, loader.loadGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0,
 				0f, new Vector3f(1f, 0f, 0f), 0.2f);
-		
+
+		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), startContainer, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, VerReference.SIBLING, VerPositions.TOP, 20);
+		GuiText antSim2 = new GuiText("antSim2", textDrawer.createTextQuad("Sim"), startContainer, 36, HorReference.PARENT, HorPositions.RIGHT, Globals.displayWidth/2 - 100, VerReference.SIBLING, VerPositions.BELOW, -15);
+
+
+
 		testState.addContainer(testContainer);
+		//MEINS
+		startMenu.addContainer(startContainer);
 		 
 		guiWrapper.addState("testState", testState);
-		guiWrapper.setCurrentState("testState");
+		//MEINS
+		guiWrapper.addState("startMenu", startMenu);
+		guiWrapper.setCurrentState("startMenu");
 		
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
 				
