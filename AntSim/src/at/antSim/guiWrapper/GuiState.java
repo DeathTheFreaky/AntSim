@@ -16,10 +16,14 @@ public class GuiState {
 	
 	List<GuiContainer> elements = new LinkedList<GuiContainer>();
 
-	/**Adds a container for positioning and scaling a group of gui elements.
+	/**Adds a container for positioning and scaling a group of gui elements and sets the {@link GuiState} associated with the passed {@link GuiElement}.
 	 * 
 	 */
 	public void addContainer(GuiContainer container) {
+		container.setGuiState(this);
+		for (GuiElement element : container.getChildren()) {
+			element.setGuiState(this);
+		}
 		elements.add(container);
 	};
 	

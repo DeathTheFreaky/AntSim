@@ -233,7 +233,7 @@ public class EngineTester {
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 		
 		//gui
-		GuiWrapper guiWrapper = new GuiWrapper();
+		GuiWrapper guiWrapper = GuiWrapper.getInstance();
 		GuiState testState = new GuiState();
 		
 		float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
@@ -241,7 +241,6 @@ public class EngineTester {
 		RawModel testContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
 		
 		Command cmd = new TestCommand();
-		System.out.println("engineTester: " + cmd);
 		
 		GuiContainer testContainer = new GuiContainer("testContainer", null, cmd, testContainerQuad, loader.loadGuiTexture("white"), 640, 360, 
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(0,0,0), 0f);
