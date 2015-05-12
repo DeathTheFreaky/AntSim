@@ -1,5 +1,6 @@
 package at.antSim.objectsPhysic;
 
+import at.antSim.objectsPhysic.basics.PhysicsObject;
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.broadphase.Dispatcher;

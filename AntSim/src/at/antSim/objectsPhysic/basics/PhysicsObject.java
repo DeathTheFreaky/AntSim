@@ -1,4 +1,4 @@
-package at.antSim.objectsPhysic;
+package at.antSim.objectsPhysic.basics;
 
 import com.bulletphysics.dynamics.RigidBody;
 
@@ -8,5 +8,8 @@ import com.bulletphysics.dynamics.RigidBody;
  * @author Clemens
  */
 public interface PhysicsObject {
+	/**
+	 * @return Returns the {@link RigidBody} represented in the PhysicsObject
+	 */
 	RigidBody getRigidBody();
 }
