@@ -27,12 +27,11 @@ public class GuiWrapper {
 	/**Adds a new State to the GUI.<br>
 	 * <br>
 	 * In case a state with the same name was already present, the old state will be replaced by the new state.
-	 * 
-	 * @param name - name of the GUI state to be added
+	 *
 	 * @param state - the GUI state to be added
 	 */
-	public void addState(String name, GuiState state) {
-		states.put(name, state);
+	public void addState(GuiState state) {
+		states.put(state.getName(), state);
 	}
 	
 	/**Sets the currently activated {@link GuiState}.<br>

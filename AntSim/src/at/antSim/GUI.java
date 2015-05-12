@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import at.antSim.guiWrapper.commands.*;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -22,7 +23,6 @@ import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.renderer.GuiRenderer;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
-import at.antSim.graphics.textures.GuiTexture;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
@@ -35,15 +35,13 @@ import at.antSim.guiWrapper.HorPositions;
 import at.antSim.guiWrapper.HorReference;
 import at.antSim.guiWrapper.VerPositions;
 import at.antSim.guiWrapper.VerReference;
-import at.antSim.guiWrapper.commands.Command;
-import at.antSim.guiWrapper.commands.TestCommand;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
  * <br>
  * The main game loop updates all objects and does the rendering for every frame.
  *
- * @author Alexander
+ * @author Flo
  *
  */
 public class GUI {
@@ -238,52 +236,62 @@ public class GUI {
 		RawModel standardContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
 
 		GuiWrapper guiWrapper = GuiWrapper.getInstance();
-		GuiState testState = new GuiState();
+		GuiState testState = new GuiState("testState");
 
 		//MEINS
-		GuiState startMenu = new GuiState();
-		GuiState optionsDisplay = new GuiState();
-		GuiState optionsControls = new GuiState();
-		GuiState mainGame = new GuiState();
+		GuiState startMenu = new GuiState("startMenu");
+		GuiState optionsDisplay = new GuiState("optionsDisplay");
+		GuiState optionsControls = new GuiState("optionsControl");
+		GuiState mainGame = new GuiState("mainGame");
 
-		GuiContainer startContainer = new GuiContainer("startContainer", null, null, standardContainerQuad, loader.loadGuiTexture("white"),
+		Command newGameCmd = new NewGameCmd("testState");
+		Command optionsCmd = new OptionsCmd("optionsDisplay");
+		Command quitGameCmd = new QuitGameCmd();
+
+		GuiContainer startContainer = new GuiContainer("startContainer", null, newGameCmd, standardContainerQuad, loader.loadGuiTexture("white"),
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 
 		Command cmd = new TestCommand();
-		
-		GuiContainer testContainer = new GuiContainer("testContainer", null, cmd, standardContainerQuad, loader.loadGuiTexture("white"), 640, 360, 
+
+		GuiContainer testContainer = new GuiContainer("testContainer", null, cmd, standardContainerQuad, loader.loadGuiTexture("white"), 640, 360,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(0,0,0), 0f);
-		
+
 		//nur einmal, außer für andere Fonts
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
 		GuiText testText = new GuiText("testText", textDrawer.createTextQuad("Flo war da!\nWhohoooo"), testContainer, null, 42, HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.TOP, 0,
 				0f, new Vector3f(0f, 1f, 0f), 0.5f);
-		
+
 		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
 		GuiImage testImage = new GuiImage("testImage", testContainer, null, testImageQuad, loader.loadGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0,
 				0f, new Vector3f(1f, 0f, 0f), 0.2f);
 		EventManager.getInstance().registerEventListener(testContainer);
-		
+
 
 		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), startContainer, null, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, VerReference.SIBLING, VerPositions.TOP, 20);
 		GuiText antSim2 = new GuiText("antSim2", textDrawer.createTextQuad("Sim"), startContainer, null, 36, HorReference.PARENT, HorPositions.RIGHT, Globals.displayWidth/2 - 100, VerReference.SIBLING, VerPositions.BELOW, -15);
 
-
+		GuiContainer newGameContainer = new GuiContainer("newGamebutton", startContainer, null, standardContainerQuad, loader.loadGuiTexture("white"), 300, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35, 0, new Vector3f(0, 0, 0), 0.8f);
+		GuiText newGameText = new GuiText("newGame", textDrawer.createTextQuad("Start new game"), newGameContainer, null, 25,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		EventManager.getInstance().registerEventListener(startContainer);
 
 		testState.addContainer(testContainer);
 		//MEINS
 		startMenu.addContainer(startContainer);
-		 
-		guiWrapper.addState("testState", testState);
+		startContainer.getChildren().add(newGameContainer);
+
+		guiWrapper.addState(testState);
 		//MEINS
-		guiWrapper.addState("startMenu", startMenu);
+		guiWrapper.addState(startMenu);
 		guiWrapper.setCurrentState("startMenu");
-		
+
 		GuiRenderer guiRenderer = new GuiRenderer(loader);
-		
+
 		//main game loop
 		boolean done = false;
 		while(!Display.isCloseRequested() && !done) {
+			EventManager.getInstance().workThroughQueue();
 
 			//game logic
 			entities.get(0).increaseRotation(0, 0.5f, 0); //rotate the dragon
