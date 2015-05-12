@@ -1,32 +1,23 @@
 package at.antSim;
 
-import java.io.IOException;
-
 import at.antSim.config.ConfigReader;
-import at.antSim.config.ConfigWriter;
-import at.antSim.eventSystem.EventManager;
+import at.antSim.graphics.graphicsUtils.DisplayManager;
+import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.renderer.MasterRenderer;
 
 /**
- * Created by Clemens on 24.03.2015.
+ * Created on 24.03.2015.
+ * @author Clemens, Flo
  */
 public class AntSim {
+	
+	Loader loader;
+	MasterRenderer masterRenderer;
 	
     public AntSim(){}
 
     public static void main(String[] args) {
         AntSim game = new AntSim();
-        ConfigWriter mywriter = new ConfigWriter();
-        ConfigReader myreader = new ConfigReader();
-        try {
-			mywriter.writeConfig();
-			myreader.readConfig();
-			System.out.println("width: " + Globals.displayWidth);
-			System.out.println("height: " + Globals.displayHeight);
-		} catch (NoSuchFieldException | SecurityException
-				| IllegalArgumentException | IllegalAccessException
-				| IOException e) {
-			e.printStackTrace();
-		}
         game.launch();
     }
 
@@ -37,15 +28,35 @@ public class AntSim {
     }
 
     private void preInit() {
-
+    	
+    	//read config
+        ConfigReader myreader = new ConfigReader();
+        myreader.readConfig();
     }
 
-    private void init() {
-
+    private void init() {		
+    	
+    	//initialize display manager
+    	DisplayManager.createDisplay();
+		loader = new Loader();
+		
+		//initialize render engine
+		masterRenderer = new MasterRenderer(loader);
     }
 
     private void postInit() {
-
+    	
+    	//launch main game
+    	EngineTester.launch(loader, masterRenderer);
     }
+    
+//	ConfigWriter mywriter = new ConfigWriter();
+//	try {
+//		//mywriter.writeConfig();
+//	} catch (NoSuchFieldException | SecurityException
+//			| IllegalArgumentException | IllegalAccessException
+//			| IOException e) {
+//		e.printStackTrace();
+//	}
 
 }

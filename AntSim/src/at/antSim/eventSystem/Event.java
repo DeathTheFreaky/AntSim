@@ -1,15 +1,12 @@
 package at.antSim.eventSystem;
 
-import java.lang.reflect.Type;
-
 /**
- * Created by Clemens on 25.03.2015.
+ * Created on 25.03.2015.
+ * @author Clemens
  */
 public interface Event {
 
-    void kill();
-    boolean isKilled();
-    Type getType();
-	Object getSource();
+    void consume();
+    boolean isConsumed();
 
 }
