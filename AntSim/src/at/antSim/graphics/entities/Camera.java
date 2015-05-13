@@ -9,6 +9,7 @@ import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.eventSystem.events.MouseMotionEvent;
+import at.antSim.eventSystem.events.MouseScrollEvent;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.terrains.Terrain;
 
@@ -97,9 +98,7 @@ public class Camera {
 		
 		increasePosition(dx, 0, dz);
 		refPointPosition.y = terrain.getHeightOfTerrain(refPointPosition.x, refPointPosition.z);
-		
-		calculateZoom();
-		
+				
 		float horizontalDistance = calculateHorizontalDistance();
 		float verticalDistance = calculateVerticalDistance();
 		
@@ -209,8 +208,9 @@ public class Camera {
 	/**Zooms camera out when moving mousewheel down and in when moving mousewheel up.
 	 * 
 	 */
-	private void calculateZoom() {
-		float zoomLevel = Mouse.getDWheel() * ZOOM_FACTOR; //calculate how for to zoom in and out, determined by mousewheel movement
+	@EventListener (priority = EventPriority.HIGH)
+	private void calculateZoom(MouseScrollEvent event) {
+		float zoomLevel = event.getDWheel() * ZOOM_FACTOR; //calculate how for to zoom in and out, determined by mousewheel movement
 		distanceFromReferencePoint -= zoomLevel; //move in when moving mousewheel up (Mouse.getDWheel() returns > 0)
 	}
 	
@@ -224,6 +224,7 @@ public class Camera {
 			pitch -= pitchChange; //rotate camera downwards when moving mouse upwards the y-Axis
 			float angleChange = event.getDX() * YAW_FACTOR; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
 			rotY += angleChange; //update reference point rotation
+			event.consume();
 		}
 	}
 	
@@ -259,6 +260,7 @@ public class Camera {
 	public void onMousePress(MouseButtonPressedEvent event){
 		if (event.getButton() == 1) {
 			rightMouseButtonDown = true;
+			event.consume();
 		}
 	}
 	
@@ -266,6 +268,7 @@ public class Camera {
 	public void onMouseReleased(MouseButtonReleasedEvent event){
 		if (event.getButton() == 1) {
 			rightMouseButtonDown = false;
+			event.consume();
 		}
 	}
 }
