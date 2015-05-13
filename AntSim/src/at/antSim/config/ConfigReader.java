@@ -76,9 +76,9 @@ public class ConfigReader {
 					String option = lineParts[0];
 					String value = lineParts[1];
 																				
-					Field var = Globals.class.getField(option);					
+					Field var = Globals.class.getField(option);		
 					var.set(this, ObjectConverter.convert(value, var.getType()));
-					
+										
 					//log what has been set to which values
 					
 				}

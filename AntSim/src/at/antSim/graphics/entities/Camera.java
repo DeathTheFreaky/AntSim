@@ -6,6 +6,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
+import at.antSim.eventSystem.events.KeyPressedEvent;
+import at.antSim.eventSystem.events.KeyReleasedEvent;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.eventSystem.events.MouseMotionEvent;
@@ -48,6 +50,7 @@ public class Camera {
 	private float rotY; //rotation of the reference point
 	
 	private boolean rightMouseButtonDown = false;
+	private boolean lShiftDown = false;
 	
 	/**Creates a new reference point camera, passing the reference point's initial position.
 	 * 
@@ -63,9 +66,6 @@ public class Camera {
 	 * @param terrain - the {@link Terrain} the {@link Camera} moves on
 	 */
 	public void move(Terrain terrain) {
-		
-		//move the reference point of movement keys have been triggered
-		checkKeyInputs();
 		
 		//takes into account the actual time passed, making movement independent from frame rate
 		increaseKeyRotation(currentTurnSpeed * DisplayManager.getFrameTimeSeconds()); 
@@ -109,32 +109,73 @@ public class Camera {
 	/**Checks if the camera movement keys have been pressed on the keyboard and sets movement variables accordingly.
 	 * 
 	 */
-	private void checkKeyInputs(){
+	@EventListener (priority = EventPriority.HIGH)
+	public void checkKeyInputs(KeyPressedEvent event){
 		
-		this.currentTurnSpeed = 0;
-		this.currentSpeed = 0;
-		this.currentStraySpeed = 0;
+		if(event.getKey() == Keyboard.KEY_LSHIFT) {
+			lShiftDown = true;
+		}
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+		if(event.getKey() == Keyboard.KEY_UP) {
 			this.currentSpeed = MOVE_SPEED;
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+		} else if (event.getKey() == Keyboard.KEY_DOWN) {
 			this.currentSpeed = -MOVE_SPEED;
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+		if (event.getKey() == Keyboard.KEY_LEFT) {
+			if (lShiftDown) {
 				this.currentTurnSpeed = TURN_SPEED;
 			} else {
 				this.currentStraySpeed = -STRAY_SPEED;
 			}
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+		} else if (event.getKey() == Keyboard.KEY_RIGHT) {
+			if (lShiftDown) {
 				this.currentTurnSpeed = -TURN_SPEED;
 			} else {
 				this.currentStraySpeed = STRAY_SPEED;
 			}
 		} 
 	}
+	
+	/**Checks if the camera movement keys have been released on the keyboard and sets movement variables accordingly.
+	 * 
+	 */
+	@EventListener (priority = EventPriority.HIGH)
+	public void checkKeyInputs(KeyReleasedEvent event){
+		
+		if(event.getKey() == Keyboard.KEY_LSHIFT) {
+			lShiftDown = false;
+			currentTurnSpeed = 0;
+		}
+		
+		if(event.getKey() == Keyboard.KEY_UP) {
+			if (currentSpeed > 0) {
+				currentSpeed = 0;
+			}
+		} else if (event.getKey() == Keyboard.KEY_DOWN) {
+			if (currentSpeed < 0) {
+				currentSpeed = 0;
+			}
+		}
+		
+		if (event.getKey() == Keyboard.KEY_LEFT) {
+			if (currentTurnSpeed > 0) {
+				currentTurnSpeed = 0;
+			}
+			if (currentStraySpeed < 0) {
+				currentStraySpeed = 0;
+			}
+		} else if (event.getKey() == Keyboard.KEY_RIGHT) {
+			if (currentTurnSpeed < 0) {
+				currentTurnSpeed = 0;
+			}
+			if (currentStraySpeed > 0) {
+				currentStraySpeed = 0;
+			}
+		} 
+	}
+	
+	
 	
 	/**Moves the referencePoint in the world.
 	 * 
@@ -209,12 +250,12 @@ public class Camera {
 	 * 
 	 */
 	@EventListener (priority = EventPriority.HIGH)
-	private void calculateZoom(MouseScrollEvent event) {
+	public void calculateZoom(MouseScrollEvent event) {
 		float zoomLevel = event.getDWheel() * ZOOM_FACTOR; //calculate how for to zoom in and out, determined by mousewheel movement
 		distanceFromReferencePoint -= zoomLevel; //move in when moving mousewheel up (Mouse.getDWheel() returns > 0)
 	}
 	
-	/**Changes camera pitch -> rotates Camera downwards when moving mouse upwards and rotates Camera upwards when moving mouse downwards.
+	/**Changes camera pitch and rotation -> rotates Camera downwards when moving mouse upwards and rotates Camera upwards when moving mouse downwards.
 	 * 
 	 */
 	@EventListener (priority = EventPriority.HIGH)
