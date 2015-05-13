@@ -82,7 +82,6 @@ public class ConfigReader {
 					//log what has been set to which values
 					
 				}
-				
 			}
 			
 			filereader.close();
