@@ -374,6 +374,7 @@ public class EngineTester {
 			//entities.add(new Entity(lampTexturedModel, 1, new Vector3f(293, -6.6f, -305), 0, 0, 0, 1));
 			
 			camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2)); //player camera - make a "ghost" player to simulate cool camera movement
+			EventManager.getInstance().registerEventListener(camera);
 			
 			picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 			

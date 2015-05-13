@@ -35,7 +35,7 @@ public class MouseHandler extends Thread {
 		while (!isInterrupted()) {
 			iterationStartTime = System.nanoTime();
 			while (Mouse.next()) {
-				if (Mouse.getEventButton() == -1 && (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0)) {
+				if (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0) {
 					eventManager.addEventToQueue(new MouseMotionEvent(Mouse.getEventDX(), Mouse.getEventDY(), Mouse.getEventX(), Mouse.getEventY()));
 				} else if (Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
 					eventManager.addEventToQueue(new MouseButtonPressedEvent(Mouse.getEventButton(), Mouse.getEventX(), Mouse.getEventY()));

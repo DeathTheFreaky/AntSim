@@ -4,6 +4,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.eventSystem.EventListener;
+import at.antSim.eventSystem.EventPriority;
+import at.antSim.eventSystem.events.MouseButtonPressedEvent;
+import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
+import at.antSim.eventSystem.events.MouseMotionEvent;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.terrains.Terrain;
 
@@ -41,6 +46,8 @@ public class Camera {
 	private Vector3f refPointPosition;
 	private float rotY; //rotation of the reference point
 	
+	private boolean rightMouseButtonDown = false;
+	
 	/**Creates a new reference point camera, passing the reference point's initial position.
 	 * 
 	 * @param refPointPosition
@@ -61,7 +68,6 @@ public class Camera {
 		
 		//takes into account the actual time passed, making movement independent from frame rate
 		increaseKeyRotation(currentTurnSpeed * DisplayManager.getFrameTimeSeconds()); 
-		increaseMouseRotation();
 		
 		/*
 		 * distance is our referncePoints movement triangle's hypotenuse.
@@ -93,7 +99,6 @@ public class Camera {
 		refPointPosition.y = terrain.getHeightOfTerrain(refPointPosition.x, refPointPosition.z);
 		
 		calculateZoom();
-		calculatePitch();
 		
 		float horizontalDistance = calculateHorizontalDistance();
 		float verticalDistance = calculateVerticalDistance();
@@ -150,18 +155,6 @@ public class Camera {
 	 */
 	private void increaseKeyRotation(float dy) {
 		rotY += dy;
-	}
-	
-	/**Rotates the reference Point around the world's y-Axis when the mouse is moved to the left or the right (inverted).
-	 * 
-	 */
-	private void increaseMouseRotation() {
-		
-		//since camera is supposed to always stay directly behind the reference point (at 0 degree angle), need to update rotY when mouse rotate around y-axis
-		if (Mouse.isButtonDown(1)) { //right mouse button pressed
-			float angleChange = Mouse.getDX() * YAW_FACTOR; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
-			rotY += angleChange; //update reference point rotation
-		}
 	}
 	
 	/**Calculates the position of a 3rd person camera in world space.
@@ -224,10 +217,13 @@ public class Camera {
 	/**Changes camera pitch -> rotates Camera downwards when moving mouse upwards and rotates Camera upwards when moving mouse downwards.
 	 * 
 	 */
-	private void calculatePitch() {
-		if (Mouse.isButtonDown(1)) { //right mouse button pressed
-			float pitchChange = Mouse.getDY() * PITCH_FACTOR; //calculate how far to rotate camera up and down, determined by the mouse's movement along the y-Axis
+	@EventListener (priority = EventPriority.HIGH)
+	public void calculatePitchAndRotation(MouseMotionEvent event) {
+		if (rightMouseButtonDown) { //right mouse button pressed
+			float pitchChange = event.getDY() * PITCH_FACTOR; //calculate how far to rotate camera up and down, determined by the mouse's movement along the y-Axis
 			pitch -= pitchChange; //rotate camera downwards when moving mouse upwards the y-Axis
+			float angleChange = event.getDX() * YAW_FACTOR; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
+			rotY += angleChange; //update reference point rotation
 		}
 	}
 	
@@ -257,5 +253,19 @@ public class Camera {
 	 */
 	public float getRoll() {
 		return roll;
+	}
+	
+	@EventListener (priority = EventPriority.HIGH)
+	public void onMousePress(MouseButtonPressedEvent event){
+		if (event.getButton() == 1) {
+			rightMouseButtonDown = true;
+		}
+	}
+	
+	@EventListener (priority = EventPriority.HIGH)
+	public void onMouseReleased(MouseButtonReleasedEvent event){
+		if (event.getButton() == 1) {
+			rightMouseButtonDown = false;
+		}
 	}
 }

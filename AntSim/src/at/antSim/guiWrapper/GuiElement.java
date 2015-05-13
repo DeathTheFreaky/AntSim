@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
+import at.antSim.eventSystem.Event;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
@@ -252,20 +253,49 @@ public abstract class GuiElement {
 	public GuiState getGuiState() {
 		return state;
 	}
+	
+	/**Checks if the mouse was pressed inside this gui element and if this {@link GuiElement} is part of the currently active {@link GuiState} and has an associated {@link Command} 
+	 * and if the released MouseButton was the right mouse button.
+	 * 
+	 * @param event
+	 * @return - true if mouse was pressed inside this {@link GuiElement} and this {@link GuiElement} is part of the currently active {@link GuiState} and has an associated {@link Command}
+	 */
+	private boolean isInsideElement(MouseButtonPressedEvent event) {
+		if (event.getPosX() >= topLeft.getX() && event.getPosX() <= (topLeft.getX() + width) &&
+				(Globals.displayHeight - event.getPosY()) >= topLeft.getY() && (Globals.displayHeight - event.getPosY()) <= (topLeft.getY() + height)) {
+			if (state == GuiWrapper.getInstance().getCurrentState() && command != null && event.getButton() == 0) {
+				return true;
+			}
+		} 
+		return false;
+	}
+	
+	/**Checks if the mouse was released inside this gui element and if this {@link GuiElement} is part of the currently active {@link GuiState} and has an associated {@link Command}
+	 * and if the released MouseButton was the right mouse button.
+	 * 
+	 * @param event
+	 * @return - true if mouse was released inside this {@link GuiElement} and this {@link GuiElement} is part of the currently active {@link GuiState} and has an associated {@link Command}
+	 */
+	private boolean isInsideElement(MouseButtonReleasedEvent event) {
+		if (event.getPosX() >= topLeft.getX() && event.getPosX() <= (topLeft.getX() + width) &&
+				(Globals.displayHeight - event.getPosY()) >= topLeft.getY() && (Globals.displayHeight - event.getPosY()) <= (topLeft.getY() + height)) {
+			if (state == GuiWrapper.getInstance().getCurrentState() && command != null && event.getButton() == 0) {
+				return true;
+			}
+		} 
+		return false;
+	}
 
-	@EventListener(priority = EventPriority.HIGH)
+	@EventListener
 	public void onMousePress(MouseButtonPressedEvent event){
 		
 	}
 	
 	@EventListener
 	public void onMouseReleased(MouseButtonReleasedEvent event){
-		if (state == GuiWrapper.getInstance().getCurrentState() && command != null) {
-			if (event.getPosX() >= topLeft.getX() && event.getPosX() <= (topLeft.getX() + width) &&
-					(Globals.displayHeight - event.getPosY()) >= topLeft.getY() && (Globals.displayHeight - event.getPosY()) <= (topLeft.getY() + height)) {
-				command.execute();
-				event.consume();
-			} 
+		if (isInsideElement(event)) {
+			command.execute();
+			event.consume();
 		}
 	}
 }
