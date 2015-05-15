@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -18,7 +19,7 @@ import at.antSim.Globals;
  */
 public class ConfigWriter {
 	
-	public void writeConfig() throws FileNotFoundException, IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public static void writeConfig() throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		
 		//create FileInputStream and open Config file				
 		try (OutputStream fs = new FileOutputStream(Globals.CONFIG + "/config.txt"); BufferedWriter filewriter = new BufferedWriter(new OutputStreamWriter(fs));) {
@@ -34,7 +35,7 @@ public class ConfigWriter {
 			//this should not be needed anyways
 			filewriter.close();
 			fs.close();
-		}
+		} 
 	}
 	
 	/**Prepares a string that can be written to an option file.
@@ -43,7 +44,7 @@ public class ConfigWriter {
 	 * @throws IllegalAccessException 
 	 * @throws IllegalArgumentException 
 	 */
-	private String writeOption(Field option) throws IllegalArgumentException, IllegalAccessException {
+	private static String writeOption(Field option) throws IllegalArgumentException, IllegalAccessException {
 		String optionStr = option.getName().concat(" = ");
 		if (String.class.isInstance(option)) {
 			optionStr = optionStr.concat("\"").concat(option.get(null).toString()).concat("\"\n");

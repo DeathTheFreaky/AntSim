@@ -44,7 +44,6 @@ public class WorldLoader {
 		modelTextureNames.add(new String[] {"dragon", "dragon", "dragon"});
 		
 		for (String[] params : modelTextureNames) {
-			System.out.println("loading " + params[0] + ", " + params[1] + ", " + params[2]);
 			ModelData modelData = OBJFileLoader.loadOBJ(params[0]);
 			RawModel rawModel = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 			ModelTexture modelTexture = new ModelTexture(loader.loadTexture(params[1]));

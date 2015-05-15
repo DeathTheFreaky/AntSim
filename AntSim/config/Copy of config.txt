@@ -1,0 +1,3 @@
+WORKING_DIR = C:\Users\Flo\git\AntSim\AntSim
+displayWidth = 1280
+displayHeight = 720

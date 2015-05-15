@@ -4,6 +4,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.Globals;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.KeyPressedEvent;
@@ -32,15 +33,22 @@ public class Camera {
 	
 	private static final float MOVE_SPEED = 50; //units per second
 	private static final float STRAY_SPEED = 50; //units per second
-	private static final float TURN_SPEED = 150; //degrees per second
+	private static final float ROTATE_SPEED = 150; //degrees per second
+	private static final float TILT_SPEED = 50; //degrees per second
+	private static final float FLOAT_SPEED = 50; //units per second
+	private static final float ZOOM_SPEED = 100; //units per second
 	
 	//determine how fast camera is currently moving
-	private float currentSpeed = 0;
+	private float currentMovementSpeed = 0;
 	private float currentStraySpeed = 0;
 	private float currentTurnSpeed = 0;
+	private float currentTiltSpeed = 0;
+	private float currentFloatSpeed = 0;
+	private float currentZoomSpeed = 0;
 	
 	//camera's position and rotation
 	private Vector3f position = new Vector3f(0,0,0);
+	private float verticalOffset = 0;
 	private float pitch = 30; //how high or low the camera is aiming
 	private float yaw; //how much left or right the camera is aiming
 	private float roll; //the camera's tilt - at 180° it is upside down
@@ -50,7 +58,6 @@ public class Camera {
 	private float rotY; //rotation of the reference point
 	
 	private boolean rightMouseButtonDown = false;
-	private boolean lShiftDown = false;
 	
 	/**Creates a new reference point camera, passing the reference point's initial position.
 	 * 
@@ -66,9 +73,9 @@ public class Camera {
 	 * @param terrain - the {@link Terrain} the {@link Camera} moves on
 	 */
 	public void move(Terrain terrain) {
-		
+				
 		//takes into account the actual time passed, making movement independent from frame rate
-		increaseKeyRotation(currentTurnSpeed * DisplayManager.getFrameTimeSeconds()); 
+		increaseKeyRotationAndTilt(currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), currentTiltSpeed * DisplayManager.getFrameTimeSeconds()); 
 		
 		/*
 		 * distance is our referncePoints movement triangle's hypotenuse.
@@ -85,8 +92,11 @@ public class Camera {
 		float dx = 0;
 		float dz = 0;
 		
-		if (currentSpeed != 0) {
-			distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+		if (currentZoomSpeed != 0) {
+			distanceFromReferencePoint += currentZoomSpeed * DisplayManager.getFrameTimeSeconds();
+		}
+		if (currentMovementSpeed != 0) {
+			distance = currentMovementSpeed * DisplayManager.getFrameTimeSeconds();
 			dx += (float) (distance * Math.sin(Math.toRadians(rotY)));
 			dz += (float) (distance * Math.cos(Math.toRadians(rotY)));
 		}
@@ -95,9 +105,12 @@ public class Camera {
 			dz += (float) (distance * Math.sin(Math.toRadians(rotY)));
 			dx -= (float) (distance * Math.cos(Math.toRadians(rotY)));
 		}
+		if (currentFloatSpeed != 0) {
+			distance = currentFloatSpeed * DisplayManager.getFrameTimeSeconds();
+			verticalOffset += distance;
+		}
 		
-		increasePosition(dx, 0, dz);
-		refPointPosition.y = terrain.getHeightOfTerrain(refPointPosition.x, refPointPosition.z);
+		increasePosition(dx, verticalOffset, dz, terrain);
 				
 		float horizontalDistance = calculateHorizontalDistance();
 		float verticalDistance = calculateVerticalDistance();
@@ -105,36 +118,43 @@ public class Camera {
 		calculateCameraPosition(horizontalDistance, verticalDistance);
 	                
 	}
-	
+
 	/**Checks if the camera movement keys have been pressed on the keyboard and sets movement variables accordingly.
 	 * 
 	 */
 	@EventListener (priority = EventPriority.HIGH)
-	public void checkKeyInputs(KeyPressedEvent event){
+	public void checkKeyInputs(KeyPressedEvent event) {
 		
-		if(event.getKey() == Keyboard.KEY_LSHIFT) {
-			lShiftDown = true;
+		if(event.getKey() == Globals.moveForwardKey) {
+			this.currentMovementSpeed = MOVE_SPEED;
+		} else if (event.getKey() == Globals.moveBackwardKey) {
+			this.currentMovementSpeed = -MOVE_SPEED;
 		}
-		
-		if(event.getKey() == Keyboard.KEY_UP) {
-			this.currentSpeed = MOVE_SPEED;
-		} else if (event.getKey() == Keyboard.KEY_DOWN) {
-			this.currentSpeed = -MOVE_SPEED;
+		if(event.getKey() == Globals.moveUpKey) {
+			this.currentFloatSpeed = FLOAT_SPEED;
+		} else if (event.getKey() == Globals.moveDownKey) {
+			this.currentFloatSpeed = -FLOAT_SPEED;
 		}
-		
-		if (event.getKey() == Keyboard.KEY_LEFT) {
-			if (lShiftDown) {
-				this.currentTurnSpeed = TURN_SPEED;
-			} else {
-				this.currentStraySpeed = -STRAY_SPEED;
-			}
-		} else if (event.getKey() == Keyboard.KEY_RIGHT) {
-			if (lShiftDown) {
-				this.currentTurnSpeed = -TURN_SPEED;
-			} else {
-				this.currentStraySpeed = STRAY_SPEED;
-			}
-		} 
+		if(event.getKey() == Globals.moveLeftKey) {
+			this.currentStraySpeed = -STRAY_SPEED;
+		} else if (event.getKey() == Globals.moveRightKey) {
+			this.currentStraySpeed = STRAY_SPEED;
+		}
+		if(event.getKey() == Globals.turnLeftKey) {
+			this.currentTurnSpeed = ROTATE_SPEED;
+		} else if (event.getKey() == Globals.turnRightKey) {
+			this.currentTurnSpeed = -ROTATE_SPEED;
+		}
+		if(event.getKey() == Globals.tiltDownKey) {
+			this.currentTiltSpeed = TILT_SPEED;
+		} else if (event.getKey() == Globals.tiltUpKey) {
+			this.currentTiltSpeed = -TILT_SPEED;
+		}
+		if(event.getKey() == Globals.zoomInKey) {
+			this.currentZoomSpeed = -ZOOM_SPEED;
+		} else if (event.getKey() == Globals.zoomOutKey) {
+			this.currentZoomSpeed = ZOOM_SPEED;
+		}
 	}
 	
 	/**Checks if the camera movement keys have been released on the keyboard and sets movement variables accordingly.
@@ -143,58 +163,59 @@ public class Camera {
 	@EventListener (priority = EventPriority.HIGH)
 	public void checkKeyInputs(KeyReleasedEvent event){
 		
-		if(event.getKey() == Keyboard.KEY_LSHIFT) {
-			lShiftDown = false;
-			currentTurnSpeed = 0;
+		if(event.getKey() == Globals.moveForwardKey) {
+			this.currentMovementSpeed = 0;
+		} else if (event.getKey() == Globals.moveBackwardKey) {
+			this.currentMovementSpeed = 0;
 		}
-		
-		if(event.getKey() == Keyboard.KEY_UP) {
-			if (currentSpeed > 0) {
-				currentSpeed = 0;
-			}
-		} else if (event.getKey() == Keyboard.KEY_DOWN) {
-			if (currentSpeed < 0) {
-				currentSpeed = 0;
-			}
+		if(event.getKey() == Globals.moveUpKey) {
+			this.currentFloatSpeed = 0;
+		} else if (event.getKey() == Globals.moveDownKey) {
+			this.currentFloatSpeed = 0;
 		}
-		
-		if (event.getKey() == Keyboard.KEY_LEFT) {
-			if (currentTurnSpeed > 0) {
-				currentTurnSpeed = 0;
-			}
-			if (currentStraySpeed < 0) {
-				currentStraySpeed = 0;
-			}
-		} else if (event.getKey() == Keyboard.KEY_RIGHT) {
-			if (currentTurnSpeed < 0) {
-				currentTurnSpeed = 0;
-			}
-			if (currentStraySpeed > 0) {
-				currentStraySpeed = 0;
-			}
+		if(event.getKey() == Globals.moveLeftKey) {
+			this.currentStraySpeed = 0;
+		} else if (event.getKey() == Globals.moveRightKey) {
+			this.currentStraySpeed = 0;
+		}
+		if(event.getKey() == Globals.turnLeftKey) {
+			this.currentTurnSpeed = 0;
+		} else if (event.getKey() == Globals.turnRightKey) {
+			this.currentTurnSpeed = 0;
 		} 
+		if(event.getKey() == Globals.tiltDownKey) {
+			this.currentTiltSpeed = 0;
+		} else if (event.getKey() == Globals.tiltUpKey) {
+			this.currentTiltSpeed = 0;
+		}
+		if(event.getKey() == Globals.zoomInKey) {
+			this.currentZoomSpeed = 0;
+		} else if (event.getKey() == Globals.zoomOutKey) {
+			this.currentZoomSpeed = 0;
+		}
 	}
-	
-	
 	
 	/**Moves the referencePoint in the world.
 	 * 
-	 * @param dx - how far to move the Entity on the x-Axis
-	 * @param dy - how far to move the Entity on the y-Axis
-	 * @param dz - how far to move the Entity on the z-Axis
+	 * @param dx - how far to move the reference point on the x-Axis
+	 * @param verticalOffset - permanent offset on the y-Axis (cause height is usually calculated by a fix offset from terrain height)
+	 * @param dz - how far to move the reference point on the z-Axis
 	 */
-	private void increasePosition(float dx, float dy, float dz) {
+	private void increasePosition(float dx, float verticalOffset, float dz, Terrain terrain) {
 		refPointPosition.x += dx;
-		refPointPosition.y += dy;
+		refPointPosition.y = terrain.getHeightOfTerrain(refPointPosition.x, refPointPosition.z) + verticalOffset;;
 		refPointPosition.z += dz;
 	}
 	
-	/**Rotates the referencePoint around the world's y-Axis when the left/right buttons are pressed.
+	/**Rotates the camera around the world's y-Axis,
+	 * tilts the camera around the world's x-Axis.
 	 * 
-	 * @param dy - how far to rotate the Entity around the y-Axis
+	 * @param dy - how far to rotate the camera around the y-Axis
+	 * @param dx - how for to tilt the camera around the x-Axis
 	 */
-	private void increaseKeyRotation(float dy) {
+	private void increaseKeyRotationAndTilt(float dy, float dx) {
 		rotY += dy;
+		pitch += dx;
 	}
 	
 	/**Calculates the position of a 3rd person camera in world space.

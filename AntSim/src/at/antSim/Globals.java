@@ -25,11 +25,26 @@ public final class Globals {
 	public static final float WORLD_SIZE = 800; //square
 	
 	//config file entries set by config reader
-	private static GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-	public static int displayWidth = gd.getDisplayMode().getWidth();
-	public static int displayHeight = gd.getDisplayMode().getHeight();
+	public static int displayWidth; 
+	public static int displayHeight;
 	public static int fontRows = 16;
 	public static int fontCols = 16;
+	
+	public static int moveForwardKey;
+	public static int moveBackwardKey;
+	public static int moveLeftKey;
+	public static int moveRightKey;
+	public static int moveUpKey;
+	public static int moveDownKey;
+	public static int turnLeftKey;
+	public static int turnRightKey;
+	public static int tiltDownKey;
+	public static int tiltUpKey;
+	public static int zoomInKey;
+	public static int zoomOutKey;
+	
+	public static boolean invertHorizontalAxis;
+	public static boolean invertVerticalAxis;
 	
 	private Globals() {}; //do not allow instances of this class
 }

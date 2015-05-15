@@ -23,7 +23,6 @@ public class OpenGLTextDrawer {
 	//2d texture is supposed to be a square with NUM_SIDE columns and rows of characters in a texture atlas
 	final int NUM_SIDE = 16;
 	final int MAX_CHARS = NUM_SIDE * NUM_SIDE;
-	final int CHAR_RES = 32; //res in pixel of one char
 	
 	/* stores texture coordinates of characters in 2d texture atlas
 	 * order corresponds the our triangle strip quad drawing order in gui renderer, since we'll use it for rendering our text: 
