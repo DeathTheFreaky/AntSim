@@ -86,10 +86,10 @@ public class AntSim {
 
     private void postInit() {
     	
-    	EngineTester tester = new EngineTester();
+    	MainApplication mainApp = MainApplication.getInstance();
     	
-    	//launch main game
-    	tester.launch(loader, masterRenderer);
+    	//launch main application
+    	mainApp.launch(loader, masterRenderer);
     }
     
     /**Close all threads.

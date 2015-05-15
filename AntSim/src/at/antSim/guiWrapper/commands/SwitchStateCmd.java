@@ -6,10 +6,11 @@ import at.antSim.guiWrapper.GuiWrapper;
  * 
  * Created by Alexander on 12.05.2015.
  */
-public class OptionsCmd implements Command {
+public class SwitchStateCmd implements Command {
+	
 	private String name;
 
-	public OptionsCmd(String name) {
+	public SwitchStateCmd(String name) {
 		this.name = name;
 	}
 

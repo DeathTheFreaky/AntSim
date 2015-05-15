@@ -1,7 +1,6 @@
 package at.antSim.guiWrapper.commands;
-import org.lwjgl.opengl.Display;
 
-import at.antSim.EngineTester;
+import at.antSim.MainApplication;
 
 /**Quits the game.
  * 
@@ -9,14 +8,8 @@ import at.antSim.EngineTester;
  */
 public class QuitGameCmd implements Command {
 	
-	EngineTester tester;
-	
-	public QuitGameCmd(EngineTester tester) {
-		this.tester = tester;
-	}
-
 	@Override
 	public void execute() {
-		tester.quit();
+		MainApplication.getInstance().quit();
 	}
 }
