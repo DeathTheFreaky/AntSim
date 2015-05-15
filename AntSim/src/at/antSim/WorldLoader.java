@@ -36,59 +36,34 @@ public class WorldLoader {
 	 */
 	public static void loadTexturedModels(Loader loader) {
 		
-		//first String in array is name of obj file, second is name of texture
-		modelTextureNames.add(new String[] {"tree" , "tree"});
-		modelTextureNames.add(new String[] {"grass" , "grass"});
-		modelTextureNames.add(new String[] {"fern" , "fern"});
-		modelTextureNames.add(new String[] {"lamp" , "lamp"});
-		modelTextureNames.add(new String[] {"dragon", "dragon"});
+		//first String in array is name of obj file, second is name of texture, third is desired name of TexturedModel in Hashmap
+		modelTextureNames.add(new String[] {"tree" , "tree", "tree"});
+		modelTextureNames.add(new String[] {"grass" , "grass", "grass"});
+		modelTextureNames.add(new String[] {"fern" , "fern", "fern"});
+		modelTextureNames.add(new String[] {"lamp" , "lamp", "lamp"});
+		modelTextureNames.add(new String[] {"dragon", "dragon", "dragon"});
 		
 		for (String[] params : modelTextureNames) {
+			System.out.println("loading " + params[0] + ", " + params[1] + ", " + params[2]);
 			ModelData modelData = OBJFileLoader.loadOBJ(params[0]);
 			RawModel rawModel = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 			ModelTexture modelTexture = new ModelTexture(loader.loadTexture(params[1]));
+			texturedModels.put(params[2], new TexturedModel(rawModel, modelTexture));
 		}
 		
-		//load 3d models from .obj files into ModelData objects
-		ModelData treeModelData = OBJFileLoader.loadOBJ("tree");
-		ModelData grassModelData = OBJFileLoader.loadOBJ("grass");
-		ModelData fernModelData = OBJFileLoader.loadOBJ("fern");
-		ModelData lampModelData = OBJFileLoader.loadOBJ("lamp");
 		
-		//load ModelData objects in a VAO and return RawModels
-		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), 
-				treeModelData.getNormals(), treeModelData.getIndices());
-		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(), 
-				grassModelData.getNormals(), grassModelData.getIndices());
-		RawModel fernRawModel = loader.loadToVAO(fernModelData.getVertices(), fernModelData.getTextureCoords(), 
-				fernModelData.getNormals(), fernModelData.getIndices());
-		RawModel lampRawModel = loader.loadToVAO(lampModelData.getVertices(), lampModelData.getTextureCoords(), 
-				lampModelData.getNormals(), lampModelData.getIndices());
+		texturedModels.get("fern").getTexture().setNumberOfRows(2); //set number of rows inside texture atlas
 		
-		//load textures from png files
-		ModelTexture dragonTexture = new ModelTexture(loader.loadTexture("dragon"));
-		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("tree")); 
-		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
-		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
-		ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lamp"));
-		
-		fernTextureAtlas.setNumberOfRows(2); //set number of rows inside texture atlas
-		
-		//set parameters for specular lighting
-		dragonTexture.setShineDamper(10); //set shine damper for specular lighting
-		dragonTexture.setReflectivity(1); //set reflectivity for specular lighting
+		//set parameters for specular lighting for demo dragon
+		texturedModels.get("dragon").getTexture().setShineDamper(10); //set shine damper for specular lighting
+		texturedModels.get("dragon").getTexture().setReflectivity(1); //set reflectivity for specular lighting
 		
 		//set transparency and fake lighting for grass and fern (to avoid weird shadow look)
-		grassTexture.setHasTransparency(true);
-		grassTexture.setUseFakeLighting(true);
-		fernTextureAtlas.setHasTransparency(true);
-		fernTextureAtlas.setUseFakeLighting(true);
+		texturedModels.get("grass").getTexture().setHasTransparency(true);
+		texturedModels.get("grass").getTexture().setUseFakeLighting(true);
+		texturedModels.get("fern").getTexture().setHasTransparency(true);
+		texturedModels.get("fern").getTexture().setUseFakeLighting(true);
 		
-		//finally, create the TexturedModel sticking ModelTextures to RawModels
-		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, treeTexture);
-		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, grassTexture);
-		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTextureAtlas);
-		TexturedModel lampTexturedModel = new TexturedModel(lampRawModel, lampTexture);
 	}
 	
 	/**Loads the world's terrain.
@@ -123,8 +98,6 @@ public class WorldLoader {
 		
 		ArrayList<Entity> entities = new ArrayList<Entity>();
 		
-		
-		
 		//create a random flora
 		Random random = new Random(676452);
 		for (int i = 0; i < 1200; i++) {
@@ -132,26 +105,29 @@ public class WorldLoader {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(fernTexturedModel, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
+				entities.add(new Entity(texturedModels.get("fern"), random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, 0.9f));
 			}
 			if (i % 5 == 0) {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(grassTexturedModel, 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
+				entities.add(new Entity(texturedModels.get("grass"), 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, random.nextFloat() * 0.1f + 0.6f));
 				x = random.nextFloat() * Globals.WORLD_SIZE;
 				z = random.nextFloat() * -Globals.WORLD_SIZE;
 				y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(treeTexturedModel, 1, new Vector3f(x, y, z), 0, 0,
+				entities.add(new Entity(texturedModels.get("tree"), 1, new Vector3f(x, y, z), 0, 0,
 						0, random.nextFloat() * 1 + 4));
 			}
 		} 
 		
 		//add some lamps
-		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
-		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
+		entities.add(new Entity(texturedModels.get("lamp"), 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
+		entities.add(new Entity(texturedModels.get("lamp"), 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
+		
+		//add cool stanford demo dragon for specular lighting demo
+		entities.add(new Entity(texturedModels.get("dragon"), 1, new Vector3f(0, 0, 0), 0, 0, 0, 1));
 		
 		return entities;
 	}
@@ -167,7 +143,6 @@ public class WorldLoader {
 		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); //sun
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f))); //lamp
-		// lights.add(new Light(new Vector3f(293, 7, -305), new Vector3f(2, 2, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		
 		return lights;
 	}

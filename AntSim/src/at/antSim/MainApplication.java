@@ -234,12 +234,14 @@ public class MainApplication {
 			 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
 			 */
 			
+			WorldLoader.loadTexturedModels(loader); //model's geometry and textures need to be loaded at first
+			
 			terrain = WorldLoader.loadTerrain(loader); // loads the world's terrain
 			entities = WorldLoader.loadEntities(loader, terrain); //loads the world's "material" contents
 			lights = WorldLoader.loadLights();
 			
 			// a lamp freely positionable on the map
-			movingLamp = new Entity(lampTexturedModel, 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
+			movingLamp = new Entity(WorldLoader.texturedModels.get("lamp"), 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
 			entities.add(movingLamp);
 			movingLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f));
 			lights.add(movingLight);
@@ -273,6 +275,9 @@ public class MainApplication {
 		quit = true;
 	}
 	
+	/**
+	 * @return - the one and only instance of {@link MainApplication}
+	 */
 	public static MainApplication getInstance() {
 		return INSTANCE;
 	}
