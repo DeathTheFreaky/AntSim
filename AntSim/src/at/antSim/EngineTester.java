@@ -137,14 +137,14 @@ public class EngineTester {
 	
 	boolean worldLoaded = false;
 	boolean triggeredLoading = false;
+	boolean quit = false;
 	
 	public void launch(Loader loader, MasterRenderer renderer) {
 		
 		loadGui(loader, renderer);
 						
 		//main game loop
-		boolean done = false;
-		while(!Display.isCloseRequested() && !done) {
+		while(!Display.isCloseRequested() && !quit) {
 			
 			EventManager.getInstance().workThroughQueue();
 			
@@ -211,7 +211,7 @@ public class EngineTester {
 
 		Command newGameCmd = new NewGameCmd(this, loader, renderer);
 		Command optionsCmd = new OptionsCmd("optionsDisplay");
-		Command quitGameCmd = new QuitGameCmd();
+		Command quitGameCmd = new QuitGameCmd(this);
 
 		GuiContainer startContainer = new GuiContainer("startContainer", null, null, standardContainerQuad, loader.loadGuiTexture("white"),
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
@@ -384,7 +384,17 @@ public class EngineTester {
 		}
 	}
 
+	/**Trigger world to be loaded.
+	 * 
+	 */
 	public void triggerWorldLoad() {
 		triggeredLoading = true;
+	}
+	
+	/**Quits the game.
+	 * 
+	 */
+	public void quit() {
+		quit = true;
 	}
 }
