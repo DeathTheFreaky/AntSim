@@ -124,5 +124,4 @@ public class AntSim {
     public static List<Thread> getThreads() {
     	return threads;
     }
-
 }

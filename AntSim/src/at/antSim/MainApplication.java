@@ -10,6 +10,7 @@ import at.antSim.guiWrapper.states.LoadingState;
 import at.antSim.guiWrapper.states.MainGameState;
 import at.antSim.guiWrapper.states.OptionsControlState;
 import at.antSim.guiWrapper.states.OptionsDisplayState;
+import at.antSim.guiWrapper.states.PauseState;
 import at.antSim.guiWrapper.states.StartMenuState;
 
 import org.lwjgl.opengl.Display;
@@ -133,6 +134,7 @@ public class MainApplication {
 	private AbstractGuiState optionsControlsState;
 	private AbstractGuiState mainGameState;
 	private AbstractGuiState loadingState;
+	private AbstractGuiState pauseState;
 	
 	private Camera camera;
 	private Terrain terrain;
@@ -143,9 +145,11 @@ public class MainApplication {
 	private Entity movingLamp;
 	private Light movingLight;
 	
+	private boolean glLoaded = false;
 	private boolean worldLoaded = false;
 	private boolean triggeredLoading = false;
 	private boolean quit = false;
+	private boolean paused = false;
 	
 	private MainApplication() {};
 	
@@ -184,6 +188,10 @@ public class MainApplication {
 				for (Entity entity : entities) {
 					renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
 				}
+				
+				if (!paused) {
+					//game logic here
+				}
 			}
 			
 			renderer.render(lights, camera, worldLoaded);
@@ -197,7 +205,6 @@ public class MainApplication {
 		}
 		
 		renderer.cleanUp();
-		loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
 	
@@ -213,10 +220,13 @@ public class MainApplication {
 		optionsControlsState = new OptionsControlState(loader, "optionsControlState");
 		mainGameState = new MainGameState(loader, "mainGameState");
 		loadingState = new LoadingState(loader, "loadingState");
+		pauseState = new PauseState(loader, "pauseState");
 		
 		startMenuState.initializeState(optionsDisplayState.getName());
 		loadingState.initializeState();
 		mainGameState.initializeState();
+		optionsDisplayState.initializeState(startMenuState.getName());
+		pauseState.initializeState(mainGameState.getName(), startMenuState.getName());
 		
 		GuiWrapper.getInstance().setCurrentState(startMenuState.getName());
 	}
@@ -234,7 +244,11 @@ public class MainApplication {
 			 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
 			 */
 			
-			WorldLoader.loadTexturedModels(loader); //model's geometry and textures need to be loaded at first
+			//open GL stuff needs to be loaded only once, even when starting a new game to speed up loading times, only released at application exit
+			if (!glLoaded) {
+				WorldLoader.loadTexturedModels(loader); //model's geometry and textures need to be loaded at first
+				glLoaded = true;
+			}
 			
 			terrain = WorldLoader.loadTerrain(loader); // loads the world's terrain
 			entities = WorldLoader.loadEntities(loader, terrain); //loads the world's "material" contents
@@ -247,7 +261,7 @@ public class MainApplication {
 			lights.add(movingLight);
 			
 			//camera for navigating in the world
-			camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2)); 
+			camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2), pauseState.getName()); 
 			EventManager.getInstance().registerEventListener(camera);
 			
 			//mousepicker to interact with the world
@@ -271,8 +285,23 @@ public class MainApplication {
 	/**Quits the game.
 	 * 
 	 */
-	public void quit() {
+	public void quitApplication() {
 		quit = true;
+	}
+	
+	/**Quits current game and returns to start menu state.
+	 * 
+	 */
+	public void quitCurrentGame() {
+		worldLoaded = false;
+	}
+	
+	public void pause() {
+		paused = true;
+	}
+	
+	public void unpause() {
+		paused = false;
 	}
 	
 	/**

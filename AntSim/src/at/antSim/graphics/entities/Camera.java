@@ -5,6 +5,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
+import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.KeyPressedEvent;
@@ -15,6 +16,7 @@ import at.antSim.eventSystem.events.MouseMotionEvent;
 import at.antSim.eventSystem.events.MouseScrollEvent;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.terrains.Terrain;
+import at.antSim.guiWrapper.GuiWrapper;
 
 /**A virtual camera, pretending camera movement by moving the whole world in the opposite direction.
  * 
@@ -61,15 +63,18 @@ public class Camera {
 	private boolean rightMouseButtonDown = false;
 	private boolean triggerReset = false;
 	
+	private String pauseMenuName;
+	
 	/**Creates a new reference point camera, passing the reference point's initial position.
 	 * 
 	 * @param refPointPosition
 	 */
-	public Camera(Vector3f refPointPosition) {
+	public Camera(Vector3f refPointPosition, String pauseMenuName) {
 		this.refPointPosition = refPointPosition;
 		initialRefPointPosition.x = refPointPosition.x;
 		initialRefPointPosition.y = refPointPosition.y;
 		initialRefPointPosition.z = refPointPosition.z;
+		this.pauseMenuName = pauseMenuName;
 	}
 	
 	/**Moves the camera.
@@ -244,9 +249,15 @@ public class Camera {
 			event.consume();
 		}
 		
+		//restore camera position
 		if (event.getKey() == Globals.restoreCameraPosition) {
-			System.out.println("restore");
 			triggerReset = true;
+		}
+		
+		//pause menu
+		if (event.getKey() == Keyboard.KEY_ESCAPE) {
+			MainApplication.getInstance().pause();
+			GuiWrapper.getInstance().setCurrentState(pauseMenuName);
 		}
 	}
 	
