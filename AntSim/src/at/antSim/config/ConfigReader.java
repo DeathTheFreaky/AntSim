@@ -116,6 +116,7 @@ public class ConfigReader {
 			Globals.turnRightKey = Keyboard.KEY_D;
 			Globals.zoomInKey = Keyboard.KEY_Q;
 			Globals.zoomOutKey = Keyboard.KEY_E;
+			Globals.restoreCameraPosition = Keyboard.KEY_R;
 			
 			Globals.invertHorizontalAxis = true;
 			Globals.invertVerticalAxis = true;

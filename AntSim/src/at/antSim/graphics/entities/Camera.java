@@ -31,8 +31,8 @@ public class Camera {
 	private static final float PITCH_FACTOR = 0.1f;
 	private static final float YAW_FACTOR = 0.3f;
 	
-	private static final float MOVE_SPEED = 50; //units per second
-	private static final float STRAY_SPEED = 50; //units per second
+	private static final float MOVE_SPEED = 100; //units per second
+	private static final float STRAY_SPEED = 100; //units per second
 	private static final float ROTATE_SPEED = 150; //degrees per second
 	private static final float TILT_SPEED = 50; //degrees per second
 	private static final float FLOAT_SPEED = 50; //units per second
@@ -55,9 +55,11 @@ public class Camera {
 	
 	//reference point's position and rotation
 	private Vector3f refPointPosition;
+	private Vector3f initialRefPointPosition = new Vector3f(0,0,0);
 	private float rotY; //rotation of the reference point
 	
 	private boolean rightMouseButtonDown = false;
+	private boolean triggerReset = false;
 	
 	/**Creates a new reference point camera, passing the reference point's initial position.
 	 * 
@@ -65,14 +67,20 @@ public class Camera {
 	 */
 	public Camera(Vector3f refPointPosition) {
 		this.refPointPosition = refPointPosition;
+		initialRefPointPosition.x = refPointPosition.x;
+		initialRefPointPosition.y = refPointPosition.y;
+		initialRefPointPosition.z = refPointPosition.z;
 	}
-	
 	
 	/**Moves the camera.
 	 * 
 	 * @param terrain - the {@link Terrain} the {@link Camera} moves on
 	 */
 	public void move(Terrain terrain) {
+		
+		if (triggerReset) {
+			resetPositions();
+		}
 				
 		//takes into account the actual time passed, making movement independent from frame rate
 		increaseKeyRotationAndTilt(currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), currentTiltSpeed * DisplayManager.getFrameTimeSeconds()); 
@@ -115,83 +123,130 @@ public class Camera {
 		float horizontalDistance = calculateHorizontalDistance();
 		float verticalDistance = calculateVerticalDistance();
 		
-		calculateCameraPosition(horizontalDistance, verticalDistance);
-	                
+		calculateCameraPosition(horizontalDistance, verticalDistance);		
+	}
+
+	/**Reset positions of camera and reference point.
+	 * 
+	 */
+	private void resetPositions() {
+		refPointPosition.x = initialRefPointPosition.x;
+		refPointPosition.y = initialRefPointPosition.y;
+		refPointPosition.z = initialRefPointPosition.z;
+		position.x = 0;
+		position.y = 0;
+		position.z = 0;
+		verticalOffset = 0;
+		yaw = 0;
+		roll = 0;
+		pitch = 30; 
+		rotY = 0;
+		distanceFromReferencePoint = 100;
+		triggerReset = false;
 	}
 
 	/**Checks if the camera movement keys have been pressed on the keyboard and sets movement variables accordingly.
 	 * 
 	 */
-	@EventListener (priority = EventPriority.HIGH)
+	@EventListener (priority = EventPriority.NORMAL)
 	public void checkKeyInputs(KeyPressedEvent event) {
 		
 		if(event.getKey() == Globals.moveForwardKey) {
 			this.currentMovementSpeed = MOVE_SPEED;
+			event.consume();
 		} else if (event.getKey() == Globals.moveBackwardKey) {
 			this.currentMovementSpeed = -MOVE_SPEED;
+			event.consume();
 		}
 		if(event.getKey() == Globals.moveUpKey) {
 			this.currentFloatSpeed = FLOAT_SPEED;
+			event.consume();
 		} else if (event.getKey() == Globals.moveDownKey) {
 			this.currentFloatSpeed = -FLOAT_SPEED;
+			event.consume();
 		}
 		if(event.getKey() == Globals.moveLeftKey) {
 			this.currentStraySpeed = -STRAY_SPEED;
+			event.consume();
 		} else if (event.getKey() == Globals.moveRightKey) {
 			this.currentStraySpeed = STRAY_SPEED;
+			event.consume();
 		}
 		if(event.getKey() == Globals.turnLeftKey) {
 			this.currentTurnSpeed = ROTATE_SPEED;
+			event.consume();
 		} else if (event.getKey() == Globals.turnRightKey) {
 			this.currentTurnSpeed = -ROTATE_SPEED;
+			event.consume();
 		}
 		if(event.getKey() == Globals.tiltDownKey) {
 			this.currentTiltSpeed = TILT_SPEED;
+			event.consume();
 		} else if (event.getKey() == Globals.tiltUpKey) {
 			this.currentTiltSpeed = -TILT_SPEED;
+			event.consume();
 		}
 		if(event.getKey() == Globals.zoomInKey) {
 			this.currentZoomSpeed = -ZOOM_SPEED;
+			event.consume();
 		} else if (event.getKey() == Globals.zoomOutKey) {
 			this.currentZoomSpeed = ZOOM_SPEED;
+			event.consume();
 		}
 	}
 	
 	/**Checks if the camera movement keys have been released on the keyboard and sets movement variables accordingly.
 	 * 
 	 */
-	@EventListener (priority = EventPriority.HIGH)
+	@EventListener (priority = EventPriority.NORMAL)
 	public void checkKeyInputs(KeyReleasedEvent event){
 		
 		if(event.getKey() == Globals.moveForwardKey) {
 			this.currentMovementSpeed = 0;
+			event.consume();
 		} else if (event.getKey() == Globals.moveBackwardKey) {
 			this.currentMovementSpeed = 0;
+			event.consume();
 		}
 		if(event.getKey() == Globals.moveUpKey) {
 			this.currentFloatSpeed = 0;
+			event.consume();
 		} else if (event.getKey() == Globals.moveDownKey) {
 			this.currentFloatSpeed = 0;
+			event.consume();
 		}
 		if(event.getKey() == Globals.moveLeftKey) {
 			this.currentStraySpeed = 0;
+			event.consume();
 		} else if (event.getKey() == Globals.moveRightKey) {
 			this.currentStraySpeed = 0;
+			event.consume();
 		}
 		if(event.getKey() == Globals.turnLeftKey) {
 			this.currentTurnSpeed = 0;
+			event.consume();
 		} else if (event.getKey() == Globals.turnRightKey) {
 			this.currentTurnSpeed = 0;
+			event.consume();
 		} 
 		if(event.getKey() == Globals.tiltDownKey) {
 			this.currentTiltSpeed = 0;
+			event.consume();
 		} else if (event.getKey() == Globals.tiltUpKey) {
 			this.currentTiltSpeed = 0;
+			event.consume();
 		}
 		if(event.getKey() == Globals.zoomInKey) {
 			this.currentZoomSpeed = 0;
+			event.consume();
 		} else if (event.getKey() == Globals.zoomOutKey) {
 			this.currentZoomSpeed = 0;
+			event.consume();
+		}
+		
+		if (event.getKey() == Globals.restoreCameraPosition) {
+			System.out.println("restore");
+			triggerReset = true;
 		}
 	}
 	

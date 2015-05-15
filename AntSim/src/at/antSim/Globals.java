@@ -42,6 +42,7 @@ public final class Globals {
 	public static int tiltUpKey;
 	public static int zoomInKey;
 	public static int zoomOutKey;
+	public static int restoreCameraPosition;
 	
 	public static boolean invertHorizontalAxis;
 	public static boolean invertVerticalAxis;
