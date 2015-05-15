@@ -151,6 +151,9 @@ public class MainApplication {
 	private boolean quit = false;
 	private boolean paused = false;
 	
+	private int speed = 2;
+	private int speedCtr = 0;
+	
 	private MainApplication() {};
 	
 	static {
@@ -190,7 +193,13 @@ public class MainApplication {
 				}
 				
 				if (!paused) {
-					//game logic here
+					if (speedCtr >= speed) { //allows to update logic only at desired game speed
+						
+						//game logic here
+						System.out.println("game logic");
+						
+						speedCtr = 0;
+					}
 				}
 			}
 			
@@ -202,6 +211,8 @@ public class MainApplication {
 				loadWorld(loader, renderer);
 				triggeredLoading = false;
 			}
+			
+			speedCtr++;
 		}
 		
 		renderer.cleanUp();
@@ -302,6 +313,14 @@ public class MainApplication {
 	
 	public void unpause() {
 		paused = false;
+	}
+	
+	/**Sets the game speed. Default is 2, half speed is 1, double speed is 4...
+	 * 
+	 * @param speed
+	 */
+	public void setSpeed(int speed) {
+		this.speed = speed;
 	}
 	
 	/**
