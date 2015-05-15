@@ -16,6 +16,7 @@ public class SwitchStateCmd implements Command {
 
 	@Override
 	public void execute() {
+		System.out.println("switching to " + name);
 		GuiWrapper.getInstance().setCurrentState(name);
 	}
 }

@@ -41,22 +41,35 @@ public class StartMenuState extends AbstractGuiState {
 		optionsCmd = new SwitchStateCmd(args[0]);
 		quitGameCmd = new QuitGameCmd();
 		 
-		GuiContainer startContainer = new GuiContainer("mainContainer", null, null, standardContainerQuad, loader.loadGuiTexture("white"),
-				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		GuiContainer mainContainer = new GuiContainer("mainContainer", null, null, standardContainerQuad, loader.loadGuiTexture("white"),
+				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(1,1,1), 1);
 
-	
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
-		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), startContainer, null, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, VerReference.SIBLING, VerPositions.TOP, 20);
-		GuiText antSim2 = new GuiText("antSim2", textDrawer.createTextQuad("Sim"), startContainer, null, 36, HorReference.PARENT, HorPositions.RIGHT, Globals.displayWidth/2 - 100, VerReference.SIBLING, VerPositions.BELOW, -15);
+		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), mainContainer, null, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, VerReference.SIBLING, VerPositions.TOP, 20);
+		GuiText antSim2 = new GuiText("antSim2", textDrawer.createTextQuad("Sim"), mainContainer, null, 36, HorReference.PARENT, HorPositions.RIGHT, Globals.displayWidth/2 - 100, VerReference.SIBLING, VerPositions.BELOW, -15);
 
-		GuiContainer newGameContainer = new GuiContainer("newGamebutton", startContainer, newGameCmd, standardContainerQuad, loader.loadGuiTexture("white"), 300, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35, 0, new Vector3f(0, 0, 0), 0.8f);
-		GuiText newGameText = new GuiText("newGame", textDrawer.createTextQuad("Start new game"), newGameContainer, null, 25,
+		//new game button
+		GuiContainer newGameContainer = new GuiContainer("newGameButton", mainContainer, newGameCmd, standardContainerQuad, loader.loadGuiTexture("white"), 450, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
+		GuiText newGameText = new GuiText("newGame", textDrawer.createTextQuad("Start new game"), newGameContainer, null, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		EventManager.getInstance().registerEventListener(newGameContainer);
 		
-		startContainer.getChildren().add(newGameContainer);
-		state.addContainer(startContainer);
+		//options button
+		GuiContainer optionsContainer = new GuiContainer("optionsButton", mainContainer, optionsCmd, standardContainerQuad, loader.loadGuiTexture("white"), 450, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
+		GuiText optionsText = new GuiText("optionsGame", textDrawer.createTextQuad("Options"), optionsContainer, null, 32,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		EventManager.getInstance().registerEventListener(optionsContainer);
+		
+		//quit button
+		GuiContainer quitContainer = new GuiContainer("quitButton", mainContainer, quitGameCmd, standardContainerQuad, loader.loadGuiTexture("white"), 450, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
+		GuiText quitText = new GuiText("optionsGame", textDrawer.createTextQuad("Quit"), quitContainer, null, 32,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		EventManager.getInstance().registerEventListener(quitContainer);
+				
+		state.addContainer(mainContainer);
 		
 		GuiWrapper.getInstance().addState(state);	
 	}
