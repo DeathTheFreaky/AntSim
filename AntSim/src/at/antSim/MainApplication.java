@@ -1,11 +1,6 @@
 package at.antSim;
 
-import java.security.acl.LastOwnerException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import at.antSim.guiWrapper.commands.*;
 import at.antSim.guiWrapper.states.AbstractGuiState;
 import at.antSim.guiWrapper.states.LoadingState;
 import at.antSim.guiWrapper.states.MainGameState;
@@ -24,26 +19,9 @@ import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.graphicsUtils.MousePicker;
-import at.antSim.graphics.graphicsUtils.OBJFileLoader;
-import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
-import at.antSim.graphics.models.ModelData;
-import at.antSim.graphics.models.RawModel;
-import at.antSim.graphics.models.TexturedModel;
-import at.antSim.graphics.renderer.GuiRenderer;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
-import at.antSim.graphics.textures.ModelTexture;
-import at.antSim.graphics.textures.TerrainTexture;
-import at.antSim.graphics.textures.TerrainTexturePack;
-import at.antSim.guiWrapper.GuiContainer;
-import at.antSim.guiWrapper.GuiImage;
-import at.antSim.guiWrapper.GuiState;
-import at.antSim.guiWrapper.GuiText;
 import at.antSim.guiWrapper.GuiWrapper;
-import at.antSim.guiWrapper.HorPositions;
-import at.antSim.guiWrapper.HorReference;
-import at.antSim.guiWrapper.VerPositions;
-import at.antSim.guiWrapper.VerReference;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -153,7 +131,8 @@ public class MainApplication {
 	private boolean paused = false;
 	
 	private float speed = 1;
-	private float timeStep = 0;
+	private float normalSpeedTime = 1/60f; //update logic 60times a second on normal speed
+	private float timeStep = normalSpeedTime;
 	private float timeAccumulator = 0;
 	
 	private MainApplication() {};
@@ -181,6 +160,7 @@ public class MainApplication {
 			
 			//update logic and events according to game speed
 			while (timeAccumulator >= timeStep) {
+				System.out.println("timeAccumulator: " + timeAccumulator);
 				timeAccumulator -= timeStep;
 				update();
 			}
@@ -188,6 +168,24 @@ public class MainApplication {
 			//trigger loading screen
 			if (triggeredLoading) {
 				GuiWrapper.getInstance().setCurrentState(loadingState.getName());
+			}
+			
+			//update camera and mouse picker 
+			//key events will be fired according to fps_cap set in DisplayManager which controlls lwjgl's Display - so camera movement speed should not be affected by game speed changes
+			if (worldLoaded) {
+				
+				camera.move(terrain); //every single frame check for key inputs which move the camera
+				picker.update(); //update mouse picker's ray
+				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
+				if (terrainPoint != null) {
+					movingLamp.setPosition(terrainPoint);
+					movingLight.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 12f, terrainPoint.z));
+				}
+				
+				renderer.processTerrain(terrain);
+				for (Entity entity : entities) {
+					renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
+				}
 			}
 			
 			//render and update display
@@ -210,13 +208,12 @@ public class MainApplication {
 	 * 
 	 */
 	private void update() {
+		
 		EventManager.getInstance().workThroughQueue();
 		
 		//game logic
-		if (!paused) {
-			
-			//game logic here
-			System.out.println("game logic");					
+		if (!paused && worldLoaded) {
+							
 		}
 	}
 
@@ -318,7 +315,7 @@ public class MainApplication {
 	
 	public void setSpeed(float speed) {
 		this.speed = speed;
-		timeStep = 1 / 30f * speed;
+		timeStep = normalSpeedTime * speed;
 	}
 	
 	public float getSpeed(float speed) {
