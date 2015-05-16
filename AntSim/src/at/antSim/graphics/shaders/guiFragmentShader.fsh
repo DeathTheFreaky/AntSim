@@ -30,6 +30,6 @@ void main(void){
 		outColor = mix(textureColor, vec4(blendColor, 1.0f), blendFactor); //blend original texture pixel color with blendColor by blendFactor
 		outColor = vec4(outColor.xyz, 1.0f - transparency); //apply transparancy to gui textures
 	} else {
-		outColor = vec4(blendColor.xyz, textureColor.a);
+		outColor = vec4(blendColor.xyz, textureColor.a * (1.0f - transparency));
 	}
 }

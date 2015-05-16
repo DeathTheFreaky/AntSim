@@ -87,19 +87,22 @@ public class ConfigReader {
 			filereader.close();
 			fs.close();
 			
+			Globals.displayHeight = Globals.displaySaveHeight;
+			Globals.displayWidth = Globals.displaySaveWidth;
+			
 		} catch (FileNotFoundException e) {
 			
 			//write default values if config file does not exist
 			PrintWriter writer = new PrintWriter(Globals.CONFIG + "config.txt", "UTF-8");
 			writer.close();
-			
-			System.out.println("config file is missing");
-			
+						
 			//set default values
 			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 			
 			Globals.displayWidth = gd.getDisplayMode().getWidth();
 			Globals.displayHeight = gd.getDisplayMode().getHeight();
+			Globals.displaySaveWidth = gd.getDisplayMode().getWidth();
+			Globals.displaySaveHeight = gd.getDisplayMode().getHeight();
 			Globals.fullscreen = true;
 			Globals.fontRows = 16;
 			Globals.fontCols = 16;

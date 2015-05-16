@@ -27,6 +27,8 @@ public final class Globals {
 	//config file entries set by config reader
 	public static int displayWidth; 
 	public static int displayHeight;
+	public static int displaySaveWidth;
+	public static int displaySaveHeight;
 	public static boolean fullscreen;
 	public static int fontRows = 16;
 	public static int fontCols = 16;

@@ -100,7 +100,7 @@ public class DisplayManager {
 	    (Display.isFullscreen() == fullscreen)) {
 	        return;
 	    }
-	 
+	    	 
 	    try {
 	        DisplayMode targetDisplayMode = null;
 	         
