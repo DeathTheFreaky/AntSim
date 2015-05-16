@@ -52,7 +52,7 @@ public abstract class GuiElement {
 	
 	//associate gui state
 	private GuiState state;
-
+	
 	/**Constructs a new {@link GuiElement}.
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
@@ -102,6 +102,7 @@ public abstract class GuiElement {
 		
 		if (parent != null) {
 			parent.getChildren().add(this);
+			this.state = parent.getGuiState();
 		}
 	}
 	
@@ -254,22 +255,6 @@ public abstract class GuiElement {
 		return state;
 	}
 	
-	/**Checks if the mouse was pressed inside this gui element and if this {@link GuiElement} is part of the currently active {@link GuiState} and has an associated {@link Command} 
-	 * and if the released MouseButton was the right mouse button.
-	 * 
-	 * @param event
-	 * @return - true if mouse was pressed inside this {@link GuiElement} and this {@link GuiElement} is part of the currently active {@link GuiState} and has an associated {@link Command}
-	 */
-	private boolean isInsideElement(MouseButtonPressedEvent event) {
-		if (event.getPosX() >= topLeft.getX() && event.getPosX() <= (topLeft.getX() + width) &&
-				(Globals.displayHeight - event.getPosY()) >= topLeft.getY() && (Globals.displayHeight - event.getPosY()) <= (topLeft.getY() + height)) {
-			if (state == GuiWrapper.getInstance().getCurrentState() && command != null && event.getButton() == 0) {
-				return true;
-			}
-		} 
-		return false;
-	}
-	
 	/**Checks if the mouse was released inside this gui element and if this {@link GuiElement} is part of the currently active {@link GuiState} and has an associated {@link Command}
 	 * and if the released MouseButton was the right mouse button.
 	 * 
@@ -284,6 +269,14 @@ public abstract class GuiElement {
 			}
 		} 
 		return false;
+	}
+	
+	public void setTextureId(int textureId) {
+		this.textureId = textureId;
+	}
+	
+	public void setCommand(Command command) {
+		this.command = command;
 	}
 
 	@EventListener

@@ -19,7 +19,7 @@ import at.antSim.Globals;
  */
 public class ConfigWriter {
 	
-	public static void writeConfig() throws IOException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	public static void writeConfig() {
 		
 		//create FileInputStream and open Config file				
 		try (OutputStream fs = new FileOutputStream(Globals.CONFIG + "/config.txt"); BufferedWriter filewriter = new BufferedWriter(new OutputStreamWriter(fs));) {
@@ -35,7 +35,9 @@ public class ConfigWriter {
 			//this should not be needed anyways
 			filewriter.close();
 			fs.close();
-		} 
+		} catch (IOException | IllegalArgumentException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**Prepares a string that can be written to an option file.

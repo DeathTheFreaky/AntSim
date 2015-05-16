@@ -1,12 +1,13 @@
 package at.antSim.graphics.graphicsUtils;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import at.antSim.eventSystem.EventListener;
+import at.antSim.eventSystem.EventPriority;
+import at.antSim.eventSystem.events.MouseMotionEvent;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.terrains.Terrain;
 
@@ -37,17 +38,18 @@ public class MousePicker {
 	private Terrain terrain;
 	private Vector3f currentTerrainPoint;
 	
+	int prevMouseX;
+	int prevMouseY;
+	
 	/**Creates a new {@link MousePicker}.
 	 * 
 	 * @param cam - the {@link Camera} associated with this {@link MousePicker}
 	 * @param projection - the projection matrix associated with this {@link MousePicker}
-	 * @param terrain - the {@link Terrain} used for intersection calculation
 	 */
-	public MousePicker(Camera cam, Matrix4f projection, Terrain terrain) {
+	public MousePicker(Camera cam, Matrix4f projection) {
 		camera = cam;
 		projectionMatrix = projection;
 		viewMatrix = Maths.createViewMatrix(camera);
-		this.terrain = terrain;
 	}
 	
 	/**Updates the currentRay of the MousePicker according to the camera position.<br>
@@ -66,14 +68,21 @@ public class MousePicker {
 			currentTerrainPoint = null;
 		}
 	}
+	
+	@EventListener (priority = EventPriority.LOW)
+	public void onMouseMove(MouseMotionEvent event) {
+		prevMouseX = event.getPosX();
+		prevMouseY = event.getPosY();
+		event.consume(); //has priority of low, so any other event notified by mousemovement will consume first
+	}
 
 	/**Calculates mouse ray converting position of the mouse from Viewport Space to World Space.
 	 * 
 	 * @return - the new currentRay 
 	 */
 	private Vector3f calculateMouseRay() {
-		float mouseX = Mouse.getX(); //eg 1274 - x position of pixel where mouse is currently pointing at
-		float mouseY = Mouse.getY(); //eg 863 - y position of pixel where mouse is currently pointing at
+		float mouseX = prevMouseX; //eg 1274 - x position of pixel where mouse is currently pointing at
+		float mouseY = prevMouseY; //eg 863 - y position of pixel where mouse is currently pointing at
 		Vector2f normalizedCoords = SpaceTransforms.toNormalisedDeviceCoords(mouseX, mouseY); //calculate the normalized mouse pointer device coordinates within a range of -1 to 1
 		Vector4f clipCoords = new Vector4f(normalizedCoords.x, normalizedCoords.y, -1f, 1f); //make the ray pointing inwards the screen (z value of -1)
 		Vector4f eyeCoords = SpaceTransforms.toEyeCoords(clipCoords, projectionMatrix);
@@ -181,5 +190,11 @@ public class MousePicker {
 	public Vector3f getCurrentRay() {
 		return currentRay;
 	}
-
+	
+	/**
+	 * @param terrain - the {@link Terrain} used for intersection calculation
+	 */
+	public void setTerrain(Terrain terrain) {
+		this.terrain = terrain;
+	}
 }

@@ -22,6 +22,7 @@ public class PauseState extends AbstractGuiState {
 	
 	Command backToGameCmd;
 	Command quitToMainMenuCmd;
+	Command optionsCmd;
 
 	public PauseState(Loader loader, String name) {
 		super(loader, name);
@@ -32,21 +33,29 @@ public class PauseState extends AbstractGuiState {
 		
 		backToGameCmd = new ContinueCmd(args[0]);
 		quitToMainMenuCmd = new QuitToMainMenuCmd(args[1]);
+		optionsCmd = new SwitchStateCmd(args[2], state);
 		 
-		GuiContainer mainContainer = new GuiContainer("mainContainer", null, null, standardContainerQuad, loader.loadGuiTexture("white"),
-				600, 175, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.2f, new Vector3f(1,1,1), 1);
+		GuiContainer mainContainer = new GuiContainer("mainContainer", null, null, standardQuad, wrapper.getGuiTexture("white"),
+				600, 245, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.2f, new Vector3f(1,1,1), 1);
 		
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
 		
 		//back button
-		GuiContainer backToGameContainer = new GuiContainer("backToGameButton", mainContainer, backToGameCmd, standardContainerQuad, loader.loadGuiTexture("white"), 580, 35,
+		GuiContainer backToGameContainer = new GuiContainer("backToGameButton", mainContainer, backToGameCmd, standardQuad, wrapper.getGuiTexture("white"), 580, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 35);
 		GuiText backToGameText = new GuiText("backText", textDrawer.createTextQuad("Back to Game"), backToGameContainer, null, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		EventManager.getInstance().registerEventListener(backToGameContainer);
 		
-		//back button
-		GuiContainer quitToStartMenuContainer = new GuiContainer("backToGameButton", mainContainer, quitToMainMenuCmd, standardContainerQuad, loader.loadGuiTexture("white"), 580, 35,
+		//options button
+		GuiContainer optionsContainer = new GuiContainer("optionsButton", mainContainer, optionsCmd, standardQuad, wrapper.getGuiTexture("white"), 580, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
+		GuiText optionsText = new GuiText("optionsGame", textDrawer.createTextQuad("Options"), optionsContainer, null, 32,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		EventManager.getInstance().registerEventListener(optionsContainer);
+		
+		//quit button
+		GuiContainer quitToStartMenuContainer = new GuiContainer("backToGameButton", mainContainer, quitToMainMenuCmd, standardQuad, wrapper.getGuiTexture("white"), 580, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
 		GuiText quitToStartMenuText = new GuiText("backText", textDrawer.createTextQuad("Quit to Start Menu"), quitToStartMenuContainer, null, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);

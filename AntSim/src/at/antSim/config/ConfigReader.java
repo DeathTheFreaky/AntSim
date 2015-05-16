@@ -100,7 +100,7 @@ public class ConfigReader {
 			
 			Globals.displayWidth = gd.getDisplayMode().getWidth();
 			Globals.displayHeight = gd.getDisplayMode().getHeight();
-			
+			Globals.fullscreen = true;
 			Globals.fontRows = 16;
 			Globals.fontCols = 16;
 			

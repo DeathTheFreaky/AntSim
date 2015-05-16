@@ -130,7 +130,6 @@ public class MainApplication {
 	private boolean quit = false;
 	private boolean paused = false;
 	
-	private float speed = 1;
 	private float normalSpeedTime = 1/60f; //update logic 60times a second on normal speed
 	private float timeStep = normalSpeedTime;
 	private float timeAccumulator = 0;
@@ -150,7 +149,16 @@ public class MainApplication {
 	 */
 	public void launch(Loader loader, MasterRenderer renderer) {
 		
+		GuiWrapper.getInstance().setLoader(loader);
 		loadGui(loader);
+		
+		//camera for navigating in the world
+		camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2), pauseState.getName()); 
+		EventManager.getInstance().registerEventListener(camera);
+		
+		//mousepicker to interact with the world
+		picker = new MousePicker(camera, renderer.getProjectionMatrix());
+		EventManager.getInstance().registerEventListener(picker);
 						
 		//main game loop
 		while(!Display.isCloseRequested() && !quit) {
@@ -174,7 +182,7 @@ public class MainApplication {
 			if (worldLoaded) {
 				
 				camera.move(terrain); //every single frame check for key inputs which move the camera
-				picker.update(); //update mouse picker's ray
+				picker.update();
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 				if (terrainPoint != null) {
 					movingLamp.setPosition(terrainPoint);
@@ -234,7 +242,7 @@ public class MainApplication {
 		loadingState.initializeState();
 		mainGameState.initializeState();
 		optionsDisplayState.initializeState(startMenuState.getName());
-		pauseState.initializeState(mainGameState.getName(), startMenuState.getName());
+		pauseState.initializeState(mainGameState.getName(), startMenuState.getName(), optionsDisplayState.getName());
 		
 		GuiWrapper.getInstance().setCurrentState(startMenuState.getName());
 	}
@@ -268,12 +276,8 @@ public class MainApplication {
 			movingLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f));
 			lights.add(movingLight);
 			
-			//camera for navigating in the world
-			camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2), pauseState.getName()); 
-			EventManager.getInstance().registerEventListener(camera);
-			
-			//mousepicker to interact with the world
-			picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
+			camera.triggerReset();
+			picker.setTerrain(terrain);
 			
 			//indicate to main game loop that world has finished loadings
 			worldLoaded = true;
@@ -313,7 +317,6 @@ public class MainApplication {
 	}
 	
 	public void setSpeed(float speed) {
-		this.speed = speed;
 		timeStep = normalSpeedTime * speed;
 	}
 	

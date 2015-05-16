@@ -24,4 +24,12 @@ public class MouseMotionEvent extends AbstractMouseEvent {
 	public int getDY() {
 		return DY;
 	}
+	
+	public int getPosX() {
+		return posX;
+	}
+	
+	public int getPosY() {
+		return posY;
+	}
 }

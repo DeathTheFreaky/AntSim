@@ -27,8 +27,8 @@ public class LoadingState extends AbstractGuiState {
 	@Override
 	public void initializeState(String... args) {
 		
-		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
-		GuiContainer loadingContainer = new GuiContainer("loadingContainer", null, null, standardContainerQuad, loader.loadGuiTexture("white"),
+		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, wrapper.getGuiTexture("font"));
+		GuiContainer loadingContainer = new GuiContainer("loadingContainer", null, null, standardQuad, wrapper.getGuiTexture("white"),
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(0,0,0), 1f);
 		GuiText loadingText = new GuiText("loadingText", textDrawer.createTextQuad("Loading..."), loadingContainer, null, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(1,1,1) , 1f);

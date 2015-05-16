@@ -58,6 +58,6 @@ public class GuiText extends GuiElement {
 			VerReference verRef, VerPositions verPos, int verOffset) {
 		
 		super(id, parent, command, textData.getModel(), textData.getTextureId(), textData.getCharSize() * textData.getCols(), textData.getCharSize() * textData.getRows(), 
-				size * textData.getCols(), size * textData.getRows(), horRef, horPos, horOffset, verRef, verPos, verOffset, 0f, new Vector3f(0, 0, 0), 0f);
+				size * textData.getCols(), size * textData.getRows(), horRef, horPos, horOffset, verRef, verPos, verOffset, 0f, new Vector3f(0, 0, 0), 1f);
 	}
 }

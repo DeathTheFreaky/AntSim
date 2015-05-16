@@ -12,20 +12,24 @@ import at.antSim.guiWrapper.GuiWrapper;
  */
 public abstract class AbstractGuiState {
 	
+	GuiWrapper wrapper;
+	
 	Loader loader;
 	GuiState state;
 	String name;
 	
 	float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
 	float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
-	RawModel standardContainerQuad;
+	RawModel standardQuad;
 
 	public AbstractGuiState(Loader loader, String name) {
 		this.loader = loader;
 		this.name = name;
 		
 		state = new GuiState(name);
-		standardContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
+		standardQuad = loader.loadToVAO(positions, textureCoords, 2);
+		
+		wrapper = GuiWrapper.getInstance();
 	}
 	
 	/**Initially fills the {@link GuiState} with {@link GuiElement}s.

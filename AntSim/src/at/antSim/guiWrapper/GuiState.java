@@ -17,6 +17,7 @@ public class GuiState {
 	List<GuiContainer> elements = new LinkedList<GuiContainer>();
 
 	String name;
+	GuiState prevState;
 
 	public GuiState(String name) {
 		this.name = name;
@@ -28,9 +29,7 @@ public class GuiState {
 	 */
 	public void addContainer(GuiContainer container) {
 		container.setGuiState(this);
-		for (GuiElement element : container.getChildren()) {
-			element.setGuiState(this);
-		}
+		addState(container);
 		elements.add(container);
 	};
 	
@@ -44,5 +43,25 @@ public class GuiState {
 
 	public String getName() {
 		return name;
+	}
+	
+	/**Adds associated gui state for container and all its children.
+	 * @param container
+	 */
+	private void addState(GuiContainer container) {
+		for (GuiElement element : container.getChildren()) {
+			element.setGuiState(this);
+			if (element instanceof GuiContainer) {
+				addState((GuiContainer) element);
+			}
+		}
+	}
+	
+	public void setPrevState(GuiState prevState) {
+		this.prevState = prevState;
+	}
+	
+	public GuiState getPrevState() {
+		return prevState;
 	}
 }

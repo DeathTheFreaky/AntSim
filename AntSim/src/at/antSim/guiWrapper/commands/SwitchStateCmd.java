@@ -1,5 +1,6 @@
 package at.antSim.guiWrapper.commands;
 
+import at.antSim.guiWrapper.GuiState;
 import at.antSim.guiWrapper.GuiWrapper;
 
 /**Opens the option menu.
@@ -9,14 +10,16 @@ import at.antSim.guiWrapper.GuiWrapper;
 public class SwitchStateCmd implements Command {
 	
 	private String name;
+	private GuiState prevState;
 
-	public SwitchStateCmd(String name) {
+	public SwitchStateCmd(String name, GuiState prevState) {
 		this.name = name;
+		this.prevState = prevState;
 	}
 
 	@Override
 	public void execute() {
-		System.out.println("switching to " + name);
 		GuiWrapper.getInstance().setCurrentState(name);
+		GuiWrapper.getInstance().getCurrentState().setPrevState(prevState);
 	}
 }

@@ -1,7 +1,6 @@
 package at.antSim.graphics.entities;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
@@ -336,7 +335,7 @@ public class Camera {
 	/**Zooms camera out when moving mousewheel down and in when moving mousewheel up.
 	 * 
 	 */
-	@EventListener (priority = EventPriority.HIGH)
+	@EventListener (priority = EventPriority.NORMAL)
 	public void calculateZoom(MouseScrollEvent event) {
 		float zoomLevel = event.getDWheel() * ZOOM_FACTOR; //calculate how for to zoom in and out, determined by mousewheel movement
 		distanceFromReferencePoint -= zoomLevel; //move in when moving mousewheel up (Mouse.getDWheel() returns > 0)
@@ -345,7 +344,7 @@ public class Camera {
 	/**Changes camera pitch and rotation -> rotates Camera downwards when moving mouse upwards and rotates Camera upwards when moving mouse downwards.
 	 * 
 	 */
-	@EventListener (priority = EventPriority.HIGH)
+	@EventListener (priority = EventPriority.NORMAL)
 	public void calculatePitchAndRotation(MouseMotionEvent event) {
 		if (rightMouseButtonDown) { //right mouse button pressed
 			float pitchChange = event.getDY() * PITCH_FACTOR * Globals.invertVerticalAxis; //calculate how far to rotate camera up and down, determined by the mouse's movement along the y-Axis
@@ -382,6 +381,10 @@ public class Camera {
 	 */
 	public float getRoll() {
 		return roll;
+	}
+	
+	public void triggerReset() {
+		triggerReset = true;
 	}
 	
 	@EventListener (priority = EventPriority.HIGH)
