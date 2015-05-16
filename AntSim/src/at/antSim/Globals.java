@@ -44,8 +44,8 @@ public final class Globals {
 	public static int zoomOutKey;
 	public static int restoreCameraPosition;
 	
-	public static boolean invertHorizontalAxis;
-	public static boolean invertVerticalAxis;
+	public static int invertHorizontalAxis; //-1 if inverted, 1 if not inverted
+	public static int invertVerticalAxis;
 	
 	private Globals() {}; //do not allow instances of this class
 }

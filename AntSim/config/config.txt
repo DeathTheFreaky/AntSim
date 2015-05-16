@@ -16,5 +16,5 @@ tiltUpKey = 31
 zoomInKey = 16
 zoomOutKey = 18
 restoreCameraPosition = 19
-invertHorizontalAxis = true
-invertVerticalAxis = true
+invertHorizontalAxis = -1
+invertVerticalAxis = -1

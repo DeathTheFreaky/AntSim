@@ -348,10 +348,10 @@ public class Camera {
 	@EventListener (priority = EventPriority.HIGH)
 	public void calculatePitchAndRotation(MouseMotionEvent event) {
 		if (rightMouseButtonDown) { //right mouse button pressed
-			float pitchChange = event.getDY() * PITCH_FACTOR; //calculate how far to rotate camera up and down, determined by the mouse's movement along the y-Axis
-			pitch -= pitchChange; //rotate camera downwards when moving mouse upwards the y-Axis
-			float angleChange = event.getDX() * YAW_FACTOR; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
-			rotY += angleChange; //update reference point rotation
+			float pitchChange = event.getDY() * PITCH_FACTOR * Globals.invertVerticalAxis; //calculate how far to rotate camera up and down, determined by the mouse's movement along the y-Axis
+			pitch += pitchChange; //rotate camera downwards when moving mouse upwards the y-Axis
+			float angleChange = event.getDX() * YAW_FACTOR * Globals.invertHorizontalAxis; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
+			rotY -= angleChange; //update reference point rotation
 			event.consume();
 		}
 	}

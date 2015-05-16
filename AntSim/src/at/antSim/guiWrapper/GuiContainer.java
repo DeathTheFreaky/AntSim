@@ -65,8 +65,8 @@ public class GuiContainer extends GuiElement {
 	public GuiContainer(String id, GuiContainer parent, Command command, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset) {
 		
-		super(id, parent, command, model, texture.getTextureId(), texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, 
-				horRef, horPos, horOffset, verRef, verPos, verOffset, 0f, new Vector3f(0, 0, 0), 0f);
+		super(id, parent, command, model, (texture != null) ? texture.getTextureId() : -1, (texture != null) ? texture.getWidth() : 0, (texture != null) ? texture.getHeight() : 0, 
+				desiredWidth, desiredHeight, horRef, horPos, horOffset, verRef, verPos, verOffset, 0f, new Vector3f(0, 0, 0), 0f);
 	}
 	
 	public List<GuiElement> getChildren() {

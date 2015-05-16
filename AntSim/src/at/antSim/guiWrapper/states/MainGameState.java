@@ -34,12 +34,12 @@ public class MainGameState extends AbstractGuiState {
 		
 		//nur einmal, außer für andere Fonts
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
-		GuiText testText = new GuiText("testText", textDrawer.createTextQuad("Flo war da!\nWhohoooo"), testContainer, null, 42, HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.TOP, 0,
-				0f, new Vector3f(0f, 1f, 0f), 0.5f);
+		GuiText testText = new GuiText("testText", textDrawer.createTextQuad("Flo war da!\nWhohoooo"), testContainer, null, 12, HorReference.PARENT, HorPositions.LEFT, 0, 
+				VerReference.PARENT, VerPositions.TOP, 0, 0f, new Vector3f(0f, 1f, 1f), 0.5f);
 		
 		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
-		GuiImage testImage = new GuiImage("testImage", testContainer, null, testImageQuad, loader.loadGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0,
-				0f, new Vector3f(1f, 0f, 0f), 0.2f);
+		GuiImage testImage = new GuiImage("testImage", testContainer, null, testImageQuad, loader.loadGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, 
+				VerReference.SIBLING, VerPositions.BELOW, 0, 0f, new Vector3f(1f, 0f, 0f), 0.2f);
 		EventManager.getInstance().registerEventListener(testContainer);
 		
 		state.addContainer(testContainer);

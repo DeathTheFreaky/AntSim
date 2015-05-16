@@ -1,6 +1,7 @@
 package at.antSim.graphics.renderer;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -12,6 +13,7 @@ import at.antSim.graphics.shaders.GuiShader;
 import at.antSim.guiWrapper.GuiContainer;
 import at.antSim.guiWrapper.GuiElement;
 import at.antSim.guiWrapper.GuiState;
+import at.antSim.guiWrapper.GuiText;
 
 /**GuiRenderer is used to render Gui Elements to the screen.
  * 
@@ -46,7 +48,7 @@ public class GuiRenderer {
 			
 			//disable depth test for gui drawing -> otherwise a texture behind a transparent texture will not be rendered
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
-					
+							
 			//gui does not need a view matrix -> view on gui elements stays the same / they are shown in a "static 2d plane"
 
 			for (GuiContainer container : state.getElements()) {
@@ -98,6 +100,12 @@ public class GuiRenderer {
 			shader.loadBlendFactor(element.getBlendFactor());
 			shader.loadBlendColor(element.getBlendColor());
 			shader.loadTransparency(element.getTransparency());
+			
+			if (element instanceof GuiText) {
+				shader.loadIsFont(true);
+			} else {
+				shader.loadIsFont(false);
+			}
 			
 			//Render vertices as triangle strip, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, element.getRawModel().getVertexCount()); //treat positions array as triangle strips

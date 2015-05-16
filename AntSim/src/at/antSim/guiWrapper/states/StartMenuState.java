@@ -45,7 +45,8 @@ public class StartMenuState extends AbstractGuiState {
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(1,1,1), 1);
 
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
-		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), mainContainer, null, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, VerReference.SIBLING, VerPositions.TOP, 20);
+		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), mainContainer, null, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, 
+				VerReference.SIBLING, VerPositions.TOP, 20,  0.5f, new Vector3f(1f, 0f, 0f), 0.0f);
 		GuiText antSim2 = new GuiText("antSim2", textDrawer.createTextQuad("Sim"), mainContainer, null, 36, HorReference.PARENT, HorPositions.RIGHT, Globals.displayWidth/2 - 100, VerReference.SIBLING, VerPositions.BELOW, -15);
 
 		//new game button

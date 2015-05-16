@@ -39,9 +39,21 @@ public class OptionsDisplayState extends AbstractGuiState {
 
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
 		
+		//invert mouse
+		GuiContainer invertContainer = new GuiContainer("invertContainer", mainContainer, null, standardContainerQuad, null, 300, 100,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 35);
+		GuiText invertHeadline = new GuiText("invertHeadline", textDrawer.createTextQuad("Invert mouse axis"), invertContainer, null, 32,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 0);
+		GuiContainer invertHorContainer = new GuiContainer("invertHorContainer", invertContainer, null, standardContainerQuad, loader.loadGuiTexture("white"), 300, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 35);
+		GuiText invertVerAxis = new GuiText("invertVerAxis", textDrawer.createTextQuad("Vertical axis"), invertContainer, null, 12,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 0);
+//		GuiContainer invertVerContainer = new GuiContainer("invertVerContainer", invertContainer, null, standardContainerQuad, loader.loadGuiTexture("white"), 300, 35,
+//				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 35);
+				
 		//back button
 		GuiContainer backContainer = new GuiContainer("backButton", mainContainer, startMenuCmd, standardContainerQuad, loader.loadGuiTexture("white"), 450, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 35);
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
 		GuiText backText = new GuiText("backText", textDrawer.createTextQuad("Back"), backContainer, null, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		EventManager.getInstance().registerEventListener(backContainer);

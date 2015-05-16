@@ -160,7 +160,6 @@ public class MainApplication {
 			
 			//update logic and events according to game speed
 			while (timeAccumulator >= timeStep) {
-				System.out.println("timeAccumulator: " + timeAccumulator);
 				timeAccumulator -= timeStep;
 				update();
 			}
@@ -171,7 +170,7 @@ public class MainApplication {
 			}
 			
 			//update camera and mouse picker 
-			//key events will be fired according to fps_cap set in DisplayManager which controlls lwjgl's Display - so camera movement speed should not be affected by game speed changes
+			//camera movement should not be affected by game speed since it works with movement speeds multiplied with time elapsed since last frame update
 			if (worldLoaded) {
 				
 				camera.move(terrain); //every single frame check for key inputs which move the camera

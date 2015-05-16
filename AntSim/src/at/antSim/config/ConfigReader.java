@@ -118,8 +118,8 @@ public class ConfigReader {
 			Globals.zoomOutKey = Keyboard.KEY_E;
 			Globals.restoreCameraPosition = Keyboard.KEY_R;
 			
-			Globals.invertHorizontalAxis = true;
-			Globals.invertVerticalAxis = true;
+			Globals.invertHorizontalAxis = -1;
+			Globals.invertVerticalAxis = -1;
 			
 			ConfigWriter.writeConfig();
 		}
