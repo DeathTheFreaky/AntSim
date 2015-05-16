@@ -10,6 +10,7 @@ import org.lwjgl.opengl.PixelFormat;
 
 import at.antSim.AntSim;
 import at.antSim.Globals;
+import at.antSim.MainApplication;
 
 /**Manages creation, updating and closing of display.
  * 
@@ -20,6 +21,7 @@ public class DisplayManager {
 	
 	private static long lastFrameTime; //time at the end of the last frame
 	private static float delta; //time taken to render previous frame
+	private static int speed = 1; //2 is default speed, 1 is half speed, 4 is double...
 	
 	/**Opens display when game starts.
 	 * 
@@ -52,7 +54,7 @@ public class DisplayManager {
 	 * 
 	 */
 	public static void updateDisplay(){
-		Display.sync(Globals.FPS_CAP); //set frame cap for smooth rendering
+		Display.sync((int) (Globals.FPS_CAP * speed)); //set frame cap for smooth rendering
 		Display.update();
 		long currentFrameTime = getCurrentTime();
 		delta = (currentFrameTime - lastFrameTime)/1000f; //delta in seconds

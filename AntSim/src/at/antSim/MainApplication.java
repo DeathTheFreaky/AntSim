@@ -1,5 +1,6 @@
 package at.antSim;
 
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -151,8 +152,9 @@ public class MainApplication {
 	private boolean quit = false;
 	private boolean paused = false;
 	
-	private int speed = 2;
-	private int speedCtr = 0;
+	private float speed = 1;
+	private float timeStep = 0;
+	private float timeAccumulator = 0;
 	
 	private MainApplication() {};
 	
@@ -160,65 +162,64 @@ public class MainApplication {
 		INSTANCE = new MainApplication();
 	}
 	
+	/**Launches the simulation loop.<br>
+	 * Logic will be updated according according to FPS_CAP * speed,
+	 * while rendering will only occur at FPS_CAP.
+	 * 
+	 * @param loader
+	 * @param renderer
+	 */
 	public void launch(Loader loader, MasterRenderer renderer) {
 		
 		loadGui(loader);
 						
 		//main game loop
 		while(!Display.isCloseRequested() && !quit) {
-						
-			EventManager.getInstance().workThroughQueue();
 			
+			//regulate rate of calculating logic according to game speed, keeping the rendering untouched at a constant frame rate
+			timeAccumulator += DisplayManager.getFrameTimeSeconds();
+			
+			//update logic and events according to game speed
+			while (timeAccumulator >= timeStep) {
+				timeAccumulator -= timeStep;
+				update();
+			}
+			
+			//trigger loading screen
 			if (triggeredLoading) {
 				GuiWrapper.getInstance().setCurrentState(loadingState.getName());
 			}
 			
-			//game logic
-			
-			if (worldLoaded) {
-				
-				camera.move(terrain); //every single frame check for key inputs which move the camera
-				
-				picker.update(); //update mouse picker's ray
-				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-				if (terrainPoint != null) {
-					movingLamp.setPosition(terrainPoint);
-					movingLight.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 12f, terrainPoint.z));
-				}
-				
-				renderer.processTerrain(terrain);
-
-				for (Entity entity : entities) {
-					renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
-				}
-				
-				if (!paused) {
-					if (speedCtr >= speed) { //allows to update logic only at desired game speed
-						
-						//game logic here
-						System.out.println("game logic");
-						
-						speedCtr = 0;
-					}
-				}
-			}
-			
-			renderer.render(lights, camera, worldLoaded);
-									
+			//render and update display
+			renderer.render(lights, camera, worldLoaded);				
 			DisplayManager.updateDisplay();
 			
+			//load world after loading screen has been rendered to support single threaded architecture
 			if (triggeredLoading) {
 				loadWorld(loader, renderer);
 				triggeredLoading = false;
-			}
-			
-			speedCtr++;
+			}			
 		}
 		
 		renderer.cleanUp();
+		loader.cleanUp();
 		DisplayManager.closeDisplay();
 	}
 	
+	/**Updates game logic and events.
+	 * 
+	 */
+	private void update() {
+		EventManager.getInstance().workThroughQueue();
+		
+		//game logic
+		if (!paused) {
+			
+			//game logic here
+			System.out.println("game logic");					
+		}
+	}
+
 	/**Loads the Gui and all its states.
 	 * 
 	 * @param loader
@@ -315,12 +316,13 @@ public class MainApplication {
 		paused = false;
 	}
 	
-	/**Sets the game speed. Default is 2, half speed is 1, double speed is 4...
-	 * 
-	 * @param speed
-	 */
-	public void setSpeed(int speed) {
+	public void setSpeed(float speed) {
 		this.speed = speed;
+		timeStep = 1 / 30f * speed;
+	}
+	
+	public float getSpeed(float speed) {
+		return speed;
 	}
 	
 	/**
