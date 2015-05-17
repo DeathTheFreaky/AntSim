@@ -60,6 +60,7 @@ public class KeyChangeCmd implements Command {
 	@Override
 	public void execute() {
 		state.showWaitingWindow();
+		state.hideErrMessage();
 		EventManager.getInstance().registerEventListener(this);
 	}
 	
@@ -71,19 +72,23 @@ public class KeyChangeCmd implements Command {
 	@EventListener (priority = EventPriority.HIGH)
 	public void onKeyPress(KeyReleasedEvent event) {
 		if (!(event.getKey() == Keyboard.KEY_ESCAPE)) {
-			try {
-				field.setInt(null, event.getKey());
-				parent.removeChildren();
-				GuiText keyNameValue = new GuiText("keyNameValue" + label, textDrawer.createTextQuad(Keyboard.getKeyName(event.getKey())), parent, null, size,
-						HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-				parent.addChild(keyNameValue);
-				ConfigWriter.writeConfig();
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
+			if (Globals.isKeyAlreadyUsed(fieldname, event.getKey())) {
+				state.showErrMessage();
+			} else {
+				try {
+					field.setInt(null, event.getKey());
+					parent.removeChildren();
+					GuiText keyNameValue = new GuiText("keyNameValue" + label, textDrawer.createTextQuad(Keyboard.getKeyName(event.getKey())), parent, null, size,
+							HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+					parent.addChild(keyNameValue);
+					ConfigWriter.writeConfig();
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		EventManager.getInstance().unregisterEventListener(this);
 		state.hideWaitingWindow();
 		event.consume();
+		EventManager.getInstance().unregisterEventListener(this);
 	}
 }

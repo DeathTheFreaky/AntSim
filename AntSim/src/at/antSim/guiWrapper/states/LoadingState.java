@@ -37,4 +37,9 @@ public class LoadingState extends AbstractGuiState {
 		
 		GuiWrapper.getInstance().addState(state);	
 	}
+
+	@Override
+	public void resetState() {
+		
+	}
 }

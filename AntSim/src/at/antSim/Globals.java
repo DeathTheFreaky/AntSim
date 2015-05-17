@@ -1,5 +1,8 @@
 package at.antSim;
 
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 /**Stores global variables, mainly config file entries and constants like resource folder, fps_cap...
  * 
  * @author Flo, Clemens
@@ -49,4 +52,38 @@ public final class Globals {
 	public static int invertVerticalAxis;
 	
 	private Globals() {}; //do not allow instances of this class
+	
+	/**Indicates whether a key is already in use.
+	 * @param fieldname
+	 * @param key
+	 * @return
+	 */
+	public static boolean isKeyAlreadyUsed(String fieldname, int key) {
+		
+		HashMap<String, Integer> keyMappings = new HashMap<>();
+		
+		keyMappings.put("moveForwardKey", moveForwardKey);
+		keyMappings.put("moveBackwardKey", moveBackwardKey);
+		keyMappings.put("moveLeftKey", moveLeftKey);
+		keyMappings.put("moveRightKey", moveRightKey);
+		keyMappings.put("moveUpKey", moveUpKey);
+		keyMappings.put("moveDownKey", moveDownKey);
+		keyMappings.put("turnLeftKey", turnLeftKey);
+		keyMappings.put("turnRightKey", turnRightKey);
+		keyMappings.put("tiltDownKey", tiltDownKey);
+		keyMappings.put("tiltUpKey", tiltUpKey);
+		keyMappings.put("zoomInKey", zoomInKey);
+		keyMappings.put("zoomOutKey", zoomOutKey);
+		keyMappings.put("restoreCameraPosition", restoreCameraPosition);
+		
+		boolean used = false;
+		
+		for (Entry<String, Integer> entry : keyMappings.entrySet()) {
+			if (entry.getValue() == key && !entry.getKey().equals(fieldname)) {
+				used = true;
+			}
+		}
+		
+		return used;
+	}
 }

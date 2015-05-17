@@ -32,7 +32,7 @@ public class PauseState extends AbstractGuiState {
 		
 		backToGameCmd = new ContinueCmd(args[0]);
 		quitToMainMenuCmd = new QuitToMainMenuCmd(args[1]);
-		optionsCmd = new SwitchStateCmd(args[2], state);
+		optionsCmd = new SwitchStateCmd(args[2], state, this);
 		 
 		GuiContainer mainContainer = new GuiContainer("mainContainer", null, null, standardQuad, wrapper.getGuiTexture("white"),
 				600, 245, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.2f, new Vector3f(1,1,1), 1);
@@ -63,5 +63,10 @@ public class PauseState extends AbstractGuiState {
 		state.addContainer(mainContainer);
 		
 		GuiWrapper.getInstance().addState(state);
+	}
+
+	@Override
+	public void resetState() {
+		
 	}
 }
