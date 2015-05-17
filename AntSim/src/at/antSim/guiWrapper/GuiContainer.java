@@ -41,8 +41,8 @@ public class GuiContainer extends GuiElement {
 	public GuiContainer(String id, GuiContainer parent, Command command, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 		
-		super(id, parent, command, model, texture.getTextureId(), texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, 
-				horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
+		super(id, parent, command, model, (texture != null) ? texture.getTextureId() : -1, (texture != null) ? texture.getWidth() : 0, (texture != null) ? texture.getHeight() : 0, 
+				desiredWidth, desiredHeight, horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
 	}
 	
 	/**Constructs a new {@link GuiContainer}.<br>
@@ -95,13 +95,6 @@ public class GuiContainer extends GuiElement {
 	 */
 	public int getChildrenSize() {
 		return children.size();
-	}
-	
-	/**
-	 * @return - last child of this container
-	 */
-	public GuiElement getLastChild() {
-		return children.get(children.size() - 1);
 	}
 	
 	/**Adds a new child also registering its gui state as the parent's gui state.
