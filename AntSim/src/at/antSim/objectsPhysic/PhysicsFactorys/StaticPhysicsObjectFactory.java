@@ -25,37 +25,50 @@ public class StaticPhysicsObjectFactory implements PhysicsObjectFactory<StaticPh
 
 	}
 
+	/*
+		@Override
+		public StaticPhysicsObject createPane(float mass) {
+			return createPane(mass, new Transform());
+		}
+
+		@Override
+		public StaticPhysicsObject createPane(float mass, Transform position) {
+			MotionState motionState = new DefaultMotionState(position);
+			CollisionShape shape = new StaticPlaneShape();
+			return null;
+		}
+	*/
 	@Override
-	public StaticPhysicsObject createSphere(float mass, float radius) {
+	public StaticPhysicsObject createSphere(float mass, float radius) throws UnsupportedOperationException {
 		return createSphere(mass, radius, new Transform());
 	}
 
 	@Override
-	public StaticPhysicsObject createSphere(float mass, float radius, Transform position) {
+	public StaticPhysicsObject createSphere(float mass, float radius, Transform position) throws UnsupportedOperationException {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = new SphereShape(radius);
 		return new StaticPhysicsObject(new RigidBody(mass, motionState, shape));
 	}
 
 	@Override
-	public StaticPhysicsObject createCuboid(float mass, float xLength, float yLength, float zLength) {
+	public StaticPhysicsObject createCuboid(float mass, float xLength, float yLength, float zLength) throws UnsupportedOperationException {
 		return createCuboid(mass, xLength, yLength, zLength, new Transform());
 	}
 
 	@Override
-	public StaticPhysicsObject createCuboid(float mass, float xLength, float yLength, float zLength, Transform position) {
+	public StaticPhysicsObject createCuboid(float mass, float xLength, float yLength, float zLength, Transform position) throws UnsupportedOperationException {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = new BoxShape(new Vector3f(xLength / 2, yLength / 2, zLength / 2));
 		return new StaticPhysicsObject(new RigidBody(mass, motionState, shape));
 	}
 
 	@Override
-	public StaticPhysicsObject createCylinder(float mass, float height, float radius, PhysicsObjectOrientation orientation) {
+	public StaticPhysicsObject createCylinder(float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException {
 		return createCylinder(mass, height, radius, orientation, new Transform());
 	}
 
 	@Override
-	public StaticPhysicsObject createCylinder(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) {
+	public StaticPhysicsObject createCylinder(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape;
 		switch (orientation) {
@@ -75,12 +88,12 @@ public class StaticPhysicsObjectFactory implements PhysicsObjectFactory<StaticPh
 	}
 
 	@Override
-	public StaticPhysicsObject createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation) {
+	public StaticPhysicsObject createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException {
 		return createCone(mass, height, radius, orientation, new Transform());
 	}
 
 	@Override
-	public StaticPhysicsObject createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) {
+	public StaticPhysicsObject createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException {
 		MotionState motionState = new DefaultMotionState();
 		CollisionShape shape;
 		switch (orientation) {
