@@ -69,6 +69,49 @@ public class EventManager {
 			}
 		}
 	}
+	
+	/**
+	 * Removes an EventListener with the {@link EventPriority} passed by the {@link EventListener}.<br />
+	 *
+	 * @param listener The instance of a class that implements a method annotated with {@link EventListener}.
+	 */
+	public void unregisterEventListener(Object listener) {
+				
+		Method[] methods = listener.getClass().getMethods();
+
+		for (int i = 0; i < methods.length; i++) {
+			EventListener eventListener = methods[i].getAnnotation(EventListener.class);
+			if (eventListener != null) {
+				Class[] methodParams = methods[i].getParameterTypes();
+				EventPriority eventPriority = eventListener.priority();
+
+				if (methodParams.length < 1)
+					continue;
+
+				List<Class<?>> paramInterfaces = ClassUtils.getAllInterfaces(methodParams[0]);
+				boolean found = false;
+				for (Class<?> interf : paramInterfaces) {
+					if (interf == Event.class) {
+						found = true;
+						break;
+					}
+				}
+
+				if (!found)
+					continue;
+
+				Class<? extends Event> eventType = methodParams[0];
+				if (eventListenerMap.containsKey(eventType)) {
+					EventListenerManagement listenerManagement = eventListenerMap.get(eventType);
+					listenerManagement.remove(new ListenerInformation(listener, methods[i]));
+					eventListenerMap.remove(eventType, listenerManagement);
+				} else {
+					EventListenerManagement eventListenerManagement = new EventListenerManagement();
+					eventListenerManagement.remove(new ListenerInformation(listener, methods[i]));
+				}
+			}
+		}
+	}
 
 	/**
 	 * Handles an passed Event immediately. Is not thread safe.

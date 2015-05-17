@@ -2,7 +2,6 @@ package at.antSim.guiWrapper.states;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import at.antSim.Globals;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;

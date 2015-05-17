@@ -2,6 +2,7 @@ package at.antSim.guiWrapper;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
 import at.antSim.guiWrapper.commands.Command;
 
 /**Represents a text drawn as 2d quad in the GUI.

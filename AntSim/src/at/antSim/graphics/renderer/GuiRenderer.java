@@ -69,7 +69,7 @@ public class GuiRenderer {
 	}
 
 	private void drawChildren(GuiContainer container) {
-		for (GuiElement element : container.getChildren()) {
+		for (GuiElement element : container.getAllChildren()) {
 			drawGuiElement(element);
 			if (element instanceof GuiContainer) {
 				drawChildren((GuiContainer) element);

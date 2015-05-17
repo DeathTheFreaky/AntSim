@@ -101,7 +101,7 @@ public abstract class GuiElement {
 		calculatePos();
 		
 		if (parent != null) {
-			parent.getChildren().add(this);
+			parent.addChild(this);
 			this.state = parent.getGuiState();
 		}
 	}
@@ -162,8 +162,8 @@ public abstract class GuiElement {
 				horRefElem = parent;
 			}
 			else {
-				if (parent.getChildren().size() > 0) {
-					horRefElem = parent.getChildren().get(parent.getChildren().size() - 1);
+				if (parent.getChildrenSize() > 0) {
+					horRefElem = parent.getLastChild();
 				} else {
 					horRefElem = parent;
 				}
@@ -172,8 +172,8 @@ public abstract class GuiElement {
 				verRefElem = parent;
 			}
 			else {
-				if (parent.getChildren().size() > 0) {
-					verRefElem = parent.getChildren().get(parent.getChildren().size() - 1);
+				if (parent.getChildrenSize() > 0) {
+					verRefElem = parent.getLastChild();
 				} else {
 					verRefElem = parent;
 				}

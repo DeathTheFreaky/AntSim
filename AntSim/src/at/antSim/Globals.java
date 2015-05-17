@@ -1,7 +1,5 @@
 package at.antSim;
 
-import java.awt.*;
-
 /**Stores global variables, mainly config file entries and constants like resource folder, fps_cap...
  * 
  * @author Flo, Clemens

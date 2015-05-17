@@ -1,5 +1,6 @@
 package at.antSim.guiWrapper;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -69,7 +70,64 @@ public class GuiContainer extends GuiElement {
 				desiredWidth, desiredHeight, horRef, horPos, horOffset, verRef, verPos, verOffset, 0f, new Vector3f(0, 0, 0), 0f);
 	}
 	
-	public List<GuiElement> getChildren() {
-		return children;
+	/**Removes a specific child from this container, identified by its id.
+	 * @param id
+	 */
+	public void removeChild(String id) {
+		GuiElement removeElement = null;
+		for (GuiElement elem : children) {
+			if (elem.getId().equals(id)) {
+				removeElement = elem;
+			}
+		}
+		children.remove(removeElement);
+	}
+	
+	/**Removes all children of this container.
+	 * 
+	 */
+	public void removeChildren() {
+		children.clear();
+	}
+	
+	/**
+	 * @return - number of this container's children
+	 */
+	public int getChildrenSize() {
+		return children.size();
+	}
+	
+	/**
+	 * @return - last child of this container
+	 */
+	public GuiElement getLastChild() {
+		return children.get(children.size() - 1);
+	}
+	
+	/**Adds a new child also registering its gui state as the parent's gui state.
+	 * @param elem
+	 */
+	public void addChild(GuiElement elem) {
+		children.add(elem);
+		elem.setGuiState(getGuiState());
+	}
+
+	/**Adds a guiState as associated state for all children of this container.
+	 * @param guiState
+	 */
+	public void addStateForAllChildren(GuiState guiState) {
+		for (GuiElement element : children) {
+			element.setGuiState(guiState);
+			if (element instanceof GuiContainer) {
+				((GuiContainer) element).addStateForAllChildren(guiState);
+			}
+		}
+	}
+
+	/**
+	 * @return - returns an unmodifiable list of all children of this container
+	 */
+	public List<GuiElement> getAllChildren() {
+		return Collections.unmodifiableList(children);
 	}
 }

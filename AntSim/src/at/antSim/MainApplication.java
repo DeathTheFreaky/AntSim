@@ -237,11 +237,12 @@ public class MainApplication {
 		mainGameState = new MainGameState(loader, "mainGameState");
 		loadingState = new LoadingState(loader, "loadingState");
 		pauseState = new PauseState(loader, "pauseState");
-		
+				
 		startMenuState.initializeState(optionsDisplayState.getName());
 		loadingState.initializeState();
 		mainGameState.initializeState();
-		optionsDisplayState.initializeState(startMenuState.getName());
+		optionsDisplayState.initializeState(startMenuState.getName(), optionsControlsState.getName());
+		optionsControlsState.initializeState(startMenuState.getName(), optionsDisplayState.getName());
 		pauseState.initializeState(mainGameState.getName(), startMenuState.getName(), optionsDisplayState.getName());
 		
 		GuiWrapper.getInstance().setCurrentState(startMenuState.getName());

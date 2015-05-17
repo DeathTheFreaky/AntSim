@@ -49,12 +49,7 @@ public class GuiState {
 	 * @param container
 	 */
 	private void addState(GuiContainer container) {
-		for (GuiElement element : container.getChildren()) {
-			element.setGuiState(this);
-			if (element instanceof GuiContainer) {
-				addState((GuiContainer) element);
-			}
-		}
+		container.addStateForAllChildren(this);
 	}
 	
 	public void setPrevState(GuiState prevState) {
