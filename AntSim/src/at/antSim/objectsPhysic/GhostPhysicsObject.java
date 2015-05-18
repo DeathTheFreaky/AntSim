@@ -1,6 +1,7 @@
 package at.antSim.objectsPhysic;
 
 import at.antSim.objectsKI.Entity;
+import com.bulletphysics.collision.dispatch.CollisionFlags;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.GhostObject;
 
@@ -15,6 +16,7 @@ public class GhostPhysicsObject extends PositionablePhysicsObjectImpl {
 
 	public GhostPhysicsObject(GhostObject body) {
 		this.body = body;
+		this.body.setCollisionFlags(this.body.getCollisionFlags() | CollisionFlags.NO_CONTACT_RESPONSE);
 	}
 
 	@Override
