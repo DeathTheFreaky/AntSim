@@ -13,7 +13,7 @@ import javax.vecmath.Vector3f;
  *
  * @author Clemens
  */
-public abstract class ReadOnlyStaticPhysicsObject implements PhysicsObject, ReadOnlyPhysicsObject {
+public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOnlyPhysicsObject {
 
 	@Override
 	public Vector3f getPosition() {
@@ -23,8 +23,8 @@ public abstract class ReadOnlyStaticPhysicsObject implements PhysicsObject, Read
 	}
 
 	@Override
-	public Vector3f getVelocity() {
-		Vector3f out = new Vector3f(0, 0, 0);
+	public Vector3f getLinearVelocity() {
+		Vector3f out = new Vector3f();
 		getRigidBody().getLinearVelocity(out);
 		return out;
 	}
@@ -36,4 +36,10 @@ public abstract class ReadOnlyStaticPhysicsObject implements PhysicsObject, Read
 		return out;
 	}
 
+	@Override
+	public Vector3f getAngularVelocity() {
+		Vector3f out = new Vector3f();
+		getRigidBody().getAngularVelocity(out);
+		return out;
+	}
 }
