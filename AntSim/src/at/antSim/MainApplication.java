@@ -321,12 +321,16 @@ public class MainApplication {
 		paused = false;
 	}
 
-	public void togglePause() {
+	public void togglePlay() {
 		if (paused) {
 			paused = false;
 		} else {
 			paused = true;
 		}
+	}
+
+	public boolean isPaused() {
+		return paused;
 	}
 	
 	public void setSpeed(float speed) {

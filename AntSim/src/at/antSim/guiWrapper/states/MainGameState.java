@@ -34,6 +34,17 @@ public class MainGameState extends AbstractGuiState {
 	HashMap<String, GuiContainer> statContainers;
 	OpenGLTextDrawer textDrawer;
 	int textSize;
+
+	GuiContainer playPauseContainer;
+	GuiContainer speed1;
+	GuiContainer speed2;
+	GuiContainer speed3;
+	GuiContainer speed4;
+	GuiImage playPause;
+	GuiImage speed1Img;
+	GuiImage speed2Img;
+	GuiImage speed3Img;
+	GuiImage speed4Img;
 	
 	public MainGameState(Loader loader, String name) {
 		super(loader, name);
@@ -84,36 +95,36 @@ public class MainGameState extends AbstractGuiState {
 
 		// Control Bar
 		// Commands
-		Command togglePlayCmd = new TogglePlayCmd();
-		Command toggleSpeed1Cmd = new ToggleSpeedCmd(0.5f);
-		Command toggleSpeed2Cmd = new ToggleSpeedCmd(1f);
-		Command toggleSpeed3Cmd = new ToggleSpeedCmd(2f);
-		Command toggleSpeed4Cmd = new ToggleSpeedCmd(4f);
+		Command togglePlayCmd = new TogglePlayCmd(this);
+		Command toggleSpeed1Cmd = new ToggleSpeedCmd(0.5f, this, 1);
+		Command toggleSpeed2Cmd = new ToggleSpeedCmd(1f, this, 2);
+		Command toggleSpeed3Cmd = new ToggleSpeedCmd(2f, this, 3);
+		Command toggleSpeed4Cmd = new ToggleSpeedCmd(4f, this, 4);
 		// Containers
 		GuiContainer controlsBar = new GuiContainer("controlsBar", null, null, standardQuad, wrapper.getGuiTexture("white"), 250, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.BOTTOM, -1, 0f, new Vector3f(0, 0, 0), 1f);
-		GuiContainer playPauseContainer = new GuiContainer("playPauseContainer", controlsBar, togglePlayCmd, standardQuad, wrapper.getGuiTexture("white"), 35, 35,
+		playPauseContainer = new GuiContainer("playPauseContainer", controlsBar, togglePlayCmd, standardQuad, wrapper.getGuiTexture("white"), 35, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		GuiContainer speedContainer = new GuiContainer("speedContainer", controlsBar, null, standardQuad, wrapper.getGuiTexture("white"), 26*4, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer speed1 = new GuiContainer("speed1", speedContainer, toggleSpeed1Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
+		speed1 = new GuiContainer("speed1", speedContainer, toggleSpeed1Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer speed2 = new GuiContainer("speed2", speedContainer, toggleSpeed2Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
+		speed2 = new GuiContainer("speed2", speedContainer, toggleSpeed2Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer speed3 = new GuiContainer("speed3", speedContainer, toggleSpeed3Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
+		speed3 = new GuiContainer("speed3", speedContainer, toggleSpeed3Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer speed4 = new GuiContainer("speed4", speedContainer, toggleSpeed4Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
+		speed4 = new GuiContainer("speed4", speedContainer, toggleSpeed4Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		// Images
-		GuiImage playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("pause"), 32, 32,
+		playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("pause"), 32, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		GuiImage speed1Img = new GuiImage("speed1Img", speed1, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+		speed1Img = new GuiImage("speed1Img", speed1, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		GuiImage speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+		speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		GuiImage speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+		speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		GuiImage speed4Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+		speed4Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		// Registering listeners
 		EventManager.getInstance().registerEventListener(playPauseContainer);
@@ -142,6 +153,47 @@ public class MainGameState extends AbstractGuiState {
 			statContainers.get(entry.getKey()).removeChildren();
 			GuiText statusValue = new GuiText("statusValue" + entry.getKey(), textDrawer.createTextQuad(String.valueOf(entry.getValue())), statContainers.get(entry.getKey()), null, textSize,
 					HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		}
+	}
+
+	public void updatePlayButton() {
+		playPauseContainer.removeChildren();
+		if (!MainApplication.getInstance().isPaused()) {
+			playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 35, 30,
+					HorReference.PARENT, HorPositions.LEFT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		} else {
+			playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("pause"), 32, 32,
+					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		}
+	}
+
+	public void updateSpeedButtons(int numberOfButtons) {
+		if (numberOfButtons >= 2) {
+			speed2.removeChildren();
+			speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		} else {
+			speed2.removeChildren();
+			speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		}
+		if (numberOfButtons >= 3) {
+			speed3.removeChildren();
+			speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		} else {
+			speed3.removeChildren();
+			speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		}
+		if (numberOfButtons >= 4) {
+			speed4.removeChildren();
+			speed2Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		} else {
+			speed4.removeChildren();
+			speed2Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		}
 	}
 }
