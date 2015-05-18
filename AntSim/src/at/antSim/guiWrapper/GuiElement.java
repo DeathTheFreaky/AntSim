@@ -29,10 +29,10 @@ public abstract class GuiElement {
 	private Command command;
 	
 	//positional values in pixel
-	private Point topLeft;
+	Point topLeft;
 	private Point middle;
-	private int width;
-	private int height;
+	int width;
+	int height;
 	
 	private HorReference horRef;
 	private HorPositions horPos;
@@ -163,7 +163,7 @@ public abstract class GuiElement {
 			}
 			else {
 				if (parent.getChildrenSize() > 0) {
-					horRefElem = parent.getLastChild();
+					horRefElem = parent.getAllChildren().get(parent.getChildrenSize() - 1);
 				} else {
 					horRefElem = parent;
 				}
@@ -173,7 +173,7 @@ public abstract class GuiElement {
 			}
 			else {
 				if (parent.getChildrenSize() > 0) {
-					verRefElem = parent.getLastChild();
+					verRefElem = parent.getAllChildren().get(parent.getChildrenSize() - 1);
 				} else {
 					verRefElem = parent;
 				}

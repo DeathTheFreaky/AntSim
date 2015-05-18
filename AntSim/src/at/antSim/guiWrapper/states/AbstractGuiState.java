@@ -38,6 +38,11 @@ public abstract class AbstractGuiState {
 	 */
 	public abstract void initializeState(String... args);
 	
+	/**Used to hide error messages etc...
+	 * 
+	 */
+	public abstract void resetState();
+	
 	/**Retrieves this {@link GuiState} from the GuiWrapper for manipulation.
 	 * @return - the {@link GuiState}
 	 */

@@ -28,6 +28,7 @@ public class OptionsControlState extends AbstractGuiState {
 	
 	GuiContainer waitingForKeyContainer;		
 	GuiText waitingForKeyText;
+	GuiText errText;
 
 	public OptionsControlState(Loader loader, String name) {
 		super(loader, name);
@@ -37,7 +38,7 @@ public class OptionsControlState extends AbstractGuiState {
 	public void initializeState(String... args) {
 		
 		backCmd = new BackCmd(state);
-		switchToDisplayCmd = new SwitchStateOptionsCmd(args[1], state);
+		switchToDisplayCmd = new SwitchStateOptionsCmd(args[1], state, this);
 		
 		GuiContainer mainContainer = new GuiContainer("mainContainer", null, null, standardQuad, wrapper.getGuiTexture("white"),
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(1,1,1), 1);
@@ -109,9 +110,14 @@ public class OptionsControlState extends AbstractGuiState {
 			idx++;
 		}
 		
+		//error message
+		errText = new GuiText("resNote", textDrawer.createTextQuad("Key is used by another binding!"), 
+				mainContainer, null, 18, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
+		errText.setTransparency(1f);
+		
 		//back button
 		GuiContainer backContainer = new GuiContainer("backButton", mainContainer, backCmd, standardQuad, wrapper.getGuiTexture("white"), 450, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 50);
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
 		GuiText backText = new GuiText("backText", textDrawer.createTextQuad("Back"), backContainer, null, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		EventManager.getInstance().registerEventListener(backContainer);
@@ -137,5 +143,19 @@ public class OptionsControlState extends AbstractGuiState {
 	public void showWaitingWindow() {
 		waitingForKeyContainer.setTransparency(0f);
 		waitingForKeyText.setTransparency(0f);
+	}
+	
+	public void showErrMessage() {
+		errText.setTransparency(0f);
+	}
+	
+	public void hideErrMessage() {
+		errText.setTransparency(1f);
+	}
+
+	@Override
+	public void resetState() {
+		hideErrMessage();
+		hideWaitingWindow();
 	}
 }

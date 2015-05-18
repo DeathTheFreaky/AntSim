@@ -38,7 +38,7 @@ public class StartMenuState extends AbstractGuiState {
 	public void initializeState(String... args) {
 		
 		newGameCmd = new NewGameCmd();
-		optionsCmd = new SwitchStateCmd(args[0], state);
+		optionsCmd = new SwitchStateCmd(args[0], state, this);
 		quitGameCmd = new QuitGameCmd();
 		 
 		GuiContainer mainContainer = new GuiContainer("mainContainer", null, null, standardQuad, wrapper.getGuiTexture("white"),
@@ -73,5 +73,10 @@ public class StartMenuState extends AbstractGuiState {
 		state.addContainer(mainContainer);
 		
 		GuiWrapper.getInstance().addState(state);	
+	}
+
+	@Override
+	public void resetState() {
+		
 	}
 }

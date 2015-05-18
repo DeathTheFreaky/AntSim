@@ -41,6 +41,9 @@ public class OptionsDisplayState extends AbstractGuiState {
 	Command fullScreenCmd;
 	Command switchToControlsCmd;
 	
+	GuiText resNoteText;
+	GuiText resNoteText2;
+	
 	public OptionsDisplayState(Loader loader, String name) {
 		super(loader, name);
 	}
@@ -49,7 +52,7 @@ public class OptionsDisplayState extends AbstractGuiState {
 	public void initializeState(String... args) {
 		
 		backCmd = new BackCmd(state);
-		switchToControlsCmd = new SwitchStateOptionsCmd(args[1], state);
+		switchToControlsCmd = new SwitchStateOptionsCmd(args[1], state, this);
 		
 		GuiContainer mainContainer = new GuiContainer("mainContainer", null, null, standardQuad, wrapper.getGuiTexture("white"),
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(1,1,1), 1);
@@ -155,9 +158,9 @@ public class OptionsDisplayState extends AbstractGuiState {
 			idx++;
 		}
 		
-		GuiText resNoteText = new GuiText("resNote", textDrawer.createTextQuad("Application needs to be restarted"), 
+		resNoteText = new GuiText("resNote", textDrawer.createTextQuad("Application needs to be restarted"), 
 				resolutionsContainer, orResolutionCmd, 18, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 46);
-		GuiText resNoteText2 = new GuiText("resNote2", textDrawer.createTextQuad("in order for resolution changes to take effect!"), 
+		resNoteText2 = new GuiText("resNote2", textDrawer.createTextQuad("in order for resolution changes to take effect!"), 
 				resolutionsContainer, orResolutionCmd, 18, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 4);
 		resNoteText.setTransparency(1f);
 		resNoteText2.setTransparency(1f);
@@ -192,5 +195,11 @@ public class OptionsDisplayState extends AbstractGuiState {
 			}
 			return retStr;
 		}
+	}
+
+	@Override
+	public void resetState() {
+		resNoteText.setTransparency(1f);
+		resNoteText2.setTransparency(1f);
 	}
 }
