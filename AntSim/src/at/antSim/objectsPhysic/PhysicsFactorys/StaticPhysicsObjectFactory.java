@@ -17,19 +17,6 @@ public class StaticPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Sta
 
 	}
 
-	/*
-		@Override
-		public StaticPhysicsObject createPane(float mass) {
-			return createPane(mass, new Transform());
-		}
-
-		@Override
-		public StaticPhysicsObject createPane(float mass, Transform position) {
-			MotionState motionState = new DefaultMotionState(position);
-			CollisionShape shape = new StaticPlaneShape();
-			return null;
-		}
-	*/
 	@Override
 	public StaticPhysicsObject createSphere(float mass, float radius) throws UnsupportedOperationException {
 		return createSphere(mass, radius, new Transform());
@@ -37,7 +24,7 @@ public class StaticPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Sta
 
 	@Override
 	public StaticPhysicsObject createSphere(float mass, float radius, Transform position) throws UnsupportedOperationException {
-		return new StaticPhysicsObject(createSphereRigid(mass, radius, position));
+		return new StaticPhysicsObject(createSphereRigid(0, radius, position));
 	}
 
 	@Override
@@ -47,7 +34,7 @@ public class StaticPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Sta
 
 	@Override
 	public StaticPhysicsObject createCuboid(float mass, float xLength, float yLength, float zLength, Transform position) throws UnsupportedOperationException {
-		return new StaticPhysicsObject(createCuboidRigid(mass, xLength, yLength, zLength, position));
+		return new StaticPhysicsObject(createCuboidRigid(0, xLength, yLength, zLength, position));
 	}
 
 	@Override
@@ -57,7 +44,7 @@ public class StaticPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Sta
 
 	@Override
 	public StaticPhysicsObject createCylinder(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException {
-		return new StaticPhysicsObject(createCylinderRigid(mass, height, radius, orientation, position));
+		return new StaticPhysicsObject(createCylinderRigid(0, height, radius, orientation, position));
 	}
 
 	@Override
@@ -67,7 +54,7 @@ public class StaticPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Sta
 
 	@Override
 	public StaticPhysicsObject createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException {
-		return new StaticPhysicsObject(createConeRigid(mass, height, radius, orientation, position));
+		return new StaticPhysicsObject(createConeRigid(0, height, radius, orientation, position));
 	}
 
 	public static StaticPhysicsObjectFactory getInstance() {
