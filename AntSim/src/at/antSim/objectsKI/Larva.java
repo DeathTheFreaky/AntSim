@@ -1,4 +1,4 @@
-package at.antSim.KI;
+package at.antSim.objectsKI;
 
 public class Larva implements Feedable{
 

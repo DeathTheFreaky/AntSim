@@ -1,4 +1,4 @@
-package at.antSim.KI;
+package at.antSim.objectsKI;
 
 public class Egg implements Feedable{
 	private int growth = 0;

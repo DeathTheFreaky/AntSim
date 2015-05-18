@@ -1,10 +1,10 @@
-package at.antSim.KI;
+package at.antSim.objectsKI;
 
-public class DeadAnt implements Foodressource{
+public class Squirrel implements Foodressource{
 	private int foodStacks;
 	
-	public DeadAnt(){
-		foodStacks = 5;
+	public Squirrel(){
+		foodStacks = 100;
 	}
 	
 	@Override

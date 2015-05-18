@@ -1,7 +1,7 @@
 /**
  * 
  */
-package at.antSim.KI;
+package at.antSim.objectsKI;
 
 /**
  * @author Martin

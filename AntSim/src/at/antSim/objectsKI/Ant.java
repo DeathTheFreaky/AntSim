@@ -1,5 +1,27 @@
-  package at.antSim.KI;
+  package at.antSim.objectsKI;
 
+import at.antSim.eventSystem.EventListener;
+import at.antSim.eventSystem.EventPriority;
+import at.antSim.eventSystem.events.CollisionEvent;
+
+
+/**
+ * 
+ * 
+ * TODO:
+ *  - http://stackoverflow.com/questions/2790144/avoiding-instanceof-in-java + Reflection
+ *    Ueberschreiben verwenden => dadurch muss kein type check gemacht werden
+ * 
+ * 	  Visitor Pattern
+ * 
+ * 
+ * Physics - Entity inkludieren.
+ * 
+ * 
+ * 
+ * @author Martin
+ *
+ */
 public class Ant {
 	// search 1, food 2, war 3, nothing 0
 	private int odorStatus = 0;
@@ -28,6 +50,12 @@ public class Ant {
 	public void attackEnemy(){
 		
 	}
+	
+	@EventListener (priority = EventPriority.NORMAL)
+	public void decideEvent(CollisionEvent ce){
+		
+	}
+	
 	
 	public void eat(){
 		hunger = hunger+40;

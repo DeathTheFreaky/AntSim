@@ -1,12 +1,12 @@
-package at.antSim.KI;
+package at.antSim.objectsKI;
 
-public class Locust implements Foodressource{
+public class DeadAnt implements Foodressource{
 	private int foodStacks;
 	
-	public Locust(){
-		foodStacks = 20;
+	public DeadAnt(){
+		foodStacks = 5;
 	}
-
+	
 	@Override
 	public int harvest() {
 		if(foodStacks > 0){
