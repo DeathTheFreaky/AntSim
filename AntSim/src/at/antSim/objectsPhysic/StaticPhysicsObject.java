@@ -17,7 +17,7 @@ public class StaticPhysicsObject extends PositionablePhysicsObjectImpl {
 	}
 
 	@Override
-	public RigidBody getRigidBody() {
+	public RigidBody getCollisionBody() {
 		return body;
 	}
 

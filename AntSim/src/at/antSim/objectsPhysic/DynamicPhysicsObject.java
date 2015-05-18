@@ -17,7 +17,7 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 	}
 
 	@Override
-	public RigidBody getRigidBody() {
+	public RigidBody getCollisionBody() {
 		return body;
 	}
 

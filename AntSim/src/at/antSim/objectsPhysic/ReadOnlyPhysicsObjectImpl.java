@@ -18,28 +18,26 @@ public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOn
 	@Override
 	public Vector3f getPosition() {
 		Vector3f out = new Vector3f();
-		getRigidBody().getMotionState().getWorldTransform(new Transform(new Matrix4f(new Quat4f(), out, 1)));
+		getCollisionBody().getWorldTransform(new Transform(new Matrix4f(new Quat4f(), out, 1)));
 		return out;
 	}
 
 	@Override
 	public Vector3f getLinearVelocity() {
 		Vector3f out = new Vector3f();
-		getRigidBody().getLinearVelocity(out);
 		return out;
 	}
 
 	@Override
 	public Quat4f getRotation() {
 		Quat4f out = new Quat4f();
-		getRigidBody().getMotionState().getWorldTransform(new Transform(new Matrix4f(out, new Vector3f(), 1)));
+		getCollisionBody().getWorldTransform(new Transform(new Matrix4f(out, new Vector3f(), 1)));
 		return out;
 	}
 
 	@Override
 	public Vector3f getAngularVelocity() {
 		Vector3f out = new Vector3f();
-		getRigidBody().getAngularVelocity(out);
 		return out;
 	}
 }

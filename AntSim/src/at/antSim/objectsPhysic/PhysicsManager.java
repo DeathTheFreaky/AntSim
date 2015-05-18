@@ -39,7 +39,7 @@ public class PhysicsManager {
 	}
 
 	public void registerPhysicsObject(PhysicsObject physicsObject) {
-		physicsWorld.addRigidBody(physicsObject.getRigidBody());
+		physicsWorld.addCollisionObject(physicsObject.getCollisionBody());
 	}
 
 	public void registerPhysicsObject(Collection<PhysicsObject> physicsObjects) {
@@ -49,7 +49,7 @@ public class PhysicsManager {
 	}
 
 	public void unregisterPhysicsObject(PhysicsObject physicsObject) {
-		physicsWorld.removeRigidBody(physicsObject.getRigidBody());
+		physicsWorld.removeCollisionObject(physicsObject.getCollisionBody());
 	}
 
 	public void unregisterPhysicsObject(Collection<PhysicsObject> physicsObjects) {

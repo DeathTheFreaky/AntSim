@@ -1,6 +1,7 @@
 package at.antSim.objectsKI;
 
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
+import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
@@ -19,5 +20,7 @@ public abstract class Entity {
 	public abstract void react(StaticPhysicsObject staticPhysicsObject);
 
 	public abstract void react(DynamicPhysicsObject dynamicPhysicsObject);
+
+	public abstract void react(GhostPhysicsObject ghostPhysicsObject);
 
 }
