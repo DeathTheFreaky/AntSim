@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import at.antSim.MainApplication;
+import at.antSim.guiWrapper.commands.Command;
+import at.antSim.guiWrapper.commands.TogglePlayCmd;
+import at.antSim.guiWrapper.commands.ToggleSpeedCmd;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.eventSystem.EventManager;
@@ -80,20 +83,26 @@ public class MainGameState extends AbstractGuiState {
 		}
 
 		// Control Bar
+		// Commands
+		Command togglePlayCmd = new TogglePlayCmd();
+		Command toggleSpeed1Cmd = new ToggleSpeedCmd(0.5f);
+		Command toggleSpeed2Cmd = new ToggleSpeedCmd(1f);
+		Command toggleSpeed3Cmd = new ToggleSpeedCmd(2f);
+		Command toggleSpeed4Cmd = new ToggleSpeedCmd(4f);
 		// Containers
 		GuiContainer controlsBar = new GuiContainer("controlsBar", null, null, standardQuad, wrapper.getGuiTexture("white"), 250, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.BOTTOM, -1, 0f, new Vector3f(0, 0, 0), 1f);
-		GuiContainer playPauseContainer = new GuiContainer("playPauseContainer", controlsBar, null, standardQuad, wrapper.getGuiTexture("white"), 35, 35,
+		GuiContainer playPauseContainer = new GuiContainer("playPauseContainer", controlsBar, togglePlayCmd, standardQuad, wrapper.getGuiTexture("white"), 35, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		GuiContainer speedContainer = new GuiContainer("speedContainer", controlsBar, null, standardQuad, wrapper.getGuiTexture("white"), 26*4, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer speed1 = new GuiContainer("speed1", speedContainer, null, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
+		GuiContainer speed1 = new GuiContainer("speed1", speedContainer, toggleSpeed1Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer speed2 = new GuiContainer("speed2", speedContainer, null, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
+		GuiContainer speed2 = new GuiContainer("speed2", speedContainer, toggleSpeed2Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer speed3 = new GuiContainer("speed3", speedContainer, null, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
+		GuiContainer speed3 = new GuiContainer("speed3", speedContainer, toggleSpeed3Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer speed4 = new GuiContainer("speed4", speedContainer, null, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
+		GuiContainer speed4 = new GuiContainer("speed4", speedContainer, toggleSpeed4Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		// Images
 		GuiImage playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("pause"), 32, 32,
@@ -106,6 +115,12 @@ public class MainGameState extends AbstractGuiState {
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		GuiImage speed4Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		// Registering listeners
+		EventManager.getInstance().registerEventListener(playPauseContainer);
+		EventManager.getInstance().registerEventListener(speed1);
+		EventManager.getInstance().registerEventListener(speed2);
+		EventManager.getInstance().registerEventListener(speed3);
+		EventManager.getInstance().registerEventListener(speed4);
 
 //		GuiImage testImage = new GuiImage("testImage", testContainer, null, testImageQuad, wrapper.getGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, 
 //				VerReference.SIBLING, VerPositions.BELOW, 0, 0f, new Vector3f(1f, 0f, 0f), 0.2f);
