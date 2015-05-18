@@ -1,21 +1,12 @@
 package at.antSim.config;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.lang.reflect.Field;
-
-import org.lwjgl.input.Keyboard;
-
 import at.antSim.Globals;
 import at.antSim.exceptions.ConfigParseException;
-import javafx.stage.Stage;
+import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
+import java.io.*;
+import java.lang.reflect.Field;
 
 /**Parses a config file and stores its entries in {@link Globals}.
  * 
@@ -107,16 +98,16 @@ public class ConfigReader {
 			Globals.fontRows = 16;
 			Globals.fontCols = 16;
 			
-			Globals.moveForwardKey = Keyboard.KEY_UP;
-			Globals.moveBackwardKey = Keyboard.KEY_DOWN;
-			Globals.moveLeftKey = Keyboard.KEY_LEFT;
-			Globals.moveRightKey = Keyboard.KEY_RIGHT;
+			Globals.moveForwardKey = Keyboard.KEY_W;
+			Globals.moveBackwardKey = Keyboard.KEY_S;
+			Globals.moveLeftKey = Keyboard.KEY_A;
+			Globals.moveRightKey = Keyboard.KEY_D;
 			Globals.moveUpKey = Keyboard.KEY_LSHIFT;
 			Globals.moveDownKey = Keyboard.KEY_SPACE;
-			Globals.tiltDownKey = Keyboard.KEY_W;
-			Globals.tiltUpKey = Keyboard.KEY_S;
-			Globals.turnLeftKey = Keyboard.KEY_A;
-			Globals.turnRightKey = Keyboard.KEY_D;
+			Globals.tiltDownKey = Keyboard.KEY_UP;
+			Globals.tiltUpKey = Keyboard.KEY_DOWN;
+			Globals.turnLeftKey = Keyboard.KEY_LEFT;
+			Globals.turnRightKey = Keyboard.KEY_RIGHT;
 			Globals.zoomInKey = Keyboard.KEY_Q;
 			Globals.zoomOutKey = Keyboard.KEY_E;
 			Globals.restoreCameraPosition = Keyboard.KEY_R;

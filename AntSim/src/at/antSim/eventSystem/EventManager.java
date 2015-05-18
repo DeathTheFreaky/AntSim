@@ -76,44 +76,6 @@ public class EventManager {
 	 * @param listener The instance of a class that implements a method annotated with {@link EventListener}.
 	 */
 	public void unregisterEventListener(Object listener) {
-				
-		Method[] methods = listener.getClass().getMethods();
-
-		for (int i = 0; i < methods.length; i++) {
-			EventListener eventListener = methods[i].getAnnotation(EventListener.class);
-			if (eventListener != null) {
-				Class[] methodParams = methods[i].getParameterTypes();
-				EventPriority eventPriority = eventListener.priority();
-
-				if (methodParams.length < 1)
-					continue;
-
-				List<Class<?>> paramInterfaces = ClassUtils.getAllInterfaces(methodParams[0]);
-				boolean found = false;
-				for (Class<?> interf : paramInterfaces) {
-					if (interf == Event.class) {
-						found = true;
-						break;
-					}
-				}
-
-				if (!found)
-					continue;
-
-				Class<? extends Event> eventType = methodParams[0];
-				if (eventListenerMap.containsKey(eventType)) {
-					EventListenerManagement listenerManagement = eventListenerMap.get(eventType);
-					listenerManagement.remove(new ListenerInformation(listener, methods[i]));
-					eventListenerMap.remove(eventType, listenerManagement);
-				} else {
-					EventListenerManagement eventListenerManagement = new EventListenerManagement();
-					eventListenerManagement.remove(new ListenerInformation(listener, methods[i]));
-				}
-			}
-		}
-	}
-
-	public void unregisterEventListener(Object listener) {
 
 		Method[] methods = listener.getClass().getMethods();
 
@@ -199,7 +161,9 @@ public class EventManager {
 		}
 
 		void remove(ListenerInformation listenerInformation) {
+			System.out.println("EventManager: check containsKey" + listenerInformation);
 			if (allEventListeners.containsKey(listenerInformation)) {
+				System.out.println("EventManager: remove listener" + listenerInformation);
 				eventListenerMap.get(allEventListeners.get(listenerInformation)).remove(listenerInformation);
 				allEventListeners.remove(listenerInformation);
 			}
@@ -232,14 +196,26 @@ public class EventManager {
 		}
 
 		@Override
+		public int hashCode() {
+			int result = listener != null ? listener.hashCode() : 0;
+			result = 31 * result + (method != null ? method.hashCode() : 0);
+			return result;
+		}
+
+		@Override
 		public boolean equals(Object obj) {
+			System.out.println("ListenerInformation: start equals" + this);
 			if (obj == null && obj instanceof ListenerInformation)
 				return false;
 
+			System.out.println("ListenerInformation: not null and write class" + this);
 			if (this == obj)
 				return true;
 
+			System.out.println("ListenerInformation: not same instance" + this);
 			ListenerInformation other = (ListenerInformation)obj;
+
+			System.out.println("ListenerInformation: last euqals " + (this.listener.equals(other.listener) && this.method.equals(other.method)));
 
 			return (this.listener.equals(other.listener) && this.method.equals(other.method));
 		}
