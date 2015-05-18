@@ -1,5 +1,6 @@
 package at.antSim;
 
+import java.util.HashMap;
 import java.util.List;
 import at.antSim.guiWrapper.states.AbstractGuiState;
 import at.antSim.guiWrapper.states.LoadingState;
@@ -133,6 +134,8 @@ public class MainApplication {
 	private float normalSpeedTime = 1/60f; //update logic 60times a second on normal speed
 	private float timeStep = normalSpeedTime;
 	private float timeAccumulator = 0;
+
+	private HashMap<String, Integer> stats = new HashMap<>();
 	
 	private MainApplication() {};
 	
@@ -220,7 +223,7 @@ public class MainApplication {
 		
 		//game logic
 		if (!paused && worldLoaded) {
-							
+			((MainGameState)mainGameState).updateStatus();
 		}
 	}
 
@@ -323,6 +326,14 @@ public class MainApplication {
 	
 	public float getSpeed(float speed) {
 		return speed;
+	}
+
+	public HashMap<String, Integer> getStats() {
+		stats.put("Population", 12035);
+		stats.put("Food", 5389);
+		stats.put("Eggs", 345);
+		stats.put("Larvae", 243);
+		return stats;
 	}
 	
 	/**
