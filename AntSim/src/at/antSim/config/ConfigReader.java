@@ -1,12 +1,21 @@
 package at.antSim.config;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.lang.reflect.Field;
+
 import at.antSim.Globals;
 import at.antSim.exceptions.ConfigParseException;
 import org.lwjgl.input.Keyboard;
 
-import java.awt.*;
-import java.io.*;
-import java.lang.reflect.Field;
 
 /**Parses a config file and stores its entries in {@link Globals}.
  * 
@@ -82,6 +91,21 @@ public class ConfigReader {
 			Globals.displayWidth = Globals.displaySaveWidth;
 			
 		} catch (FileNotFoundException e) {
+			
+			File configDir = new File(Globals.CONFIG);
+
+			// if the directory does not exist, create it
+			if (!configDir.exists()) {
+			    boolean result = false;
+
+			    try{
+			        configDir.mkdir();
+			        result = true;
+			    } 
+			    catch(SecurityException se){
+			        System.exit(-1);
+			    }        
+			}
 			
 			//write default values if config file does not exist
 			PrintWriter writer = new PrintWriter(Globals.CONFIG + "config.txt", "UTF-8");

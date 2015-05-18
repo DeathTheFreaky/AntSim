@@ -161,9 +161,7 @@ public class EventManager {
 		}
 
 		void remove(ListenerInformation listenerInformation) {
-			System.out.println("EventManager: check containsKey" + listenerInformation);
 			if (allEventListeners.containsKey(listenerInformation)) {
-				System.out.println("EventManager: remove listener" + listenerInformation);
 				eventListenerMap.get(allEventListeners.get(listenerInformation)).remove(listenerInformation);
 				allEventListeners.remove(listenerInformation);
 			}
@@ -204,18 +202,13 @@ public class EventManager {
 
 		@Override
 		public boolean equals(Object obj) {
-			System.out.println("ListenerInformation: start equals" + this);
 			if (obj == null && obj instanceof ListenerInformation)
 				return false;
 
-			System.out.println("ListenerInformation: not null and write class" + this);
 			if (this == obj)
 				return true;
 
-			System.out.println("ListenerInformation: not same instance" + this);
 			ListenerInformation other = (ListenerInformation)obj;
-
-			System.out.println("ListenerInformation: last euqals " + (this.listener.equals(other.listener) && this.method.equals(other.method)));
 
 			return (this.listener.equals(other.listener) && this.method.equals(other.method));
 		}
