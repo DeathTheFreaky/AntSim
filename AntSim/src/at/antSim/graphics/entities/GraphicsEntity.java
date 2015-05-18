@@ -4,14 +4,14 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.models.TexturedModel;
 
-/**An Entity represents a representation of a real-world object.<br>
+/**An GraphicsEntity represents a graphical representation of a real-world object.<br>
  * It consists of a {@link TexturedModel}, a PhysicsObject and the position, rotation and scale of its model.<br>
- * Additional behavior may be defined by extending this {@link Entity} class.
+ * Additional behavior may be defined by extending this {@link GraphicsEntity} class.
  * 
  * @author Flo
  * @see TexturedModel
  */
-public class Entity {
+public class GraphicsEntity {
 	
 	private TexturedModel model;
 	private Vector3f position;
@@ -20,7 +20,7 @@ public class Entity {
 	
 	private int textureIndex = 0; //indicates which texture in a texture atlas the entity uses
 	
-	/**Creates a new {@link Entity}.
+	/**Creates a new {@link GraphicsEntity}.
 	 * 
 	 * @param textureIndex - indicates which texture in texture atlas the entity uses
 	 * @param model - 3-dimensional model of the entity with a texture
@@ -30,7 +30,7 @@ public class Entity {
 	 * @param rotZ - the entity's Z rotation in degrees
 	 * @param scale - the scale applied to the entity's model
 	 */
-	public Entity(TexturedModel model, int textureIndex, Vector3f position, float rotX, float rotY, float rotZ, 
+	public GraphicsEntity(TexturedModel model, int textureIndex, Vector3f position, float rotX, float rotY, float rotZ, 
 			float scale) {
 		this.textureIndex = textureIndex;
 		this.model = model;

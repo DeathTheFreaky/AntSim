@@ -11,7 +11,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.entities.Camera;
-import at.antSim.graphics.entities.Entity;
+import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.RawModel;
@@ -50,7 +50,7 @@ public class EntityRenderer {
 	 * @param lights - a list of lightsources
 	 * @param camera - for creating a viewMatrix
 	 */
-	public void render(Map<TexturedModel, List<Entity>> entities, float blendFactor, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
+	public void render(Map<TexturedModel, List<GraphicsEntity>> entities, float blendFactor, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
 		
 		shader.start(); 
 		
@@ -69,8 +69,8 @@ public class EntityRenderer {
 			/* For every instance of a unique model: prepare the instance by loading its transformation matrix and its texture atlas offset (if needed)
 			 * and draw the model.
 			 */
-			List<Entity> batch = entities.get(model);
-			for(Entity entity:batch) {
+			List<GraphicsEntity> batch = entities.get(model);
+			for(GraphicsEntity entity:batch) {
 				prepareInstance(entity); //load transformation matrix and texture atlas offset
 				
 				//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
@@ -130,9 +130,9 @@ public class EntityRenderer {
 	
 	/**Creates and loads an entity's transformation matrix and the texture offset in a texture atlas into the shader program. 
 	 * 
-	 * @param entity - the {@link Entity} to be rendered
+	 * @param entity - the {@link GraphicsEntity} to be rendered
 	 */
-	private void prepareInstance(Entity entity) {
+	private void prepareInstance(GraphicsEntity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), 
 				entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale()); //transformation matrix to be applied in the shader program
 		shader.loadTransformationMatrix(transformationMatrix); //load transformation matrix into the shader program
