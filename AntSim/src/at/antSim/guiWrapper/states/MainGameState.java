@@ -167,6 +167,12 @@ public class MainGameState extends AbstractGuiState {
 		}
 	}
 
+	public void setPauseButton() {
+		playPauseContainer.removeChildren();
+		playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("pause"), 32, 32,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+	}
+
 	public void updateSpeedButtons(int numberOfButtons) {
 		if (numberOfButtons >= 2) {
 			speed2.removeChildren();

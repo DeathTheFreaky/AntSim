@@ -20,6 +20,8 @@ public class ToggleSpeedCmd implements Command {
 	public void execute() {
 		mainGameState.updateSpeedButtons(speedCount);
 		MainApplication.getInstance().setSpeed(speed);
+		mainGameState.setPauseButton();
+		MainApplication.getInstance().unpause();
 		System.out.println("ToggleSpeedCmd: execute()\n Speed: " + speed);
 		//change icon
 	}
