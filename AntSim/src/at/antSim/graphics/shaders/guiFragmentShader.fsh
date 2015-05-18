@@ -28,7 +28,7 @@ void main(void){
 			discard; //used to discard transparent parts of half-transparent textures - otherwise they will appear black
 		}
 		outColor = mix(textureColor, vec4(blendColor, 1.0f), blendFactor); //blend original texture pixel color with blendColor by blendFactor
-		outColor = vec4(outColor.xyz, 1.0f - transparency); //apply transparancy to gui textures
+		outColor = vec4(outColor.xyz, textureColor.a * 1.0f - transparency); //apply transparancy to gui textures
 	} else {
 		outColor = vec4(blendColor.xyz, textureColor.a * (1.0f - transparency));
 	}
