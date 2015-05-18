@@ -22,5 +22,11 @@ public interface PositionablePhysicsObject {
 	 */
 	void setPosition(Vector3f position);
 
+	/**
+	 * Sets the Rotation of the Object.
+	 * @param yaw
+	 * @param pitch
+	 * @param roll
+	 */
 	void setRotation(float yaw, float pitch, float roll);
 }

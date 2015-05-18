@@ -24,5 +24,8 @@ public interface ReadOnlyPhysicsObject {
 	 */
 	Quat4f getRotation();
 
+	/**
+	 * @return Returns the angular velocity of the Object represented as {@link Vector3f vector}
+	 */
 	Vector3f getAngularVelocity();
 }

@@ -1,6 +1,6 @@
 package at.antSim.objectsPhysic;
 
-import at.antSim.objectsPhysic.basics.MoveablePhysicsObject;
+import at.antSim.objectsPhysic.basics.MovablePhysicsObject;
 
 import javax.vecmath.Vector3f;
 
@@ -9,7 +9,7 @@ import javax.vecmath.Vector3f;
  *
  * @author Clemens
  */
-public abstract class MoveablePhysicsObjectImpl extends PositionablePhysicsObjectImpl implements MoveablePhysicsObject {
+public abstract class MovablePhysicsObjectImpl extends PositionablePhysicsObjectImpl implements MovablePhysicsObject {
 	@Override
 	public void setLinearVelocity(Vector3f linearVelocity) {
 		getRigidBody().setLinearVelocity(linearVelocity);

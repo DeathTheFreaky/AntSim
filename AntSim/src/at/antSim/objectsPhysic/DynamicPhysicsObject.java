@@ -7,7 +7,7 @@ import com.bulletphysics.dynamics.RigidBody;
  *
  * @author Clemens
  */
-public class DynamicPhysicsObject extends MoveablePhysicsObjectImpl {
+public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 
 	final RigidBody body;
 
