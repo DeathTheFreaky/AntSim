@@ -7,7 +7,7 @@ import java.util.Random;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import at.antSim.graphics.entities.Entity;
+import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.graphicsUtils.OBJFileLoader;
@@ -26,11 +26,11 @@ import at.antSim.graphics.textures.TerrainTexturePack;
  */
 public class WorldLoader {
 
-	public static HashMap<String, Entity> specificEntities = new HashMap<>();
+	public static HashMap<String, GraphicsEntity> specificEntities = new HashMap<>();
 	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
 	private static LinkedList<String[]> modelTextureNames = new LinkedList<>(); //names of all obj files and associated textures to be loaded
 	
-	/**Loads all {@link TexturedModel}s needed for creating {@link Entity}s into a HashMap.<br>
+	/**Loads all {@link TexturedModel}s needed for creating {@link GraphicsEntity}s into a HashMap.<br>
 	 * Needs to be called before loadEntities.
 	 * 
 	 * @param loader
@@ -92,11 +92,11 @@ public class WorldLoader {
 	 * 
 	 * @param loader
 	 * @param terrain
-	 * @return - a list of the World's {@link Entity}s
+	 * @return - a list of the World's {@link GraphicsEntity}s
 	 */
-	public static ArrayList<Entity> loadEntities(Loader loader, Terrain terrain) {
+	public static ArrayList<GraphicsEntity> loadEntities(Loader loader, Terrain terrain) {
 		
-		ArrayList<Entity> entities = new ArrayList<Entity>();
+		ArrayList<GraphicsEntity> entities = new ArrayList<GraphicsEntity>();
 		
 		//create a random flora
 		Random random = new Random(676452);
@@ -105,29 +105,29 @@ public class WorldLoader {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(texturedModels.get("fern"), random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
+				entities.add(new GraphicsEntity(texturedModels.get("fern"), random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, 0.9f));
 			}
 			if (i % 5 == 0) {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(texturedModels.get("grass"), 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
+				entities.add(new GraphicsEntity(texturedModels.get("grass"), 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, random.nextFloat() * 0.1f + 0.6f));
 				x = random.nextFloat() * Globals.WORLD_SIZE;
 				z = random.nextFloat() * -Globals.WORLD_SIZE;
 				y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new Entity(texturedModels.get("tree"), 1, new Vector3f(x, y, z), 0, 0,
+				entities.add(new GraphicsEntity(texturedModels.get("tree"), 1, new Vector3f(x, y, z), 0, 0,
 						0, random.nextFloat() * 1 + 4));
 			}
 		} 
 		
 		//add some lamps
-		entities.add(new Entity(texturedModels.get("lamp"), 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
-		entities.add(new Entity(texturedModels.get("lamp"), 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
+		entities.add(new GraphicsEntity(texturedModels.get("lamp"), 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
+		entities.add(new GraphicsEntity(texturedModels.get("lamp"), 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
 		
 		//add cool stanford demo dragon for specular lighting demo
-		Entity dragon = new Entity(texturedModels.get("dragon"), 1, new Vector3f(0, 0, 0), 0, 0, 0, 1);
+		GraphicsEntity dragon = new GraphicsEntity(texturedModels.get("dragon"), 1, new Vector3f(0, 0, 0), 0, 0, 0, 1);
 		entities.add(dragon);
 		specificEntities.put("dragon", dragon);
 		

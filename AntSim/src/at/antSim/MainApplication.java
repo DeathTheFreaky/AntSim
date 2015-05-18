@@ -15,7 +15,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.entities.Camera;
-import at.antSim.graphics.entities.Entity;
+import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Loader;
@@ -119,10 +119,10 @@ public class MainApplication {
 	private Camera camera;
 	private Terrain terrain;
 	private MousePicker picker;
-	private List<Entity> entities;
+	private List<GraphicsEntity> entities;
 	private List<Light> lights;
 	
-	private Entity movingLamp;
+	private GraphicsEntity movingLamp;
 	private Light movingLight;
 	
 	private boolean glLoaded = false;
@@ -193,7 +193,7 @@ public class MainApplication {
 				}
 				
 				renderer.processTerrain(terrain);
-				for (Entity entity : entities) {
+				for (GraphicsEntity entity : entities) {
 					renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
 				}
 			}
@@ -276,7 +276,7 @@ public class MainApplication {
 			lights = WorldLoader.loadLights();
 			
 			// a lamp freely positionable on the map
-			movingLamp = new Entity(WorldLoader.texturedModels.get("lamp"), 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
+			movingLamp = new GraphicsEntity(WorldLoader.texturedModels.get("lamp"), 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
 			entities.add(movingLamp);
 			movingLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f));
 			lights.add(movingLight);

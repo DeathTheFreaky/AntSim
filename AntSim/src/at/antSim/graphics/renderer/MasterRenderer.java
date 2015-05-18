@@ -11,7 +11,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.entities.Camera;
-import at.antSim.graphics.entities.Entity;
+import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Loader;
@@ -60,7 +60,7 @@ public class MasterRenderer {
 	//all entities and terrains to be rendered
 	/* map of texturedModels, each containing a list of entities using this TexturedModel - 
 	 * so a texture needs to be loaded once and then can be applied to all entities using this same texture */
-	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>(); 
+	private Map<TexturedModel, List<GraphicsEntity>> entities = new HashMap<TexturedModel, List<GraphicsEntity>>(); 
 	private List<Terrain> terrains = new ArrayList<Terrain>();
 	
 	
@@ -139,16 +139,16 @@ public class MasterRenderer {
 	/**Sort entity in the entities Hashmap by their correct {@link TexturedModel} for more efficient rendering.<br>
 	 * This way, a texture has to be loaded only once and can then be applied for all entities using the same texture.
 	 * 
-	 * @param entity - the {@link Entity} to be sorted in
+	 * @param entity - the {@link GraphicsEntity} to be sorted in
 	 */
-	public void processEntity(Entity entity) {
+	public void processEntity(GraphicsEntity entity) {
 		TexturedModel entityModel = entity.getModel();
-		List<Entity> batch = entities.get(entityModel);
+		List<GraphicsEntity> batch = entities.get(entityModel);
 		if(batch != null) {
 			batch.add(entity);
 		}
 		else {
-			List<Entity> newBatch = new ArrayList<Entity>();
+			List<GraphicsEntity> newBatch = new ArrayList<GraphicsEntity>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}
