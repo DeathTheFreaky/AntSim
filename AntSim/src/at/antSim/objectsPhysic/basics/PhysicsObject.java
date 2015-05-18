@@ -1,5 +1,6 @@
 package at.antSim.objectsPhysic.basics;
 
+import at.antSim.objectsKI.Entity;
 import com.bulletphysics.dynamics.RigidBody;
 
 /**
@@ -12,4 +13,7 @@ public interface PhysicsObject {
 	 * @return Returns the {@link RigidBody} represented in the PhysicsObject
 	 */
 	RigidBody getRigidBody();
+
+	void receive(Entity entity);
+
 }

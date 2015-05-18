@@ -1,5 +1,6 @@
 package at.antSim.objectsPhysic;
 
+import at.antSim.objectsKI.Entity;
 import com.bulletphysics.dynamics.RigidBody;
 
 /**
@@ -18,5 +19,10 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 	@Override
 	public RigidBody getRigidBody() {
 		return body;
+	}
+
+	@Override
+	public void receive(Entity entity) {
+		entity.react(this);
 	}
 }
