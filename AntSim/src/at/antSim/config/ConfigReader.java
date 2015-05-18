@@ -3,6 +3,7 @@ package at.antSim.config;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -91,6 +92,21 @@ public class ConfigReader {
 			Globals.displayWidth = Globals.displaySaveWidth;
 			
 		} catch (FileNotFoundException e) {
+			
+			File configDir = new File(Globals.CONFIG);
+
+			// if the directory does not exist, create it
+			if (!configDir.exists()) {
+			    boolean result = false;
+
+			    try{
+			        configDir.mkdir();
+			        result = true;
+			    } 
+			    catch(SecurityException se){
+			        System.exit(-1);
+			    }        
+			}
 			
 			//write default values if config file does not exist
 			PrintWriter writer = new PrintWriter(Globals.CONFIG + "config.txt", "UTF-8");

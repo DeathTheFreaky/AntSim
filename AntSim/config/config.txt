@@ -1,9 +1,9 @@
 WORKING_DIR = C:\Users\Flo\git\AntSim\AntSim
-displayWidth = 1280
-displayHeight = 720
-displaySaveWidth = 1280
-displaySaveHeight = 720
-fullscreen = false
+displayWidth = 1920
+displayHeight = 1080
+displaySaveWidth = 1920
+displaySaveHeight = 1080
+fullscreen = true
 fontRows = 16
 fontCols = 16
 moveForwardKey = 200
