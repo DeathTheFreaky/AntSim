@@ -9,6 +9,7 @@ import at.antSim.config.ConfigWriter;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.EventPriority;
+import at.antSim.eventSystem.events.KeyPressedEvent;
 import at.antSim.eventSystem.events.KeyReleasedEvent;
 import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
 import at.antSim.guiWrapper.GuiContainer;
@@ -90,5 +91,13 @@ public class KeyChangeCmd implements Command {
 		state.hideWaitingWindow();
 		event.consume();
 		EventManager.getInstance().unregisterEventListener(this);
+	}
+	
+	/**Consumes a key press event when key binding change is active.
+	 * @param event
+	 */
+	@EventListener (priority = EventPriority.HIGH)
+	public void consumeKeyPress(KeyPressedEvent event) {
+		event.consume();
 	}
 }
