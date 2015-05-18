@@ -224,6 +224,7 @@ public class MainApplication {
 		//game logic
 		if (!paused && worldLoaded) {
 			((MainGameState)mainGameState).updateStatus();
+			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
 		}
 	}
 
@@ -319,9 +320,17 @@ public class MainApplication {
 	public void unpause() {
 		paused = false;
 	}
+
+	public void togglePause() {
+		if (paused) {
+			paused = false;
+		} else {
+			paused = true;
+		}
+	}
 	
 	public void setSpeed(float speed) {
-		timeStep = normalSpeedTime * speed;
+		timeStep = normalSpeedTime / speed;
 	}
 	
 	public float getSpeed(float speed) {

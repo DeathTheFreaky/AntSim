@@ -25,7 +25,8 @@ import at.antSim.graphics.textures.TerrainTexturePack;
  *
  */
 public class WorldLoader {
-	
+
+	public static HashMap<String, Entity> specificEntities = new HashMap<>();
 	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
 	private static LinkedList<String[]> modelTextureNames = new LinkedList<>(); //names of all obj files and associated textures to be loaded
 	
@@ -126,7 +127,9 @@ public class WorldLoader {
 		entities.add(new Entity(texturedModels.get("lamp"), 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
 		
 		//add cool stanford demo dragon for specular lighting demo
-		entities.add(new Entity(texturedModels.get("dragon"), 1, new Vector3f(0, 0, 0), 0, 0, 0, 1));
+		Entity dragon = new Entity(texturedModels.get("dragon"), 1, new Vector3f(0, 0, 0), 0, 0, 0, 1);
+		entities.add(dragon);
+		specificEntities.put("dragon", dragon);
 		
 		return entities;
 	}
