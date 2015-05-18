@@ -70,6 +70,27 @@ public class EventManager {
 		}
 	}
 
+	public void unregisterEventListener(Object listener) {
+
+		Method[] methods = listener.getClass().getMethods();
+
+		for (int i = 0; i < methods.length; i++) {
+			EventListener eventListener = methods[i].getAnnotation(EventListener.class);
+			if (eventListener != null) {
+				Class[] methodParams = methods[i].getParameterTypes();
+
+				if (methodParams.length < 1)
+					continue;
+
+				Class<? extends Event> eventType = methodParams[0];
+				if (eventListenerMap.containsKey(eventType)) {
+					EventListenerManagement listenerManagement = eventListenerMap.get(eventType);
+					listenerManagement.remove(new ListenerInformation(listener, methods[i]));
+				}
+			}
+		}
+	}
+
 	/**
 	 * Handles an passed Event immediately. Is not thread safe.
 	 *
@@ -169,14 +190,11 @@ public class EventManager {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (obj == null)
+			if (obj == null && obj instanceof ListenerInformation)
 				return false;
 
 			if (this == obj)
 				return true;
-
-			if (this.getClass() != obj.getClass())
-				return false;
 
 			ListenerInformation other = (ListenerInformation)obj;
 
