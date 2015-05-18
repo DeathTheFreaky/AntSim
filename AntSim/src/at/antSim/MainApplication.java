@@ -1,6 +1,9 @@
 package at.antSim;
 
 import java.util.List;
+
+import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
+
 import at.antSim.guiWrapper.states.AbstractGuiState;
 import at.antSim.guiWrapper.states.LoadingState;
 import at.antSim.guiWrapper.states.MainGameState;
@@ -220,7 +223,7 @@ public class MainApplication {
 		
 		//game logic
 		if (!paused && worldLoaded) {
-							
+			WorldLoader.specificEntities.get("dragon").increaseRotation(0, 5, 0);			
 		}
 	}
 
