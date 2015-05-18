@@ -5,11 +5,13 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
+import at.antSim.eventSystem.Event;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.graphics.models.RawModel;
+import at.antSim.guiWrapper.commands.Command;
 
 /**Represents an abstract class for Element's which shall be drawn in the GUI.
  * 
@@ -24,12 +26,13 @@ public abstract class GuiElement {
 	private String id;
 	private int textureId;
 	private GuiContainer parent;
+	private Command command;
 	
 	//positional values in pixel
-	private Point topLeft;
+	Point topLeft;
 	private Point middle;
-	private int width;
-	private int height;
+	int width;
+	int height;
 	
 	private HorReference horRef;
 	private HorPositions horPos;
@@ -46,11 +49,15 @@ public abstract class GuiElement {
 	//blend color and factor
 	private Vector3f blendColor;
 	private float blendFactor;
-
+	
+	//associate gui state
+	private GuiState state;
+	
 	/**Constructs a new {@link GuiElement}.
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
 	 * @param model - the {@link GuiElement}'s geometric model
 	 * @param textureId - id of the {@link GuiElement}'s texture as assigned by OpenGL
 	 * @param textureWidth - width of the {@link GuiElement}'s texture
@@ -67,12 +74,13 @@ public abstract class GuiElement {
 	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
 	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
 	 */
-	public GuiElement(String id, GuiContainer parent, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
+	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
-		
+				
 		this.width = desiredWidth;
 		this.height = desiredHeight;
 		this.model = model;
+		this.command = command;
 		this.textureId = textureId;
 		this.id = id;
 		this.parent = parent;
@@ -89,17 +97,12 @@ public abstract class GuiElement {
 		this.blendFactor = blendFactor;
 		
 		this.scale = new Vector2f(((float) textureWidth/Globals.displayWidth) * ((float) desiredWidth/textureWidth), ((float) textureHeight/Globals.displayHeight) * ((float) desiredHeight/textureHeight));
-		//this.scale = new Vector2f((float) desiredWidth/textureWidth*desiredWidth/Globals.displayWidth, (float) desiredHeight/textureHeight*desiredHeight/Globals.displayHeight/9*16);
-		
-		System.out.println("desired width: " + desiredWidth + ", texture width: " + textureWidth);
-		System.out.println("desired height: " + desiredHeight + ", texture height: " + textureHeight);
-		System.out.println("scale x: " + scale.x);
-		System.out.println("scale y: " + scale.y);
 				
 		calculatePos();
 		
 		if (parent != null) {
-			parent.getChildren().add(this);
+			parent.addChild(this);
+			this.state = parent.getGuiState();
 		}
 	}
 	
@@ -159,8 +162,8 @@ public abstract class GuiElement {
 				horRefElem = parent;
 			}
 			else {
-				if (parent.getChildren().size() > 0) {
-					horRefElem = parent.getChildren().get(parent.getChildren().size() - 1);
+				if (parent.getChildrenSize() > 0) {
+					horRefElem = parent.getAllChildren().get(parent.getChildrenSize() - 1);
 				} else {
 					horRefElem = parent;
 				}
@@ -169,8 +172,8 @@ public abstract class GuiElement {
 				verRefElem = parent;
 			}
 			else {
-				if (parent.getChildren().size() > 0) {
-					verRefElem = parent.getChildren().get(parent.getChildren().size() - 1);
+				if (parent.getChildrenSize() > 0) {
+					verRefElem = parent.getAllChildren().get(parent.getChildrenSize() - 1);
 				} else {
 					verRefElem = parent;
 				}
@@ -226,9 +229,6 @@ public abstract class GuiElement {
 		this.middle = new Point(left + width/2, top + height/2);
 		this.position = new Vector2f((float) middle.getX()/Globals.displayWidth * 2 - 1, ((float) middle.getY()/Globals.displayHeight * 2 - 1) * -1f);
 		
-		System.out.println("topLeft: " + topLeft.getX() + ", " + topLeft.getY());
-		System.out.println("middle: " + middle.getX() + ", " + middle.getY());
-		System.out.println("position: " + position.x + ", " + position.y);
 	}
 
 	public float getTransparency() {
@@ -246,14 +246,49 @@ public abstract class GuiElement {
 	public float getBlendFactor() {
 		return blendFactor;
 	}
+	
+	public void setGuiState(GuiState state) {
+		this.state = state;
+	}
+	
+	public GuiState getGuiState() {
+		return state;
+	}
+	
+	/**Checks if the mouse was released inside this gui element and if this {@link GuiElement} is part of the currently active {@link GuiState} and has an associated {@link Command}
+	 * and if the released MouseButton was the right mouse button.
+	 * 
+	 * @param event
+	 * @return - true if mouse was released inside this {@link GuiElement} and this {@link GuiElement} is part of the currently active {@link GuiState} and has an associated {@link Command}
+	 */
+	private boolean isInsideElement(MouseButtonReleasedEvent event) {
+		if (event.getPosX() >= topLeft.getX() && event.getPosX() <= (topLeft.getX() + width) &&
+				(Globals.displayHeight - event.getPosY()) >= topLeft.getY() && (Globals.displayHeight - event.getPosY()) <= (topLeft.getY() + height)) {
+			if (state == GuiWrapper.getInstance().getCurrentState() && command != null && event.getButton() == 0) {
+				return true;
+			}
+		} 
+		return false;
+	}
+	
+	public void setTextureId(int textureId) {
+		this.textureId = textureId;
+	}
+	
+	public void setCommand(Command command) {
+		this.command = command;
+	}
 
-	@EventListener(priority = EventPriority.HIGH)
+	@EventListener
 	public void onMousePress(MouseButtonPressedEvent event){
-		System.out.println("mouse pressed");
+		
 	}
 	
 	@EventListener
 	public void onMouseReleased(MouseButtonReleasedEvent event){
-		System.out.println("mouse released");
+		if (isInsideElement(event)) {
+			command.execute();
+			event.consume();
+		}
 	}
 }

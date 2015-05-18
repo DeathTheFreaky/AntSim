@@ -1,5 +1,6 @@
 package at.antSim.guiWrapper;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.textures.GuiTexture;
+import at.antSim.guiWrapper.commands.Command;
 
 /**A {@link GuiContainer} is meant to group {@link GuiElement} in a list of children.
  * 
@@ -21,6 +23,7 @@ public class GuiContainer extends GuiElement {
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
 	 * @param model - the {@link GuiElement}'s geometric model
 	 * @param texture - the {@link GuiElement}'s {@link GuiTexture}
 	 * @param desiredWidth - desired width of the Gui element in pixels
@@ -35,11 +38,11 @@ public class GuiContainer extends GuiElement {
 	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
 	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
 	 */
-	public GuiContainer(String id, GuiContainer parent, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
+	public GuiContainer(String id, GuiContainer parent, Command command, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 		
-		super(id, parent, model, texture.getTextureId(), texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, 
-				horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
+		super(id, parent, command, model, (texture != null) ? texture.getTextureId() : -1, (texture != null) ? texture.getWidth() : 0, (texture != null) ? texture.getHeight() : 0, 
+				desiredWidth, desiredHeight, horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
 	}
 	
 	/**Constructs a new {@link GuiContainer}.<br>
@@ -48,6 +51,7 @@ public class GuiContainer extends GuiElement {
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
 	 * @param model - the {@link GuiElement}'s geometric model
 	 * @param texture - the {@link GuiElement}'s {@link GuiTexture}
 	 * @param desiredWidth - desired width of the Gui element in pixels
@@ -59,14 +63,64 @@ public class GuiContainer extends GuiElement {
 	 * @param verPos - {@link VerPosition} of the {@link GuiElement}
 	 * @param verOffset - vertical offset in pixels
 	 */
-	public GuiContainer(String id, GuiContainer parent, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
+	public GuiContainer(String id, GuiContainer parent, Command command, RawModel model, GuiTexture texture, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset) {
 		
-		super(id, parent, model, texture.getTextureId(), texture.getWidth(), texture.getHeight(), desiredWidth, desiredHeight, 
-				horRef, horPos, horOffset, verRef, verPos, verOffset, 0f, new Vector3f(0, 0, 0), 0f);
+		super(id, parent, command, model, (texture != null) ? texture.getTextureId() : -1, (texture != null) ? texture.getWidth() : 0, (texture != null) ? texture.getHeight() : 0, 
+				desiredWidth, desiredHeight, horRef, horPos, horOffset, verRef, verPos, verOffset, 0f, new Vector3f(0, 0, 0), 0f);
 	}
 	
-	public List<GuiElement> getChildren() {
-		return children;
+	/**Removes a specific child from this container, identified by its id.
+	 * @param id
+	 */
+	public void removeChild(String id) {
+		GuiElement removeElement = null;
+		for (GuiElement elem : children) {
+			if (elem.getId().equals(id)) {
+				removeElement = elem;
+			}
+		}
+		children.remove(removeElement);
+	}
+	
+	/**Removes all children of this container.
+	 * 
+	 */
+	public void removeChildren() {
+		children.clear();
+	}
+	
+	/**
+	 * @return - number of this container's children
+	 */
+	public int getChildrenSize() {
+		return children.size();
+	}
+	
+	/**Adds a new child also registering its gui state as the parent's gui state.
+	 * @param elem
+	 */
+	public void addChild(GuiElement elem) {
+		children.add(elem);
+		elem.setGuiState(getGuiState());
+	}
+
+	/**Adds a guiState as associated state for all children of this container.
+	 * @param guiState
+	 */
+	public void addStateForAllChildren(GuiState guiState) {
+		for (GuiElement element : children) {
+			element.setGuiState(guiState);
+			if (element instanceof GuiContainer) {
+				((GuiContainer) element).addStateForAllChildren(guiState);
+			}
+		}
+	}
+
+	/**
+	 * @return - returns an unmodifiable list of all children of this container
+	 */
+	public List<GuiElement> getAllChildren() {
+		return Collections.unmodifiableList(children);
 	}
 }

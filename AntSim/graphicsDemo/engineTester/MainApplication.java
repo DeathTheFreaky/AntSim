@@ -1,39 +1,33 @@
-package at.antSim;
+package engineTester;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.ObjLongConsumer;
+
+import models.RawModel;
+import models.TexturedModel;
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
 
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import at.antSim.graphics.entities.Camera;
-import at.antSim.graphics.entities.Entity;
-import at.antSim.graphics.entities.Light;
-import at.antSim.graphics.graphicsUtils.DisplayManager;
-import at.antSim.graphics.graphicsUtils.Loader;
-import at.antSim.graphics.graphicsUtils.MousePicker;
-import at.antSim.graphics.graphicsUtils.OBJFileLoader;
-import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
-import at.antSim.graphics.models.ModelData;
-import at.antSim.graphics.models.RawModel;
-import at.antSim.graphics.models.TexturedModel;
-import at.antSim.graphics.renderer.GuiRenderer;
-import at.antSim.graphics.renderer.MasterRenderer;
-import at.antSim.graphics.terrains.Terrain;
-import at.antSim.graphics.textures.GuiTexture;
-import at.antSim.graphics.textures.ModelTexture;
-import at.antSim.graphics.textures.TerrainTexture;
-import at.antSim.graphics.textures.TerrainTexturePack;
-import at.antSim.guiWrapper.GuiContainer;
-import at.antSim.guiWrapper.GuiImage;
-import at.antSim.guiWrapper.GuiState;
-import at.antSim.guiWrapper.GuiText;
-import at.antSim.guiWrapper.GuiWrapper;
-import at.antSim.guiWrapper.HorPositions;
-import at.antSim.guiWrapper.HorReference;
-import at.antSim.guiWrapper.VerPositions;
-import at.antSim.guiWrapper.VerReference;
+import entities.Camera;
+import entities.Entity;
+import entities.Light;
+import entities.Player;
+import guis.GuiRenderer;
+import guis.GuiTexture;
+import renderEngine.DisplayManager;
+import renderEngine.Loader;
+import renderEngine.MasterRenderer;
+import terrains.Terrain;
+import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
+import toolbox.MousePicker;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -43,14 +37,14 @@ import at.antSim.guiWrapper.VerReference;
  * @author Flo
  *
  */
-public class EngineTester {
+public class MainApplication {
 	
 	/* The OpenGL code so far has been written based on the a youtube tutorial series. 
 	 * 
 	 * Also, there is a plugin for writing GLSL shaders in Eclipse: http://sourceforge.net/projects/webglsl/
 	 * -> Extract .zip file to Eclipse installation directory
 	 * 
-	 * NiftyGUI: http://sourceforge.net/projects/nifty-gui/files/nifty-gui/1.3.2/
+	 * OpenGL Api: https://www.opengl.org/sdk/docs/man4/index.php
 	 * 
 	 * OpenGL Commands syntax for lots of 3 param - commands:
 	 * 1.: what is affected, 2.: which behaviour to define, 3.: the actual value to set
@@ -89,54 +83,42 @@ public class EngineTester {
 	 * 28.) Day/Night: http://www.youtube.com/watch?v=rqx9IDLKV28
 	 * 29.) Mouse Picking: https://youtu.be/DLKN0jExRIM //using 3d ray representing everything under the ray from the viewer's perspective; bounding spheres
 	 * 
-	 * Sources:
-	 * OpenGL Api: https://www.opengl.org/sdk/docs/man4/index.php
 	 * Animations: http://www.wazim.com/Collada_Tutorial_2.htm
-	 * LWJGL: http://wiki.lwjgl.org/index.php?title=Main_Page
-	 * Easy Matrix Explanations: http://www.mathsisfun.com/algebra/matrix-introduction.html
-	 * TransformationMatrix: http://en.wikipedia.org/wiki/Transformation_matrix
-	 * Conversion Matrix to Euler: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToEuler/
-	 * More complex matrix explanation: http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/
-	 * Projection Matrix explained: http://www.songho.ca/opengl/gl_projectionmatrix.html
-	 * Vector basics: http://www.bbc.co.uk/bitesize/higher/maths/geometry/vectors/revision/1/
-	 * Dot Product: http://betterexplained.com/articles/vector-calculus-understanding-the-dot-product/
-	 * Some basic trigonometry: http://www.mathsisfun.com/algebra/trigonometry.html
-	 * Open GL Textures: https://open.gl/textures
-	 * Mouse Picking with Ray Casting: http://antongerdelan.net/opengl/raycasting.html
-	 * 
-	 * Code sources:
-	 * 14 - Simple Terrain generation code: https://www.dropbox.com/s/47qk4yrz5v9lb61/Terrain%20Generation%20Code.txt?dl=0
-	 * 16 - OBJ File Loader: https://www.dropbox.com/sh/x1fyet1otejxk3z/AAAoCqArl4cIx0THdRk2poW3a?dl=0
-	 * 17 - Example blend Map: https://www.dropbox.com/s/yfd7so1yg0fq4jo/blendMap.png?dl=0
-	 * 18 - Height map: https://www.dropbox.com/s/dcul3fnrnejue7x/heightmap.png?dl=0
-	 * 22 - BarryCentric function: https://www.dropbox.com/s/0md240yyc359ik3/code.txt?dl=0
-	 * 23 - Fern texture atlas: https://www.dropbox.com/s/4m901nauypnsapn/fern.png?dl=0
-	 * 26 - Models and texuters: https://www.dropbox.com/sh/j1zmywbkxqkp0rw/AADx61ZUt48A97xKZUww5YNea?dl=0
-	 * 27 - Skybox: https://www.dropbox.com/sh/phslacd8v9i17wb/AABui_-C-yhKvZ1H2wb3NykIa?dl=0
-	 * 28 - Night Skybox: https://www.dropbox.com/sh/o7ozx1u5qlg7b5v/AACI3zt1a9ZMw5MG2G_rzbKda?dl=0
-	 * 28 - Day/Night example code: https://www.dropbox.com/s/iom1x2c3t0r5owr/Day%20Night%20Example.txt?dl=0
-	 * 29 - Mouse Picker example code: https://www.dropbox.com/s/qkslys3p3xzh8av/MousePicker%20Code.txt?dl=0
 	 * */
 	
-	public static void launch(Loader loader, MasterRenderer renderer) {
+	private static final float WORLD_SIZE = 800; //square
+	
+	public static void main(String[] args) {
+		
+		DisplayManager.createDisplay();
+		
+		Loader loader = new Loader();
+		
+		MasterRenderer renderer = new MasterRenderer(loader);
 		
 		/* Using index buffers will help to use less data in total by not specifying positions shared by 
 		 * different vertexes multiple times and instead using indices defining which vertexes use which positions.
 		 */
 		
 		//load 3d models from .obj files into ModelData objects
+		ModelData dragonModelData = OBJFileLoader.loadOBJ("dragon");
 		ModelData treeModelData = OBJFileLoader.loadOBJ("tree");
 		ModelData grassModelData = OBJFileLoader.loadOBJ("grass");
 		ModelData fernModelData = OBJFileLoader.loadOBJ("fern");
+		ModelData playerModelData = OBJFileLoader.loadOBJ("person");
 		ModelData lampModelData = OBJFileLoader.loadOBJ("lamp");
 		
 		//load ModelData objects in a VAO and return RawModels
+		RawModel dragonRawModel = loader.loadToVAO(dragonModelData.getVertices(), dragonModelData.getTextureCoords(), 
+				dragonModelData.getNormals(), dragonModelData.getIndices());
 		RawModel treeRawModel = loader.loadToVAO(treeModelData.getVertices(), treeModelData.getTextureCoords(), 
 				treeModelData.getNormals(), treeModelData.getIndices());
 		RawModel grassRawModel = loader.loadToVAO(grassModelData.getVertices(), grassModelData.getTextureCoords(), 
 				grassModelData.getNormals(), grassModelData.getIndices());
 		RawModel fernRawModel = loader.loadToVAO(fernModelData.getVertices(), fernModelData.getTextureCoords(), 
 				fernModelData.getNormals(), fernModelData.getIndices());
+		RawModel playerRawModel = loader.loadToVAO(playerModelData.getVertices(), playerModelData.getTextureCoords(), 
+				playerModelData.getNormals(), playerModelData.getIndices());
 		RawModel lampRawModel = loader.loadToVAO(lampModelData.getVertices(), lampModelData.getTextureCoords(), 
 				lampModelData.getNormals(), lampModelData.getIndices());
 		
@@ -145,6 +127,7 @@ public class EngineTester {
 		ModelTexture treeTexture = new ModelTexture(loader.loadTexture("tree")); 
 		ModelTexture grassTexture = new ModelTexture(loader.loadTexture("grass"));
 		ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("fern"));
+		ModelTexture playerTexture = new ModelTexture(loader.loadTexture("playerTexture"));
 		ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lamp"));
 		
 		fernTextureAtlas.setNumberOfRows(2); //set number of rows inside texture atlas
@@ -160,11 +143,16 @@ public class EngineTester {
 		fernTextureAtlas.setUseFakeLighting(true);
 		
 		//finally, create the TexturedModel sticking ModelTextures to RawModels
+		TexturedModel dragonTexturedModel = new TexturedModel(dragonRawModel, dragonTexture); 
 		TexturedModel treeTexturedModel = new TexturedModel(treeRawModel, treeTexture);
 		TexturedModel grassTexturedModel = new TexturedModel(grassRawModel, grassTexture);
 		TexturedModel fernTexturedModel = new TexturedModel(fernRawModel, fernTextureAtlas);
+		TexturedModel playerTexturedModel = new TexturedModel(playerRawModel, playerTexture);
 		TexturedModel lampTexturedModel = new TexturedModel(lampRawModel, lampTexture);
-						
+		
+		//create player
+		Player player = new Player(playerTexturedModel, 1, new Vector3f(WORLD_SIZE/2, 0, -WORLD_SIZE/2), 0, 0, 0, 1);
+				
 		//load the different terrain textures
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("dirt"));
@@ -186,23 +174,25 @@ public class EngineTester {
 		
 		List<Entity> entities = new ArrayList<Entity>(); //holds all entities to be rendered
 		Random random = new Random(676452);
-				
+		
+		entities.add(new Entity(dragonTexturedModel, 1, new Vector3f(0,0,0),0,0,0,1)); 
+		
 		for (int i = 0; i < 1200; i++) {
 			if (i % 20 == 0) {
-				float x = random.nextFloat() * Globals.WORLD_SIZE;
-				float z = random.nextFloat() * -Globals.WORLD_SIZE;
+				float x = random.nextFloat() * WORLD_SIZE;
+				float z = random.nextFloat() * -WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
 				entities.add(new Entity(fernTexturedModel, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, 0.9f));
 			}
 			if (i % 5 == 0) {
-				float x = random.nextFloat() * Globals.WORLD_SIZE;
-				float z = random.nextFloat() * -Globals.WORLD_SIZE;
+				float x = random.nextFloat() * WORLD_SIZE;
+				float z = random.nextFloat() * -WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
 				entities.add(new Entity(grassTexturedModel, 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
 						0, random.nextFloat() * 0.1f + 0.6f));
-				x = random.nextFloat() * Globals.WORLD_SIZE;
-				z = random.nextFloat() * -Globals.WORLD_SIZE;
+				x = random.nextFloat() * WORLD_SIZE;
+				z = random.nextFloat() * -WORLD_SIZE;
 				y = terrain.getHeightOfTerrain(x, z);
 				entities.add(new Entity(treeTexturedModel, 1, new Vector3f(x, y, z), 0, 0,
 						0, random.nextFloat() * 1 + 4));
@@ -225,44 +215,26 @@ public class EngineTester {
 		entities.add(new Entity(lampTexturedModel, 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
 		//entities.add(new Entity(lampTexturedModel, 1, new Vector3f(293, -6.6f, -305), 0, 0, 0, 1));
 		
-		Camera camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2)); //player camera - make a "ghost" player to simulate cool camera movement
+		Camera camera = new Camera(player); //player camera - make a "ghost" player to simulate cool camera movement
+		
+		List<GuiTexture> guis = new ArrayList<GuiTexture>();
+		GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.8f, 0.95f), new Vector2f(0.2f, 0.25f));
+		
+		//order matters: second texture will be drawn in fron of first texture
+		guis.add(gui);
+		
+		GuiRenderer guiRenderer = new GuiRenderer(loader);
 		
 		MousePicker picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrain);
 		
-		//gui
-		GuiWrapper guiWrapper = new GuiWrapper();
-		GuiState testState = new GuiState();
-		
-		float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
-		float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
-		RawModel testContainerQuad = loader.loadToVAO(positions, textureCoords, 2);
-		
-		GuiContainer testContainer = new GuiContainer("testContainer", null, testContainerQuad, loader.loadGuiTexture("white"), 640, 360, 
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.5f, new Vector3f(0,0,0), 0f);
-		
-		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
-		GuiText testText = new GuiText("testText", textDrawer.createTextQuad("Flo war da!\nWhohoooo"), testContainer, 42, HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.TOP, 0,
-				0f, new Vector3f(0f, 1f, 0f), 0.5f);
-		
-		RawModel testImageQuad = loader.loadToVAO(positions, textureCoords, 2);
-		GuiImage testImage = new GuiImage("testImage", testContainer, testImageQuad, loader.loadGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0,
-				0f, new Vector3f(1f, 0f, 0f), 0.2f);
-		
-		testState.addContainer(testContainer);
-		 
-		guiWrapper.addState("testState", testState);
-		guiWrapper.setCurrentState("testState");
-		
-		GuiRenderer guiRenderer = new GuiRenderer(loader);
-				
 		//main game loop
-		boolean done = false;
-		while(!Display.isCloseRequested() && !done) {
+		while(!Display.isCloseRequested()) {
 			
 			//game logic
 			entities.get(0).increaseRotation(0, 0.5f, 0); //rotate the dragon
 			
-			camera.move(terrain); //every single frame check for key inputs which move the camera
+			player.move(terrain);
+			camera.move(); //every single frame check for key inputs which move the camera
 			
 			picker.update(); //update mouse picker's ray
 			Vector3f terrainPoint = picker.getCurrentTerrainPoint();
@@ -271,6 +243,7 @@ public class EngineTester {
 				movingLight.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 12f, terrainPoint.z));
 			}
 			
+			renderer.processEntity(player);
 			renderer.processTerrain(terrain);
 			//renderer.processTerrain(terrain2);
 			for (Entity entity : entities) {
@@ -278,8 +251,8 @@ public class EngineTester {
 			}
 			
 			renderer.render(lights, camera);
-			guiRenderer.render(guiWrapper.getCurrentState()); 
-						
+			guiRenderer.render(guis);
+			
 			DisplayManager.updateDisplay();
 		}
 		
@@ -287,5 +260,9 @@ public class EngineTester {
 		renderer.cleanUp();
 		loader.cleanUp();
 		DisplayManager.closeDisplay();
+	}
+
+	public static float getWorldSize() {
+		return WORLD_SIZE;
 	}
 }

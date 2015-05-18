@@ -44,9 +44,10 @@ public class KeyboardHandler extends Thread {
 			if ((System.nanoTime() - iterationStartTime) < Globals.FPS_DURATION_NANONS) {
 				long waitTime = Globals.FPS_DURATION_NANONS - (System.nanoTime() - iterationStartTime);
 				try {
-					sleep(waitTime / 100, (int) waitTime % 100);
+					sleep(waitTime / Globals.MILIS_TO_NANOS_RATIO, (int) waitTime % Globals.MILIS_TO_NANOS_RATIO);
 				} catch (InterruptedException e) {
 					//do nothing --> will jump out of loop
+					interrupt();
 				}
 			}
 		}

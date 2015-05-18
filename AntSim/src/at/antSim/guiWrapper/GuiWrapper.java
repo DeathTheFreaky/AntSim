@@ -3,7 +3,10 @@ package at.antSim.guiWrapper;
 import java.util.HashMap;
 import java.util.Map;
 
-/**A gui wrapper wraps the current state of a gui.<br>
+import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.textures.GuiTexture;
+
+/**A gui wrapper wraps the current state of a gui and stores all GuiTextures to be reused.<br>
  * <br>
  * It manages all states known to the GUI and can set and get the currently activated state of the GUI.
  * 
@@ -12,19 +15,28 @@ import java.util.Map;
  */
 public class GuiWrapper {
 	
+	private static GuiWrapper INSTANCE = null;
+	
 	Map<String, GuiState> states = new HashMap<>();
+	Map<String, GuiTexture> guiTextures = new HashMap<>();
 	
 	GuiState currentState;
+	Loader loader;
+	
+	static {
+		INSTANCE = new GuiWrapper();
+	}
+	
+	private GuiWrapper() {};
 	
 	/**Adds a new State to the GUI.<br>
 	 * <br>
 	 * In case a state with the same name was already present, the old state will be replaced by the new state.
-	 * 
-	 * @param name - name of the GUI state to be added
+	 *
 	 * @param state - the GUI state to be added
 	 */
-	public void addState(String name, GuiState state) {
-		states.put(name, state);
+	public void addState(GuiState state) {
+		states.put(state.getName(), state);
 	}
 	
 	/**Sets the currently activated {@link GuiState}.<br>
@@ -32,7 +44,7 @@ public class GuiWrapper {
 	 * 
 	 * @param name - name of the GUI State to be set active
 	 */
-	public void setCurrentState(String name) {
+	public synchronized void setCurrentState(String name) {
 		currentState = states.get(name);
 	}
 	
@@ -52,4 +64,31 @@ public class GuiWrapper {
 		return states.get(name);
 	}
 	
+	/**Retrieves a gui Texture.
+	 * 
+	 * @param filename
+	 * @return
+	 */
+	public GuiTexture getGuiTexture(String filename) {
+		
+		GuiTexture tex = guiTextures.get(filename);
+		
+		if (tex == null) {
+			tex = loader.loadGuiTexture(filename);
+			guiTextures.put(filename, tex);
+		}
+		
+		return tex;
+	}
+	
+	/**Sets a loader to be used for loading GuiTextures. Needs to be called before any GuiTexture can be loaded.
+	 * @param loader
+	 */
+	public void setLoader(Loader loader) {
+		this.loader = loader;
+	}
+		
+	public static GuiWrapper getInstance() {
+		return INSTANCE;
+	}
 }

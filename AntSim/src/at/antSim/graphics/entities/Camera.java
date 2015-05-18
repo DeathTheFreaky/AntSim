@@ -1,11 +1,21 @@
 package at.antSim.graphics.entities;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.Globals;
+import at.antSim.MainApplication;
+import at.antSim.eventSystem.EventListener;
+import at.antSim.eventSystem.EventPriority;
+import at.antSim.eventSystem.events.KeyPressedEvent;
+import at.antSim.eventSystem.events.KeyReleasedEvent;
+import at.antSim.eventSystem.events.MouseButtonPressedEvent;
+import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
+import at.antSim.eventSystem.events.MouseMotionEvent;
+import at.antSim.eventSystem.events.MouseScrollEvent;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.terrains.Terrain;
+import at.antSim.guiWrapper.GuiWrapper;
 
 /**A virtual camera, pretending camera movement by moving the whole world in the opposite direction.
  * 
@@ -22,33 +32,49 @@ public class Camera {
 	private static final float PITCH_FACTOR = 0.1f;
 	private static final float YAW_FACTOR = 0.3f;
 	
-	private static final float MOVE_SPEED = 50; //units per second
-	private static final float STRAY_SPEED = 50; //units per second
-	private static final float TURN_SPEED = 150; //degrees per second
+	private static final float MOVE_SPEED = 100; //units per second
+	private static final float STRAY_SPEED = 100; //units per second
+	private static final float ROTATE_SPEED = 150; //degrees per second
+	private static final float TILT_SPEED = 50; //degrees per second
+	private static final float FLOAT_SPEED = 50; //units per second
+	private static final float ZOOM_SPEED = 100; //units per second
 	
 	//determine how fast camera is currently moving
-	private float currentSpeed = 0;
+	private float currentMovementSpeed = 0;
 	private float currentStraySpeed = 0;
 	private float currentTurnSpeed = 0;
+	private float currentTiltSpeed = 0;
+	private float currentFloatSpeed = 0;
+	private float currentZoomSpeed = 0;
 	
 	//camera's position and rotation
 	private Vector3f position = new Vector3f(0,0,0);
+	private float verticalOffset = 0;
 	private float pitch = 30; //how high or low the camera is aiming
 	private float yaw; //how much left or right the camera is aiming
 	private float roll; //the camera's tilt - at 180° it is upside down
 	
 	//reference point's position and rotation
 	private Vector3f refPointPosition;
+	private Vector3f initialRefPointPosition = new Vector3f(0,0,0);
 	private float rotY; //rotation of the reference point
+	
+	private boolean rightMouseButtonDown = false;
+	private boolean triggerReset = false;
+	
+	private String pauseMenuName;
 	
 	/**Creates a new reference point camera, passing the reference point's initial position.
 	 * 
 	 * @param refPointPosition
 	 */
-	public Camera(Vector3f refPointPosition) {
+	public Camera(Vector3f refPointPosition, String pauseMenuName) {
 		this.refPointPosition = refPointPosition;
+		initialRefPointPosition.x = refPointPosition.x;
+		initialRefPointPosition.y = refPointPosition.y;
+		initialRefPointPosition.z = refPointPosition.z;
+		this.pauseMenuName = pauseMenuName;
 	}
-	
 	
 	/**Moves the camera.
 	 * 
@@ -56,12 +82,12 @@ public class Camera {
 	 */
 	public void move(Terrain terrain) {
 		
-		//move the reference point of movement keys have been triggered
-		checkKeyInputs();
-		
+		if (triggerReset) {
+			resetPositions();
+		}
+				
 		//takes into account the actual time passed, making movement independent from frame rate
-		increaseKeyRotation(currentTurnSpeed * DisplayManager.getFrameTimeSeconds()); 
-		increaseMouseRotation();
+		increaseKeyRotationAndTilt(currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), currentTiltSpeed * DisplayManager.getFrameTimeSeconds()); 
 		
 		/*
 		 * distance is our referncePoints movement triangle's hypotenuse.
@@ -78,8 +104,11 @@ public class Camera {
 		float dx = 0;
 		float dz = 0;
 		
-		if (currentSpeed != 0) {
-			distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
+		if (currentZoomSpeed != 0) {
+			distanceFromReferencePoint += currentZoomSpeed * DisplayManager.getFrameTimeSeconds();
+		}
+		if (currentMovementSpeed != 0) {
+			distance = currentMovementSpeed * DisplayManager.getFrameTimeSeconds();
 			dx += (float) (distance * Math.sin(Math.toRadians(rotY)));
 			dz += (float) (distance * Math.cos(Math.toRadians(rotY)));
 		}
@@ -88,80 +117,170 @@ public class Camera {
 			dz += (float) (distance * Math.sin(Math.toRadians(rotY)));
 			dx -= (float) (distance * Math.cos(Math.toRadians(rotY)));
 		}
+		if (currentFloatSpeed != 0) {
+			distance = currentFloatSpeed * DisplayManager.getFrameTimeSeconds();
+			verticalOffset += distance;
+		}
 		
-		increasePosition(dx, 0, dz);
-		refPointPosition.y = terrain.getHeightOfTerrain(refPointPosition.x, refPointPosition.z);
-		
-		calculateZoom();
-		calculatePitch();
-		
+		increasePosition(dx, verticalOffset, dz, terrain);
+				
 		float horizontalDistance = calculateHorizontalDistance();
 		float verticalDistance = calculateVerticalDistance();
 		
-		calculateCameraPosition(horizontalDistance, verticalDistance);
-	                
+		calculateCameraPosition(horizontalDistance, verticalDistance);		
 	}
-	
+
+	/**Reset positions of camera and reference point.
+	 * 
+	 */
+	private void resetPositions() {
+		refPointPosition.x = initialRefPointPosition.x;
+		refPointPosition.y = initialRefPointPosition.y;
+		refPointPosition.z = initialRefPointPosition.z;
+		position.x = 0;
+		position.y = 0;
+		position.z = 0;
+		verticalOffset = 0;
+		yaw = 0;
+		roll = 0;
+		pitch = 30; 
+		rotY = 0;
+		distanceFromReferencePoint = 100;
+		triggerReset = false;
+	}
+
 	/**Checks if the camera movement keys have been pressed on the keyboard and sets movement variables accordingly.
 	 * 
 	 */
-	private void checkKeyInputs(){
+	@EventListener (priority = EventPriority.NORMAL)
+	public void checkKeyInputs(KeyPressedEvent event) {
 		
-		this.currentTurnSpeed = 0;
-		this.currentSpeed = 0;
-		this.currentStraySpeed = 0;
+		if(event.getKey() == Globals.moveForwardKey) {
+			this.currentMovementSpeed = MOVE_SPEED;
+			event.consume();
+		} else if (event.getKey() == Globals.moveBackwardKey) {
+			this.currentMovementSpeed = -MOVE_SPEED;
+			event.consume();
+		}
+		if(event.getKey() == Globals.moveUpKey) {
+			this.currentFloatSpeed = FLOAT_SPEED;
+			event.consume();
+		} else if (event.getKey() == Globals.moveDownKey) {
+			this.currentFloatSpeed = -FLOAT_SPEED;
+			event.consume();
+		}
+		if(event.getKey() == Globals.moveLeftKey) {
+			this.currentStraySpeed = -STRAY_SPEED;
+			event.consume();
+		} else if (event.getKey() == Globals.moveRightKey) {
+			this.currentStraySpeed = STRAY_SPEED;
+			event.consume();
+		}
+		if(event.getKey() == Globals.turnLeftKey) {
+			this.currentTurnSpeed = ROTATE_SPEED;
+			event.consume();
+		} else if (event.getKey() == Globals.turnRightKey) {
+			this.currentTurnSpeed = -ROTATE_SPEED;
+			event.consume();
+		}
+		if(event.getKey() == Globals.tiltDownKey) {
+			this.currentTiltSpeed = TILT_SPEED;
+			event.consume();
+		} else if (event.getKey() == Globals.tiltUpKey) {
+			this.currentTiltSpeed = -TILT_SPEED;
+			event.consume();
+		}
+		if(event.getKey() == Globals.zoomInKey) {
+			this.currentZoomSpeed = -ZOOM_SPEED;
+			event.consume();
+		} else if (event.getKey() == Globals.zoomOutKey) {
+			this.currentZoomSpeed = ZOOM_SPEED;
+			event.consume();
+		}
+	}
+	
+	/**Checks if the camera movement keys have been released on the keyboard and sets movement variables accordingly.
+	 * 
+	 */
+	@EventListener (priority = EventPriority.NORMAL)
+	public void checkKeyInputs(KeyReleasedEvent event){
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-			this.currentSpeed = MOVE_SPEED;
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-			this.currentSpeed = -MOVE_SPEED;
+		if(event.getKey() == Globals.moveForwardKey) {
+			this.currentMovementSpeed = 0;
+			event.consume();
+		} else if (event.getKey() == Globals.moveBackwardKey) {
+			this.currentMovementSpeed = 0;
+			event.consume();
+		}
+		if(event.getKey() == Globals.moveUpKey) {
+			this.currentFloatSpeed = 0;
+			event.consume();
+		} else if (event.getKey() == Globals.moveDownKey) {
+			this.currentFloatSpeed = 0;
+			event.consume();
+		}
+		if(event.getKey() == Globals.moveLeftKey) {
+			this.currentStraySpeed = 0;
+			event.consume();
+		} else if (event.getKey() == Globals.moveRightKey) {
+			this.currentStraySpeed = 0;
+			event.consume();
+		}
+		if(event.getKey() == Globals.turnLeftKey) {
+			this.currentTurnSpeed = 0;
+			event.consume();
+		} else if (event.getKey() == Globals.turnRightKey) {
+			this.currentTurnSpeed = 0;
+			event.consume();
+		} 
+		if(event.getKey() == Globals.tiltDownKey) {
+			this.currentTiltSpeed = 0;
+			event.consume();
+		} else if (event.getKey() == Globals.tiltUpKey) {
+			this.currentTiltSpeed = 0;
+			event.consume();
+		}
+		if(event.getKey() == Globals.zoomInKey) {
+			this.currentZoomSpeed = 0;
+			event.consume();
+		} else if (event.getKey() == Globals.zoomOutKey) {
+			this.currentZoomSpeed = 0;
+			event.consume();
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-				this.currentTurnSpeed = TURN_SPEED;
-			} else {
-				this.currentStraySpeed = -STRAY_SPEED;
-			}
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-			if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-				this.currentTurnSpeed = -TURN_SPEED;
-			} else {
-				this.currentStraySpeed = STRAY_SPEED;
-			}
-		} 
+		//restore camera position
+		if (event.getKey() == Globals.restoreCameraPosition) {
+			triggerReset = true;
+		}
+		
+		//pause menu
+		if (event.getKey() == Keyboard.KEY_ESCAPE) {
+			MainApplication.getInstance().pause();
+			GuiWrapper.getInstance().setCurrentState(pauseMenuName);
+		}
 	}
 	
 	/**Moves the referencePoint in the world.
 	 * 
-	 * @param dx - how far to move the Entity on the x-Axis
-	 * @param dy - how far to move the Entity on the y-Axis
-	 * @param dz - how far to move the Entity on the z-Axis
+	 * @param dx - how far to move the reference point on the x-Axis
+	 * @param verticalOffset - permanent offset on the y-Axis (cause height is usually calculated by a fix offset from terrain height)
+	 * @param dz - how far to move the reference point on the z-Axis
 	 */
-	private void increasePosition(float dx, float dy, float dz) {
+	private void increasePosition(float dx, float verticalOffset, float dz, Terrain terrain) {
 		refPointPosition.x += dx;
-		refPointPosition.y += dy;
+		refPointPosition.y = terrain.getHeightOfTerrain(refPointPosition.x, refPointPosition.z) + verticalOffset;;
 		refPointPosition.z += dz;
 	}
 	
-	/**Rotates the referencePoint around the world's y-Axis when the left/right buttons are pressed.
+	/**Rotates the camera around the world's y-Axis,
+	 * tilts the camera around the world's x-Axis.
 	 * 
-	 * @param dy - how far to rotate the Entity around the y-Axis
+	 * @param dy - how far to rotate the camera around the y-Axis
+	 * @param dx - how for to tilt the camera around the x-Axis
 	 */
-	private void increaseKeyRotation(float dy) {
+	private void increaseKeyRotationAndTilt(float dy, float dx) {
 		rotY += dy;
-	}
-	
-	/**Rotates the reference Point around the world's y-Axis when the mouse is moved to the left or the right (inverted).
-	 * 
-	 */
-	private void increaseMouseRotation() {
-		
-		//since camera is supposed to always stay directly behind the reference point (at 0 degree angle), need to update rotY when mouse rotate around y-axis
-		if (Mouse.isButtonDown(1)) { //right mouse button pressed
-			float angleChange = Mouse.getDX() * YAW_FACTOR; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
-			rotY += angleChange; //update reference point rotation
-		}
+		pitch += dx;
 	}
 	
 	/**Calculates the position of a 3rd person camera in world space.
@@ -216,18 +335,23 @@ public class Camera {
 	/**Zooms camera out when moving mousewheel down and in when moving mousewheel up.
 	 * 
 	 */
-	private void calculateZoom() {
-		float zoomLevel = Mouse.getDWheel() * ZOOM_FACTOR; //calculate how for to zoom in and out, determined by mousewheel movement
+	@EventListener (priority = EventPriority.NORMAL)
+	public void calculateZoom(MouseScrollEvent event) {
+		float zoomLevel = event.getDWheel() * ZOOM_FACTOR; //calculate how for to zoom in and out, determined by mousewheel movement
 		distanceFromReferencePoint -= zoomLevel; //move in when moving mousewheel up (Mouse.getDWheel() returns > 0)
 	}
 	
-	/**Changes camera pitch -> rotates Camera downwards when moving mouse upwards and rotates Camera upwards when moving mouse downwards.
+	/**Changes camera pitch and rotation -> rotates Camera downwards when moving mouse upwards and rotates Camera upwards when moving mouse downwards.
 	 * 
 	 */
-	private void calculatePitch() {
-		if (Mouse.isButtonDown(1)) { //right mouse button pressed
-			float pitchChange = Mouse.getDY() * PITCH_FACTOR; //calculate how far to rotate camera up and down, determined by the mouse's movement along the y-Axis
-			pitch -= pitchChange; //rotate camera downwards when moving mouse upwards the y-Axis
+	@EventListener (priority = EventPriority.NORMAL)
+	public void calculatePitchAndRotation(MouseMotionEvent event) {
+		if (rightMouseButtonDown) { //right mouse button pressed
+			float pitchChange = event.getDY() * PITCH_FACTOR * Globals.invertVerticalAxis; //calculate how far to rotate camera up and down, determined by the mouse's movement along the y-Axis
+			pitch += pitchChange; //rotate camera downwards when moving mouse upwards the y-Axis
+			float angleChange = event.getDX() * YAW_FACTOR * Globals.invertHorizontalAxis; //calculate how far to rotate camera left and right, determined by the mouse's movement along the x-Axis
+			rotY -= angleChange; //update reference point rotation
+			event.consume();
 		}
 	}
 	
@@ -257,5 +381,25 @@ public class Camera {
 	 */
 	public float getRoll() {
 		return roll;
+	}
+	
+	public void triggerReset() {
+		triggerReset = true;
+	}
+	
+	@EventListener (priority = EventPriority.HIGH)
+	public void onMousePress(MouseButtonPressedEvent event){
+		if (event.getButton() == 1) {
+			rightMouseButtonDown = true;
+			event.consume();
+		}
+	}
+	
+	@EventListener (priority = EventPriority.HIGH)
+	public void onMouseReleased(MouseButtonReleasedEvent event){
+		if (event.getButton() == 1) {
+			rightMouseButtonDown = false;
+			event.consume();
+		}
 	}
 }

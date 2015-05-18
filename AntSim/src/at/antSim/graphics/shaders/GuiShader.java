@@ -20,6 +20,7 @@ public class GuiShader extends ShaderProgram {
   	private int location_transparency;
   	private int location_blendColor;
   	private int location_blendFactor;
+  	private int location_isFont;
  
     /**Creates a new {@link GuiShader}.
      * 
@@ -59,6 +60,14 @@ public class GuiShader extends ShaderProgram {
 	public void loadBlendColor(Vector3f blendColor) {
 		super.loadVector(location_blendColor, blendColor);
 	}
+	
+	/**Loads isFont switch into shader uniform variable.
+	 * 
+	 * @param isFont - true if rendered texture is a font texture
+	 */
+	public void loadIsFont(boolean isFont) {
+		super.loadBoolean(location_isFont, isFont);
+	}
  
     @Override
     protected void getAllUniformLocations() {
@@ -66,6 +75,7 @@ public class GuiShader extends ShaderProgram {
         location_transparency = super.getUniformLocation("transparency");
         location_blendColor = super.getUniformLocation("blendColor");
         location_blendFactor = super.getUniformLocation("blendFactor");
+        location_isFont = super.getUniformLocation("isFont");
     }
  
     @Override

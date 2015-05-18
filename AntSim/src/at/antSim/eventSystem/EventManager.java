@@ -5,7 +5,8 @@ import at.antSim.utils.ClassUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 
 /**
  * Created on 24.03.2015.<br />
@@ -16,14 +17,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class EventManager {
 
-	private static EventManager instance;
+	private static EventManager instance = new EventManager();
 
 	private Queue<Event> eventQueue;
 	private Map<Class<? extends Event>, EventListenerManagement> eventListenerMap;
 
 	protected EventManager() {
 		eventListenerMap = new HashMap<Class<? extends Event>, EventListenerManagement>();
-		eventQueue = new LinkedBlockingQueue<Event>();
+		eventQueue = new ConcurrentLinkedQueue<Event>();
 	}
 
 	/**
@@ -68,6 +69,32 @@ public class EventManager {
 			}
 		}
 	}
+	
+	/**
+	 * Removes an EventListener with the {@link EventPriority} passed by the {@link EventListener}.<br />
+	 *
+	 * @param listener The instance of a class that implements a method annotated with {@link EventListener}.
+	 */
+	public void unregisterEventListener(Object listener) {
+
+		Method[] methods = listener.getClass().getMethods();
+
+		for (int i = 0; i < methods.length; i++) {
+			EventListener eventListener = methods[i].getAnnotation(EventListener.class);
+			if (eventListener != null) {
+				Class[] methodParams = methods[i].getParameterTypes();
+
+				if (methodParams.length < 1)
+					continue;
+
+				Class<? extends Event> eventType = methodParams[0];
+				if (eventListenerMap.containsKey(eventType)) {
+					EventListenerManagement listenerManagement = eventListenerMap.get(eventType);
+					listenerManagement.remove(new ListenerInformation(listener, methods[i]));
+				}
+			}
+		}
+	}
 
 	/**
 	 * Handles an passed Event immediately. Is not thread safe.
@@ -91,8 +118,11 @@ public class EventManager {
 	 * Handles all stored Events.
 	 */
 	public void workThroughQueue() {
-		for (Event event : eventQueue) {
-			eventListenerMap.get(event.getClass()).handle(event);
+		for (Event event = eventQueue.poll(); event != null; event = eventQueue.poll()) {
+			EventListenerManagement management = eventListenerMap.get(event.getClass());
+			if (management != null) {
+				management.handle(event);
+			}
 		}
 	}
 
@@ -100,9 +130,6 @@ public class EventManager {
 	 * @return Returns instance of EventManager.
 	 */
 	public static EventManager getInstance() {
-		if (instance == null) {
-			instance = new EventManager();
-		}
 		return instance;
 	}
 
@@ -167,15 +194,19 @@ public class EventManager {
 		}
 
 		@Override
+		public int hashCode() {
+			int result = listener != null ? listener.hashCode() : 0;
+			result = 31 * result + (method != null ? method.hashCode() : 0);
+			return result;
+		}
+
+		@Override
 		public boolean equals(Object obj) {
-			if (obj == null)
+			if (obj == null && obj instanceof ListenerInformation)
 				return false;
 
 			if (this == obj)
 				return true;
-
-			if (this.getClass() != obj.getClass())
-				return false;
 
 			ListenerInformation other = (ListenerInformation)obj;
 

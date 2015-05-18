@@ -5,6 +5,7 @@ import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.eventSystem.events.MouseMotionEvent;
+import at.antSim.eventSystem.events.MouseScrollEvent;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 
@@ -31,26 +32,27 @@ public class MouseHandler extends Thread {
 		long iterationStartTime = 0;
 
 		EventManager eventManager = EventManager.getInstance();
-
+		
 		while (!isInterrupted()) {
 			iterationStartTime = System.nanoTime();
-
 			while (Mouse.next()) {
-				if (Mouse.getEventButton() == -1) {
+				if (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0) {
 					eventManager.addEventToQueue(new MouseMotionEvent(Mouse.getEventDX(), Mouse.getEventDY(), Mouse.getEventX(), Mouse.getEventY()));
-				} else if (Mouse.getEventButtonState()) {
+				} else if (Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
 					eventManager.addEventToQueue(new MouseButtonPressedEvent(Mouse.getEventButton(), Mouse.getEventX(), Mouse.getEventY()));
-				} else {
+				} else if (Mouse.getEventButton() != -1){
 					eventManager.addEventToQueue(new MouseButtonReleasedEvent(Mouse.getEventButton(), Mouse.getEventX(), Mouse.getEventY()));
+				}else if (Mouse.getEventDWheel() != 0) {
+					eventManager.addEventToQueue(new MouseScrollEvent(Mouse.getEventDWheel(), Mouse.getEventX(), Mouse.getEventY()));
 				}
 			}
-
 			if ((System.nanoTime() - iterationStartTime) < Globals.FPS_DURATION_NANONS) {
 				long waitTime = Globals.FPS_DURATION_NANONS - (System.nanoTime() - iterationStartTime);
 				try {
-					sleep(waitTime / 100, (int) waitTime % 100);
+					sleep(waitTime / Globals.MILIS_TO_NANOS_RATIO, (int) waitTime % Globals.MILIS_TO_NANOS_RATIO);
 				} catch (InterruptedException e) {
 					//do nothing --> will jump out of loop
+					interrupt();
 				}
 			}
 		}

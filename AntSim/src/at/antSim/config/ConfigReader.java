@@ -1,16 +1,21 @@
 package at.antSim.config;
 
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 
 import at.antSim.Globals;
 import at.antSim.exceptions.ConfigParseException;
-import javafx.stage.Stage;
+import org.lwjgl.input.Keyboard;
+
 
 /**Parses a config file and stores its entries in {@link Globals}.
  * 
@@ -19,15 +24,10 @@ import javafx.stage.Stage;
  */
 public class ConfigReader {
 	
-	public void readConfig() {
+	public static void readConfig() {
 		
 		try {
 			parseConfig();
-		} catch (FileNotFoundException e) {
-			//Platform.runLater(new AlertMessage(AlertType.ERROR, "Config Load Error", "Config File could not be found!", e.getMessage()));
-			e.printStackTrace();	
-			System.exit(1);
-			
 		} catch (IOException e) {
 			//Platform.runLater(new AlertMessage(AlertType.ERROR, "Config Load Error", "Config File could not be read!", e.getMessage()));
 			e.printStackTrace();
@@ -46,7 +46,7 @@ public class ConfigReader {
 		} 
 	}
 	
-	private void parseConfig() throws FileNotFoundException, IOException, ConfigParseException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	private static void parseConfig() throws FileNotFoundException, IOException, ConfigParseException, NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 				
 		//create FileInputStream and open Config file				
 		try (InputStream fs = new FileInputStream(Globals.CONFIG + "/config.txt"); BufferedReader filereader = new BufferedReader(new InputStreamReader(fs));) {
@@ -76,18 +76,70 @@ public class ConfigReader {
 					String option = lineParts[0];
 					String value = lineParts[1];
 																				
-					Field var = Globals.class.getField(option);					
-					var.set(this, ObjectConverter.convert(value, var.getType()));
-					
+					Field var = Globals.class.getField(option);		
+					var.set(null, ObjectConverter.convert(value, var.getType()));
+										
 					//log what has been set to which values
 					
 				}
-				
 			}
 			
 			filereader.close();
 			fs.close();
-		} 
-	}
+			
+			Globals.displayHeight = Globals.displaySaveHeight;
+			Globals.displayWidth = Globals.displaySaveWidth;
+			
+		} catch (FileNotFoundException e) {
+			
+			File configDir = new File(Globals.CONFIG);
 
+			// if the directory does not exist, create it
+			if (!configDir.exists()) {
+			    boolean result = false;
+
+			    try{
+			        configDir.mkdir();
+			        result = true;
+			    } 
+			    catch(SecurityException se){
+			        System.exit(-1);
+			    }        
+			}
+			
+			//write default values if config file does not exist
+			PrintWriter writer = new PrintWriter(Globals.CONFIG + "config.txt", "UTF-8");
+			writer.close();
+						
+			//set default values
+			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+			
+			Globals.displayWidth = gd.getDisplayMode().getWidth();
+			Globals.displayHeight = gd.getDisplayMode().getHeight();
+			Globals.displaySaveWidth = gd.getDisplayMode().getWidth();
+			Globals.displaySaveHeight = gd.getDisplayMode().getHeight();
+			Globals.fullscreen = true;
+			Globals.fontRows = 16;
+			Globals.fontCols = 16;
+			
+			Globals.moveForwardKey = Keyboard.KEY_W;
+			Globals.moveBackwardKey = Keyboard.KEY_S;
+			Globals.moveLeftKey = Keyboard.KEY_A;
+			Globals.moveRightKey = Keyboard.KEY_D;
+			Globals.moveUpKey = Keyboard.KEY_LSHIFT;
+			Globals.moveDownKey = Keyboard.KEY_SPACE;
+			Globals.tiltDownKey = Keyboard.KEY_UP;
+			Globals.tiltUpKey = Keyboard.KEY_DOWN;
+			Globals.turnLeftKey = Keyboard.KEY_LEFT;
+			Globals.turnRightKey = Keyboard.KEY_RIGHT;
+			Globals.zoomInKey = Keyboard.KEY_Q;
+			Globals.zoomOutKey = Keyboard.KEY_E;
+			Globals.restoreCameraPosition = Keyboard.KEY_R;
+			
+			Globals.invertHorizontalAxis = -1;
+			Globals.invertVerticalAxis = -1;
+			
+			ConfigWriter.writeConfig();
+		}
+	}
 }
