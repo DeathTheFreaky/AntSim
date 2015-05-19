@@ -104,9 +104,18 @@ public class MainGameState extends AbstractGuiState {
 		Command toggleSpeed4Cmd = new ToggleSpeedCmd(4f, this, 4);
 		Command toggleFoodCmd = new ToggleFoodCmd();
 		Command toggleFoodSubCmd = new ToggleFoodSubCmd();
+		Command clickFoodAppleCmd = new ClickFoodAppleCmd();
+		Command clickFoodSquirrelCmd = new ClickFoodSquirrelCmd();
+		Command clickFoodAntCmd = new ClickFoodAntCmd();
+		Command clickFoodGrasshopperCmd = new ClickFoodGrasshopperCmd();
 		Command toggleEnemyCmd = new ToggleEnemyCmd();
+		Command clickEnemyAntCmd = new ClickEnemyAntCmd();
+		Command clickEnemyGrasshopperCmd = new ClickEnemyGrasshopperCmd();
+
 		// Containers
-		GuiContainer controlsBar = new GuiContainer("controlsBar", null, null, standardQuad, wrapper.getGuiTexture("white"), 250, 35,
+		GuiContainer controlsFrame = new GuiContainer("controlsFrame", null, null, standardQuad, wrapper.getGuiTexture("white"), 282, 36,
+				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.BOTTOM, -1, 0f, new Vector3f(0, 0, 0), 1f);
+		GuiContainer controlsBar = new GuiContainer("controlsBar", controlsFrame, null, standardQuad, wrapper.getGuiTexture("white"), 281, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.BOTTOM, -1, 0f, new Vector3f(0, 0, 0), 1f);
 		playPauseContainer = new GuiContainer("playPauseContainer", controlsBar, togglePlayCmd, standardQuad, wrapper.getGuiTexture("white"), 35, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
@@ -121,28 +130,28 @@ public class MainGameState extends AbstractGuiState {
 		speed4 = new GuiContainer("speed4", speedContainer, toggleSpeed4Cmd, standardQuad, wrapper.getGuiTexture("white"), 26, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		foodButton = new GuiContainer("food", controlsBar, toggleFoodCmd, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		foodContainer = new GuiContainer("foodSub", controlsBar, null, standardQuad, wrapper.getGuiTexture("white"), 70, 105,
-				HorReference.PARENT, HorPositions.LEFT, 139, VerReference.PARENT, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer foodApple = new GuiContainer("foodApple", foodContainer, null, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer foodSquirrel = new GuiContainer("foodSquirrel", foodContainer, null, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 0), 0f);
+				HorReference.SIBLING, HorPositions.RIGHT_OF, 1, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
+		foodContainer = new GuiContainer("foodSub", foodButton, null, standardQuad, wrapper.getGuiTexture("white"), 70, 105,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0), 0f);
+		GuiContainer foodApple = new GuiContainer("foodApple", foodContainer, clickFoodAppleCmd, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BOTTOM, 0, 0f, new Vector3f(0, 0, 0), 0f);
+		GuiContainer foodSquirrel = new GuiContainer("foodSquirrel", foodContainer, clickFoodSquirrelCmd, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		GuiContainer foodInsect = new GuiContainer("foodInsect", foodContainer, toggleFoodSubCmd, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 0), 0f);
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		GuiContainer foodSubContainer = new GuiContainer("foodSubContainer", foodInsect, null, standardQuad, wrapper.getGuiTexture("white"), 140, 35,
 				HorReference.PARENT, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer foodAnt = new GuiContainer("foodAnt", foodSubContainer, null, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
+		GuiContainer foodAnt = new GuiContainer("foodAnt", foodSubContainer, clickFoodAntCmd, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer foodGrasshopper = new GuiContainer("foodGrasshopper", foodSubContainer, null, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
+		GuiContainer foodGrasshopper = new GuiContainer("foodGrasshopper", foodSubContainer, clickFoodGrasshopperCmd, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		enemyButton = new GuiContainer("enemyButton", controlsBar, toggleEnemyCmd, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
+				HorReference.SIBLING, HorPositions.RIGHT_OF, 1, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		GuiContainer enemyContainer = new GuiContainer("enemyContainer", enemyButton, null, standardQuad, wrapper.getGuiTexture("white"), 70, 70,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer enemyAnt = new GuiContainer("enemyAnt", enemyContainer, null, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
+		GuiContainer enemyAnt = new GuiContainer("enemyAnt", enemyContainer, clickEnemyAntCmd, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(0, 0, 0), 0f);
-		GuiContainer enemyGrasshopper = new GuiContainer("enemyGrasshopper", enemyContainer, null, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
+		GuiContainer enemyGrasshopper = new GuiContainer("enemyGrasshopper", enemyContainer, clickEnemyGrasshopperCmd, standardQuad, wrapper.getGuiTexture("white"), 70, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		// Images
 		playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("pause"), 32, 32,
@@ -162,15 +171,21 @@ public class MainGameState extends AbstractGuiState {
 		EventManager.getInstance().registerEventListener(speed3);
 		EventManager.getInstance().registerEventListener(speed4);
 		EventManager.getInstance().registerEventListener(foodButton);
+		EventManager.getInstance().registerEventListener(foodApple);
+		EventManager.getInstance().registerEventListener(foodSquirrel);
 		EventManager.getInstance().registerEventListener(foodInsect);
+		EventManager.getInstance().registerEventListener(foodAnt);
+		EventManager.getInstance().registerEventListener(foodGrasshopper);
 		EventManager.getInstance().registerEventListener(enemyButton);
+		EventManager.getInstance().registerEventListener(enemyAnt);
+		EventManager.getInstance().registerEventListener(enemyGrasshopper);
 
 //		GuiImage testImage = new GuiImage("testImage", testContainer, null, testImageQuad, wrapper.getGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, 
 //				VerReference.SIBLING, VerPositions.BELOW, 0, 0f, new Vector3f(1f, 0f, 0f), 0.2f);
 //		EventManager.getInstance().registerEventListener(testContainer);
 		
 		state.addContainer(statusContainer);
-		state.addContainer(controlsBar);
+		state.addContainer(controlsFrame);
 		
 		GuiWrapper.getInstance().addState(state);	
 	}
