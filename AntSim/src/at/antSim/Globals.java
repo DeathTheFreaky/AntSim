@@ -24,6 +24,7 @@ public final class Globals {
 	public static final int MILIS_TO_NANOS_RATIO = 1000 * 1000;
 	public static final int FPS_DURATION_NANONS = (int) ((1.0 / FPS_CAP) * 1000 * MILIS_TO_NANOS_RATIO);
 	public static final float WORLD_SIZE = 800; //square
+	public static final float TIMECYCLE_MULTIPLIER = 4.0f;
 	
 	//config file entries set by config reader
 	public static int displayWidth; 

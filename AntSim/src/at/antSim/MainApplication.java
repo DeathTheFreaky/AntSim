@@ -116,6 +116,8 @@ public class MainApplication {
 	private AbstractGuiState loadingState;
 	private AbstractGuiState pauseState;
 	
+	private MasterRenderer renderer;
+	
 	private Camera camera;
 	private Terrain terrain;
 	private MousePicker picker;
@@ -151,6 +153,8 @@ public class MainApplication {
 	 * @param renderer
 	 */
 	public void launch(Loader loader, MasterRenderer renderer) {
+		
+		this.renderer = renderer;
 		
 		GuiWrapper.getInstance().setLoader(loader);
 		loadGui(loader);
@@ -334,7 +338,9 @@ public class MainApplication {
 	}
 	
 	public void setSpeed(float speed) {
+		float prevSpeed = normalSpeedTime/timeStep;
 		timeStep = normalSpeedTime / speed;
+		renderer.adaptTime(speed/prevSpeed, speed);
 	}
 	
 	public float getSpeed() {
