@@ -8,11 +8,11 @@ import com.bulletphysics.dynamics.RigidBody;
  *
  * @author Clemens
  */
-public class StaticPhysicsObject extends PositionablePhysicsObjectImpl {
+public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 
 	final RigidBody body;
 
-	public StaticPhysicsObject(RigidBody body) {
+	public DynamicPhysicsObject(RigidBody body) {
 		this.body = body;
 	}
 

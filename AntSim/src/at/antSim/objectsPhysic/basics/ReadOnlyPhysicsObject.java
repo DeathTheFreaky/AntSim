@@ -15,12 +15,17 @@ public interface ReadOnlyPhysicsObject {
 	Vector3f getPosition();
 
 	/**
-	 * @return Returns the velocity of the Object represented as {@link Vector3f vector}
+	 * @return Returns the linear velocity of the Object represented as {@link Vector3f vector}
 	 */
-	Vector3f getVelocity();
+	Vector3f getLinearVelocity();
 
 	/**
 	 * @return Returns the rotation of the object represented as {@link Quat4f quaternion}
 	 */
 	Quat4f getRotation();
+
+	/**
+	 * @return Returns the angular velocity of the Object represented as {@link Vector3f vector}
+	 */
+	Vector3f getAngularVelocity();
 }
