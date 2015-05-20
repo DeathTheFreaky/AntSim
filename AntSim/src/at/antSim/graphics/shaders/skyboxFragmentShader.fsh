@@ -17,7 +17,7 @@ uniform vec3 fogColor1; //lower section of skybox shall fade into the fog
 uniform vec3 fogColor2; //lower section of skybox shall fade into the fog
 
 const float lowerLimit = 0.0; //below: skybox has fogcolor
-const float upperLimit = 30.0; //above: skybox has skybox's original color
+const float upperLimit = 500.0; //above: skybox has skybox's original color
 
 void main(void){
 
