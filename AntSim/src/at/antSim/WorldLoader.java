@@ -74,7 +74,7 @@ public class WorldLoader {
 	public static Terrain loadTerrain(Loader loader) {
 	
 		//load the different terrain textures
-		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("terrain/grassy3"));
+		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("terrain/grassy2"));
 		TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("terrain/grassFlowers"));
 		TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("terrain/pinkFlowers"));
 		TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("terrain/mud"));
