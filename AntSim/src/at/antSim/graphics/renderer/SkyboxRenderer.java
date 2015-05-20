@@ -68,8 +68,8 @@ public class SkyboxRenderer {
 	};
 	
 	//in OpenGL's CubeMap, the different textures have to be loaded in the order defined below
-	private static String[] TEXTURE_FILES = {"right", "left", "top", "bottom", "back", "front"};
-	private static String[] NIGHT_TEXTURE_FILES = {"nightRight", "nightLeft", "nightTop", "nightBottom", "nightBack", "nightFront"};
+	private static String[] TEXTURE_FILES = {"skyboxes/right", "skyboxes/left", "skyboxes/top", "skyboxes/bottom", "skyboxes/back", "skyboxes/front"};
+	private static String[] NIGHT_TEXTURE_FILES = {"skyboxes/nightRight", "skyboxes/nightLeft", "skyboxes/nightTop", "skyboxes/nightBottom", "skyboxes/nightBack", "skyboxes/nightFront"};
 	
 	private RawModel cube;
 	private int dayTexture;

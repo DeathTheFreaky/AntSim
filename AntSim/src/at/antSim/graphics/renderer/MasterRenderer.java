@@ -10,8 +10,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.Globals;
+import at.antSim.MainApplication;
 import at.antSim.graphics.entities.Camera;
-import at.antSim.graphics.entities.Entity;
+import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Loader;
@@ -57,10 +59,12 @@ public class MasterRenderer {
 	private GuiRenderer guiRenderer;
 	private GuiShader guiShader = new GuiShader();
 	
+	private float timeFactor = Globals.TIMECYCLE_MULTIPLIER / MainApplication.getInstance().getSpeed();
+	
 	//all entities and terrains to be rendered
 	/* map of texturedModels, each containing a list of entities using this TexturedModel - 
 	 * so a texture needs to be loaded once and then can be applied to all entities using this same texture */
-	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>(); 
+	private Map<TexturedModel, List<GraphicsEntity>> entities = new HashMap<TexturedModel, List<GraphicsEntity>>(); 
 	private List<Terrain> terrains = new ArrayList<Terrain>();
 	
 	
@@ -139,16 +143,16 @@ public class MasterRenderer {
 	/**Sort entity in the entities Hashmap by their correct {@link TexturedModel} for more efficient rendering.<br>
 	 * This way, a texture has to be loaded only once and can then be applied for all entities using the same texture.
 	 * 
-	 * @param entity - the {@link Entity} to be sorted in
+	 * @param entity - the {@link GraphicsEntity} to be sorted in
 	 */
-	public void processEntity(Entity entity) {
+	public void processEntity(GraphicsEntity entity) {
 		TexturedModel entityModel = entity.getModel();
-		List<Entity> batch = entities.get(entityModel);
+		List<GraphicsEntity> batch = entities.get(entityModel);
 		if(batch != null) {
 			batch.add(entity);
 		}
 		else {
-			List<Entity> newBatch = new ArrayList<Entity>();
+			List<GraphicsEntity> newBatch = new ArrayList<GraphicsEntity>();
 			newBatch.add(entity);
 			entities.put(entityModel, newBatch);
 		}
@@ -301,13 +305,17 @@ public class MasterRenderer {
 	 */
 	private void dayNightCycle() {
 		
-		time += DisplayManager.getFrameTimeSeconds() * 1000;
+		if (MainApplication.getInstance().isPaused()) {
+			time += 0;
+		} else {
+			time += DisplayManager.getFrameTimeSeconds() * 1000 / timeFactor;
+		}
 		time %= 24000;
 					
 		if(time >= 0 && time < 5000) {
 			blendFactor = 1f;
 		}else if(time >= 5000 && time < 8000) {
-			blendFactor = 1 - (time - 5000)/(8000 - 5000);
+			blendFactor = 1 - (time - 5000 )/(8000 - 5000);
 		}else if(time >= 8000 && time < 19000) {
 			blendFactor = 0f;
 		}else if (time >= 19000 && time < 22000) {
@@ -320,4 +328,8 @@ public class MasterRenderer {
 	public Matrix4f getProjectionMatrix() {
 		return projectionMatrix;
 	}
+	
+	public void adaptTime(float multiplier, float speed) {
+		timeFactor = Globals.TIMECYCLE_MULTIPLIER / speed;
+	} 
 }
