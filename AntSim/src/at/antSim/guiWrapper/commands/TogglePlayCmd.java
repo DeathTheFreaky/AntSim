@@ -17,7 +17,5 @@ public class TogglePlayCmd implements Command {
 	public void execute() {
 		mainGameState.updatePlayButton();
 		MainApplication.getInstance().togglePlay();
-		System.out.println("TogglePlayCmd: execute()");
-		// change icon
 	}
 }

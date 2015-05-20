@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.MainApplication;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
@@ -28,6 +29,8 @@ import at.antSim.guiWrapper.GuiWrapper;
  *
  */
 public class MasterRenderer {
+	
+	private final float TIMECYCLE_MULTIPLIER = 4.0f;
 	
 	//set projection matrix parameters
 	private static final float FOV = 70; //horizontal (y-Axis) camera opening angle
@@ -301,17 +304,18 @@ public class MasterRenderer {
 	 */
 	private void dayNightCycle() {
 		
+		float timeFactor = TIMECYCLE_MULTIPLIER / MainApplication.getInstance().getSpeed();
 		time += DisplayManager.getFrameTimeSeconds() * 1000;
-		time %= 24000;
+		time %= (24000 * timeFactor);
 					
-		if(time >= 0 && time < 5000) {
+		if(time >= 0 * timeFactor && time < 5000 * timeFactor) {
 			blendFactor = 1f;
-		}else if(time >= 5000 && time < 8000) {
-			blendFactor = 1 - (time - 5000)/(8000 - 5000);
-		}else if(time >= 8000 && time < 19000) {
+		}else if(time >= 5000 * timeFactor && time < 8000 * timeFactor) {
+			blendFactor = 1 - (time - 5000 * timeFactor)/(8000 * timeFactor - 5000 * timeFactor);
+		}else if(time >= 8000 * timeFactor && time < 19000 * timeFactor) {
 			blendFactor = 0f;
-		}else if (time >= 19000 && time < 22000) {
-			blendFactor = (time - 19000)/(22000 - 19000);
+		}else if (time >= 19000 * timeFactor && time < 22000 * timeFactor) {
+			blendFactor = (time - 19000 * timeFactor)/(22000 * timeFactor - 19000 * timeFactor);
 		} else {
 			blendFactor = 1f;
 		}

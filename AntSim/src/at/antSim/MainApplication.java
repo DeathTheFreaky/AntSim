@@ -337,8 +337,8 @@ public class MainApplication {
 		timeStep = normalSpeedTime / speed;
 	}
 	
-	public float getSpeed(float speed) {
-		return speed;
+	public float getSpeed() {
+		return normalSpeedTime/timeStep;
 	}
 
 	public HashMap<String, Integer> getStats() {
