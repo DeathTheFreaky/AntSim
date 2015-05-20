@@ -53,6 +53,9 @@ public abstract class GuiElement {
 	//associate gui state
 	private GuiState state;
 	
+	//disabling gui element will prevent it from drawing and disable it for events
+	private boolean disabled = false;
+	
 	/**Constructs a new {@link GuiElement}.
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
@@ -286,9 +289,36 @@ public abstract class GuiElement {
 	
 	@EventListener
 	public void onMouseReleased(MouseButtonReleasedEvent event){
-		if (isInsideElement(event)) {
+		if (isInsideElement(event) && !disabled) {
 			command.execute();
 			event.consume();
 		}
+	}
+	
+	/**
+	 * @param disabled - true to disable GuiElement to prevent it from rendering and receiving events
+	 */
+	public void setDisabled(boolean disabled) {
+		setDisabledOnAllChildren(disabled, this);
+	}
+
+	/**Sets disabled state for all children of a GuiElement, if it is a GuiContainer and does have children.
+	 * @param disabled
+	 * @param elem
+	 */
+	private void setDisabledOnAllChildren(boolean disabled, GuiElement elem) {
+		if (elem instanceof GuiContainer) {
+			for (GuiElement child : ((GuiContainer) elem).getAllChildren()) {
+				child.setDisabledOnAllChildren(disabled, child);
+			}
+		}
+		this.disabled = disabled;
+	}
+
+	/**
+	 * @return - true if gui element is disabled
+	 */
+	public boolean isDisabled() {
+		return disabled;
 	}
 }
