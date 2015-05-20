@@ -170,15 +170,15 @@ public class MainGameState extends AbstractGuiState {
 		enemyContainer.setDisabled(true);
 		
 		// Images
-		playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("pause"), 32, 32,
+		playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("controls/pause"), 32, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		speed1Img = new GuiImage("speed1Img", speed1, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+		speed1Img = new GuiImage("speed1Img", speed1, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+		speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+		speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("controls/play_unfilled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		speed4Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+		speed4Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("controls/play_unfilled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		
 		// Registering listeners
