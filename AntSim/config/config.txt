@@ -1,6 +1,6 @@
 WORKING_DIR = C:\Users\Flo\git\AntSim\AntSim
 displayWidth = 1280
-displayHeight = 720
+displayHeight = 700
 displaySaveWidth = 1280
 displaySaveHeight = 700
 fullscreen = false
@@ -18,6 +18,6 @@ tiltDownKey = 200
 tiltUpKey = 208
 zoomInKey = 16
 zoomOutKey = 18
-restoreCameraPosition = 34
+restoreCameraPosition = 19
 invertHorizontalAxis = -1
 invertVerticalAxis = -1

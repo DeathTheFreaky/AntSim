@@ -230,9 +230,8 @@ public class MainGameState extends AbstractGuiState {
 	public void updateStatus() {
 		for (Entry<String, Integer> entry : MainApplication.getInstance().getStats().entrySet()) {
 			statContainers.get(entry.getKey()).removeChildren();
-			GuiText statusValue = new GuiText("statusValue" + entry.getKey(), textDrawer.createTextQuad("0"), statContainers.get(entry.getValue()), null, textSize,
+			GuiText statusValue = new GuiText("statusValue" + entry.getKey(), textDrawer.createTextQuad(String.valueOf(entry.getValue())), statContainers.get(entry.getKey()), null, textSize,
 					HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
-			statContainers.get(entry.getKey()).addChild(statusValue);
 		}
 	}
 
