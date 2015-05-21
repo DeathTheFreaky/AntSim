@@ -20,7 +20,7 @@ import at.antSim.guiWrapper.commands.Command;
  */
 public abstract class GuiElement {
 
-	private RawModel model; //holds geometry data
+	RawModel model; //holds geometry data
 	private Vector2f position; //need to store center position of the gui quad since gui Texture has no underlying ModelData storing positional data
 	private Vector2f scale;
 	private String id;
@@ -40,8 +40,8 @@ public abstract class GuiElement {
 	private VerReference verRef;
 	private VerPositions verPos;
 	private int verOffset;
-	private int textureWidth;
-	private int textureHeight;
+	int textureWidth;
+	int textureHeight;
 	
 	//transparency
 	private float transparency; //0: will be non-transparent, opaque; 1: will be fully transparent

@@ -234,7 +234,7 @@ public class MainApplication {
 		if (!paused && worldLoaded) {
 			((MainGameState)mainGameState).updateStatus();
 			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
-		}
+		}		
 	}
 
 	/**Loads the Gui and all its states.

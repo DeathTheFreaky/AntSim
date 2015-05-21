@@ -65,7 +65,7 @@ public class MainGameState extends AbstractGuiState {
 
 	@Override
 	public void initializeState(String... args) {
-		
+				
 		playFilledTexId = wrapper.getGuiTexture("controls/play_filled_small").getTextureId(); 
 		playUnfilledTexId = wrapper.getGuiTexture("controls/play_unfilled_small").getTextureId(); 
 		pauseTexId = wrapper.getGuiTexture("controls/pause").getTextureId(); 
@@ -106,6 +106,7 @@ public class MainGameState extends AbstractGuiState {
 					statusRowContainer.getHeight(), HorReference.PARENT, HorPositions.RIGHT, 0, VerReference.SIBLING, VerPositions.TOP, 0, 1f, new Vector3f(0, 1, 0), 0f);
 			GuiText statusValue = new GuiText("statusValue" + str, textDrawer.createTextQuad("0"), statusValueContainer, null, textSize,
 					HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			
 			statContainers.put(str, statusValueContainer);
 			idx++;
 		}
@@ -227,11 +228,12 @@ public class MainGameState extends AbstractGuiState {
 	}
 	
 	public void updateStatus() {
-//		for (Entry<String, Integer> entry : MainApplication.getInstance().getStats().entrySet()) {
-//			statContainers.get(entry.getKey()).removeChildren();
-//			GuiText statusValue = new GuiText("statusValue" + entry.getKey(), textDrawer.createTextQuad(String.valueOf(entry.getValue())), statContainers.get(entry.getKey()), null, textSize,
-//					HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
-//		}
+		for (Entry<String, Integer> entry : MainApplication.getInstance().getStats().entrySet()) {
+			statContainers.get(entry.getKey()).removeChildren();
+			GuiText statusValue = new GuiText("statusValue" + entry.getKey(), textDrawer.createTextQuad("0"), statContainers.get(entry.getValue()), null, textSize,
+					HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			statContainers.get(entry.getKey()).addChild(statusValue);
+		}
 	}
 
 	public void updatePlayButton() {
