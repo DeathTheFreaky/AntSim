@@ -140,6 +140,10 @@ public class MainApplication {
 	private float normalSpeedTime = 1/60f; //update logic 60times a second on normal speed
 	private float timeStep = normalSpeedTime;
 	private float timeAccumulator = 0;
+	private float statsTimeStep = 1f;
+	private float statsTimeAccumulator = 0;
+	
+	private int statsCtrTest = 0;
 
 	private HashMap<String, Integer> stats = new HashMap<>();
 	
@@ -183,6 +187,23 @@ public class MainApplication {
 			while (timeAccumulator >= timeStep) {
 				timeAccumulator -= timeStep;
 				update();
+			}
+			
+			//regulate rate of calculating logic according to game speed, keeping the rendering untouched at a constant frame rate
+			statsTimeAccumulator += DisplayManager.getFrameTimeSeconds();
+			
+			//update stats (population, food...) and remove temporary vao and vbo data once a second
+			while (statsTimeAccumulator >= statsTimeStep) {
+				
+				statsTimeAccumulator -= statsTimeStep;
+				
+				//remove temporary data (like text stats models) after each rendering frame
+				loader.tempCleanUp();
+				
+				if (worldLoaded && !paused) {
+					((MainGameState)mainGameState).updateStatus(); //update stats in main game state (population, food...)
+					statsCtrTest++;
+				}
 			}
 			
 			//trigger loading screen
@@ -232,7 +253,6 @@ public class MainApplication {
 		
 		//game logic
 		if (!paused && worldLoaded) {
-			((MainGameState)mainGameState).updateStatus();
 			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
 		}		
 	}
@@ -353,10 +373,10 @@ public class MainApplication {
 	}
 
 	public HashMap<String, Integer> getStats() {
-		stats.put("Population", 12035);
-		stats.put("Food", 5389);
-		stats.put("Eggs", 345);
-		stats.put("Larvae", 243);
+		stats.put("Population", 12035+statsCtrTest);
+		stats.put("Food", 5389+statsCtrTest);
+		stats.put("Eggs", 345+statsCtrTest);
+		stats.put("Larvae", 243+statsCtrTest);
 		return stats;
 	}
 	

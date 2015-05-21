@@ -52,6 +52,8 @@ public class Loader {
 	private List<Integer> vaos = new ArrayList<Integer>(); //list holding all vaos ids to be cleaned at program exit
 	private List<Integer> vbos = new ArrayList<Integer>(); //list holding all vbos ids to be cleaned at program exit
 	private List<Integer> textures = new ArrayList<Integer>(); //list holding all texture ids to be cleaned at program exit
+	private List<Integer> tempVaos = new ArrayList<Integer>(); //list holding all vaos ids for temp data to be cleaned after every render call
+	private List<Integer> tempVbos = new ArrayList<Integer>(); //list holding all vbos ids for temp data to be cleaned after every render call
 	
 	/**Takes in position coordinates, texture coordinates and the indices of positions of a model's vertexes, loads this data into a VAO and then returns information about the VAO as a RawModel object.
 	 * 
@@ -62,11 +64,11 @@ public class Loader {
 	 * @return - a RawModel object storing positions', texture coordinate's and normals' data inside a VAO
 	 */
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
-		int vaoID = createVAO(); //creates and activates a VAO: the following VBOs will all be stored to this activated VAO
+		int vaoID = createVAO(false); //creates and activates a VAO: the following VBOs will all be stored to this activated VAO
 		bindIndicesBuffer(indices); //bind indices to the activated VAO
-		storeDataInAttributeList(0, 3, positions); //store positional data into attribute list 0 of the activated VAO
-		storeDataInAttributeList(1, 2, textureCoords); //store texture coordinates into attribute list 1 of the activated VAO
-		storeDataInAttributeList(2, 3, normals); //store normals into attribute list 2 of the activated VAO
+		storeDataInAttributeList(0, 3, positions, false); //store positional data into attribute list 0 of the activated VAO
+		storeDataInAttributeList(1, 2, textureCoords, false); //store texture coordinates into attribute list 1 of the activated VAO
+		storeDataInAttributeList(2, 3, normals, false); //store normals into attribute list 2 of the activated VAO
 		unbindVAO(); //now that we finished using the our VAO bound in createVAO(), we need to unbind it - deactivate it
 		return new RawModel(vaoID, indices.length); //number of indices equals vertex count
 	}
@@ -80,8 +82,8 @@ public class Loader {
 	 * @return - a RawModel object storing positions' data inside a VAO
 	 */
 	public RawModel loadToVAO(float [] positions, int dimensions) {
-		int vaoID = createVAO();
-		this.storeDataInAttributeList(0, dimensions, positions); //store positional data into attribute list 0 of the activated VAO
+		int vaoID = createVAO(false);
+		this.storeDataInAttributeList(0, dimensions, positions, false); //store positional data into attribute list 0 of the activated VAO
 		unbindVAO();
 		return new RawModel(vaoID, positions.length/dimensions); //for 2d models there are 2 number per vertex, for 3d models there are 3
 	}
@@ -93,12 +95,13 @@ public class Loader {
 	 * @param positions - the vertice's 2D positions
 	 * @param textureCoorder - texture coordinates of the vertices
 	 * @param dimensions - can be either 2 or 3 (2D quads, 3D Skybox cubes)
+	 * @param temporary - true if data shall only be stored for one render loop (eg. stats text which changes at every render loop)
 	 * @return - a RawModel object storing positions' data inside a VAO
 	 */
-	public RawModel loadToVAO(float [] positions, float[] textureCoords, int dimensions) {
-		int vaoID = createVAO();
-		this.storeDataInAttributeList(0, dimensions, positions); //store positional data into attribute list 0 of the activated VAO
-		storeDataInAttributeList(1, 2, textureCoords); //store texture coordinates into attribute list 1 of the activated VAO
+	public RawModel loadToVAO(float [] positions, float[] textureCoords, int dimensions, boolean temporary) {
+		int vaoID = createVAO(temporary);
+		storeDataInAttributeList(0, dimensions, positions, temporary); //store positional data into attribute list 0 of the activated VAO
+		storeDataInAttributeList(1, 2, textureCoords, temporary); //store texture coordinates into attribute list 1 of the activated VAO
 		unbindVAO();
 		return new RawModel(vaoID, positions.length/dimensions); //for 2d models there are 2 number per vertex, for 3d models there are 3
 	}
@@ -305,11 +308,16 @@ public class Loader {
 	
 	/**Creates an empty VAO.
 	 * 
+	 * @param temporary - true if data shall only be stored for one render loop (eg. stats text which changes at every render loop)
 	 * @return - the ID of the newly created VAO
 	 */
-	private int createVAO(){
+	private int createVAO(boolean temporary){
 		int vaoID = GL30.glGenVertexArrays(); //creates empty VAO returning its ID
-		vaos.add(vaoID); //add vaoID to list of vaoIDs for cleanup at program exit
+		if (temporary) {
+			tempVaos.add(vaoID);
+		} else {
+			vaos.add(vaoID); //add vaoID to list of vaoIDs for cleanup at program exit
+		}
 		GL30.glBindVertexArray(vaoID); //VAO needs to be activated by binding it before it can be used
 		return vaoID;
 	}
@@ -355,10 +363,15 @@ public class Loader {
 	 * @param attributeNumber - number of the attribute list in which the data shall be stored
 	 * @param coordinateSize - eg. 3 for x,y,z or 2 for texture coordinates
 	 * @param data - the data which shall be stored inside an attribute list of a VAO
+	 * @param temporary - true if data shall only be stored for one render loop (eg. stats text which changes at every render loop)
 	 */
-	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
+	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data, boolean temporary) {
 		int vboID = GL15.glGenBuffers(); //creates an empty VBO, returning the empty VBO's ID
-		vbos.add(vboID);
+		if (temporary) {
+			tempVbos.add(vboID);
+		} else {
+			vbos.add(vboID);
+		}
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID); //VBO needs to be bound before it can be used; type of VBA is GL_ARRAY_BUFFER -> vertex-attribute data
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);//usage of static means we will not be editing the data later on
@@ -399,6 +412,18 @@ public class Loader {
 		}
 		for (int texture:textures) {
 			GL15.glDeleteBuffers(texture);
+		}
+	}
+	
+	/**Deletes all temporary VAOS, VBOS and textures stored in the vaos, vbos and textures lists when they are not needed any longer.
+	 * 
+	 */
+	public void tempCleanUp() {
+		for(int vao:tempVaos) {
+			GL30.glDeleteVertexArrays(vao);
+		}
+		for (int vbo:tempVbos) {
+			GL15.glDeleteBuffers(vbo);
 		}
 	}
 }

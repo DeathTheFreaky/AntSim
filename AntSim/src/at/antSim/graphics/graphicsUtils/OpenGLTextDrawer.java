@@ -54,12 +54,23 @@ public class OpenGLTextDrawer {
 		}		
 	}
 	
-	/**Creates one quad per line in the text, consisting of 1 sub-quad per character, with the appropriate texture coordinates for the passed text.
+	/**Creates one quad per line in the text, consisting of 1 sub-quad per character, with the appropriate texture coordinates for the passed text.<br>
+	 * Temporary will be set to false be default.
 	 * 
 	 * @param text - text to be rendered
 	 * @return - a {@link GuiTextData}
 	 */
 	public GuiTextData createTextQuad(String text) {
+		return createTextQuad(text, false);
+	}
+	
+	/**Creates one quad per line in the text, consisting of 1 sub-quad per character, with the appropriate texture coordinates for the passed text.
+	 * 
+	 * @param text - text to be rendered
+	 * @param temporary - true if data shall only be stored for one render loop (eg. stats text which changes at every render loop)
+	 * @return - a {@link GuiTextData}
+	 */
+	public GuiTextData createTextQuad(String text, boolean temporary) {
 		
 		LinkedList<Vector2f> quadPositions = new LinkedList<>();
 		LinkedList<Vector2f> quadTextCoords = new LinkedList<>();
@@ -120,21 +131,7 @@ public class OpenGLTextDrawer {
 			}
 		}
 		
-		float[] quadPosArray = convertListToArray(quadPositions);
-		float[] quadTextCoordArray = convertListToArray(quadTextCoords);
-		
-//		System.out.println("Positions: ");
-//		for (float f: quadPosArray) {
-//			System.out.println(" " + f);
-//		}
-//		
-//		System.out.println("TextureCoords: ");
-//		for (float f: quadTextCoordArray) {
-//			System.out.println(" " + f);
-//		}
-		
-		
-		GuiTextData textData = new GuiTextData(loader.loadToVAO(convertListToArray(quadPositions), convertListToArray(quadTextCoords), 2), rows, cols, texture.getWidth()/Globals.fontCols, texture.getTextureId());
+		GuiTextData textData = new GuiTextData(loader.loadToVAO(convertListToArray(quadPositions), convertListToArray(quadTextCoords), 2, temporary), rows, cols, texture.getWidth()/Globals.fontCols, texture.getTextureId());
 		
 		return textData; 
 	}
