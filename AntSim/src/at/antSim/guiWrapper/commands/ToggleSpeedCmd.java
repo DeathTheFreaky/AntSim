@@ -18,6 +18,8 @@ public class ToggleSpeedCmd implements Command {
 	}
 	@Override
 	public void execute() {
+		mainGameState.hideFoodContainer();
+		mainGameState.hideEnemyContainer();
 		mainGameState.updateSpeedButtons(speedCount);
 		MainApplication.getInstance().setSpeed(speed);
 		mainGameState.setPauseButton();

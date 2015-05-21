@@ -15,6 +15,8 @@ public class TogglePlayCmd implements Command {
 	}
 	@Override
 	public void execute() {
+		mainGameState.hideFoodContainer();
+		mainGameState.hideEnemyContainer();
 		mainGameState.updatePlayButton();
 		MainApplication.getInstance().togglePlay();
 	}

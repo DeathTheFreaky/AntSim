@@ -224,46 +224,46 @@ public class MainGameState extends AbstractGuiState {
 	public void updatePlayButton() {
 		playPauseContainer.removeChildren();
 		if (!MainApplication.getInstance().isPaused()) {
-			playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 35, 30,
+			playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 35, 30,
 					HorReference.PARENT, HorPositions.LEFT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		} else {
-			playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("pause"), 32, 32,
+			playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("controls/pause"), 32, 32,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		}
 	}
 
 	public void setPauseButton() {
 		playPauseContainer.removeChildren();
-		playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("pause"), 32, 32,
+		playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("controls/pause"), 32, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 	}
 
 	public void updateSpeedButtons(int numberOfButtons) {
 		if (numberOfButtons >= 2) {
 			speed2.removeChildren();
-			speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+			speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		} else {
 			speed2.removeChildren();
-			speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+			speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("controls/play_unfilled_small"), 26, 32,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		}
 		if (numberOfButtons >= 3) {
 			speed3.removeChildren();
-			speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+			speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		} else {
 			speed3.removeChildren();
-			speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+			speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("controls/play_unfilled_small"), 26, 32,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		}
 		if (numberOfButtons >= 4) {
 			speed4.removeChildren();
-			speed2Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("play_filled_small"), 26, 32,
+			speed2Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		} else {
 			speed4.removeChildren();
-			speed2Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("play_unfilled_small"), 26, 32,
+			speed2Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("controls/play_unfilled_small"), 26, 32,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		}
 	}
