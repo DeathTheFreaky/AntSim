@@ -130,8 +130,25 @@ public class WorldLoader {
 		GraphicsEntity dragon = new GraphicsEntity(texturedModels.get("dragon"), 1, new Vector3f(0, 0, 0), 0, 0, 0, 1);
 		entities.add(dragon);
 		specificEntities.put("dragon", dragon);
-		
+	
 		return entities;
+	}
+	
+	/**Tries to create an Entity for the given name from all available texturedModels.<br>
+	 * Returns null if no texturedModel could be found for the given name.
+	 * 
+	 * @param name
+	 * @param id
+	 * @return - a GraphicsEntity or null if no texturedModel could be found for the given name
+	 */
+	public static GraphicsEntity createEntity(String name, String id) {
+		GraphicsEntity entity = null;
+		TexturedModel texturedModel = texturedModels.get(name);
+		if (texturedModel != null) {
+			entity = new GraphicsEntity(texturedModel, 1, new Vector3f(0, 0, 0), 0, 0, 0, 1);
+		}
+		specificEntities.put(id, entity);
+		return entity;
 	}
 	
 	/**Loads the world's light sources.

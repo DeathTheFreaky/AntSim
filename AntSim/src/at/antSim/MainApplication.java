@@ -127,6 +127,7 @@ public class MainApplication {
 	private List<GraphicsEntity> entities;
 	private List<Light> lights;
 	
+	private MovingEntity movingEntity;
 	private GraphicsEntity movingLamp;
 	private Light movingLight;
 	
@@ -162,6 +163,8 @@ public class MainApplication {
 		GuiWrapper.getInstance().setLoader(loader);
 		loadGui(loader);
 		
+		movingEntity = new MovingEntity();
+		
 		//camera for navigating in the world
 		camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2), pauseState.getName()); 
 		EventManager.getInstance().registerEventListener(camera);
@@ -194,9 +197,8 @@ public class MainApplication {
 				camera.move(terrain); //every single frame check for key inputs which move the camera
 				picker.update();
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-				if (terrainPoint != null) {
-					movingLamp.setPosition(terrainPoint);
-					movingLight.setPosition(new Vector3f(terrainPoint.x, terrainPoint.y + 12f, terrainPoint.z));
+				if (terrainPoint != null && movingEntity.getGraphicsEntity() != null) {
+					movingEntity.getGraphicsEntity().setPosition(terrainPoint);
 				}
 				
 				renderer.processTerrain(terrain);
@@ -358,6 +360,10 @@ public class MainApplication {
 		return stats;
 	}
 	
+	public MovingEntity getMovingEntity() {
+		return movingEntity;
+	}
+		
 	/**
 	 * @return - the one and only instance of {@link MainApplication}
 	 */
