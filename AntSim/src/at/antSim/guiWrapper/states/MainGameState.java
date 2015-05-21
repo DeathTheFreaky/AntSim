@@ -50,6 +50,11 @@ public class MainGameState extends AbstractGuiState {
 	GuiImage speed3Img;
 	GuiImage speed4Img;
 	
+	//texture ids for exchanging
+	int playFilledTexId;
+	int playUnfilledTexId;
+	int pauseTexId;
+	
 	//used for toggling containers when pressing them twice
 	GuiContainer visibleControlContainer = null;
 	boolean foodSubContainerDisplayed = false;
@@ -60,7 +65,11 @@ public class MainGameState extends AbstractGuiState {
 
 	@Override
 	public void initializeState(String... args) {
-
+		
+		playFilledTexId = wrapper.getGuiTexture("controls/play_filled_small").getTextureId(); 
+		playUnfilledTexId = wrapper.getGuiTexture("controls/play_unfilled_small").getTextureId(); 
+		pauseTexId = wrapper.getGuiTexture("controls/pause").getTextureId(); 
+		
 		statContainers = new HashMap<>();
 		GuiContainer statusContainer = new GuiContainer("statusContainer", null, null, standardQuad, wrapper.getGuiTexture("white"), 230, 80,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.TOP, 0, 0.5f, new Vector3f(0.9f, 0.9f, 0.9f), 1f);
@@ -181,6 +190,14 @@ public class MainGameState extends AbstractGuiState {
 		speed4Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("controls/play_unfilled_small"), 26, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		
+//		playPauseContainer.addChild(playPausePause);
+//		speed1Img = new GuiImage("speed1Img", speed1, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
+//				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+//		speed1.addChild(speed1Img);
+//		speed2.addChild(speed2Filled);
+//		speed3.addChild(speed3Unfilled);
+//		speed4.addChild(speed4Unfilled);
+		
 		// Registering listeners
 		EventManager.getInstance().registerEventListener(playPauseContainer);
 		EventManager.getInstance().registerEventListener(speed1);
@@ -196,10 +213,6 @@ public class MainGameState extends AbstractGuiState {
 		EventManager.getInstance().registerEventListener(foodGrasshopper);
 		EventManager.getInstance().registerEventListener(enemyAnt);
 		EventManager.getInstance().registerEventListener(enemyGrasshopper);
-
-//		GuiImage testImage = new GuiImage("testImage", testContainer, null, testImageQuad, wrapper.getGuiTexture("health"), 500, 280, HorReference.PARENT, HorPositions.CENTER, 0, 
-//				VerReference.SIBLING, VerPositions.BELOW, 0, 0f, new Vector3f(1f, 0f, 0f), 0.2f);
-//		EventManager.getInstance().registerEventListener(testContainer);
 		
 		state.addContainer(statusContainer);
 		state.addContainer(controlsFrame);
@@ -214,57 +227,40 @@ public class MainGameState extends AbstractGuiState {
 	}
 	
 	public void updateStatus() {
-		for (Entry<String, Integer> entry : MainApplication.getInstance().getStats().entrySet()) {
-			statContainers.get(entry.getKey()).removeChildren();
-			GuiText statusValue = new GuiText("statusValue" + entry.getKey(), textDrawer.createTextQuad(String.valueOf(entry.getValue())), statContainers.get(entry.getKey()), null, textSize,
-					HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		}
+//		for (Entry<String, Integer> entry : MainApplication.getInstance().getStats().entrySet()) {
+//			statContainers.get(entry.getKey()).removeChildren();
+//			GuiText statusValue = new GuiText("statusValue" + entry.getKey(), textDrawer.createTextQuad(String.valueOf(entry.getValue())), statContainers.get(entry.getKey()), null, textSize,
+//					HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
+//		}
 	}
 
 	public void updatePlayButton() {
-		playPauseContainer.removeChildren();
 		if (!MainApplication.getInstance().isPaused()) {
-			playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 35, 30,
-					HorReference.PARENT, HorPositions.LEFT, 5, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			playPause.setTextureId(playFilledTexId);
 		} else {
-			playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("controls/pause"), 32, 32,
-					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			playPause.setTextureId(pauseTexId);
 		}
 	}
 
 	public void setPauseButton() {
-		playPauseContainer.removeChildren();
-		playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("controls/pause"), 32, 32,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		playPause.setTextureId(pauseTexId);
 	}
 
 	public void updateSpeedButtons(int numberOfButtons) {
 		if (numberOfButtons >= 2) {
-			speed2.removeChildren();
-			speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
-					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			speed2Img.setTextureId(playFilledTexId);
 		} else {
-			speed2.removeChildren();
-			speed2Img = new GuiImage("speed2Img", speed2, null, standardQuad, wrapper.getGuiTexture("controls/play_unfilled_small"), 26, 32,
-					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			speed2Img.setTextureId(playUnfilledTexId);
 		}
 		if (numberOfButtons >= 3) {
-			speed3.removeChildren();
-			speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
-					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			speed3Img.setTextureId(playFilledTexId);
 		} else {
-			speed3.removeChildren();
-			speed3Img = new GuiImage("speed3Img", speed3, null, standardQuad, wrapper.getGuiTexture("controls/play_unfilled_small"), 26, 32,
-					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			speed3Img.setTextureId(playUnfilledTexId);
 		}
 		if (numberOfButtons >= 4) {
-			speed4.removeChildren();
-			speed2Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
-					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			speed4Img.setTextureId(playFilledTexId);
 		} else {
-			speed4.removeChildren();
-			speed2Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("controls/play_unfilled_small"), 26, 32,
-					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+			speed4Img.setTextureId(playUnfilledTexId);
 		}
 	}
 
