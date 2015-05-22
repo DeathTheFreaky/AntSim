@@ -132,11 +132,10 @@ public class OBJFileLoader {
         float[] verticesArray = new float[vertices.size() * 3];
         float[] texturesArray = new float[vertices.size() * 2];
         float[] normalsArray = new float[vertices.size() * 3];
-        float furthest = convertDataToArrays(vertices, textures, normals, verticesArray,
+        OBJLoaderGeometryData geometryData = convertDataToArrays(vertices, textures, normals, verticesArray,
                 texturesArray, normalsArray);
         int[] indicesArray = convertIndicesListToArray(indices);
-        ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray,
-                furthest);
+        ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, geometryData);
         return data;
     }
 	
@@ -200,20 +199,42 @@ public class OBJFileLoader {
 	 * @param verticesArray - the float array which the data from the list of vertexes shall be written to
 	 * @param texturesArray - the float array which the data from the list of textures shall be written to
 	 * @param normalsArray - the float array which the data from the list of normals shall be written to
-	 * @return - the furthestPoint of all vertexes
+	 * @return - {@link OBJLoaderGeometryData}
 	 */
-	private static float convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures,
-            List<Vector3f> normals, float[] verticesArray, float[] texturesArray,
-            float[] normalsArray) {
+	private static OBJLoaderGeometryData convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures,
+            List<Vector3f> normals, float[] verticesArray, float[] texturesArray, float[] normalsArray) {
+		
         float furthestPoint = 0;
+        float xLength;
+        float yLength;
+        float zLength;
+        
+        //find max extents for each axis to calculate lengths
+        float maxNegX = 0;
+        float maxPosX = 0;
+        float maxNegY = 0;
+        float maxPosY = 0;
+        float maxNegZ = 0;
+        float maxPosZ = 0;
+        
         for (int i = 0; i < vertices.size(); i++) {
+        	
             Vertex currentVertex = vertices.get(i);
             if (currentVertex.getLength() > furthestPoint) {
                 furthestPoint = currentVertex.getLength();
             }
+            
             Vector3f position = currentVertex.getPosition();
             Vector2f textureCoord = textures.get(currentVertex.getTextureIndex());
             Vector3f normalVector = normals.get(currentVertex.getNormalIndex());
+            
+            if (position.x > maxPosX) maxPosX = position.x;
+            else if (position.x < maxNegX) maxNegX = position.x;
+            if (position.y > maxPosY) maxPosY = position.y;
+            else if (position.y < maxNegY) maxNegY = position.y;
+            if (position.z > maxPosZ) maxPosZ = position.z;
+            else if (position.z < maxNegZ) maxNegZ = position.z;
+            
             verticesArray[i * 3] = position.x;
             verticesArray[i * 3 + 1] = position.y;
             verticesArray[i * 3 + 2] = position.z;
@@ -223,7 +244,12 @@ public class OBJFileLoader {
             normalsArray[i * 3 + 1] = normalVector.y;
             normalsArray[i * 3 + 2] = normalVector.z;
         }
-        return furthestPoint;
+        
+        xLength = maxPosX - maxNegX;
+        yLength = maxPosY - maxNegY;
+        zLength = maxPosZ - maxNegZ;
+        
+        return new OBJLoaderGeometryData(furthestPoint, xLength, yLength, zLength);
     }
 	
 	/**Deals with vertices that have already been indexed (by their positional data in vertices array).<br>

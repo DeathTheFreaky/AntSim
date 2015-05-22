@@ -117,6 +117,28 @@ public class Maths {
 		return matrix;
 	}
 	
+	/**Creates a transformation matrix to be used for the transformation of 3D models.<br>
+	 * The matrix is going to be applied to the model each frame.
+	 * 
+	 * @param translation - an x,y,z translation in world coordinate space
+	 * @param rx - rotation value for x - axis
+	 * @param ry - rotation value for y - axis
+	 * @param rz - rotation value for z - axis
+	 * @return - a 4x4 transformation matrix as javax.vecmath.Matrix4f
+	 */
+	public static javax.vecmath.Matrix4f createTransformationMatrix(Vector3f translation, float rx, float ry, float rz) {
+		
+		Matrix4f matrix = new Matrix4f();
+		matrix.setIdentity(); //start a "fresh" previous matrix for multiplication
+		//perform operations in reverse order due to column-major order post-multiplication equaling row-major order pre-multiplication
+		Matrix4f.translate(translation, matrix, matrix); 
+		Matrix4f.rotate((float) Math.toRadians(ry), new Vector3f(0,1,0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(rx), new Vector3f(1,0,0), matrix, matrix);
+		Matrix4f.rotate((float) Math.toRadians(rz), new Vector3f(0,0,1), matrix, matrix);
+		
+		return convertMatrix4f(matrix);
+	}
+	
 	/**Creates a view matrix to move the view on the world.<br>
 	 * <br>
 	 * To make the world seem to move, although the OpenGL coordinates system stays fixed,
@@ -269,5 +291,34 @@ public class Maths {
         float l3 = 1.0f - l1 - l2;
 
         return l1 * p1.y + l2 * p2.y + l3 * p3.y; //use barycentric coordinates to determine value of y
-	}	
+	}
+	 
+	 /**Converts a lwjgl matrix4f to a vecmath matrix4f.
+	  * 
+	 * @param lwjglMatrix4f
+	 * @return
+	 */
+	private static javax.vecmath.Matrix4f convertMatrix4f(Matrix4f lwjglMatrix4f) {
+		 
+		javax.vecmath.Matrix4f vecmathMatrix4f = new javax.vecmath.Matrix4f();
+		
+		vecmathMatrix4f.m00 = lwjglMatrix4f.m00; 
+		vecmathMatrix4f.m01 = lwjglMatrix4f.m01;
+		vecmathMatrix4f.m02 = lwjglMatrix4f.m02;
+		vecmathMatrix4f.m03 = lwjglMatrix4f.m03;
+		vecmathMatrix4f.m10 = lwjglMatrix4f.m10;
+		vecmathMatrix4f.m11 = lwjglMatrix4f.m11;
+		vecmathMatrix4f.m12 = lwjglMatrix4f.m12;
+		vecmathMatrix4f.m13 = lwjglMatrix4f.m13;
+		vecmathMatrix4f.m20 = lwjglMatrix4f.m20;
+		vecmathMatrix4f.m21 = lwjglMatrix4f.m21;
+		vecmathMatrix4f.m22 = lwjglMatrix4f.m22;
+		vecmathMatrix4f.m23 = lwjglMatrix4f.m23;
+		vecmathMatrix4f.m30 = lwjglMatrix4f.m30;
+		vecmathMatrix4f.m31 = lwjglMatrix4f.m31;
+		vecmathMatrix4f.m32 = lwjglMatrix4f.m32;
+		vecmathMatrix4f.m33 = lwjglMatrix4f.m33;
+		
+		return vecmathMatrix4f;
+	 }
 }
