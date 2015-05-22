@@ -196,12 +196,9 @@ public class MainApplication {
 				
 				statsTimeAccumulator -= statsTimeStep;
 				
-				//remove temporary data (like text stats models) after each rendering frame
-				loader.tempCleanUp();
-				
 				if (worldLoaded && !paused) {
+					loader.tempCleanUp(); //remove temporary data (like text stats models) after each rendering frame
 					((MainGameState)mainGameState).updateStatus(); //update stats in main game state (population, food...)
-					statsCtrTest++;
 				}
 			}
 			
@@ -250,6 +247,7 @@ public class MainApplication {
 		//game logic
 		if (!paused && worldLoaded) {
 			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
+			statsCtrTest++;
 		}		
 	}
 

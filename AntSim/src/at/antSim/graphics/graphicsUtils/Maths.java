@@ -321,4 +321,20 @@ public class Maths {
 		
 		return vecmathMatrix4f;
 	 }
+	
+	/**Converts a vecmath vector3f to a lwjgl vector3f.
+	 * 
+	 * @param vecmathVector3f
+	 * @return
+	 */
+	public static Vector3f convertVector3f(javax.vecmath.Vector3f vecmathVector3f) {
+		
+		Vector3f lwjglVector3f = new Vector3f();
+		
+		lwjglVector3f.x = vecmathVector3f.x;
+		lwjglVector3f.y = vecmathVector3f.y;
+		lwjglVector3f.z = vecmathVector3f.z;
+		
+		return lwjglVector3f;
+	}
 }

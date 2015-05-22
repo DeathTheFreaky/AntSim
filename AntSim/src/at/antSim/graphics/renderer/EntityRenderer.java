@@ -19,6 +19,7 @@ import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.shaders.EntityShader;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.objectsKI.Entity;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 /**EntityRenderer renders static models.
  * 
@@ -72,7 +73,7 @@ public class EntityRenderer {
 			 */
 			List<Entity> batch = Entity.getUnmodifiableRenderingMap().get(model);
 			for(Entity entity:batch) {
-				prepareInstance(entity.getGraphicsEntity()); //load transformation matrix and texture atlas offset
+				prepareInstance(entity); //load transformation matrix and texture atlas offset
 				
 				//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 
@@ -131,12 +132,14 @@ public class EntityRenderer {
 	
 	/**Creates and loads an entity's transformation matrix and the texture offset in a texture atlas into the shader program. 
 	 * 
-	 * @param entity - the {@link GraphicsEntity} to be rendered
+	 * @param entity - the {@link Entity} to be rendered
 	 */
-	private void prepareInstance(GraphicsEntity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), 
-				entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale()); //transformation matrix to be applied in the shader program
+	private void prepareInstance(Entity entity) {
+		ReadOnlyPhysicsObject physicsObject = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.convertVector3f(physicsObject.getPosition()), 
+				entity.getGraphicsEntity().getRotX(), entity.getGraphicsEntity().getRotY(), entity.getGraphicsEntity().getRotZ(), 
+				entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
 		shader.loadTransformationMatrix(transformationMatrix); //load transformation matrix into the shader program
-		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset()); //offsets could be different for each entity
+		shader.loadOffset(entity.getGraphicsEntity().getTextureXOffset(), entity.getGraphicsEntity().getTextureYOffset()); //offsets could be different for each entity
 	}
 }
