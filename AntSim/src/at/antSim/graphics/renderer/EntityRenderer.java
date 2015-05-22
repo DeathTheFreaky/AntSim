@@ -18,6 +18,7 @@ import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.shaders.EntityShader;
 import at.antSim.graphics.textures.ModelTexture;
+import at.antSim.objectsKI.Entity;
 
 /**EntityRenderer renders static models.
  * 
@@ -50,7 +51,7 @@ public class EntityRenderer {
 	 * @param lights - a list of lightsources
 	 * @param camera - for creating a viewMatrix
 	 */
-	public void render(Map<TexturedModel, List<GraphicsEntity>> entities, float blendFactor, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
+	public void render(float blendFactor, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
 		
 		shader.start(); 
 		
@@ -60,7 +61,7 @@ public class EntityRenderer {
 		shader.loadViewMatrix(camera);
 		shader.loadBlendFactor(blendFactor);
 		
-		for (TexturedModel model : entities.keySet()) {
+		for (TexturedModel model : Entity.getUnmodifiableRenderingMap().keySet()) {
 			
 			/*Once for each unique model: load model's texture (by binding it to texture bank) and positions, normals, texture coordinates (as VBOs inside VAO) into OpenGL 
 			* and load other model attributes as uniform variables into shader program */
@@ -69,9 +70,9 @@ public class EntityRenderer {
 			/* For every instance of a unique model: prepare the instance by loading its transformation matrix and its texture atlas offset (if needed)
 			 * and draw the model.
 			 */
-			List<GraphicsEntity> batch = entities.get(model);
-			for(GraphicsEntity entity:batch) {
-				prepareInstance(entity); //load transformation matrix and texture atlas offset
+			List<Entity> batch = Entity.getUnmodifiableRenderingMap().get(model);
+			for(Entity entity:batch) {
+				prepareInstance(entity.getGraphicsEntity()); //load transformation matrix and texture atlas offset
 				
 				//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 

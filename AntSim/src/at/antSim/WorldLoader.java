@@ -18,6 +18,9 @@ import at.antSim.graphics.terrains.Terrain;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
+import at.antSim.objectsKI.Entity;
+import at.antSim.objectsKI.EnvironmentObject;
+import at.antSim.objectsKI.ObjectType;
 
 /**Provides methods to load the world's content.
  * 
@@ -94,10 +97,8 @@ public class WorldLoader {
 	 * @param terrain
 	 * @return - a list of the World's {@link GraphicsEntity}s
 	 */
-	public static ArrayList<GraphicsEntity> loadEntities(Loader loader, Terrain terrain) {
-		
-		ArrayList<GraphicsEntity> entities = new ArrayList<GraphicsEntity>();
-		
+	public static void loadEntities(Loader loader, Terrain terrain) {
+				
 		//create a random flora
 		Random random = new Random(676452);
 		for (int i = 0; i < 1200; i++) {
@@ -105,33 +106,35 @@ public class WorldLoader {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new GraphicsEntity(texturedModels.get("fern"), random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
-						0, 0.9f));
+				GraphicsEntity fernGraphicsEntity = new GraphicsEntity(texturedModels.get("fern"), random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.9f);
+				new EnvironmentObject(fernGraphicsEntity, null);
 			}
 			if (i % 5 == 0) {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new GraphicsEntity(texturedModels.get("grass"), 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 
-						0, random.nextFloat() * 0.1f + 0.6f));
+				GraphicsEntity grassGraphicsEntity = new GraphicsEntity(texturedModels.get("grass"), 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, random.nextFloat() * 0.1f + 0.6f);
+				new EnvironmentObject(grassGraphicsEntity, null);
 				x = random.nextFloat() * Globals.WORLD_SIZE;
 				z = random.nextFloat() * -Globals.WORLD_SIZE;
 				y = terrain.getHeightOfTerrain(x, z);
-				entities.add(new GraphicsEntity(texturedModels.get("tree"), 1, new Vector3f(x, y, z), 0, 0,
-						0, random.nextFloat() * 1 + 4));
+				GraphicsEntity treeGraphicsEntity = new GraphicsEntity(texturedModels.get("tree"), 1, new Vector3f(x, y, z), 0, 0, 0, random.nextFloat() * 1 + 4);
+				new EnvironmentObject(treeGraphicsEntity, null);
 			}
 		} 
 		
 		//add some lamps
-		entities.add(new GraphicsEntity(texturedModels.get("lamp"), 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1));
-		entities.add(new GraphicsEntity(texturedModels.get("lamp"), 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1));
+		GraphicsEntity lamp1GraphicsEntity = new GraphicsEntity(texturedModels.get("lamp"), 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1);
+		GraphicsEntity lamp2graGraphicsEntity = new GraphicsEntity(texturedModels.get("lamp"), 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1);
+		new EnvironmentObject(lamp1GraphicsEntity, null);
+		new EnvironmentObject(lamp2graGraphicsEntity, null);
 		
 		//add cool stanford demo dragon for specular lighting demo
-		GraphicsEntity dragon = new GraphicsEntity(texturedModels.get("dragon"), 1, new Vector3f(0, 0, 0), 0, 0, 0, 1);
-		entities.add(dragon);
-		specificEntities.put("dragon", dragon);
-	
-		return entities;
+		GraphicsEntity dragonGraphicsEntity = new GraphicsEntity(texturedModels.get("dragon"), 1, new Vector3f(0, 0, 0), 0, 0, 0, 1);
+		new EnvironmentObject(dragonGraphicsEntity, null);
+		
+		//delete the following line
+		specificEntities.put("dragon", dragonGraphicsEntity);
 	}
 	
 	/**Tries to create an Entity for the given name from all available texturedModels.<br>

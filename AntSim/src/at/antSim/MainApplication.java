@@ -124,7 +124,6 @@ public class MainApplication {
 	private Camera camera;
 	private Terrain terrain;
 	private MousePicker picker;
-	private List<GraphicsEntity> entities;
 	private List<Light> lights;
 	
 	private MovingEntity movingEntity;
@@ -223,9 +222,6 @@ public class MainApplication {
 				}
 				
 				renderer.processTerrain(terrain);
-				for (GraphicsEntity entity : entities) {
-					renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
-				}
 			}
 			
 			//render and update display
@@ -301,14 +297,14 @@ public class MainApplication {
 			}
 			
 			terrain = WorldLoader.loadTerrain(loader); // loads the world's terrain
-			entities = WorldLoader.loadEntities(loader, terrain); //loads the world's "material" contents
+			WorldLoader.loadEntities(loader, terrain); //loads the world's "material" contents
 			lights = WorldLoader.loadLights();
 			
 			// a lamp freely positionable on the map
-			movingLamp = new GraphicsEntity(WorldLoader.texturedModels.get("lamp"), 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
+			/*movingLamp = new GraphicsEntity(WorldLoader.texturedModels.get("lamp"), 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
 			entities.add(movingLamp);
 			movingLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f));
-			lights.add(movingLight);
+			lights.add(movingLight);*/
 			
 			camera.triggerReset();
 			picker.setTerrain(terrain);
