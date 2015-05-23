@@ -137,8 +137,8 @@ public class EntityRenderer {
 	private void prepareInstance(Entity entity) {
 		ReadOnlyPhysicsObject physicsObject = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
 		
-		//System.out.println("ge position: " + entity.getGraphicsEntity().getPosition());
-		//System.out.println("po position: " + physicsObject.getPosition());
+//		System.out.println("ge position: " + entity.getGraphicsEntity().getPosition());
+//		System.out.println("po position: " + physicsObject.getPosition());
 		
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getGraphicsEntity().getPosition(), 
 				entity.getGraphicsEntity().getRotX(), entity.getGraphicsEntity().getRotY(), entity.getGraphicsEntity().getRotZ(), 

@@ -1,7 +1,11 @@
 package at.antSim.objectsPhysic.PhysicsFactorys;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Quat4f;
+
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+
 import com.bulletphysics.linearmath.Transform;
 
 /**
@@ -24,6 +28,16 @@ public class StaticPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Sta
 
 	@Override
 	public StaticPhysicsObject createSphere(float mass, float radius, Transform position) throws UnsupportedOperationException {
+		System.out.println("creating sphere in StaticPhysicsObjectFactory: ");
+		System.out.println("mass: " + mass);
+		System.out.println("radius: " + radius);
+		System.out.println("position: " + position);
+		Matrix4f translation = new Matrix4f();
+		Quat4f rotation = new Quat4f();
+		position.getMatrix(translation);
+		position.getRotation(rotation);
+		System.out.println("position - translation: \n" + translation);
+		System.out.println("position - rotation: \n" + rotation);
 		return new StaticPhysicsObject(createSphereRigid(0, radius, position));
 	}
 

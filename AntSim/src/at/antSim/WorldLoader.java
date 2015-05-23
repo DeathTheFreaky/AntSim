@@ -161,8 +161,26 @@ public class WorldLoader {
 		//add cool stanford demo dragon for specular lighting demo
 		GraphicsEntity dragonGraphicsEntity = new GraphicsEntity(texturedModels.get("dragon"), 1, new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 0, 0, 0, 1);
 		GTPSphere dragonGtpSphere = GTPMapper.getSphere(dragonGraphicsEntity, dragonGraphicsEntity.getScale());
-		PhysicsObject dragonPhysicsObject = staticFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), 
-				new Transform(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 0, 0, 0)));
+		PhysicsObject dragonPhysicsObject = staticFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), new Transform(Maths.createTransformationMatrix(
+				new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), dragonGraphicsEntity.getRotX(), dragonGraphicsEntity.getRotY(), dragonGraphicsEntity.getRotZ())));
+		
+		javax.vecmath.Vector3f centerOfMassPosition = new javax.vecmath.Vector3f();
+		dragonPhysicsObject.getRigidBody().getCenterOfMassPosition(centerOfMassPosition);
+		System.out.println("dragonPhysicsObject center of MassPosition: " + centerOfMassPosition);
+		
+		javax.vecmath.Quat4f orientation = new javax.vecmath.Quat4f();
+		dragonPhysicsObject.getRigidBody().getOrientation(orientation);
+		System.out.println("dragonPhysicsObject orientation: " + orientation);
+		
+		Transform transform = new Transform();
+		dragonPhysicsObject.getRigidBody().getWorldTransform(transform);
+		javax.vecmath.Matrix4f transformMatrix = new javax.vecmath.Matrix4f();
+		transform.getMatrix(transformMatrix);
+		javax.vecmath.Quat4f transformRotation = new javax.vecmath.Quat4f();
+		transform.getRotation(transformRotation);
+		System.out.println("transform: \n" + transformMatrix);
+		System.out.println("transform: \n" + transformRotation);
+		
 		new EnvironmentObject(dragonGraphicsEntity, dragonPhysicsObject);
 		
 		//delete the following line

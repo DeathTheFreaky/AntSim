@@ -303,21 +303,23 @@ public class Maths {
 		javax.vecmath.Matrix4f vecmathMatrix4f = new javax.vecmath.Matrix4f();
 		
 		vecmathMatrix4f.m00 = lwjglMatrix4f.m00; 
-		vecmathMatrix4f.m01 = lwjglMatrix4f.m01;
-		vecmathMatrix4f.m02 = lwjglMatrix4f.m02;
-		vecmathMatrix4f.m03 = lwjglMatrix4f.m03;
-		vecmathMatrix4f.m10 = lwjglMatrix4f.m10;
+		vecmathMatrix4f.m01 = lwjglMatrix4f.m10;
+		vecmathMatrix4f.m02 = lwjglMatrix4f.m20;
+		vecmathMatrix4f.m03 = lwjglMatrix4f.m30;
+		vecmathMatrix4f.m10 = lwjglMatrix4f.m01;
 		vecmathMatrix4f.m11 = lwjglMatrix4f.m11;
-		vecmathMatrix4f.m12 = lwjglMatrix4f.m12;
-		vecmathMatrix4f.m13 = lwjglMatrix4f.m13;
-		vecmathMatrix4f.m20 = lwjglMatrix4f.m20;
-		vecmathMatrix4f.m21 = lwjglMatrix4f.m21;
+		vecmathMatrix4f.m12 = lwjglMatrix4f.m21;
+		vecmathMatrix4f.m13 = lwjglMatrix4f.m31;
+		vecmathMatrix4f.m20 = lwjglMatrix4f.m02;
+		vecmathMatrix4f.m21 = lwjglMatrix4f.m12;
 		vecmathMatrix4f.m22 = lwjglMatrix4f.m22;
-		vecmathMatrix4f.m23 = lwjglMatrix4f.m23;
-		vecmathMatrix4f.m30 = lwjglMatrix4f.m30;
-		vecmathMatrix4f.m31 = lwjglMatrix4f.m31;
-		vecmathMatrix4f.m32 = lwjglMatrix4f.m32;
+		vecmathMatrix4f.m23 = lwjglMatrix4f.m32;
+		vecmathMatrix4f.m30 = lwjglMatrix4f.m03;
+		vecmathMatrix4f.m31 = lwjglMatrix4f.m13;
+		vecmathMatrix4f.m32 = lwjglMatrix4f.m23;
 		vecmathMatrix4f.m33 = lwjglMatrix4f.m33;
+		
+		System.out.println("vecmath: \n" + vecmathMatrix4f);
 		
 		return vecmathMatrix4f;
 	 }
