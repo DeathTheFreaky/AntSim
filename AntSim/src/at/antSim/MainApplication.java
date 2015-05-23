@@ -246,7 +246,7 @@ public class MainApplication {
 		
 		//game logic
 		if (!paused && worldLoaded) {
-			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
+//			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
 			statsCtrTest++;
 		}		
 	}

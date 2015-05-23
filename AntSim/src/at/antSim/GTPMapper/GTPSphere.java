@@ -14,6 +14,8 @@ public class GTPSphere {
 
 	public GTPSphere(GraphicsEntity graphicsEntity, float scale) {
 		this.radious = graphicsEntity.getModel().getRawModel().getFurthestPoint() * scale;
+		System.out.println(graphicsEntity + " - furthest point: " + graphicsEntity.getModel().getRawModel().getFurthestPoint());
+		System.out.println(graphicsEntity + " - radious: " + radious);
 	}
 
 	public float getRadious() {
