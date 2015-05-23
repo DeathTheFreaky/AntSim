@@ -28,10 +28,6 @@ public class StaticPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Sta
 
 	@Override
 	public StaticPhysicsObject createSphere(float mass, float radius, Transform position) throws UnsupportedOperationException {
-		Matrix4f translation = new Matrix4f();
-		Quat4f rotation = new Quat4f();
-		position.getMatrix(translation);
-		position.getRotation(rotation);
 		return new StaticPhysicsObject(createSphereRigid(0, radius, position));
 	}
 
