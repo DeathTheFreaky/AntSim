@@ -3,6 +3,8 @@ package at.antSim.graphics.renderer;
 import java.util.List;
 import java.util.Map;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -136,16 +138,9 @@ public class EntityRenderer {
 	 */
 	private void prepareInstance(Entity entity) {
 		ReadOnlyPhysicsObject physicsObject = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
-		
-//		System.out.println("ge position: " + entity.getGraphicsEntity().getPosition());
-//		System.out.println("po position: " + physicsObject.getPosition());
-		
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getGraphicsEntity().getPosition(), 
-				entity.getGraphicsEntity().getRotX(), entity.getGraphicsEntity().getRotY(), entity.getGraphicsEntity().getRotZ(), 
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.convertVector3f(physicsObject.getPosition()), 
+				physicsObject.getRotationAngles().x, physicsObject.getRotationAngles().y, physicsObject.getRotationAngles().z, 
 				entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
-//		Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.convertVector3f(physicsObject.getPosition()), 
-//				entity.getGraphicsEntity().getRotX(), entity.getGraphicsEntity().getRotY(), entity.getGraphicsEntity().getRotZ(), 
-//				entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
 		shader.loadTransformationMatrix(transformationMatrix); //load transformation matrix into the shader program
 		shader.loadOffset(entity.getGraphicsEntity().getTextureXOffset(), entity.getGraphicsEntity().getTextureYOffset()); //offsets could be different for each entity
 	}

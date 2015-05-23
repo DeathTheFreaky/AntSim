@@ -318,9 +318,7 @@ public class Maths {
 		vecmathMatrix4f.m31 = lwjglMatrix4f.m13;
 		vecmathMatrix4f.m32 = lwjglMatrix4f.m23;
 		vecmathMatrix4f.m33 = lwjglMatrix4f.m33;
-		
-		System.out.println("vecmath: \n" + vecmathMatrix4f);
-		
+				
 		return vecmathMatrix4f;
 	 }
 	

@@ -9,8 +9,6 @@ import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.MotionState;
 import com.bulletphysics.linearmath.Transform;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 /**
@@ -21,16 +19,6 @@ import javax.vecmath.Vector3f;
 public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> implements PhysicsObjectFactory<E> {
 
 	RigidBody createSphereRigid(float mass, float radius, Transform position) {
-		System.out.println("\n\ncreateSphereRigid in AbstractPhysicsObjectFactory: ");
-		System.out.println("mass: " + mass);
-		System.out.println("radius: " + radius);
-		System.out.println("position: " + position);
-		Matrix4f translation = new Matrix4f();
-		Quat4f rotation = new Quat4f();
-		position.getMatrix(translation);
-		position.getRotation(rotation);
-		System.out.println("position - translation: \n" + translation);
-		System.out.println("position - rotation: \n" + rotation);
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = new SphereShape(radius);
 		return new RigidBody(mass, motionState, shape);

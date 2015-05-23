@@ -12,9 +12,9 @@ public class ClickFoodAppleCmd implements Command {
 	public void execute() {
 		System.out.println("ClickFoodAppleCmd: execute()");
 		if (MainApplication.getInstance().getMovingEntity().getGraphicsEntity() == null) {
-			MainApplication.getInstance().getMovingEntity().setGraphicsEntity(WorldLoader.createEntity("dragon", "test"));
+			//MainApplication.getInstance().getMovingEntity().setGraphicsEntity(WorldLoader.createEntity("dragon", "test"));
 		} else {
-			MainApplication.getInstance().getMovingEntity().setGraphicsEntity(null);
+			//MainApplication.getInstance().getMovingEntity().setGraphicsEntity(null);
 		}
 	}
 }

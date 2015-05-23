@@ -215,7 +215,7 @@ public class MainApplication {
 				picker.update();
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 				if (terrainPoint != null && movingEntity.getGraphicsEntity() != null) {
-					movingEntity.getGraphicsEntity().setPosition(terrainPoint);
+//					movingEntity.getGraphicsEntity().setPosition(terrainPoint);
 				}
 				
 				renderer.processTerrain(terrain);

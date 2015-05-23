@@ -22,7 +22,12 @@ public interface ReadOnlyPhysicsObject {
 	/**
 	 * @return Returns the rotation of the object represented as {@link Quat4f quaternion}
 	 */
-	Quat4f getRotation();
+	Quat4f getRotationQuaternions();
+	
+	/**
+	 * @return Returns the rotation of the object represented as {@link Vector3f}
+	 */
+	Vector3f getRotationAngles();
 
 	/**
 	 * @return Returns the angular velocity of the Object represented as {@link Vector3f vector}

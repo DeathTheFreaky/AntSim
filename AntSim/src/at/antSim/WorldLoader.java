@@ -31,6 +31,7 @@ import at.antSim.objectsKI.EnvironmentObject;
 import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 /**Provides methods to load the world's content.
  * 
@@ -42,7 +43,6 @@ public class WorldLoader {
 	private static StaticPhysicsObjectFactory staticFactory = StaticPhysicsObjectFactory.getInstance();
 	private static float massDummie = 0.1f;
 	
-	public static HashMap<String, GraphicsEntity> specificEntities = new HashMap<>();
 	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
 	private static LinkedList<String[]> modelTextureNames = new LinkedList<>(); //names of all obj files and associated textures to be loaded
 	
@@ -114,94 +114,57 @@ public class WorldLoader {
 	public static void loadEntities(Loader loader, Terrain terrain) {
 				
 		//create a random flora
-//		Random random = new Random(676452);
-//		for (int i = 0; i < 1200; i++) {
-//			if (i % 20 == 0) {
-//				float x = random.nextFloat() * Globals.WORLD_SIZE;
-//				float z = random.nextFloat() * -Globals.WORLD_SIZE;
-//				float y = terrain.getHeightOfTerrain(x, z);
-//				GraphicsEntity fernGraphicsEntity = new GraphicsEntity(texturedModels.get("fern"), random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.9f);
-//				GTPCylinder fernCylinder = GTPMapper.getCylinder(fernGraphicsEntity, fernGraphicsEntity.getScale());
-//				PhysicsObject fernPhysicsObject = staticFactory.createCylinder(massDummie, fernCylinder.getHeight(), fernCylinder.getRadius(), fernCylinder.getOrientation(), 
-//						new Transform(Maths.createTransformationMatrix(new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0)));
-//				new EnvironmentObject(fernGraphicsEntity, fernPhysicsObject);
-//			}
-//			if (i % 5 == 0) {
-//				float x = random.nextFloat() * Globals.WORLD_SIZE;
-//				float z = random.nextFloat() * -Globals.WORLD_SIZE;
-//				float y = terrain.getHeightOfTerrain(x, z);
-//				GraphicsEntity grassGraphicsEntity = new GraphicsEntity(texturedModels.get("grass"), 1, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, random.nextFloat() * 0.1f + 0.6f);
-//				GTPCuboid grassCuboid = GTPMapper.getCuboid(grassGraphicsEntity, grassGraphicsEntity.getScale());
-//				PhysicsObject grassPhysicsObject = staticFactory.createCuboid(massDummie, grassCuboid.getxLength(), grassCuboid.getyLength(), grassCuboid.getzLength(), 
-//						new Transform(Maths.createTransformationMatrix(new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0)));
-//				new EnvironmentObject(grassGraphicsEntity, grassPhysicsObject);
-//				x = random.nextFloat() * Globals.WORLD_SIZE;
-//				z = random.nextFloat() * -Globals.WORLD_SIZE;
-//				y = terrain.getHeightOfTerrain(x, z);
-//				GraphicsEntity treeGraphicsEntity = new GraphicsEntity(texturedModels.get("tree"), 1, new Vector3f(x, y, z), 0, 0, 0, random.nextFloat() * 1 + 4);
-//				GTPCylinder treeCylinder = GTPMapper.getCylinder(treeGraphicsEntity, treeGraphicsEntity.getScale());
-//				PhysicsObject treePhysicsObject = staticFactory.createCylinder(massDummie, treeCylinder.getHeight(), treeCylinder.getRadius(), treeCylinder.getOrientation(), 
-//						new Transform(Maths.createTransformationMatrix(new Vector3f(x, y, z), 0, 0, 0)));
-//				new EnvironmentObject(treeGraphicsEntity, treePhysicsObject);
-//			}
-//		} 
+		Random random = new Random(676452);
+		for (int i = 0; i < 1200; i++) {
+			if (i % 20 == 0) {
+				float x = random.nextFloat() * Globals.WORLD_SIZE;
+				float z = random.nextFloat() * -Globals.WORLD_SIZE;
+				float y = terrain.getHeightOfTerrain(x, z);
+				GraphicsEntity fernGraphicsEntity = new GraphicsEntity(texturedModels.get("fern"), random.nextInt(4), 20f);
+				GTPCylinder fernCylinder = GTPMapper.getCylinder(fernGraphicsEntity, fernGraphicsEntity.getScale());
+				PhysicsObject fernPhysicsObject = staticFactory.createCylinder(massDummie, fernCylinder.getHeight(), fernCylinder.getRadius(), fernCylinder.getOrientation(), 
+						new Transform(Maths.createTransformationMatrix(new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0)));
+				new EnvironmentObject(fernGraphicsEntity, fernPhysicsObject);
+			}
+			if (i % 5 == 0) {
+				float x = random.nextFloat() * Globals.WORLD_SIZE;
+				float z = random.nextFloat() * -Globals.WORLD_SIZE;
+				float y = terrain.getHeightOfTerrain(x, z);
+				GraphicsEntity grassGraphicsEntity = new GraphicsEntity(texturedModels.get("grass"), 1, random.nextFloat() * 2f + 25f);
+				GTPCuboid grassCuboid = GTPMapper.getCuboid(grassGraphicsEntity, grassGraphicsEntity.getScale());
+				PhysicsObject grassPhysicsObject = staticFactory.createCuboid(massDummie, grassCuboid.getxLength(), grassCuboid.getyLength(), grassCuboid.getzLength(), 
+						new Transform(Maths.createTransformationMatrix(new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0)));
+				new EnvironmentObject(grassGraphicsEntity, grassPhysicsObject);
+				x = random.nextFloat() * Globals.WORLD_SIZE;
+				z = random.nextFloat() * -Globals.WORLD_SIZE;
+				y = terrain.getHeightOfTerrain(x, z);
+				GraphicsEntity treeGraphicsEntity = new GraphicsEntity(texturedModels.get("tree"), 1, random.nextFloat() * 5f + 20f);
+				GTPCylinder treeCylinder = GTPMapper.getCylinder(treeGraphicsEntity, treeGraphicsEntity.getScale());
+				PhysicsObject treePhysicsObject = staticFactory.createCylinder(massDummie, treeCylinder.getHeight(), treeCylinder.getRadius(), treeCylinder.getOrientation(), 
+						new Transform(Maths.createTransformationMatrix(new Vector3f(x, y, z), 0, 0, 0)));
+				new EnvironmentObject(treeGraphicsEntity, treePhysicsObject);
+			}
+		} 
 		
 		//add some lamps
-//		GraphicsEntity lamp1GraphicsEntity = new GraphicsEntity(texturedModels.get("lamp"), 1, new Vector3f(185, -4.7f, -293), 0, 0, 0, 1);
-//		GraphicsEntity lamp2GraphicsEntity = new GraphicsEntity(texturedModels.get("lamp"), 1, new Vector3f(370, 4.2f, -300), 0, 0, 0, 1);
-//		GTPCylinder lamp1Cylinder = GTPMapper.getCylinder(lamp1GraphicsEntity, lamp1GraphicsEntity.getScale());
-//		GTPCylinder lamp2Cylinder = GTPMapper.getCylinder(lamp2GraphicsEntity, lamp2GraphicsEntity.getScale());
-//		PhysicsObject lamp1PhysicsObject = staticFactory.createCylinder(massDummie, lamp1Cylinder.getHeight(), lamp1Cylinder.getRadius(), lamp1Cylinder.getOrientation(), 
-//				new Transform(Maths.createTransformationMatrix(new Vector3f(185, -4.7f, -293), 0, 0, 0)));
-//		PhysicsObject lamp2PhysicsObject = staticFactory.createCylinder(massDummie, lamp2Cylinder.getHeight(), lamp2Cylinder.getRadius(), lamp2Cylinder.getOrientation(), 
-//				new Transform(Maths.createTransformationMatrix(new Vector3f(370, 4.2f, -300), 0, 0, 0)));
-//		new EnvironmentObject(lamp1GraphicsEntity, lamp1PhysicsObject);
-//		new EnvironmentObject(lamp2GraphicsEntity, lamp2PhysicsObject);
+		GraphicsEntity lamp1GraphicsEntity = new GraphicsEntity(texturedModels.get("lamp"), 1, 20);
+		GraphicsEntity lamp2GraphicsEntity = new GraphicsEntity(texturedModels.get("lamp"), 1, 20);
+		GTPCylinder lamp1Cylinder = GTPMapper.getCylinder(lamp1GraphicsEntity, lamp1GraphicsEntity.getScale());
+		GTPCylinder lamp2Cylinder = GTPMapper.getCylinder(lamp2GraphicsEntity, lamp2GraphicsEntity.getScale());
+		PhysicsObject lamp1PhysicsObject = staticFactory.createCylinder(massDummie, lamp1Cylinder.getHeight(), lamp1Cylinder.getRadius(), lamp1Cylinder.getOrientation(), 
+				new Transform(Maths.createTransformationMatrix(new Vector3f(185, -4.7f, -293), 0, 0, 0)));
+		PhysicsObject lamp2PhysicsObject = staticFactory.createCylinder(massDummie, lamp2Cylinder.getHeight(), lamp2Cylinder.getRadius(), lamp2Cylinder.getOrientation(), 
+				new Transform(Maths.createTransformationMatrix(new Vector3f(370, 4.2f, -300), 0, 0, 0)));
+		new EnvironmentObject(lamp1GraphicsEntity, lamp1PhysicsObject);
+		new EnvironmentObject(lamp2GraphicsEntity, lamp2PhysicsObject);
 		
 		//add cool stanford demo dragon for specular lighting demo
-		GraphicsEntity dragonGraphicsEntity = new GraphicsEntity(texturedModels.get("dragon"), 1, new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 0, 0, 0, 1);
+		GraphicsEntity dragonGraphicsEntity = new GraphicsEntity(texturedModels.get("dragon"), 1, 25);
 		GTPSphere dragonGtpSphere = GTPMapper.getSphere(dragonGraphicsEntity, dragonGraphicsEntity.getScale());
-		PhysicsObject dragonPhysicsObject = staticFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), new Transform(Maths.createTransformationMatrix(
-				new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), dragonGraphicsEntity.getRotX(), dragonGraphicsEntity.getRotY(), dragonGraphicsEntity.getRotZ())));
-		
-		javax.vecmath.Vector3f centerOfMassPosition = new javax.vecmath.Vector3f();
-		dragonPhysicsObject.getRigidBody().getCenterOfMassPosition(centerOfMassPosition);
-		System.out.println("dragonPhysicsObject center of MassPosition: " + centerOfMassPosition);
-		
-		javax.vecmath.Quat4f orientation = new javax.vecmath.Quat4f();
-		dragonPhysicsObject.getRigidBody().getOrientation(orientation);
-		System.out.println("dragonPhysicsObject orientation: " + orientation);
-		
-		Transform transform = new Transform();
-		dragonPhysicsObject.getRigidBody().getWorldTransform(transform);
-		javax.vecmath.Matrix4f transformMatrix = new javax.vecmath.Matrix4f();
-		transform.getMatrix(transformMatrix);
-		javax.vecmath.Quat4f transformRotation = new javax.vecmath.Quat4f();
-		transform.getRotation(transformRotation);
-		System.out.println("transform: \n" + transformMatrix);
-		System.out.println("transform: \n" + transformRotation);
-		
+		PhysicsObject dragonPhysicsObject = staticFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), 
+				new Transform(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 90, 45, 90)));
 		new EnvironmentObject(dragonGraphicsEntity, dragonPhysicsObject);
 		
-		//delete the following line
-		specificEntities.put("dragon", dragonGraphicsEntity);
-	}
-	
-	/**Tries to create an Entity for the given name from all available texturedModels.<br>
-	 * Returns null if no texturedModel could be found for the given name.
-	 * 
-	 * @param name
-	 * @param id
-	 * @return - a GraphicsEntity or null if no texturedModel could be found for the given name
-	 */
-	public static GraphicsEntity createEntity(String name, String id) {
-		GraphicsEntity entity = null;
-		TexturedModel texturedModel = texturedModels.get(name);
-		if (texturedModel != null) {
-			entity = new GraphicsEntity(texturedModel, 1, new Vector3f(0, 0, 0), 0, 0, 0, 1);
-		}
-		specificEntities.put(id, entity);
-		return entity;
 	}
 	
 	/**Loads the world's light sources.
