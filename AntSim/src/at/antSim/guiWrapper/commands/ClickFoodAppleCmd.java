@@ -11,7 +11,7 @@ public class ClickFoodAppleCmd implements Command {
 	@Override
 	public void execute() {
 		System.out.println("ClickFoodAppleCmd: execute()");
-		if (MainApplication.getInstance().getMovingEntity().getGraphicsEntity() == null) {
+		if (MainApplication.getInstance().getMovingEntity().getEntity().getGraphicsEntity() == null) {
 			//MainApplication.getInstance().getMovingEntity().setGraphicsEntity(WorldLoader.createEntity("dragon", "test"));
 		} else {
 			//MainApplication.getInstance().getMovingEntity().setGraphicsEntity(null);

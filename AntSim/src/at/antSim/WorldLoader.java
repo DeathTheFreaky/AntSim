@@ -29,6 +29,8 @@ import at.antSim.graphics.textures.TerrainTexturePack;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EnvironmentObject;
 import at.antSim.objectsKI.ObjectType;
+import at.antSim.objectsPhysic.DynamicPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
@@ -41,6 +43,7 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 public class WorldLoader {
 
 	private static StaticPhysicsObjectFactory staticFactory = StaticPhysicsObjectFactory.getInstance();
+	private static DynamicPhysicsObjectFactory dynamicFactory = DynamicPhysicsObjectFactory.getInstance();
 	private static float massDummie = 0.1f;
 	
 	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
@@ -161,8 +164,12 @@ public class WorldLoader {
 		//add cool stanford demo dragon for specular lighting demo
 		GraphicsEntity dragonGraphicsEntity = new GraphicsEntity(texturedModels.get("dragon"), 1, 25);
 		GTPSphere dragonGtpSphere = GTPMapper.getSphere(dragonGraphicsEntity, dragonGraphicsEntity.getScale());
-		PhysicsObject dragonPhysicsObject = staticFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), 
+//		PhysicsObject dragonPhysicsObject = staticFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), 
+//				new Transform(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 90, 45, 90)));
+		DynamicPhysicsObject dragonPhysicsObject = dynamicFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), 
 				new Transform(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 90, 45, 90)));
+		dragonPhysicsObject.setAngularVelocity(new javax.vecmath.Vector3f(0, 5, 0)); //not working
+		dragonPhysicsObject.getRigidBody().activate(); //does also not work
 		new EnvironmentObject(dragonGraphicsEntity, dragonPhysicsObject);
 		
 	}

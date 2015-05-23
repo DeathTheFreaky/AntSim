@@ -3,8 +3,6 @@ package at.antSim;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
-
 import at.antSim.guiWrapper.states.AbstractGuiState;
 import at.antSim.guiWrapper.states.LoadingState;
 import at.antSim.guiWrapper.states.MainGameState;
