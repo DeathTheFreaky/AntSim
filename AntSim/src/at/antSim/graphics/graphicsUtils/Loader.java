@@ -106,7 +106,9 @@ public class Loader {
 		return new RawModel(vaoID, positions.length/dimensions); //for 2d models there are 2 number per vertex, for 3d models there are 3
 	}
 	
-	/**Loads up a texture into memory to be used by OpenGL.
+	/**Loads up a texture into memory to be used by OpenGL.<br>
+	 * Slick Util's texture loader will be used for loading a texture into openGl.<br>
+	 * It is important to note that the slick util texture loader only supports power of 2 textures, which is recommended for mipmapping.
 	 * 
 	 * @param filename - the filename of the texture 
 	 * @return - the ID of the newly loaded texture
@@ -149,7 +151,9 @@ public class Loader {
 		return textureID;
 	}
 	
-	/**Loads up a GUI texture into memory to be used by OpenGL, providing the texture's height and width for gui positioning.
+	/**Loads up a GUI texture into memory to be used by OpenGL, providing the texture's height and width for gui positioning.<br>
+	 * Textures will be loaded manually, without slick util's texture loader, to allow loading of non power of 2 textures for the gui.<br>
+	 * Gui textures will not use mipmapping, since this will not be necessary, for Gui textures will most likely be created in their "target" size.
 	 * 
 	 * @param filename - the filename of the texture 
 	 * @return - a {@link GuiTexture}
@@ -162,7 +166,7 @@ public class Loader {
 		int texID = GL11.glGenTextures(); //generates completely empty texture - see OpenGL Programming Guide p.263
 		GL13.glActiveTexture(texID); //change the selector referring the active texture unit - see OpenGL Programming Guide p.265
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID); //bind active texture as a cubemap - see OpenGL Programming Guide p.264
-			
+					
 //		/* 
 //		 * To avoid artifacts produced by the undersampling of textures, with the texture changed abruptly at certain transition points,
 //		 * we create lower res versions of the texture, called mipmaps. OpenGL automatically chooses the right texture version,
@@ -190,8 +194,8 @@ public class Loader {
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 		
 		//set filtering to nearest
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		
 		//set clamp to edge to avoid visible seam on the edges of your cubemap textures
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
@@ -306,7 +310,8 @@ public class Loader {
 			 * - fmt: the target format into which the image should be decoded
 			 *
 			 */
-			decoder.decodeFlipped(buffer, width * 4, Format.RGBA);
+			decoder.decode(buffer,  width * 4, Format.RGBA);
+			//decoder.decodeFlipped(buffer, width * 4, Format.RGBA);
 			buffer.flip(); //change from buffer write to buffer read access
 			in.close();
 		} catch (Exception e) {
