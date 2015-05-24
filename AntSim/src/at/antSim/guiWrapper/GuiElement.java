@@ -3,6 +3,7 @@ package at.antSim.guiWrapper;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.opengl.Texture;
 
 import at.antSim.Globals;
 import at.antSim.eventSystem.Event;
@@ -10,6 +11,8 @@ import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
+import at.antSim.graphics.graphicsUtils.GuiQuadCreator;
+import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.guiWrapper.commands.Command;
 
@@ -59,6 +62,32 @@ public abstract class GuiElement {
 	/**Constructs a new {@link GuiElement}.
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
+	 * @param loader - the {@link Loader} used for loading texture coords and positions into a vao
+	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
+	 * @param texture - a {@link Texture}
+	 * @param desiredWidth - desired width of the Gui element in pixels
+	 * @param desiredHeight - desired height of the Gui element in pixels
+	 * @param horRef - {@link HorReference} of the {@link GuiElement}
+	 * @param horPos - {@link HorPosition} of the {@link GuiElement}
+	 * @param horOffset - horizontal offset in pixels
+	 * @param verRef - {@link VerReference} of the {@link GuiElement}
+	 * @param verPos - {@link VerPosition} of the {@link GuiElement}
+	 * @param verOffset - vertical offset in pixels
+	 * @param transparency - 0: opaque, 1: fully transparent
+	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
+	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
+	 */
+	public GuiElement(String id, Loader loader, GuiContainer parent, Command command, Texture texture, int desiredWidth, int desiredHeight, 
+			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
+				
+		this(id, parent, command, GuiQuadCreator.createGuiQuad(texture, loader), (texture != null) ? texture.getTextureID() : -1, (texture != null) ? texture.getTextureWidth() : 0, 
+				(texture != null) ? texture.getTextureHeight() : 0, desiredWidth, desiredHeight, horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
+	}
+	
+	/**Constructs a new {@link GuiElement}.
+	 * 
+	 * @param id - the {@link GuiElement}'s id as String
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
 	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
 	 * @param model - the {@link GuiElement}'s geometric model
@@ -98,13 +127,6 @@ public abstract class GuiElement {
 		this.transparency = transparency;
 		this.blendColor = blendColor;
 		this.blendFactor = blendFactor;
-		
-		if (id.equals("speedContainer")) {
-			System.out.println("textureWidth: " + textureWidth);
-			System.out.println("textureHeight: " + textureHeight);
-			System.out.println("desiredWidth: " + desiredWidth);
-			System.out.println("desiredHeight: " + desiredHeight);
-		}
 		
 		this.scale = new Vector2f(((float) textureWidth/Globals.displayWidth) * ((float) desiredWidth/textureWidth), ((float) textureHeight/Globals.displayHeight) * ((float) desiredHeight/textureHeight));
 				

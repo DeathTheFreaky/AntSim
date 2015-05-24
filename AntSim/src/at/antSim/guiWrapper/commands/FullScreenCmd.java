@@ -19,7 +19,7 @@ public class FullScreenCmd implements Command {
 	public void execute() {
 		Globals.fullscreen = !Globals.fullscreen;
 		ConfigWriter.writeConfig();
-		img.setTextureId(GuiWrapper.getInstance().getGuiTexture(GuiUtils.getCheckboxTexStr(Globals.fullscreen)).getTextureId());
+		img.setTextureId(GuiWrapper.getInstance().getGuiTexture(GuiUtils.getCheckboxTexStr(Globals.fullscreen)).getTextureID());
 		DisplayManager.setDisplayMode(Globals.displayWidth, Globals.displayHeight, Globals.fullscreen);
 	}
 }

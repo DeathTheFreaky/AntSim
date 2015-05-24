@@ -154,7 +154,7 @@ public class Loader {
 	 * @param filename - the filename of the texture 
 	 * @return - a {@link Texture}
 	 */
-	public Texture loadGuiTestTexture(String fileName) {
+	public Texture loadGuiTexture(String fileName) {
 			
 		//load a texture in .png format from /res/models directory and store it in raw format
 		Texture texture = null;
@@ -190,49 +190,6 @@ public class Loader {
 		}
 
 		return texture;
-	}
-	
-	/**Loads up a texture into memory to be used by OpenGL, providing the texture's height and width for gui positioning.<br>
-	 * 
-	 * @param filename - the filename of the texture 
-	 * @return - a {@link Texture}
-	 */
-	public GuiTexture loadGuiTexture(String fileName) {
-			
-		//load a texture in .png format from /res/models directory and store it in raw format
-		Texture texture = null;
-		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream(Globals.TEXTURES + fileName + ".png")); //texture is being bound for GL30.glGenerateMipMap(int target)
-			/* 
-			 * To avoid artifacts produced by the undersampling of textures, with the texture changed abruptly at certain transition points,
-			 * we create lower res versions of the texture, called mipmaps. OpenGL automatically chooses the right texture version,
-			 * according to the distance from and hence the effective size of a texture.
-			 * The GL30.glGenerateMipmap() method automatically creates all needed smaller resolution version of the original texture.
-			 * Since we are using 2D textures only, we can set the target parameter to GL11.GL_TEXTURE_2D.
-			 * 
-			 * For more information, see OpenGL Programming Guide on page 333.
-			 */
-			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-			 /* 
-			  * tell openGl to use these lower res textures:
-			  * param1: texture type,
-			  * param2: defining openGl's behaviour for when the texture is rendered onto a surface with smaller dimensions than the texture
-			  * param3: when the above happens, use the mipmaps that we generated -> linear: transition smoothly between different resolution versions
-			  */
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
-			/*
-			 * Set texture's level of detail bias: texture will be rendered in more detail (higher mipmap levels) for higher negative numbers.
-			 * 
-			 * See OpenGL Programming Guide on page 338.
-			 */
-			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f); 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return new GuiTexture(texture.getTextureID(), texture.getTextureWidth(), texture.getTextureHeight());
 	}
 	
 	/**Loads up a CubeMap's textures into OpenGL.<br>

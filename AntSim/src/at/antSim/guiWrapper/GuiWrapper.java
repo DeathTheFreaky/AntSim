@@ -20,8 +20,7 @@ public class GuiWrapper {
 	private static GuiWrapper INSTANCE = null;
 	
 	Map<String, GuiState> states = new HashMap<>();
-	Map<String, GuiTexture> guiTextures = new HashMap<>();
-	Map<String, Texture> guiTestTextures = new HashMap<>();
+	Map<String, Texture> guiTextures = new HashMap<>();
 	
 	GuiState currentState;
 	Loader loader;
@@ -72,30 +71,13 @@ public class GuiWrapper {
 	 * @param filename
 	 * @return
 	 */
-	public GuiTexture getGuiTexture(String filename) {
+	public Texture getGuiTexture(String filename) {
 		
-		GuiTexture tex = guiTextures.get(filename);
+		Texture tex = guiTextures.get(filename);
 		
 		if (tex == null) {
 			tex = loader.loadGuiTexture(filename);
 			guiTextures.put(filename, tex);
-		}
-		
-		return tex;
-	}
-	
-	/**Retrieves a gui Texture.
-	 * 
-	 * @param filename
-	 * @return
-	 */
-	public Texture getGuiTestTexture(String filename) {
-		
-		Texture tex = guiTestTextures.get(filename);
-		
-		if (tex == null) {
-			tex = loader.loadGuiTestTexture(filename);
-			guiTestTextures.put(filename, tex);
 		}
 		
 		return tex;
