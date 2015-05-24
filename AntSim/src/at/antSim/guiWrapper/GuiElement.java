@@ -79,7 +79,7 @@ public abstract class GuiElement {
 	 */
 	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
-				
+		
 		this.width = desiredWidth;
 		this.height = desiredHeight;
 		this.model = model;
@@ -98,6 +98,13 @@ public abstract class GuiElement {
 		this.transparency = transparency;
 		this.blendColor = blendColor;
 		this.blendFactor = blendFactor;
+		
+		if (id.equals("speedContainer")) {
+			System.out.println("textureWidth: " + textureWidth);
+			System.out.println("textureHeight: " + textureHeight);
+			System.out.println("desiredWidth: " + desiredWidth);
+			System.out.println("desiredHeight: " + desiredHeight);
+		}
 		
 		this.scale = new Vector2f(((float) textureWidth/Globals.displayWidth) * ((float) desiredWidth/textureWidth), ((float) textureHeight/Globals.displayHeight) * ((float) desiredHeight/textureHeight));
 				

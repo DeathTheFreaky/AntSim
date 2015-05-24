@@ -158,8 +158,22 @@ public class Loader {
 			
 		//load a texture in .png format from /res/models directory and store it in raw format
 		Texture texture = null;
+		int width = 0, height = 0;
+		FileInputStream in;
+		
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream(Globals.TEXTURES + fileName + ".png")); //texture is being bound for GL30.glGenerateMipMap(int target)
+			
+			in = new FileInputStream(Globals.TEXTURES + fileName + ".png");
+			texture = TextureLoader.getTexture("PNG", in); //texture is being bound for GL30.glGenerateMipMap(int target)
+			
+			in.getChannel().position(0);
+			
+			//retrieve height and width of texture
+			PNGDecoder decoder = new PNGDecoder(in); //use png decoder library to gather width and height information of png file
+			width = decoder.getWidth();
+			height = decoder.getHeight();
+			in.close();
+			
 			/* 
 			 * To avoid artifacts produced by the undersampling of textures, with the texture changed abruptly at certain transition points,
 			 * we create lower res versions of the texture, called mipmaps. OpenGL automatically chooses the right texture version,
@@ -189,7 +203,7 @@ public class Loader {
 			e.printStackTrace();
 		}
 		
-		return new GuiTexture(texture.getTextureID(), texture.getTextureWidth(), texture.getTextureHeight());
+		return new GuiTexture(texture.getTextureID(), width, height);
 	}
 	
 	/**Loads up a CubeMap's textures into OpenGL.<br>
