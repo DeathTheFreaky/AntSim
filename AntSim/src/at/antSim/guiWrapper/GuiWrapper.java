@@ -6,7 +6,6 @@ import java.util.Map;
 import org.newdawn.slick.opengl.Texture;
 
 import at.antSim.graphics.graphicsUtils.Loader;
-import at.antSim.graphics.textures.GuiTexture;
 
 /**A gui wrapper wraps the current state of a gui and stores all GuiTextures to be reused.<br>
  * <br>

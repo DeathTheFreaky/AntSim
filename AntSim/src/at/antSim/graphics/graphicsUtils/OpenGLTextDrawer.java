@@ -8,7 +8,6 @@ import org.newdawn.slick.opengl.Texture;
 
 import at.antSim.Globals;
 import at.antSim.graphics.models.RawModel;
-import at.antSim.graphics.textures.GuiTexture;
 import at.antSim.guiWrapper.GuiTextData;
 
 /**Used to draw bitmap font text on a 3d screen with gui Renderer.

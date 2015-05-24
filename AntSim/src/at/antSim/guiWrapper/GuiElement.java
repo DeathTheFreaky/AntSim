@@ -90,7 +90,7 @@ public abstract class GuiElement {
 	 * @param id - the {@link GuiElement}'s id as String
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
 	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
-	 * @param model - the {@link GuiElement}'s geometric model
+	 * @param model - a {@link RawModel} used to stored texture coords and positions
 	 * @param textureId - id of the {@link GuiElement}'s texture as assigned by OpenGL
 	 * @param textureWidth - width of the {@link GuiElement}'s texture
 	 * @param textureHeight - height of the {@link GuiElement}'s texture
@@ -106,7 +106,7 @@ public abstract class GuiElement {
 	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
 	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
 	 */
-	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
+	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight,
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 		
 		this.width = desiredWidth;
@@ -137,7 +137,7 @@ public abstract class GuiElement {
 			this.state = parent.getGuiState();
 		}
 	}
-	
+
 	public Vector2f getPosition() {
 		return position;
 	}
