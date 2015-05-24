@@ -189,6 +189,8 @@ public class Loader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("Loader: " + fileName  + " - id: " + texture.getTextureID());
 
 		return texture;
 	}
