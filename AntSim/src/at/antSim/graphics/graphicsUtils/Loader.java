@@ -22,7 +22,6 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import at.antSim.Globals;
 import at.antSim.graphics.models.RawModel;
-import at.antSim.graphics.textures.GuiTexture;
 import at.antSim.graphics.textures.TextureData;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;

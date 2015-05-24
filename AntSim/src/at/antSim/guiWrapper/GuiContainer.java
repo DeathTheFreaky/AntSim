@@ -9,7 +9,6 @@ import org.newdawn.slick.opengl.Texture;
 
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.models.RawModel;
-import at.antSim.graphics.textures.GuiTexture;
 import at.antSim.guiWrapper.commands.Command;
 
 /**A {@link GuiContainer} is meant to group {@link GuiElement} in a list of children.

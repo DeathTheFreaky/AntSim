@@ -81,8 +81,8 @@ public abstract class GuiElement {
 	public GuiElement(String id, Loader loader, GuiContainer parent, Command command, Texture texture, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 				
-		this(id, parent, command, GuiQuadCreater.createGuiQuad(texture, loader), texture.getTextureID(), texture.getTextureWidth(), texture.getTextureHeight(), desiredWidth, desiredHeight, 
-			horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
+		this(id, parent, command, GuiQuadCreater.createGuiQuad(texture, loader), (texture != null) ? texture.getTextureID() : -1, (texture != null) ? texture.getTextureWidth() : 0, 
+				(texture != null) ? texture.getTextureHeight() : 0, desiredWidth, desiredHeight, horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
 	}
 
 	/**Constructs a new {@link GuiElement}.
@@ -127,13 +127,6 @@ public abstract class GuiElement {
 		this.transparency = transparency;
 		this.blendColor = blendColor;
 		this.blendFactor = blendFactor;
-		
-		if (id.equals("speedContainer")) {
-			System.out.println("textureWidth: " + textureWidth);
-			System.out.println("textureHeight: " + textureHeight);
-			System.out.println("desiredWidth: " + desiredWidth);
-			System.out.println("desiredHeight: " + desiredHeight);
-		}
 		
 		this.scale = new Vector2f(((float) textureWidth/Globals.displayWidth) * ((float) desiredWidth/textureWidth), ((float) textureHeight/Globals.displayHeight) * ((float) desiredHeight/textureHeight));
 				
