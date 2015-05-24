@@ -130,7 +130,7 @@ public class MainGameState extends AbstractGuiState {
 		//speed controls
 		playPauseContainer = new GuiContainer("playPauseContainer", loader, controlsBar, togglePlayCmd, wrapper.getGuiTexture("white"), 35, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0f, 0f, 0f), 0f);
-		speedContainer = new GuiContainer("speedContainer", loader, controlsBar, null, wrapper.getGuiTexture("test2"), 75, 35,
+		speedContainer = new GuiContainer("speedContainer", loader, controlsBar, null, wrapper.getGuiTexture("controls/speedContainer"), 75, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(1f, 0f, 0f), 0f);
 		speed1 = new GuiContainer("speed1", loader, speedContainer, toggleSpeed1Cmd, wrapper.getGuiTexture("white"), 17, 26,
 				HorReference.PARENT, HorPositions.LEFT, 4, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0.2f, 0, 0), 0.5f);
