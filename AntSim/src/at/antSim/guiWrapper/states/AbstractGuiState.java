@@ -17,17 +17,12 @@ public abstract class AbstractGuiState {
 	Loader loader;
 	GuiState state;
 	String name;
-	
-	float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
-	float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
-	RawModel standardQuad;
 
 	public AbstractGuiState(Loader loader, String name) {
 		this.loader = loader;
 		this.name = name;
 		
 		state = new GuiState(name);
-		standardQuad = loader.loadToVAO(positions, textureCoords, 2, false);
 		
 		wrapper = GuiWrapper.getInstance();
 	}

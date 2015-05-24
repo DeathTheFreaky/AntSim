@@ -107,8 +107,6 @@ public class Loader {
 	}
 	
 	/**Loads up a texture into memory to be used by OpenGL.<br>
-	 * Slick Util's texture loader will be used for loading a texture into openGl.<br>
-	 * It is important to note that the slick util texture loader only supports power of 2 textures, which is recommended for mipmapping.
 	 * 
 	 * @param filename - the filename of the texture 
 	 * @return - the ID of the newly loaded texture
@@ -152,59 +150,48 @@ public class Loader {
 	}
 	
 	/**Loads up a GUI texture into memory to be used by OpenGL, providing the texture's height and width for gui positioning.<br>
-	 * Textures will be loaded manually, without slick util's texture loader, to allow loading of non power of 2 textures for the gui.<br>
-	 * Gui textures will not use mipmapping, since this will not be necessary, for Gui textures will most likely be created in their "target" size.
-	 * 
+	 *
 	 * @param filename - the filename of the texture 
-	 * @return - a {@link GuiTexture}
+	 * @return - a {@link Texture}
 	 */
-	public GuiTexture loadGuiTexture(String fileName) {
+	public Texture loadGuiTexture(String fileName) {
 			
 		//load a texture in .png format from /res/models directory and store it in raw format
-		TextureData data = decodeTextureFile(Globals.TEXTURES + fileName + ".png");	
-				
-		int texID = GL11.glGenTextures(); //generates completely empty texture - see OpenGL Programming Guide p.263
-		GL13.glActiveTexture(texID); //change the selector referring the active texture unit - see OpenGL Programming Guide p.265
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID); //bind active texture as a cubemap - see OpenGL Programming Guide p.264
-					
-//		/* 
-//		 * To avoid artifacts produced by the undersampling of textures, with the texture changed abruptly at certain transition points,
-//		 * we create lower res versions of the texture, called mipmaps. OpenGL automatically chooses the right texture version,
-//		 * according to the distance from and hence the effective size of a texture.
-//		 * The GL30.glGenerateMipmap() method automatically creates all needed smaller resolution version of the original texture.
-//		 * Since we are using 2D textures only, we can set the target parameter to GL11.GL_TEXTURE_2D.
-//		 * 
-//		 * For more information, see OpenGL Programming Guide on page 333.
-//		 */
-//		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-//		 /* 
-//		  * tell openGl to use these lower res textures:
-//		  * param1: texture type,
-//		  * param2: defining openGl's behaviour for when the texture is rendered onto a surface with smaller dimensions than the texture
-//		  * param3: when the above happens, use the mipmaps that we generated -> linear: transition smoothly between different resolution versions
-//		  */
-//		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
-//		/*
-//		 * Set texture's level of detail bias: texture will be rendered in more detail (higher mipmap levels) for higher negative numbers.
-//		 * 
-//		 * See OpenGL Programming Guide on page 338.
-//		 */
-//		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f); 
+		Texture texture = null;
 		
-		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-		
-		//set filtering to nearest
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-		
-		//set clamp to edge to avoid visible seam on the edges of your cubemap textures
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-		
-		//upload texture to OpenGL
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+		try {
+			texture = TextureLoader.getTexture("PNG", new FileInputStream(Globals.TEXTURES + fileName + ".png")); //texture is being bound for GL30.glGenerateMipMap(int target)
+			
+			/* 
+			 * To avoid artifacts produced by the undersampling of textures, with the texture changed abruptly at certain transition points,
+			 * we create lower res versions of the texture, called mipmaps. OpenGL automatically chooses the right texture version,
+			 * according to the distance from and hence the effective size of a texture.
+			 * The GL30.glGenerateMipmap() method automatically creates all needed smaller resolution version of the original texture.
+			 * Since we are using 2D textures only, we can set the target parameter to GL11.GL_TEXTURE_2D.
+			 * 
+			 * For more information, see OpenGL Programming Guide on page 333.
+			 */
+			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+			 /* 
+			  * tell openGl to use these lower res textures:
+			  * param1: texture type,
+			  * param2: defining openGl's behaviour for when the texture is rendered onto a surface with smaller dimensions than the texture
+			  * param3: when the above happens, use the mipmaps that we generated -> linear: transition smoothly between different resolution versions
+			  */
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_NEAREST);
+			/*
+			 * Set texture's level of detail bias: texture will be rendered in more detail (higher mipmap levels) for higher negative numbers.
+			 * 
+			 * See OpenGL Programming Guide on page 338.
+			 */
+			GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.4f); 
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		return new GuiTexture(texID, data.getWidth(), data.getHeight());
+		return texture;
 	}
 	
 	/**Loads up a CubeMap's textures into OpenGL.<br>

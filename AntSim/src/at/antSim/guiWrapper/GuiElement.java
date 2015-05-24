@@ -3,6 +3,7 @@ package at.antSim.guiWrapper;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.opengl.Texture;
 
 import at.antSim.Globals;
 import at.antSim.eventSystem.Event;
@@ -10,6 +11,8 @@ import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
+import at.antSim.graphics.graphicsUtils.GuiQuadCreater;
+import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.guiWrapper.commands.Command;
 
@@ -59,9 +62,35 @@ public abstract class GuiElement {
 	/**Constructs a new {@link GuiElement}.
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
+	 * @param loader - the {@link Loader} used for loading texture coords and positions into a vao
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
 	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
-	 * @param model - the {@link GuiElement}'s geometric model
+	 * @param texture - a {@link Texture}
+	 * @param desiredWidth - desired width of the Gui element in pixels
+	 * @param desiredHeight - desired height of the Gui element in pixels
+	 * @param horRef - {@link HorReference} of the {@link GuiElement}
+	 * @param horPos - {@link HorPosition} of the {@link GuiElement}
+	 * @param horOffset - horizontal offset in pixels
+	 * @param verRef - {@link VerReference} of the {@link GuiElement}
+	 * @param verPos - {@link VerPosition} of the {@link GuiElement}
+	 * @param verOffset - vertical offset in pixels
+	 * @param transparency - 0: opaque, 1: fully transparent
+	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
+	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
+	 */
+	public GuiElement(String id, Loader loader, GuiContainer parent, Command command, Texture texture, int desiredWidth, int desiredHeight, 
+			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
+				
+		this(id, parent, command, GuiQuadCreater.createGuiQuad(texture, loader), texture.getTextureID(), texture.getTextureWidth(), texture.getTextureHeight(), desiredWidth, desiredHeight, 
+			horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
+	}
+
+	/**Constructs a new {@link GuiElement}.
+	 * 
+	 * @param id - the {@link GuiElement}'s id as String
+	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
+	 * @param model - a {@link RawModel} used to stored texture coords and positions
 	 * @param textureId - id of the {@link GuiElement}'s texture as assigned by OpenGL
 	 * @param textureWidth - width of the {@link GuiElement}'s texture
 	 * @param textureHeight - height of the {@link GuiElement}'s texture
@@ -77,7 +106,7 @@ public abstract class GuiElement {
 	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
 	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
 	 */
-	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
+	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight,
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 		
 		this.width = desiredWidth;
@@ -115,7 +144,7 @@ public abstract class GuiElement {
 			this.state = parent.getGuiState();
 		}
 	}
-	
+
 	public Vector2f getPosition() {
 		return position;
 	}

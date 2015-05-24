@@ -18,6 +18,6 @@ public class InvertVerCmd implements Command {
 	public void execute() {
 		Globals.invertVerticalAxis = Globals.invertVerticalAxis * -1;
 		ConfigWriter.writeConfig();
-		img.setTextureId(GuiWrapper.getInstance().getGuiTexture(GuiUtils.getInvertCheckboxTexStr(Globals.invertVerticalAxis)).getTextureId());
+		img.setTextureId(GuiWrapper.getInstance().getGuiTexture(GuiUtils.getInvertCheckboxTexStr(Globals.invertVerticalAxis)).getTextureID());
 	}
 }

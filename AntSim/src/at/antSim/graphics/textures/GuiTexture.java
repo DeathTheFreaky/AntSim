@@ -7,7 +7,7 @@ package at.antSim.graphics.textures;
 public class GuiTexture {
 	
 	int textureId;
-	int width;
+	int textureWidth;
 	int height;
 	
 	/**Creates a new Gui Texture.
@@ -18,7 +18,7 @@ public class GuiTexture {
 	 */
 	public GuiTexture(int textureId, int width, int height) {
 		this.textureId = textureId;
-		this.width = width;
+		this.textureWidth = width;
 		this.height = height;
 	}
 
@@ -27,7 +27,7 @@ public class GuiTexture {
 	}
 
 	public int getWidth() {
-		return width;
+		return textureWidth;
 	}
 
 	public int getHeight() {

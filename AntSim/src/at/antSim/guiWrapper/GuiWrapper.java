@@ -3,6 +3,8 @@ package at.antSim.guiWrapper;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.newdawn.slick.opengl.Texture;
+
 import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.textures.GuiTexture;
 
@@ -18,7 +20,7 @@ public class GuiWrapper {
 	private static GuiWrapper INSTANCE = null;
 	
 	Map<String, GuiState> states = new HashMap<>();
-	Map<String, GuiTexture> guiTextures = new HashMap<>();
+	Map<String, Texture> guiTextures = new HashMap<>();
 	
 	GuiState currentState;
 	Loader loader;
@@ -69,9 +71,9 @@ public class GuiWrapper {
 	 * @param filename
 	 * @return
 	 */
-	public GuiTexture getGuiTexture(String filename) {
+	public Texture getGuiTexture(String filename) {
 		
-		GuiTexture tex = guiTextures.get(filename);
+		Texture tex = guiTextures.get(filename);
 		
 		if (tex == null) {
 			tex = loader.loadGuiTexture(filename);

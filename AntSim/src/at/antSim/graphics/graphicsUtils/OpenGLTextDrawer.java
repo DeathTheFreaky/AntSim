@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.newdawn.slick.opengl.Texture;
 
 import at.antSim.Globals;
 import at.antSim.graphics.models.RawModel;
@@ -18,7 +19,7 @@ import at.antSim.guiWrapper.GuiTextData;
 public class OpenGLTextDrawer {
 	
 	Loader loader;
-	GuiTexture texture;
+	Texture texture;
 
 	//2d texture is supposed to be a square with NUM_SIDE columns and rows of characters in a texture atlas
 	final int NUM_SIDE = 16;
@@ -33,7 +34,7 @@ public class OpenGLTextDrawer {
 	/**Creates a new {@link OpenGLTextDrawer}.
 	 * 
 	 */
-	public OpenGLTextDrawer(Loader loader, GuiTexture texture) {
+	public OpenGLTextDrawer(Loader loader, Texture texture) {
 		this.loader = loader;
 		this.texture = texture;
 		initCoords();
@@ -131,7 +132,9 @@ public class OpenGLTextDrawer {
 			}
 		}
 		
-		GuiTextData textData = new GuiTextData(loader.loadToVAO(convertListToArray(quadPositions), convertListToArray(quadTextCoords), 2, temporary), rows, cols, texture.getWidth()/Globals.fontCols, texture.getTextureId());
+		int id = texture.getTextureID();
+		int usedwidth = (int) texture.getWidth();
+		GuiTextData textData = new GuiTextData(loader.loadToVAO(convertListToArray(quadPositions), convertListToArray(quadTextCoords), 2, temporary), rows, cols, usedwidth/Globals.fontCols, id);
 		
 		return textData; 
 	}
