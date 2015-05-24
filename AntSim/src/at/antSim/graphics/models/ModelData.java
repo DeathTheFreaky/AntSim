@@ -1,4 +1,6 @@
 package at.antSim.graphics.models;
+
+import at.antSim.graphics.graphicsUtils.OBJLoaderGeometryData;
  
 /**ModelData is a storage class holding a model's:<br>
  * <ul>
@@ -19,7 +21,10 @@ public class ModelData {
     private float[] textureCoords;
     private float[] normals;
     private int[] indices;
-    private float farthestPoint; //distance of the point farthest away form this model's origin -> useful for creating spheres around the model for collision detection 
+    private float furthestPoint; //distance of the point furthest away form this model's origin -> useful for creating spheres around the model for collision detection 
+    private float xLength;
+    private float yLength;
+    private float zLength;
  
     /**Constructs a new {@link ModelData} object.
      * 
@@ -30,12 +35,15 @@ public class ModelData {
      * @param furthestPoint
      */
     public ModelData(float[] vertices, float[] textureCoords, float[] normals, int[] indices,
-            float furthestPoint) {
+            OBJLoaderGeometryData geometryData) {
         this.vertices = vertices; //a vertex's positional coordinates
         this.textureCoords = textureCoords;
         this.normals = normals;
         this.indices = indices;
-        this.farthestPoint = furthestPoint;
+        this.furthestPoint = geometryData.getFurthestPoint();
+        this.xLength = geometryData.getxLength();
+        this.yLength = geometryData.getyLength();
+        this.zLength = geometryData.getzLength();
     }
  
     public float[] getVertices() {
@@ -55,7 +63,18 @@ public class ModelData {
     }
  
     public float getFurthestPoint() {
-        return farthestPoint;
+        return furthestPoint;
     }
- 
+
+	public float getxLength() {
+		return xLength;
+	}
+
+	public float getyLength() {
+		return yLength;
+	}
+
+	public float getzLength() {
+		return zLength;
+	}
 }

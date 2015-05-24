@@ -11,21 +11,20 @@ import java.util.List;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import at.antSim.AntSim;
 import at.antSim.Globals;
 import at.antSim.graphics.models.ModelData;
 
 /**OBJFileLoader parses .obj files and stores the parsed values into {@link ModelData} objects.<br>
  * This OBJFileLoader can also handle texture themes.
  * 
- * THIS CLASS HAS BEEN COPIED FROM "3D GAME DEVELOPMENT SERIES": https://www.dropbox.com/sh/x1fyet1otejxk3z/AAAVdsje7VSnwrS93NT43K3ta/OBJFileLoader.java?dl=0<br>
+ * THIS CLASS HAS BEEN COPIED AND LATER MODIFIED FROM "3D GAME DEVELOPMENT SERIES": https://www.dropbox.com/sh/x1fyet1otejxk3z/AAAVdsje7VSnwrS93NT43K3ta/OBJFileLoader.java?dl=0<br>
  * TO ENSURE COMPREHENSION, EXTENSIVE COMMENTS HAVE BEEN ADDED.
  * 
  * @author Flo
  *
  */
 public class OBJFileLoader {
-	
+		
 	/**Takes in an .obj File, extracts all data from it (vertices, texture coordinates, normals, indices)
 	 * and returns a {@link RawModel} built on this data.
 	 * 
@@ -132,11 +131,11 @@ public class OBJFileLoader {
         float[] verticesArray = new float[vertices.size() * 3];
         float[] texturesArray = new float[vertices.size() * 2];
         float[] normalsArray = new float[vertices.size() * 3];
-        float furthest = convertDataToArrays(vertices, textures, normals, verticesArray,
+        OBJLoaderGeometryData geometryData = convertDataToArrays(vertices, textures, normals, verticesArray,
                 texturesArray, normalsArray);
         int[] indicesArray = convertIndicesListToArray(indices);
-        ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray,
-                furthest);
+        ModelData data = new ModelData(verticesArray, texturesArray, normalsArray, indicesArray, geometryData);    
+        
         return data;
     }
 	
@@ -192,7 +191,9 @@ public class OBJFileLoader {
 	 * starting with an offset of 6 (because vertex 1 and 2 took up 3 places each -> x,y,z).<br>
 	 * <br>
 	 * After finishing this operation, the vertex positional coordinate float array will contain:<br>
-	 * vertex1.x, vertex1.y, vertex1.z, vertex2.x, vertex2.y, vertex2.z, vertex3.x, vertex3.y, vertex3.z
+	 * vertex1.x, vertex1.y, vertex1.z, vertex2.x, vertex2.y, vertex2.z, vertex3.x, vertex3.y, vertex3.z<br>
+	 * <br>
+	 * The model will be normalized to allow for precise sizing with scale transform.
 	 * 
 	 * @param vertices - a list of vertexes parsed from an .obj File
 	 * @param textures - a list of textures parsed from an .obj File
@@ -200,32 +201,104 @@ public class OBJFileLoader {
 	 * @param verticesArray - the float array which the data from the list of vertexes shall be written to
 	 * @param texturesArray - the float array which the data from the list of textures shall be written to
 	 * @param normalsArray - the float array which the data from the list of normals shall be written to
-	 * @return - the furthestPoint of all vertexes
+	 * @return - {@link OBJLoaderGeometryData}
 	 */
-	private static float convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures,
-            List<Vector3f> normals, float[] verticesArray, float[] texturesArray,
-            float[] normalsArray) {
+	private static OBJLoaderGeometryData convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures,
+            List<Vector3f> normals, float[] verticesArray, float[] texturesArray, float[] normalsArray) {
+		
+		float normalizeMultiplier = findNormalizeModelDivider(vertices, normals);
+		
         float furthestPoint = 0;
+        float xLength;
+        float yLength;
+        float zLength;
+        
+        //find max extents for each axis to calculate lengths
+        float maxNegX = 0;
+        float maxPosX = 0;
+        float maxNegY = 0;
+        float maxPosY = 0;
+        float maxNegZ = 0;
+        float maxPosZ = 0;
+        
         for (int i = 0; i < vertices.size(); i++) {
+        	
             Vertex currentVertex = vertices.get(i);
+            
+            Vector3f position = (Vector3f) currentVertex.getPosition();
+            Vector2f textureCoord = (Vector2f) textures.get(currentVertex.getTextureIndex());
+            Vector3f normalVector = (Vector3f) normals.get(currentVertex.getNormalIndex());
+            
+            float x = position.x * normalizeMultiplier, y = position.y * normalizeMultiplier, z = position.z * normalizeMultiplier;
+            
             if (currentVertex.getLength() > furthestPoint) {
                 furthestPoint = currentVertex.getLength();
             }
-            Vector3f position = currentVertex.getPosition();
-            Vector2f textureCoord = textures.get(currentVertex.getTextureIndex());
-            Vector3f normalVector = normals.get(currentVertex.getNormalIndex());
-            verticesArray[i * 3] = position.x;
-            verticesArray[i * 3 + 1] = position.y;
-            verticesArray[i * 3 + 2] = position.z;
+            
+            if (x > maxPosX) maxPosX = x;
+            else if (x < maxNegX) maxNegX = x;
+            if (y > maxPosY) maxPosY = y;
+            else if (y < maxNegY) maxNegY = y;
+            if (z > maxPosZ) maxPosZ = z;
+            else if (z < maxNegZ) maxNegZ = z;
+            
+            verticesArray[i * 3] = x;
+            verticesArray[i * 3 + 1] = y;
+            verticesArray[i * 3 + 2] = z;
             texturesArray[i * 2] = textureCoord.x;
             texturesArray[i * 2 + 1] = 1 - textureCoord.y;
             normalsArray[i * 3] = normalVector.x;
             normalsArray[i * 3 + 1] = normalVector.y;
             normalsArray[i * 3 + 2] = normalVector.z;
         }
-        return furthestPoint;
+        
+        xLength = maxPosX - maxNegX;
+        yLength = maxPosY - maxNegY;
+        zLength = maxPosZ - maxNegZ;
+        
+        return new OBJLoaderGeometryData(furthestPoint * normalizeMultiplier, xLength, yLength, zLength);
     }
 	
+	/**Finds multiplier to normalize a model used for dividing all its positional data with the length of the axis with the biggest extent.
+	 * 
+	 * @param vertices
+	 * @param normals
+	 */
+	private static float findNormalizeModelDivider(List<Vertex> vertices, List<Vector3f> normals) {
+		
+		float xLength;
+        float yLength;
+        float zLength;
+        
+        //find max extents for each axis to calculate lengths
+        float maxNegX = 0;
+        float maxPosX = 0;
+        float maxNegY = 0;
+        float maxPosY = 0;
+        float maxNegZ = 0;
+        float maxPosZ = 0;
+        
+        for (int i = 0; i < vertices.size(); i++) {
+        	
+            Vertex currentVertex = vertices.get(i);
+            
+            Vector3f position = currentVertex.getPosition();
+            
+            if (position.x > maxPosX) maxPosX = position.x;
+            else if (position.x < maxNegX) maxNegX = position.x;
+            if (position.y > maxPosY) maxPosY = position.y;
+            else if (position.y < maxNegY) maxNegY = position.y;
+            if (position.z > maxPosZ) maxPosZ = position.z;
+            else if (position.z < maxNegZ) maxNegZ = position.z;
+        }
+        
+        xLength = maxPosX - maxNegX;
+        yLength = maxPosY - maxNegY;
+        zLength = maxPosZ - maxNegZ;
+        
+        return 1/java.lang.Math.max(xLength, java.lang.Math.max(yLength, zLength));
+	}
+
 	/**Deals with vertices that have already been indexed (by their positional data in vertices array).<br>
 	 * 
 	 * If the two vertices match in texture index and normal index, simply adds the vertices index to the list of indices.<br>

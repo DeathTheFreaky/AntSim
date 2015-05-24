@@ -61,10 +61,7 @@ public class MasterRenderer {
 	
 	private float timeFactor = Globals.TIMECYCLE_MULTIPLIER / MainApplication.getInstance().getSpeed();
 	
-	//all entities and terrains to be rendered
-	/* map of texturedModels, each containing a list of entities using this TexturedModel - 
-	 * so a texture needs to be loaded once and then can be applied to all entities using this same texture */
-	private Map<TexturedModel, List<GraphicsEntity>> entities = new HashMap<TexturedModel, List<GraphicsEntity>>(); 
+	//all terrains to be rendered
 	private List<Terrain> terrains = new ArrayList<Terrain>();
 	
 	
@@ -110,13 +107,12 @@ public class MasterRenderer {
 				
 			//run all sub-renderers' render methods
 
-			entityRenderer.render(entities, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);		
+			entityRenderer.render(blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);		
 			terrainRenderer.render(terrains, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);
 			skyboxRenderer.render(camera, blendFactor, DAY_FOG, NIGHT_FOG);
 			
 			//clear list of terrains and map of entities each frame so they do not build up and up
 			terrains.clear();
-			entities.clear(); 
 		}
 		
 		guiRenderer.render(GuiWrapper.getInstance().getCurrentState());
@@ -138,24 +134,6 @@ public class MasterRenderer {
 		GL11.glClearColor(RED, GREEN, BLUE, 1f); //represents skycolor: choose color (R,G,B,A) with which the screen will be cleared
 		GL11.glClearDepth(1.0d); //clear depth buffer/reset depth buffer with values of 1
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT); //clears color of screen and depth buffer with values set above
-	}
-	
-	/**Sort entity in the entities Hashmap by their correct {@link TexturedModel} for more efficient rendering.<br>
-	 * This way, a texture has to be loaded only once and can then be applied for all entities using the same texture.
-	 * 
-	 * @param entity - the {@link GraphicsEntity} to be sorted in
-	 */
-	public void processEntity(GraphicsEntity entity) {
-		TexturedModel entityModel = entity.getModel();
-		List<GraphicsEntity> batch = entities.get(entityModel);
-		if(batch != null) {
-			batch.add(entity);
-		}
-		else {
-			List<GraphicsEntity> newBatch = new ArrayList<GraphicsEntity>();
-			newBatch.add(entity);
-			entities.put(entityModel, newBatch);
-		}
 	}
 	
 	/**Creates a Projection Matrix with the parameters set in Renderer.<br>

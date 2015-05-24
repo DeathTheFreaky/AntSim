@@ -1,6 +1,6 @@
 package at.antSim;
 
-import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.objectsKI.Entity;
 
 /**An Entity moving on the terrain. Will not be rendered if Entity is null.
  * 
@@ -9,20 +9,20 @@ import at.antSim.graphics.entities.GraphicsEntity;
  */
 public class MovingEntity {
 	
-	private GraphicsEntity graphicModel;
+	private Entity entity;
 	private boolean moving;
 	
-	public void setGraphicsEntity(GraphicsEntity graphicModel) {
-		this.graphicModel = graphicModel;
+	public void setEntity(Entity entity) {
+		this.entity = entity;
 	}
 	
 	//return Entity
 	
-	public GraphicsEntity getGraphicsEntity() {
-		return graphicModel;
+	public Entity getEntity() {
+		return entity;
 	}
 	
 	public void placeEntityOnTerrain() {
-		setGraphicsEntity(null);
+		setEntity(null);
 	}
 }

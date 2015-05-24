@@ -3,8 +3,6 @@ package at.antSim;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
-
 import at.antSim.guiWrapper.states.AbstractGuiState;
 import at.antSim.guiWrapper.states.LoadingState;
 import at.antSim.guiWrapper.states.MainGameState;
@@ -124,7 +122,6 @@ public class MainApplication {
 	private Camera camera;
 	private Terrain terrain;
 	private MousePicker picker;
-	private List<GraphicsEntity> entities;
 	private List<Light> lights;
 	
 	private MovingEntity movingEntity;
@@ -197,12 +194,9 @@ public class MainApplication {
 				
 				statsTimeAccumulator -= statsTimeStep;
 				
-				//remove temporary data (like text stats models) after each rendering frame
-				loader.tempCleanUp();
-				
 				if (worldLoaded && !paused) {
+					loader.tempCleanUp(); //remove temporary data (like text stats models) after each rendering frame
 					((MainGameState)mainGameState).updateStatus(); //update stats in main game state (population, food...)
-					statsCtrTest++;
 				}
 			}
 			
@@ -218,14 +212,11 @@ public class MainApplication {
 				camera.move(terrain); //every single frame check for key inputs which move the camera
 				picker.update();
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
-				if (terrainPoint != null && movingEntity.getGraphicsEntity() != null) {
-					movingEntity.getGraphicsEntity().setPosition(terrainPoint);
+				if (terrainPoint != null && movingEntity.getEntity() != null) {
+//					movingEntity.getGraphicsEntity().setPosition(terrainPoint);
 				}
 				
 				renderer.processTerrain(terrain);
-				for (GraphicsEntity entity : entities) {
-					renderer.processEntity(entity); //needs to be called for every single entity that shall be rendered
-				}
 			}
 			
 			//render and update display
@@ -253,7 +244,8 @@ public class MainApplication {
 		
 		//game logic
 		if (!paused && worldLoaded) {
-			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
+//			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
+			statsCtrTest++;
 		}		
 	}
 
@@ -301,14 +293,14 @@ public class MainApplication {
 			}
 			
 			terrain = WorldLoader.loadTerrain(loader); // loads the world's terrain
-			entities = WorldLoader.loadEntities(loader, terrain); //loads the world's "material" contents
+			WorldLoader.loadEntities(loader, terrain); //loads the world's "material" contents
 			lights = WorldLoader.loadLights();
 			
 			// a lamp freely positionable on the map
-			movingLamp = new GraphicsEntity(WorldLoader.texturedModels.get("lamp"), 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
+			/*movingLamp = new GraphicsEntity(WorldLoader.texturedModels.get("lamp"), 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
 			entities.add(movingLamp);
 			movingLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f));
-			lights.add(movingLight);
+			lights.add(movingLight);*/
 			
 			camera.triggerReset();
 			picker.setTerrain(terrain);

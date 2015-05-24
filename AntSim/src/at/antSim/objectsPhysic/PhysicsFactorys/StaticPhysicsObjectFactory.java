@@ -1,7 +1,11 @@
 package at.antSim.objectsPhysic.PhysicsFactorys;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Quat4f;
+
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+
 import com.bulletphysics.linearmath.Transform;
 
 /**

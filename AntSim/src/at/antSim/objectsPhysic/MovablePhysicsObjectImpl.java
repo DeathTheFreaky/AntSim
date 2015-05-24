@@ -17,6 +17,7 @@ public abstract class MovablePhysicsObjectImpl extends PositionablePhysicsObject
 
 	@Override
 	public void setAngularVelocity(Vector3f angularVelocity) {
+		System.out.println("angularVelocity: " + angularVelocity);
 		getRigidBody().setAngularVelocity(angularVelocity);
 	}
 }
