@@ -293,7 +293,7 @@ public class MainApplication {
 			}
 			
 			terrain = WorldLoader.loadTerrain(loader); // loads the world's terrain
-			WorldLoader.loadEntities(loader, terrain); //loads the world's "material" contents
+			WorldLoader.loadWorldEntities(loader, terrain); //loads the world's "material" contents
 			lights = WorldLoader.loadLights();
 			
 			// a lamp freely positionable on the map

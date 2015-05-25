@@ -8,7 +8,7 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
  * @author Flo
  *
  */
-public class GTPSphere {
+public class GTPSphere extends GTPObject {
 	
 	private float radious;
 

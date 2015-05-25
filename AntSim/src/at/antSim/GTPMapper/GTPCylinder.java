@@ -9,7 +9,7 @@ import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
  * @author Flo
  *
  */
-public class GTPCylinder {
+public class GTPCylinder extends GTPObject {
 	
 	float xLength;
 	float yLength;
