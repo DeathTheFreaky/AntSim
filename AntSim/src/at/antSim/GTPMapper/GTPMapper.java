@@ -8,6 +8,29 @@ import at.antSim.graphics.entities.GraphicsEntity;
  *
  */
 public class GTPMapper {
+	
+	/**Returns a new GTPObject.
+	 * 
+	 * @param graphicsEntity
+	 * @param scale
+	 * @param type
+	 * @return
+	 */
+	public static GTPObject getObject(GraphicsEntity graphicsEntity, float scale, PrimitiveType type) {
+				
+		switch (type) {
+		case CONE:
+			return getCone(graphicsEntity, scale);
+		case CUBOID:
+			return getCuboid(graphicsEntity, scale);
+		case CYLINDER:
+			return getCylinder(graphicsEntity, scale);
+		case SPHERE: 
+			return getSphere(graphicsEntity, scale);
+		}
+		
+		return null;		
+	}
 
 	/**Returns the data needed to create a cuboid from a {@link GraphicsEntity}.
 	 * 

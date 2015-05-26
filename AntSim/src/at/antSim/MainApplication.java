@@ -19,7 +19,8 @@ import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.ModelLoader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.MousePicker;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
@@ -157,7 +158,7 @@ public class MainApplication {
 	 * @param loader
 	 * @param renderer
 	 */
-	public void launch(Loader loader, MasterRenderer renderer) {
+	public void launch(OpenGLLoader loader, MasterRenderer renderer) {
 		
 		this.renderer = renderer;
 		
@@ -253,7 +254,7 @@ public class MainApplication {
 	 * 
 	 * @param loader
 	 */
-	private void loadGui(Loader loader) {
+	private void loadGui(OpenGLLoader loader) {
 		
 		//MEINS
 		startMenuState = new StartMenuState(loader, "startMenuState");
@@ -278,7 +279,7 @@ public class MainApplication {
 	 * @param loader
 	 * @param renderer
 	 */
-	private void loadWorld(Loader loader, MasterRenderer renderer) {
+	private void loadWorld(OpenGLLoader loader, MasterRenderer renderer) {
 		
 		if (!worldLoaded) {
 						
@@ -288,12 +289,12 @@ public class MainApplication {
 			
 			//open GL stuff needs to be loaded only once, even when starting a new game to speed up loading times, only released at application exit
 			if (!glLoaded) {
-				WorldLoader.loadTexturedModels(loader); //model's geometry and textures need to be loaded at first
+				ModelLoader.loadTexturedModels(loader); //model's geometry and textures need to be loaded at first
 				glLoaded = true;
 			}
 			
 			terrain = WorldLoader.loadTerrain(loader); // loads the world's terrain
-			WorldLoader.loadEntities(loader, terrain); //loads the world's "material" contents
+			WorldLoader.loadWorldEntities(loader, terrain); //loads the world's "material" contents
 			lights = WorldLoader.loadLights();
 			
 			// a lamp freely positionable on the map

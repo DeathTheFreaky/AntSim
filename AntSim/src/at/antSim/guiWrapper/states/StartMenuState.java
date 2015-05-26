@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
 import at.antSim.eventSystem.EventManager;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.guiWrapper.GuiContainer;
@@ -30,7 +30,7 @@ public class StartMenuState extends AbstractGuiState {
 	Command optionsCmd;
 	Command quitGameCmd;
 
-	public StartMenuState(Loader loader, String name) {
+	public StartMenuState(OpenGLLoader loader, String name) {
 		super(loader, name);
 	}
 

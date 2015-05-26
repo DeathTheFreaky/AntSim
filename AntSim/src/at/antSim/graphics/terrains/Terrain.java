@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.textures.TerrainTexture;
@@ -42,12 +42,12 @@ public class Terrain {
 	 * 
 	 * @param gridX - terrain's x position as an int in a grid of terrains
 	 * @param gridZ - terrain's z position as an int in a grid of terrains
-	 * @param loader - a 3d model {@link Loader}
+	 * @param loader - a 3d model {@link OpenGLLoader}
 	 * @param texturePack - a {@link TerrainTexturePack} containing the different {@link TerrainTexture} to be drawn on the {@link Terrain}
 	 * @param blendMap - a blendMap indicating how much of each terrain texture to be used on a specific vertex
 	 * @param heightMap - name of the heightMap file to use - must be stored in /res folder and must by a square (height = width in pixels)
 	 */
-	public Terrain(int gridX, int gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightMap) {
+	public Terrain(int gridX, int gridZ, OpenGLLoader loader, TerrainTexturePack texturePack, TerrainTexture blendMap, String heightMap) {
 		this.texturePack = texturePack;
 		this.blendMap = blendMap;
 		this.x = gridX * Globals.WORLD_SIZE;
@@ -58,11 +58,11 @@ public class Terrain {
 	/**Generates a {@link RawModel} for a {@link Terrain}.<br>
 	 * <br>
 	 * 
-	 * @param loader - a 3D model {@link Loader}
+	 * @param loader - a 3D model {@link OpenGLLoader}
 	 * @param heightMapStr - name of the heightMap to use for creating 3d terrain
 	 * @return - the generated terrain as a {@link RawModel}
 	 */
-	private RawModel generateTerrain(Loader loader, String heightMapStr){
+	private RawModel generateTerrain(OpenGLLoader loader, String heightMapStr){
 				
 		//load up the heightMap into a BufferedImage
 		BufferedImage heightMap = null;

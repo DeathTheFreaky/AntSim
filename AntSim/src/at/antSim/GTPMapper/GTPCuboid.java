@@ -8,7 +8,7 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
  * @author Flo
  *
  */
-public class GTPCuboid {
+public class GTPCuboid extends GTPObject {
 	
 	float xLength;
 	float yLength;

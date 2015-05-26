@@ -81,4 +81,12 @@ public class GraphicsEntity {
 	public float getScale() {
 		return scale;
 	}
+	
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+	
+	public void setTextureIndex(int textureIndex) {
+		this.textureIndex = textureIndex;
+	}
 }

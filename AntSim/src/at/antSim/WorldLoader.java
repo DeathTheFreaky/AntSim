@@ -3,10 +3,13 @@ package at.antSim;
 import at.antSim.GTPMapper.GTPCuboid;
 import at.antSim.GTPMapper.GTPCylinder;
 import at.antSim.GTPMapper.GTPMapper;
+import at.antSim.GTPMapper.GTPObject;
 import at.antSim.GTPMapper.GTPSphere;
+import at.antSim.GTPMapper.PrimitiveType;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.ModelLoader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.graphicsUtils.OBJFileLoader;
 import at.antSim.graphics.models.ModelData;
@@ -16,9 +19,18 @@ import at.antSim.graphics.terrains.Terrain;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
+import at.antSim.objectsKI.Ant;
+import at.antSim.objectsKI.Enemy;
+import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EnvironmentObject;
+import at.antSim.objectsKI.Food;
+import at.antSim.objectsKI.ObjectType;
+import at.antSim.objectsKI.Pheronome;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsFactorys.AbstractPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsFactoryType;
+import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import com.bulletphysics.linearmath.Transform;
@@ -35,57 +47,16 @@ import java.util.Random;
  *
  */
 public class WorldLoader {
-
+	
 	private static StaticPhysicsObjectFactory staticFactory = StaticPhysicsObjectFactory.getInstance();
 	private static DynamicPhysicsObjectFactory dynamicFactory = DynamicPhysicsObjectFactory.getInstance();
-	private static float massDummie = 0.1f;
-	
-	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
-	private static LinkedList<String[]> modelTextureNames = new LinkedList<>(); //names of all obj files and associated textures to be loaded
-	
-	/**Loads all {@link TexturedModel}s needed for creating {@link GraphicsEntity}s into a HashMap.<br>
-	 * Needs to be called before loadEntities.
-	 * 
-	 * @param loader
-	 */
-	public static void loadTexturedModels(Loader loader) {
-		
-		//first String in array is name of obj file, second is name of texture, third is desired name of TexturedModel in Hashmap
-		modelTextureNames.add(new String[] {"tree" , "tree", "tree"});
-		modelTextureNames.add(new String[] {"grass" , "grass", "grass"});
-		modelTextureNames.add(new String[] {"fern" , "fern", "fern"});
-		modelTextureNames.add(new String[] {"lamp" , "lamp", "lamp"});
-		modelTextureNames.add(new String[] {"dragon", "dragon", "dragon"});
-		
-		for (String[] params : modelTextureNames) {
-			ModelData modelData = OBJFileLoader.loadOBJ(params[0]);
-			RawModel rawModel = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
-			rawModel.setFurthestPoint(modelData.getFurthestPoint());
-			rawModel.setLenghts(modelData.getxLength(), modelData.getyLength(), modelData.getzLength());
-			ModelTexture modelTexture = new ModelTexture(loader.loadTexture(params[1]));
-			texturedModels.put(params[2], new TexturedModel(rawModel, modelTexture));
-		}
-		
-		texturedModels.get("fern").getTexture().setNumberOfRows(2); //set number of rows inside texture atlas
-		
-		//set parameters for specular lighting for demo dragon
-		texturedModels.get("dragon").getTexture().setShineDamper(10); //set shine damper for specular lighting
-		texturedModels.get("dragon").getTexture().setReflectivity(1); //set reflectivity for specular lighting
-		
-		//set transparency and fake lighting for grass and fern (to avoid weird shadow look)
-		texturedModels.get("grass").getTexture().setHasTransparency(true);
-		texturedModels.get("grass").getTexture().setUseFakeLighting(true);
-		texturedModels.get("fern").getTexture().setHasTransparency(true);
-		texturedModels.get("fern").getTexture().setUseFakeLighting(true);
-		
-	}
 	
 	/**Loads the world's terrain.
 	 * 
 	 * @param loader
 	 * @return - the world's {@link Terrain}
 	 */
-	public static Terrain loadTerrain(Loader loader) {
+	public static Terrain loadTerrain(OpenGLLoader loader) {
 	
 		//load the different terrain textures
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("terrain/grassy2"));
@@ -108,7 +79,7 @@ public class WorldLoader {
 	 * @param terrain
 	 * @return - a list of the World's {@link GraphicsEntity}s
 	 */
-	public static void loadEntities(Loader loader, Terrain terrain) {
+	public static void loadWorldEntities(OpenGLLoader loader, Terrain terrain) {
 				
 		//create a random flora
 		Random random = new Random(676452);
@@ -117,54 +88,105 @@ public class WorldLoader {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				GraphicsEntity fernGraphicsEntity = new GraphicsEntity(texturedModels.get("fern"), random.nextInt(4), 20f);
-				GTPCylinder fernCylinder = GTPMapper.getCylinder(fernGraphicsEntity, fernGraphicsEntity.getScale());
-				PhysicsObject fernPhysicsObject = staticFactory.createCylinder(massDummie, fernCylinder.getHeight(), fernCylinder.getRadius(), fernCylinder.getOrientation(), 
-						new Transform(Maths.createTransformationMatrix(new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0)));
-				new EnvironmentObject(fernGraphicsEntity, fernPhysicsObject);
+				createEntity("fern", PhysicsFactoryType.STATIC, random.nextInt(4), 20f, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0);
 			}
 			if (i % 5 == 0) {
 				float x = random.nextFloat() * Globals.WORLD_SIZE;
 				float z = random.nextFloat() * -Globals.WORLD_SIZE;
 				float y = terrain.getHeightOfTerrain(x, z);
-				GraphicsEntity grassGraphicsEntity = new GraphicsEntity(texturedModels.get("grass"), 1, random.nextFloat() * 2f + 25f);
-				GTPCuboid grassCuboid = GTPMapper.getCuboid(grassGraphicsEntity, grassGraphicsEntity.getScale());
-				PhysicsObject grassPhysicsObject = staticFactory.createCuboid(massDummie, grassCuboid.getxLength(), grassCuboid.getyLength(), grassCuboid.getzLength(), 
-						new Transform(Maths.createTransformationMatrix(new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0)));
-				new EnvironmentObject(grassGraphicsEntity, grassPhysicsObject);
+				createEntity("grass", PhysicsFactoryType.STATIC, 1, random.nextFloat() * 2f + 25f, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0);
 				x = random.nextFloat() * Globals.WORLD_SIZE;
 				z = random.nextFloat() * -Globals.WORLD_SIZE;
 				y = terrain.getHeightOfTerrain(x, z);
-				GraphicsEntity treeGraphicsEntity = new GraphicsEntity(texturedModels.get("tree"), 1, random.nextFloat() * 5f + 20f);
-				GTPCylinder treeCylinder = GTPMapper.getCylinder(treeGraphicsEntity, treeGraphicsEntity.getScale());
-				PhysicsObject treePhysicsObject = staticFactory.createCylinder(massDummie, treeCylinder.getHeight(), treeCylinder.getRadius(), treeCylinder.getOrientation(), 
-						new Transform(Maths.createTransformationMatrix(new Vector3f(x, y, z), 0, 0, 0)));
-				new EnvironmentObject(treeGraphicsEntity, treePhysicsObject);
+				createEntity("tree", PhysicsFactoryType.STATIC, 1, random.nextFloat() * 5f + 20f, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0);
 			}
 		} 
 		
 		//add some lamps
-		GraphicsEntity lamp1GraphicsEntity = new GraphicsEntity(texturedModels.get("lamp"), 1, 20);
-		GraphicsEntity lamp2GraphicsEntity = new GraphicsEntity(texturedModels.get("lamp"), 1, 20);
-		GTPCylinder lamp1Cylinder = GTPMapper.getCylinder(lamp1GraphicsEntity, lamp1GraphicsEntity.getScale());
-		GTPCylinder lamp2Cylinder = GTPMapper.getCylinder(lamp2GraphicsEntity, lamp2GraphicsEntity.getScale());
-		PhysicsObject lamp1PhysicsObject = staticFactory.createCylinder(massDummie, lamp1Cylinder.getHeight(), lamp1Cylinder.getRadius(), lamp1Cylinder.getOrientation(), 
-				new Transform(Maths.createTransformationMatrix(new Vector3f(185, -4.7f, -293), 0, 0, 0)));
-		PhysicsObject lamp2PhysicsObject = staticFactory.createCylinder(massDummie, lamp2Cylinder.getHeight(), lamp2Cylinder.getRadius(), lamp2Cylinder.getOrientation(), 
-				new Transform(Maths.createTransformationMatrix(new Vector3f(370, 4.2f, -300), 0, 0, 0)));
-		new EnvironmentObject(lamp1GraphicsEntity, lamp1PhysicsObject);
-		new EnvironmentObject(lamp2GraphicsEntity, lamp2PhysicsObject);
+		Entity lamp1 = createEntity("lamp", PhysicsFactoryType.STATIC, 1, 20, new Vector3f(185, -4.7f, -293), 0, 0, 0);
+		Entity lamp2 = createEntity("lamp", PhysicsFactoryType.STATIC, 1, 20, new Vector3f(370, 4.2f, -300), 0, 0, 0);
 		
 		//add cool stanford demo dragon for specular lighting demo
-		GraphicsEntity dragonGraphicsEntity = new GraphicsEntity(texturedModels.get("dragon"), 1, 25);
-		GTPSphere dragonGtpSphere = GTPMapper.getSphere(dragonGraphicsEntity, dragonGraphicsEntity.getScale());
-//		PhysicsObject dragonPhysicsObject = staticFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), 
-//				new Transform(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 90, 45, 90)));
-		DynamicPhysicsObject dragonPhysicsObject = dynamicFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), 
-				new Transform(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 90, 45, 90)));
-		dragonPhysicsObject.setAngularVelocity(new javax.vecmath.Vector3f(0, 5, 0)); //not working
-		new EnvironmentObject(dragonGraphicsEntity, dragonPhysicsObject);
+		Entity dragon = createEntity("dragon", PhysicsFactoryType.DYNAMIC, 1, 25, new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 90, 45, 90);
+	}
+	
+	/**Creates an {@link Entity} which is not initially part of the world.<br>
+	 * Linear and angular velocity for dynamic {@link Entity}s can be set afterwards for the returned {@link Entity}.
+	 * 
+	 * @param modelId - a unique String identifier for the model to be used which holds the texture and geometry data for the created {@link Entity}
+	 * @param factoryType - dynamic or static
+	 * @param objectType - the {@link Entity}'s {@link ObjectType}
+	 * @param primitiveType - the {@link Entity}'s {@link SphereType}
+	 * @param textureIndex - in case there are multiple textures in a texture atlas, specify which one to use
+	 * @param scale - scale determining the size of the Entity in [units]
+	 * @param position - initial position of the new created Entity
+	 * @param rx - initial rotation around the x - axis
+	 * @param ry - initial rotation around the y - axis
+	 * @param rz - initial rotation around the z - axis
+	 * 
+	 * @return - the created {@link Entity}
+	 */
+	public static Entity createEntity(String modelId, PhysicsFactoryType factoryType, int textureIndex, float scale, Vector3f position, float rx, float ry, float rz) {
 		
+		return createEntity(modelId, factoryType, textureIndex, scale, -1, position, rx, ry, rz);
+	}
+	
+	/**Creates an {@link Entity} which is not initially part of the world.<br>
+	 * Linear and angular velocity for dynamic {@link Entity}s can be set afterwards for the returned {@link Entity}.
+	 * 
+	 * @param modelId - a unique String identifier for the model to be used which holds the texture and geometry data for the created {@link Entity}
+	 * @param factoryType - dynamic or static
+	 * @param objectType - the {@link Entity}'s {@link ObjectType}
+	 * @param primitiveType - the {@link Entity}'s {@link SphereType}
+	 * @param textureIndex - in case there are multiple textures in a texture atlas, specify which one to use
+	 * @param scale - scale determining the size of the Entity in [units]
+	 * @param mass - mass of the object in [units]
+	 * @param position - initial position of the new created Entity
+	 * @param rx - initial rotation around the x - axis
+	 * @param ry - initial rotation around the y - axis
+	 * @param rz - initial rotation around the z - axis
+	 * 
+	 * @return - the created {@link Entity}
+	 */
+	public static Entity createEntity(String modelId, PhysicsFactoryType factoryType, int textureIndex, float scale, float mass, Vector3f position, float rx, float ry, float rz) {
+		
+		Entity entity;
+		PhysicsObject physicsObject = null;
+		GraphicsEntity graphicsEntity = new GraphicsEntity(ModelLoader.texturedModels.get(modelId), textureIndex, scale);
+		GTPObject gtpObject = GTPMapper.getObject(graphicsEntity, scale, graphicsEntity.getModel().getPrimitiveType());
+		
+		PhysicsObjectFactory factory;
+		
+		if (mass < 0) {
+			mass = graphicsEntity.getModel().getMass();
+		} else if (mass == 0) { //do all objects need mass? if no, delete this
+			mass = ModelLoader.massDummie;
+		}
+		
+		switch(factoryType) {
+		case STATIC:
+			factory = staticFactory;
+			physicsObject = staticFactory.createPrimitive(gtpObject, mass, new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+			break;
+		case DYNAMIC:
+			physicsObject = dynamicFactory.createPrimitive(gtpObject, mass, new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+			break;
+		}
+		
+		switch (graphicsEntity.getModel().getObjectType()) {
+		case ANT:
+			return new Ant(graphicsEntity, physicsObject);
+		case ENEMY:
+			return new Enemy(graphicsEntity, physicsObject);
+		case ENVIRONMENT:
+			return new EnvironmentObject(graphicsEntity, physicsObject);
+		case FOOD:
+			return new Food(graphicsEntity, physicsObject);
+		case PHEROMONE:
+			return new Pheronome(graphicsEntity, physicsObject);
+		}
+				
+		return null;
 	}
 	
 	/**Loads the world's light sources.
@@ -181,6 +203,4 @@ public class WorldLoader {
 		
 		return lights;
 	}
-	
-	
 }

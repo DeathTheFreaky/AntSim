@@ -3,7 +3,13 @@ package at.antSim.objectsPhysic.PhysicsFactorys;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 
+import at.antSim.GTPMapper.GTPCone;
+import at.antSim.GTPMapper.GTPCuboid;
+import at.antSim.GTPMapper.GTPCylinder;
+import at.antSim.GTPMapper.GTPObject;
+import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
 import com.bulletphysics.collision.shapes.IndexedMesh;
 

@@ -5,8 +5,7 @@ import java.util.Map;
 
 import org.newdawn.slick.opengl.Texture;
 
-import at.antSim.graphics.graphicsUtils.Loader;
-import at.antSim.graphics.textures.GuiTexture;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 
 /**A gui wrapper wraps the current state of a gui and stores all GuiTextures to be reused.<br>
  * <br>
@@ -23,7 +22,7 @@ public class GuiWrapper {
 	Map<String, Texture> guiTextures = new HashMap<>();
 	
 	GuiState currentState;
-	Loader loader;
+	OpenGLLoader loader;
 	
 	static {
 		INSTANCE = new GuiWrapper();
@@ -86,7 +85,7 @@ public class GuiWrapper {
 	/**Sets a loader to be used for loading GuiTextures. Needs to be called before any GuiTexture can be loaded.
 	 * @param loader
 	 */
-	public void setLoader(Loader loader) {
+	public void setLoader(OpenGLLoader loader) {
 		this.loader = loader;
 	}
 		

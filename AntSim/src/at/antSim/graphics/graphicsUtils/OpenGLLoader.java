@@ -22,17 +22,16 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import at.antSim.Globals;
 import at.antSim.graphics.models.RawModel;
-import at.antSim.graphics.textures.GuiTexture;
 import at.antSim.graphics.textures.TextureData;
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
-/**Loader loads 3D Models into memory (buffer) by storing data (positions, textureCoords, normals) about the model in a VAO.
+/**OpenGLLoader loads 3D Models and textures into OpenGL and memory (buffer) by storing data (positions, textureCoords, normals) about the model in a VAO.
  * 
  * @author Flo
  *
  */
-public class Loader {
+public class OpenGLLoader {
 	
 	/* For more information about GL function calls used in this class to load java objects into OpenGL,
 	 * refer to OPENGL Programming Guide:
@@ -158,6 +157,7 @@ public class Loader {
 			
 		//load a texture in .png format from /res/models directory and store it in raw format
 		Texture texture = null;
+
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(Globals.TEXTURES + fileName + ".png")); //texture is being bound for GL30.glGenerateMipMap(int target)
 			/* 

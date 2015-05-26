@@ -8,7 +8,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.entities.Camera;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.shaders.SkyboxShader;
 
@@ -79,10 +79,10 @@ public class SkyboxRenderer {
 	
 	/**Creates a new {@link SkyboxRenderer}.
 	 * 
-	 * @param loader - a {@link Loader} to load data into OpenGL
+	 * @param loader - a {@link OpenGLLoader} to load data into OpenGL
 	 * @param projectionMatrix
 	 */
-	public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
+	public SkyboxRenderer(OpenGLLoader loader, Matrix4f projectionMatrix) {
 		
 		//load cube's geometric data into VBO and the VBO into a VAO
 		cube = loader.loadToVAO(VERTICES, 3);

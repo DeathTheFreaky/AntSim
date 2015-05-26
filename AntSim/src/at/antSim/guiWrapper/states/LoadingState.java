@@ -3,7 +3,7 @@ package at.antSim.guiWrapper.states;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
 import at.antSim.guiWrapper.GuiContainer;
 import at.antSim.guiWrapper.GuiText;
@@ -20,7 +20,7 @@ import at.antSim.guiWrapper.VerReference;
  */
 public class LoadingState extends AbstractGuiState {
 
-	public LoadingState(Loader loader, String name) {
+	public LoadingState(OpenGLLoader loader, String name) {
 		super(loader, name);
 	}
 

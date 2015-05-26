@@ -1,6 +1,6 @@
 package at.antSim.guiWrapper.states;
 
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.guiWrapper.GuiElement;
 import at.antSim.guiWrapper.GuiState;
@@ -14,20 +14,15 @@ public abstract class AbstractGuiState {
 	
 	GuiWrapper wrapper;
 	
-	Loader loader;
+	OpenGLLoader loader;
 	GuiState state;
 	String name;
-	
-	float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
-	float[] textureCoords = {0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1}; //gui texture coords for images
-	RawModel standardQuad;
 
-	public AbstractGuiState(Loader loader, String name) {
+	public AbstractGuiState(OpenGLLoader loader, String name) {
 		this.loader = loader;
 		this.name = name;
 		
 		state = new GuiState(name);
-		standardQuad = loader.loadToVAO(positions, textureCoords, 2, false);
 		
 		wrapper = GuiWrapper.getInstance();
 	}

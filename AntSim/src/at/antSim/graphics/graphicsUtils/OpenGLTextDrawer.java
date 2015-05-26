@@ -8,7 +8,6 @@ import org.newdawn.slick.opengl.Texture;
 
 import at.antSim.Globals;
 import at.antSim.graphics.models.RawModel;
-import at.antSim.graphics.textures.GuiTexture;
 import at.antSim.guiWrapper.GuiTextData;
 
 /**Used to draw bitmap font text on a 3d screen with gui Renderer.
@@ -18,7 +17,7 @@ import at.antSim.guiWrapper.GuiTextData;
  */
 public class OpenGLTextDrawer {
 	
-	Loader loader;
+	OpenGLLoader loader;
 	Texture texture;
 
 	//2d texture is supposed to be a square with NUM_SIDE columns and rows of characters in a texture atlas
@@ -34,7 +33,7 @@ public class OpenGLTextDrawer {
 	/**Creates a new {@link OpenGLTextDrawer}.
 	 * 
 	 */
-	public OpenGLTextDrawer(Loader loader, Texture texture) {
+	public OpenGLTextDrawer(OpenGLLoader loader, Texture texture) {
 		this.loader = loader;
 		this.texture = texture;
 		initCoords();

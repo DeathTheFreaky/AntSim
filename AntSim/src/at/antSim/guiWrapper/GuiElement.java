@@ -12,7 +12,7 @@ import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.graphics.graphicsUtils.GuiQuadCreator;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.guiWrapper.commands.Command;
 
@@ -62,7 +62,7 @@ public abstract class GuiElement {
 	/**Constructs a new {@link GuiElement}.
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String
-	 * @param loader - the {@link Loader} used for loading texture coords and positions into a vao
+	 * @param loader - the {@link OpenGLLoader} used for loading texture coords and positions into a vao
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
 	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
 	 * @param texture - a {@link Texture}
@@ -78,7 +78,7 @@ public abstract class GuiElement {
 	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
 	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
 	 */
-	public GuiElement(String id, Loader loader, GuiContainer parent, Command command, Texture texture, int desiredWidth, int desiredHeight, 
+	public GuiElement(String id, OpenGLLoader loader, GuiContainer parent, Command command, Texture texture, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 				
 		this(id, parent, command, GuiQuadCreator.createGuiQuad(texture, loader), (texture != null) ? texture.getTextureID() : -1, (texture != null) ? texture.getTextureWidth() : 0, 
@@ -90,7 +90,7 @@ public abstract class GuiElement {
 	 * @param id - the {@link GuiElement}'s id as String
 	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
 	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
-	 * @param model - the {@link GuiElement}'s geometric model
+	 * @param model - a {@link RawModel} used to stored texture coords and positions
 	 * @param textureId - id of the {@link GuiElement}'s texture as assigned by OpenGL
 	 * @param textureWidth - width of the {@link GuiElement}'s texture
 	 * @param textureHeight - height of the {@link GuiElement}'s texture
@@ -106,7 +106,7 @@ public abstract class GuiElement {
 	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
 	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
 	 */
-	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
+	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight,
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
 		
 		this.width = desiredWidth;
@@ -137,7 +137,7 @@ public abstract class GuiElement {
 			this.state = parent.getGuiState();
 		}
 	}
-	
+
 	public Vector2f getPosition() {
 		return position;
 	}
