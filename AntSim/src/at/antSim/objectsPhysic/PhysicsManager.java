@@ -11,6 +11,7 @@ import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.dynamics.DynamicsWorld;
+import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.SimpleDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.ConstraintSolver;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
@@ -43,11 +44,16 @@ public class PhysicsManager {
 		BroadphaseInterface broadphaseInterface = new DbvtBroadphase();
 		ConstraintSolver constraintSolver = new SequentialImpulseConstraintSolver();
 		physicsWorld = new SimpleDynamicsWorld(dispatcher, broadphaseInterface, constraintSolver, collisionConfiguration);
-		physicsWorld.setGravity(new Vector3f(0, (float) Globals.gravity, 0));
+		physicsWorld.setGravity(new Vector3f(0, Globals.gravity, 0));
 	}
 
 	public void registerPhysicsObject(PhysicsObject physicsObject) {
-		physicsWorld.addCollisionObject(physicsObject.getCollisionBody());
+		RigidBody rig = RigidBody.upcast(physicsObject.getCollisionBody());
+		if (rig != null) {
+			physicsWorld.addRigidBody(rig);
+		} else {
+			physicsWorld.addCollisionObject(physicsObject.getCollisionBody());
+		}
 		physicsObjectMap.put(physicsObject.getCollisionBody(), physicsObject);
 	}
 
@@ -68,8 +74,11 @@ public class PhysicsManager {
 		}
 	}
 
-	public void performCollisionDetection() {
+	public void performCollisionDetection(float timeStep) {
 		physicsWorld.performDiscreteCollisionDetection();
+		physicsWorld.stepSimulation(timeStep, 7);
+
+
 	}
 
 	public PhysicsObject getPhysicsObject(CollisionObject colObj) {

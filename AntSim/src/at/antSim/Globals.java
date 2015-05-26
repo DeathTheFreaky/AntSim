@@ -34,7 +34,7 @@ public final class Globals {
 	public static boolean fullscreen;
 	public static int fontRows = 16;
 	public static int fontCols = 16;
-	public static float gravity = 8.13f;
+	public static float gravity = -9.81f;
 	
 	public static int moveForwardKey;
 	public static int moveBackwardKey;

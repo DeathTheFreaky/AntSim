@@ -1,8 +1,5 @@
 package at.antSim.graphics.graphicsUtils;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-
 import at.antSim.GTPMapper.PrimitiveType;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.models.ModelData;
@@ -12,9 +9,12 @@ import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.ObjectType;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+
 public class ModelLoader {
 	
-	public static float massDummie = 0.1f;
+	public static float massDummie = 1f;
 	
 	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
 	private static LinkedList<ModelNamesAndTypes> modelPresets = new LinkedList<>(); //names of all obj files and associated textures to be loaded
@@ -31,7 +31,7 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.SPHERE, ObjectType.ENEMY, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.SPHERE, ObjectType.ANT, massDummie));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);

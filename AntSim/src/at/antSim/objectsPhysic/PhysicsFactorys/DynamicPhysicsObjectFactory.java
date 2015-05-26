@@ -19,19 +19,6 @@ public class DynamicPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Dy
 
 	}
 
-	/*
-		@Override
-		public StaticPhysicsObject createPane(float mass) {
-			return createPane(mass, new Transform());
-		}
-
-		@Override
-		public StaticPhysicsObject createPane(float mass, Transform position) {
-			MotionState motionState = new DefaultMotionState(position);
-			CollisionShape shape = new StaticPlaneShape();
-			return null;
-		}
-	*/
 	@Override
 	public DynamicPhysicsObject createSphere(float mass, float radius) throws UnsupportedOperationException {
 		return createSphere(mass, radius, new Transform());

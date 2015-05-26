@@ -1,31 +1,20 @@
 package at.antSim;
 
-import java.util.HashMap;
-import java.util.List;
-
-import at.antSim.guiWrapper.states.AbstractGuiState;
-import at.antSim.guiWrapper.states.LoadingState;
-import at.antSim.guiWrapper.states.MainGameState;
-import at.antSim.guiWrapper.states.OptionsControlState;
-import at.antSim.guiWrapper.states.OptionsDisplayState;
-import at.antSim.guiWrapper.states.PauseState;
-import at.antSim.guiWrapper.states.StartMenuState;
-
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector3f;
-
 import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
-import at.antSim.graphics.graphicsUtils.DisplayManager;
-import at.antSim.graphics.graphicsUtils.ModelLoader;
-import at.antSim.graphics.graphicsUtils.OpenGLLoader;
-import at.antSim.graphics.graphicsUtils.MousePicker;
-import at.antSim.graphics.graphicsUtils.WorldLoader;
+import at.antSim.graphics.graphicsUtils.*;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;
+import at.antSim.guiWrapper.states.*;
+import at.antSim.objectsPhysic.PhysicsManager;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -141,6 +130,8 @@ public class MainApplication {
 	private float timeAccumulator = 0;
 	private float statsTimeStep = 1f;
 	private float statsTimeAccumulator = 0;
+
+	private long timeLastLogicUpdate = System.currentTimeMillis();
 	
 	private int statsCtrTest = 0;
 
@@ -241,14 +232,17 @@ public class MainApplication {
 	 * 
 	 */
 	private void update() {
-		
+		long timeCurrentUpdate = System.currentTimeMillis();
 		EventManager.getInstance().workThroughQueue();
-		
+
 		//game logic
 		if (!paused && worldLoaded) {
 //			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
+			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
 			statsCtrTest++;
-		}		
+			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate);
+		}
+		timeLastLogicUpdate = timeCurrentUpdate;
 	}
 
 	/**Loads the Gui and all its states.

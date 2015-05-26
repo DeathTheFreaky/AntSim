@@ -1,11 +1,11 @@
 displayWidth = 1920
 displayHeight = 1080
-displaySaveWidth = 1920
-displaySaveHeight = 1080
-fullscreen = true
+displaySaveWidth = 1024
+displaySaveHeight = 768
+fullscreen = false
 fontRows = 16
 fontCols = 16
-gravity = 8.13
+gravity = -9.81
 moveForwardKey = 17
 moveBackwardKey = 31
 moveLeftKey = 30
