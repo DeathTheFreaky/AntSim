@@ -36,7 +36,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 public class Terrain {
 	
 	//for 3d terrain - used with heightmap
-	private static final float MAX_HEIGHT = 0; //maximum height in positive and negative range of the terrain -> -40 to 40
+	private static final float MAX_HEIGHT = 40; //maximum height in positive and negative range of the terrain -> -40 to 40
 	private static final float MAX_PIXEL_COLOR = 256 * 256 * 256; //3 color channels -> each channel has value between 0 and 256 -> 256*256*256 colors in total 
 		
 	private float x; //position of this terrain in the worldspace -> there can be muliple terrains, eg. if terrains have size 800 and then terrain 1 starts at 0, terrain 2 at 800...
@@ -119,9 +119,6 @@ public class Terrain {
 				normals[vertexPointer * 3 + 2] = normal.z;
 				textureCoords[vertexPointer * 2] = (float) j / ((float) VERTEX_COUNT - 1); //texture coordinate u corresponds to pixel at x-coordinate of height map image
 				textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) VERTEX_COUNT - 1); //texture coordinate v corresponds to pixel at y-coordinate of height map image
-				if (vertices[vertexPointer * 3 + 2] < 20) {
-				System.out.println("terrain: " + vertices[vertexPointer * 3] + ", " + vertices[vertexPointer  * 3 + 1] + ", " + vertices[vertexPointer * 3 + 2]);
-				}
 				vertexPointer++;
 			}
 		}
@@ -155,7 +152,7 @@ public class Terrain {
 			}
 		}
 		
-		//create indexedMesh 
+		//create indexedMesh and load to physics world for collision detection
 		// http://www.java-gaming.org/index.php?topic=22894.0
 		IndexedMesh myMesh = new IndexedMesh();
 		myMesh.numTriangles = indices.length / 3; //number of triangles -> each vertex in a triangle has a unique index, each triangle is composed of 3 vertices
@@ -169,9 +166,8 @@ public class Terrain {
 		myMesh.vertexStride = 3 * 4;
 
 		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject(0, myMesh, 
-				new Transform(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, 0, Globals.WORLD_SIZE/2), 0, 0, 0)));
-		PhysicsManager.getInstance().registerPhysicsObject(obj);
-		
+				new Transform(Maths.createTransformationMatrix(new Vector3f(0, 0, -Globals.WORLD_SIZE), 0, 0, 0)));
+		PhysicsManager.getInstance().registerPhysicsObject(obj);		
 		
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}

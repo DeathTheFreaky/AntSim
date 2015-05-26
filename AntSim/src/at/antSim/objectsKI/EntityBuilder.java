@@ -73,5 +73,5 @@ public interface EntityBuilder {
 	/**
 	 * @return - the created {@link Entity}
 	 */
-	public Entity getResult();
+	public Entity registerResult();
 }

@@ -3,8 +3,10 @@ package at.antSim.objectsPhysic;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+
 import com.bulletphysics.ContactProcessedCallback;
 import com.bulletphysics.collision.dispatch.CollisionObject;
+import com.bulletphysics.collision.dispatch.CollisionObjectType;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 
 /**

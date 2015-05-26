@@ -13,6 +13,7 @@ import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.TexturedModel;
+import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
@@ -99,8 +100,9 @@ public class EntityBuilderImpl implements EntityBuilder {
 	}
 
 	@Override
-	public Entity getResult() {
+	public Entity registerResult() {
 		if (graphicsEntity != null) {
+			PhysicsManager.getInstance().registerPhysicsObject(physicsObject);
 			switch (graphicsEntity.getModel().getObjectType()) {
 			case ANT:
 				return new Ant(graphicsEntity, physicsObject);
