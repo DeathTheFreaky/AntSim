@@ -1,7 +1,7 @@
 package at.antSim.GTPMapper;
 
-import at.antSim.EntityBuilder;
 import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
 

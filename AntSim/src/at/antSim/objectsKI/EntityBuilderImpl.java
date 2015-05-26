@@ -1,4 +1,4 @@
-package at.antSim;
+package at.antSim.objectsKI;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -13,12 +13,6 @@ import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.TexturedModel;
-import at.antSim.objectsKI.Ant;
-import at.antSim.objectsKI.Enemy;
-import at.antSim.objectsKI.Entity;
-import at.antSim.objectsKI.EnvironmentObject;
-import at.antSim.objectsKI.Food;
-import at.antSim.objectsKI.Pheronome;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
