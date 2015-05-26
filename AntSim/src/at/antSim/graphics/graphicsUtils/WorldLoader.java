@@ -1,15 +1,17 @@
-package at.antSim;
+package at.antSim.graphics.graphicsUtils;
 
+import at.antSim.Globals;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
-import at.antSim.graphics.graphicsUtils.ModelLoader;
-import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
 import at.antSim.objectsKI.Entity;
+import at.antSim.objectsKI.EntityBuilder;
+import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;

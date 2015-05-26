@@ -22,6 +22,7 @@ import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.ModelLoader;
 import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.MousePicker;
+import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;

@@ -1,22 +1,13 @@
 package at.antSim.objectsPhysic.PhysicsFactorys;
 
-import at.antSim.GTPMapper.GTPCone;
-import at.antSim.GTPMapper.GTPCuboid;
-import at.antSim.GTPMapper.GTPCylinder;
-import at.antSim.GTPMapper.GTPObject;
-import at.antSim.GTPMapper.GTPSphere;
-import at.antSim.objectsPhysic.DynamicPhysicsObject;
-import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
-
 import com.bulletphysics.collision.shapes.*;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.MotionState;
 import com.bulletphysics.linearmath.Transform;
 
-import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
 /**
@@ -25,7 +16,7 @@ import javax.vecmath.Vector3f;
  * @author Clemens
  */
 public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> implements PhysicsObjectFactory<E> {
-	
+
 	RigidBody createSphereRigid(float mass, float radius, Transform position) {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = createSphereShape(radius);

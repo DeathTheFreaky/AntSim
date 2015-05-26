@@ -1,7 +1,7 @@
 package at.antSim.GTPMapper;
 
-import at.antSim.EntityBuilder;
 import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
 /**Holds data needed to create a {@link PhysicsObject} sphere from the geometry data of a {@link GraphicsEntity}.
