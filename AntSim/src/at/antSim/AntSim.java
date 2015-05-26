@@ -6,7 +6,7 @@ import java.util.List;
 
 import at.antSim.config.ConfigReader;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.inputHandlers.KeyboardHandler;
 import at.antSim.inputHandlers.KeyboardHandlerException;
@@ -25,7 +25,7 @@ public class AntSim {
 		INSTANCE = new AntSim();
 	}
 	
-	Loader loader;
+	OpenGLLoader loader;
 	MasterRenderer masterRenderer;
 	static List<Thread> threads = new LinkedList<>();
 	
@@ -59,7 +59,7 @@ public class AntSim {
     	
     	//initialize display manager
     	DisplayManager.createDisplay();
-		loader = new Loader();
+		loader = new OpenGLLoader();
 		
 		//initialize render engine
 		masterRenderer = new MasterRenderer(loader);

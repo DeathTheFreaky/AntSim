@@ -29,7 +29,7 @@ public class OBJFileLoader {
 	 * and returns a {@link RawModel} built on this data.
 	 * 
 	 * @param fileName - the name of the .obj file
-	 * @param loader - a {@link Loader} object for loading 3D models into memory
+	 * @param loader - a {@link OpenGLLoader} object for loading 3D models into memory
 	 * @return - the {@link RawModel} created from the data in the .obj File
 	 */
 	public static ModelData loadOBJ(String objFileName) {

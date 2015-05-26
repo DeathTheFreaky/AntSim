@@ -2,7 +2,7 @@ package at.antSim.guiWrapper.states;
 
 import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventManager;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
 import at.antSim.guiWrapper.*;
 import at.antSim.guiWrapper.commands.*;
@@ -52,7 +52,7 @@ public class MainGameState extends AbstractGuiState {
 	GuiContainer visibleControlContainer = null;
 	boolean foodSubContainerDisplayed = false;
 	
-	public MainGameState(Loader loader, String name) {
+	public MainGameState(OpenGLLoader loader, String name) {
 		super(loader, name);
 	}
 

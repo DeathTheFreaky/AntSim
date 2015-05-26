@@ -18,7 +18,8 @@ import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.GTPMapper.PrimitiveType;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.ModelLoader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.graphicsUtils.OBJFileLoader;
 import at.antSim.graphics.models.ModelData;
@@ -50,57 +51,16 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
  *
  */
 public class WorldLoader {
-
+	
 	private static StaticPhysicsObjectFactory staticFactory = StaticPhysicsObjectFactory.getInstance();
 	private static DynamicPhysicsObjectFactory dynamicFactory = DynamicPhysicsObjectFactory.getInstance();
-	private static float massDummie = 0.1f;
-	
-	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
-	private static LinkedList<ModelNamesAndTypes> modelPresets = new LinkedList<>(); //names of all obj files and associated textures to be loaded
-	
-	/**Loads all {@link TexturedModel}s needed for creating {@link GraphicsEntity}s into a HashMap.<br>
-	 * Needs to be called before loadEntities.
-	 * 
-	 * @param loader
-	 */
-	public static void loadTexturedModels(Loader loader) {
-		
-		//first String in array is name of obj file, second is name of texture, third is desired name of TexturedModel in Hashmap
-		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.SPHERE, ObjectType.ENEMY, massDummie));
-		
-		for (ModelNamesAndTypes modelPreset : modelPresets) {
-			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);
-			RawModel rawModel = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
-			rawModel.setFurthestPoint(modelData.getFurthestPoint());
-			rawModel.setLenghts(modelData.getxLength(), modelData.getyLength(), modelData.getzLength());
-			ModelTexture modelTexture = new ModelTexture(loader.loadTexture(modelPreset.textureFileName));
-			texturedModels.put(modelPreset.key, new TexturedModel(rawModel, modelTexture, modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass));
-		}
-		
-		texturedModels.get("fern").getTexture().setNumberOfRows(2); //set number of rows inside texture atlas
-		
-		//set parameters for specular lighting for demo dragon
-		texturedModels.get("dragon").getTexture().setShineDamper(10); //set shine damper for specular lighting
-		texturedModels.get("dragon").getTexture().setReflectivity(1); //set reflectivity for specular lighting
-		
-		//set transparency and fake lighting for grass and fern (to avoid weird shadow look)
-		texturedModels.get("grass").getTexture().setHasTransparency(true);
-		texturedModels.get("grass").getTexture().setUseFakeLighting(true);
-		texturedModels.get("fern").getTexture().setHasTransparency(true);
-		texturedModels.get("fern").getTexture().setUseFakeLighting(true);
-		
-	}
 	
 	/**Loads the world's terrain.
 	 * 
 	 * @param loader
 	 * @return - the world's {@link Terrain}
 	 */
-	public static Terrain loadTerrain(Loader loader) {
+	public static Terrain loadTerrain(OpenGLLoader loader) {
 	
 		//load the different terrain textures
 		TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("terrain/grassy2"));
@@ -123,7 +83,7 @@ public class WorldLoader {
 	 * @param terrain
 	 * @return - a list of the World's {@link GraphicsEntity}s
 	 */
-	public static void loadWorldEntities(Loader loader, Terrain terrain) {
+	public static void loadWorldEntities(OpenGLLoader loader, Terrain terrain) {
 				
 		//create a random flora
 		Random random = new Random(676452);
@@ -198,17 +158,20 @@ public class WorldLoader {
 		
 		Entity entity;
 		PhysicsObject physicsObject = null;
-		GraphicsEntity graphicsEntity = new GraphicsEntity(texturedModels.get(modelId), textureIndex, scale);
+		GraphicsEntity graphicsEntity = new GraphicsEntity(ModelLoader.texturedModels.get(modelId), textureIndex, scale);
 		GTPObject gtpObject = GTPMapper.getObject(graphicsEntity, scale, graphicsEntity.getModel().getPrimitiveType());
+		
+		PhysicsObjectFactory factory;
 		
 		if (mass < 0) {
 			mass = graphicsEntity.getModel().getMass();
 		} else if (mass == 0) { //do all objects need mass? if no, delete this
-			mass = massDummie;
+			mass = ModelLoader.massDummie;
 		}
 		
 		switch(factoryType) {
 		case STATIC:
+			factory = staticFactory;
 			physicsObject = staticFactory.createPrimitive(gtpObject, mass, new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
 			break;
 		case DYNAMIC:
@@ -245,29 +208,5 @@ public class WorldLoader {
 		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		
 		return lights;
-	}
-	
-	/**Stores "presets" for an {@link Entity}'s model.
-	 * 
-	 * @author Flo
-	 *
-	 */
-	static class ModelNamesAndTypes {
-		
-		String objFileName;
-		String textureFileName;
-		String key;
-		PrimitiveType primitiveType;
-		ObjectType objectType;
-		float mass;
-		
-		public ModelNamesAndTypes(String objFileName, String textureFileName, String key, PrimitiveType sphereType, ObjectType objectType, float mass) {
-			this.objFileName = objFileName;
-			this.textureFileName = textureFileName;
-			this.key = key;
-			this.primitiveType = sphereType;
-			this.objectType = objectType;
-			this.mass = mass;
-		}
 	}
 }

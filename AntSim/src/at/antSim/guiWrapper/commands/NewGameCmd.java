@@ -2,7 +2,7 @@ package at.antSim.guiWrapper.commands;
 
 import at.antSim.AntSim;
 import at.antSim.MainApplication;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.guiWrapper.GuiWrapper;
 

@@ -17,7 +17,7 @@ import at.antSim.guiWrapper.GuiTextData;
  */
 public class OpenGLTextDrawer {
 	
-	Loader loader;
+	OpenGLLoader loader;
 	Texture texture;
 
 	//2d texture is supposed to be a square with NUM_SIDE columns and rows of characters in a texture atlas
@@ -33,7 +33,7 @@ public class OpenGLTextDrawer {
 	/**Creates a new {@link OpenGLTextDrawer}.
 	 * 
 	 */
-	public OpenGLTextDrawer(Loader loader, Texture texture) {
+	public OpenGLTextDrawer(OpenGLLoader loader, Texture texture) {
 		this.loader = loader;
 		this.texture = texture;
 		initCoords();

@@ -3,7 +3,7 @@ package at.antSim.guiWrapper.states;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.eventSystem.EventManager;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
 import at.antSim.guiWrapper.GuiContainer;
 import at.antSim.guiWrapper.GuiText;
@@ -23,7 +23,7 @@ public class PauseState extends AbstractGuiState {
 	Command quitToMainMenuCmd;
 	Command optionsCmd;
 
-	public PauseState(Loader loader, String name) {
+	public PauseState(OpenGLLoader loader, String name) {
 		super(loader, name);
 	}
 

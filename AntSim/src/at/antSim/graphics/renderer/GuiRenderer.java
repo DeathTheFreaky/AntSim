@@ -7,7 +7,7 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.shaders.GuiShader;
 import at.antSim.guiWrapper.GuiContainer;
@@ -26,7 +26,7 @@ public class GuiRenderer {
 	
 	/**Create a new {@link GuiRenderer}, loading a quad to hold the gui element's texture.
 	 * 
-	 * @param loader - an instance of {@link Loader} class
+	 * @param loader - an instance of {@link OpenGLLoader} class
 	 */
 	public GuiRenderer(GuiShader shader) {		 
 		this.shader = shader;

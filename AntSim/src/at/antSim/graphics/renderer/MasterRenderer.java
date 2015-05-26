@@ -16,7 +16,7 @@ import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.shaders.EntityShader;
 import at.antSim.graphics.shaders.GuiShader;
@@ -67,9 +67,9 @@ public class MasterRenderer {
 	
 	/**Constructs a {@link MasterRenderer} which manages all rendering and controls sub-renderer classes.
 	 * 
-	 * @param loader - a {@link Loader} used to load data into OpenGL
+	 * @param loader - a {@link OpenGLLoader} used to load data into OpenGL
 	 */
-	public MasterRenderer(Loader loader) {
+	public MasterRenderer(OpenGLLoader loader) {
 		enableCulling(); //enable backface culling by default
 		createProjectionMatrix(); //needs to be created only once
 		entityRenderer = new EntityRenderer(entitiyShader, projectionMatrix);

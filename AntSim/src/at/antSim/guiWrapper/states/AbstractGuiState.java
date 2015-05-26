@@ -1,6 +1,6 @@
 package at.antSim.guiWrapper.states;
 
-import at.antSim.graphics.graphicsUtils.Loader;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.guiWrapper.GuiElement;
 import at.antSim.guiWrapper.GuiState;
@@ -14,11 +14,11 @@ public abstract class AbstractGuiState {
 	
 	GuiWrapper wrapper;
 	
-	Loader loader;
+	OpenGLLoader loader;
 	GuiState state;
 	String name;
 
-	public AbstractGuiState(Loader loader, String name) {
+	public AbstractGuiState(OpenGLLoader loader, String name) {
 		this.loader = loader;
 		this.name = name;
 		
