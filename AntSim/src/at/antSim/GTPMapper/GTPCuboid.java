@@ -1,5 +1,6 @@
 package at.antSim.GTPMapper;
 
+import at.antSim.EntityBuilder;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
@@ -30,5 +31,10 @@ public class GTPCuboid extends GTPObject {
 
 	public float getzLength() {
 		return zLength;
+	}
+
+	@Override
+	public void createPrimitive(EntityBuilder builder) {
+		builder.createCuboid(this);
 	}
 }
