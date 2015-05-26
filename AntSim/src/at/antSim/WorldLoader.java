@@ -1,15 +1,5 @@
 package at.antSim;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Random;
-
-import org.lwjgl.util.vector.Vector3f;
-
-import com.bulletphysics.linearmath.Transform;
-
-import at.antSim.GTPMapper.GTPCone;
 import at.antSim.GTPMapper.GTPCuboid;
 import at.antSim.GTPMapper.GTPCylinder;
 import at.antSim.GTPMapper.GTPMapper;
@@ -26,14 +16,18 @@ import at.antSim.graphics.terrains.Terrain;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
-import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EnvironmentObject;
-import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
-import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import com.bulletphysics.linearmath.Transform;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Random;
 
 /**Provides methods to load the world's content.
  * 
@@ -169,7 +163,6 @@ public class WorldLoader {
 		DynamicPhysicsObject dragonPhysicsObject = dynamicFactory.createSphere(massDummie, dragonGtpSphere.getRadious(), 
 				new Transform(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, -7, -Globals.WORLD_SIZE/2), 90, 45, 90)));
 		dragonPhysicsObject.setAngularVelocity(new javax.vecmath.Vector3f(0, 5, 0)); //not working
-		dragonPhysicsObject.getRigidBody().activate(); //does also not work
 		new EnvironmentObject(dragonGraphicsEntity, dragonPhysicsObject);
 		
 	}

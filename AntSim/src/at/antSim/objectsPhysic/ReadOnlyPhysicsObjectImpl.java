@@ -18,15 +18,14 @@ public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOn
 	@Override
 	public Vector3f getPosition() {
 		Vector3f out = new Vector3f();
-		getCollisionBody().getWorldTransform(new Transform(new Matrix4f(new Quat4f(), out, 1)));
-		//Transform transform = new Transform();
-		//getRigidBody().getMotionState().getWorldTransform(transform);
-		//Matrix4f transformMatrix = new Matrix4f();
-		//transform.getMatrix(transformMatrix);
-		//out.x = transformMatrix.m03/transformMatrix.m33;
-		//out.y = transformMatrix.m13/transformMatrix.m33;
-		//out.z = transformMatrix.m23/transformMatrix.m33;
-		//getRigidBody().getMotionState().getWorldTransform(new Transform(new Matrix4f(new Quat4f(), out, 1))); //does not work
+		Transform transform = new Transform();
+		getCollisionBody().getWorldTransform(transform);
+		Matrix4f transformMatrix = new Matrix4f();
+		transform.getMatrix(transformMatrix);
+		transformMatrix.get(out);
+//		out.x = transformMatrix.m03/transformMatrix.m33;
+//		out.y = transformMatrix.m13/transformMatrix.m33;
+//		out.z = transformMatrix.m23/transformMatrix.m33;
 		return out;
 	}
 
@@ -42,15 +41,17 @@ public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOn
 		Transform transform = new Transform();
 		getCollisionBody().getWorldTransform(transform);
 		transform.getRotation(out);
-//		//getRigidBody().getMotionState().getWorldTransform(new Transform(new Matrix4f(out, new Vector3f(), 1))); //does not work
+//		getRigidBody().getMotionState().getWorldTransform(new Transform(new Matrix4f(out, new Vector3f(), 1))); //does not work
 		return out;
 	}
 	
 	@Override
 	public Vector3f getRotationAngles() {
 		//quaternions to euler angles: http://gamedev.stackexchange.com/questions/80831/jbullet-quaternion-to-euler-angle-conversion-causes-strange-flipping-behavior
+		Transform transform = new Transform();
 		Quat4f q = new Quat4f();
-		getRigidBody().getOrientation(q);
+		getCollisionBody().getWorldTransform(transform);
+		transform.getRotation(q);
 		float roll = (float) Math.atan2(2d * (q.x * q.y + q.w * q.z), (double) q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z);
 		float pitch = (float) Math.atan2(2d * (q.y * q.z + q.w * q.x), (double) q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
 		float yaw = (float) Math.asin(-2d * (q.x * q.z - q.w * q.y));
