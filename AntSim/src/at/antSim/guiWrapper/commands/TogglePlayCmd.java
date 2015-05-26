@@ -2,7 +2,6 @@ package at.antSim.guiWrapper.commands;
 
 import at.antSim.MainApplication;
 import at.antSim.guiWrapper.states.MainGameState;
-import sun.applet.Main;
 
 /**
  * Created by Alexander on 18.05.2015.
@@ -15,8 +14,7 @@ public class TogglePlayCmd implements Command {
 	}
 	@Override
 	public void execute() {
-		mainGameState.hideFoodContainer();
-		mainGameState.hideEnemyContainer();
+		mainGameState.resetState();
 		mainGameState.updatePlayButton();
 		MainApplication.getInstance().togglePlay();
 	}

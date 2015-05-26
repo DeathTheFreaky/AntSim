@@ -42,11 +42,16 @@ public class MainGameState extends AbstractGuiState {
 	GuiImage speed4Img;
 	
 	//texture ids for exchanging
-	int playFilledTexId;
-	int playUnfilledTexId;
 	int pauseTexId;
+	int playTexId;
 	int speedFilledTexId;
 	int speedEmptyTexId;
+	int foodButtonInactiveTexId;
+	int foodButtonActiveTexId;
+	int foodContainerTexId;
+	int foodContainerSubTexId;
+	int enemyButtonInactiveTexId;
+	int enemyButtonActiveTexId;
 	
 	//used for toggling containers when pressing them twice
 	GuiContainer visibleControlContainer = null;
@@ -58,12 +63,17 @@ public class MainGameState extends AbstractGuiState {
 
 	@Override
 	public void initializeState(String... args) {
-				
-		playFilledTexId = wrapper.getGuiTexture("controls/play_filled_small").getTextureID(); 
-		playUnfilledTexId = wrapper.getGuiTexture("controls/play_unfilled_small").getTextureID(); 
+
 		pauseTexId = wrapper.getGuiTexture("controls/pause").getTextureID();
+		playTexId = wrapper.getGuiTexture("controls/play").getTextureID();
 		speedFilledTexId = wrapper.getGuiTexture("controls/speed_filled").getTextureID();
 		speedEmptyTexId = wrapper.getGuiTexture("controls/speed_empty").getTextureID();
+		foodButtonInactiveTexId = wrapper.getGuiTexture("controls/foodButton").getTextureID();
+		foodButtonActiveTexId = wrapper.getGuiTexture("controls/foodButtonActive").getTextureID();
+		foodContainerTexId = wrapper.getGuiTexture("controls/foodContainer").getTextureID();
+		foodContainerSubTexId = wrapper.getGuiTexture("controls/foodContainerSub").getTextureID();
+		enemyButtonInactiveTexId = wrapper.getGuiTexture("controls/foodButton").getTextureID();
+		enemyButtonActiveTexId = wrapper.getGuiTexture("controls/foodButtonActive").getTextureID();
 		
 		statContainers = new HashMap<>();
 		GuiContainer statusContainer = new GuiContainer("statusContainer", loader, null, null, wrapper.getGuiTexture("white"), 230, 80,
@@ -123,50 +133,50 @@ public class MainGameState extends AbstractGuiState {
 		Command clickEnemyAntCmd = new ClickEnemyAntCmd();
 		Command clickEnemyGrasshopperCmd = new ClickEnemyGrasshopperCmd();
 
-		//Controlsbar
-		GuiContainer controlsBar = new GuiContainer("controlsBar", loader, null, null, wrapper.getGuiTexture("white"), 281, 35,
-				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.BOTTOM, -1, 0f, new Vector3f(1.0f, 1.0f, 1.0f), 1f);
+		// Controls bar
+		GuiContainer controlsBar = new GuiContainer("controlsBar", loader, null, null, null, 251, 35,
+				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.BOTTOM, -1, 0f, new Vector3f(1.0f, 1.0f, 1.0f), 0.5f);
 
 		//speed controls
-		playPauseContainer = new GuiContainer("playPauseContainer", loader, controlsBar, togglePlayCmd, wrapper.getGuiTexture("white"), 35, 35,
-				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0f, 0f, 0f), 0f);
+		playPauseContainer = new GuiContainer("playPauseContainer", loader, controlsBar, togglePlayCmd, wrapper.getGuiTexture("controls/playPause"), 35, 35,
+				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(0f, 0f, 0f), 0f);
 		speedContainer = new GuiContainer("speedContainer", loader, controlsBar, null, wrapper.getGuiTexture("controls/speedContainer"), 75, 35,
-				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(1f, 0f, 0f), 0f);
-		speed1 = new GuiContainer("speed1", loader, speedContainer, toggleSpeed1Cmd, wrapper.getGuiTexture("white"), 17, 26,
-				HorReference.PARENT, HorPositions.LEFT, 4, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0.2f, 0, 0), 0.5f);
-		speed2 = new GuiContainer("speed2", loader, speedContainer, toggleSpeed2Cmd, wrapper.getGuiTexture("white"), 17, 26,
-				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0.2f, 0), 0.5f);
-		speed3 = new GuiContainer("speed3", loader, speedContainer, toggleSpeed3Cmd, wrapper.getGuiTexture("white"), 17, 26,
-				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0.2f), 0.5f);
-		speed4 = new GuiContainer("speed4", loader, speedContainer, toggleSpeed4Cmd, wrapper.getGuiTexture("white"), 17, 26,
-				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0.2f, 0, 0), 0.5f);
+				HorReference.SIBLING, HorPositions.RIGHT_OF, -1, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(1f, 0f, 0f), 0f);
+		speed1 = new GuiContainer("speed1", loader, speedContainer, toggleSpeed1Cmd, null, 17, 26,
+				HorReference.PARENT, HorPositions.LEFT, 4, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0.2f, 0, 0), 0f);
+		speed2 = new GuiContainer("speed2", loader, speedContainer, toggleSpeed2Cmd, null, 17, 26,
+				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0.2f, 0), 0f);
+		speed3 = new GuiContainer("speed3", loader, speedContainer, toggleSpeed3Cmd, null, 17, 26,
+				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0.2f), 0f);
+		speed4 = new GuiContainer("speed4", loader, speedContainer, toggleSpeed4Cmd, null, 17, 26,
+				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0.2f, 0, 0), 0f);
 		
 		//food containers
-		foodButton = new GuiContainer("foodButton", loader, controlsBar, toggleFoodCmd, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.SIBLING, HorPositions.RIGHT_OF, 1, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(1, 0, 0), 1f);
-		foodContainer = new GuiContainer("foodContainer", loader, foodButton, null, wrapper.getGuiTexture("white"), 70, 105,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 1, 0), 1f);
-		GuiContainer foodApple = new GuiContainer("foodApple", loader, foodContainer, clickFoodAppleCmd, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BOTTOM, 0, 0f, new Vector3f(0.2f, 0, 0), 1f);
-		GuiContainer foodSquirrel = new GuiContainer("foodSquirrel", loader, foodContainer, clickFoodSquirrelCmd, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0.4f, 0, 0), 1f);
-		GuiContainer foodInsect = new GuiContainer("foodInsect", loader, foodContainer, toggleFoodSubCmd, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0.6f, 0, 0), 1f);
+		foodButton = new GuiContainer("foodButton", loader, controlsBar, toggleFoodCmd, wrapper.getGuiTexture("controls/foodButton"), 70, 35,
+				HorReference.SIBLING, HorPositions.RIGHT_OF, -1, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(1, 0, 0), 0f);
+		foodContainer = new GuiContainer("foodContainer", loader, foodButton, null, wrapper.getGuiTexture("controls/foodContainer"), 70, 105,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.ABOVE, -1, 0f, new Vector3f(0, 1, 0), 0f);
+		GuiContainer foodApple = new GuiContainer("foodApple", loader, foodContainer, clickFoodAppleCmd, null, 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BOTTOM, 0, 0f, new Vector3f(0.2f, 0, 0), 0f);
+		GuiContainer foodSquirrel = new GuiContainer("foodSquirrel", loader, foodContainer, clickFoodSquirrelCmd, null, 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0.4f, 0, 0), 0f);
+		GuiContainer foodInsect = new GuiContainer("foodInsect", loader, foodContainer, toggleFoodSubCmd, null, 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0.6f, 0, 0), 0f);
 		
-		foodInsectSubContainer = new GuiContainer("foodSubContainer", loader, foodInsect, null, wrapper.getGuiTexture("white"), 140, 35,
-				HorReference.PARENT, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0.8f, 0, 0), 1f);
-		GuiContainer foodAnt = new GuiContainer("foodAnt", loader, foodInsectSubContainer, clickFoodAntCmd, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0.2f, 0), 1f);
-		GuiContainer foodGrasshopper = new GuiContainer("foodGrasshopper", loader, foodInsectSubContainer, clickFoodGrasshopperCmd, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0.4f, 0), 1f);
-		enemyButton = new GuiContainer("enemyButton", loader, controlsBar, toggleEnemyCmd, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.SIBLING, HorPositions.RIGHT_OF, 1, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0.2f), 1f);
-		enemyContainer = new GuiContainer("enemyContainer", loader, enemyButton, null, wrapper.getGuiTexture("white"), 70, 70,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0.4f), 1f);
-		GuiContainer enemyAnt = new GuiContainer("enemyAnt", loader, enemyContainer, clickEnemyAntCmd, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(0, 0, 0.6f), 1f);
-		GuiContainer enemyGrasshopper = new GuiContainer("enemyGrasshopper", loader, enemyContainer, clickEnemyGrasshopperCmd, wrapper.getGuiTexture("white"), 70, 35,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0.8f), 1f);
+		foodInsectSubContainer = new GuiContainer("foodSubContainer", loader, foodInsect, null, wrapper.getGuiTexture("controls/foodSub"), 140, 35,
+				HorReference.PARENT, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0.8f, 0, 0), 0f);
+		GuiContainer foodAnt = new GuiContainer("foodAnt", loader, foodInsectSubContainer, clickFoodAntCmd, null, 70, 35,
+				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0.2f, 0), 0f);
+		GuiContainer foodGrasshopper = new GuiContainer("foodGrasshopper", loader, foodInsectSubContainer, clickFoodGrasshopperCmd, null, 70, 35,
+				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0.4f, 0), 0f);
+		enemyButton = new GuiContainer("enemyButton", loader, controlsBar, toggleEnemyCmd, wrapper.getGuiTexture("controls/foodButton"), 70, 35,
+				HorReference.SIBLING, HorPositions.RIGHT_OF, -1, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0.2f), 0f);
+		enemyContainer = new GuiContainer("enemyContainer", loader, enemyButton, null, wrapper.getGuiTexture("controls/enemyContainer"), 70, 70,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0.4f), 0f);
+		GuiContainer enemyAnt = new GuiContainer("enemyAnt", loader, enemyContainer, clickEnemyAntCmd, null, 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(0, 0, 0.6f), 0f);
+		GuiContainer enemyGrasshopper = new GuiContainer("enemyGrasshopper", loader, enemyContainer, clickEnemyGrasshopperCmd, null, 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0.8f), 0f);
 		
 		// default hidings
 		foodContainer.setDisabled(true);
@@ -175,16 +185,16 @@ public class MainGameState extends AbstractGuiState {
 		// Images old (working properly
 		//GuiImage playPauseContainerImg = new GuiImage("playPauseContainer", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("controls/playPause"), 35, 35,
 				//HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		playPause = new GuiImage("playPause", loader, playPauseContainer, null, wrapper.getGuiTexture("controls/pause"), 32, 32,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		speed1Img = new GuiImage("speed1Img", loader, speed1, null, wrapper.getGuiTexture("controls/play_filled_small"), 15, 30,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		speed2Img = new GuiImage("speed2Img", loader, speed2, null, wrapper.getGuiTexture("controls/play_filled_small"), 15, 30,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		speed3Img = new GuiImage("speed3Img", loader, speed3, null, wrapper.getGuiTexture("controls/play_unfilled_small"), 15, 30,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		speed4Img = new GuiImage("speed4Img", loader, speed4, null, wrapper.getGuiTexture("controls/play_unfilled_small"), 15, 30,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		playPause = new GuiImage("playPause", loader, playPauseContainer, null, wrapper.getGuiTexture("controls/pause"), 30, 30,
+				HorReference.PARENT, HorPositions.LEFT, 1, VerReference.PARENT, VerPositions.BOTTOM, 2);
+		speed1Img = new GuiImage("speed1Img", loader, speed1, null, wrapper.getGuiTexture("controls/speed_filled"), 15, 26,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.TOP, 1);
+		speed2Img = new GuiImage("speed2Img", loader, speed2, null, wrapper.getGuiTexture("controls/speed_filled"), 15, 26,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.TOP, 1);
+		speed3Img = new GuiImage("speed3Img", loader, speed3, null, wrapper.getGuiTexture("controls/speed_empty"), 15, 26,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.TOP, 1);
+		speed4Img = new GuiImage("speed4Img", loader, speed4, null, wrapper.getGuiTexture("controls/speed_empty"), 15, 26,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.TOP, 1);
 
 		// images new
 //		playPause = new GuiImage("playPause", playPauseContainer, null, standardQuad, wrapper.getGuiTexture("controls/pause"), 32, 32,
@@ -198,7 +208,7 @@ public class MainGameState extends AbstractGuiState {
 //		speed4Img = new GuiImage("speed4Img", speed4, null, standardQuad, wrapper.getGuiTexture("controls/speed_empty"), 15, 26,
 //				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 
-		updateSpeedButtons(2);
+		//updateSpeedButtons(2);
 		
 //		playPauseContainer.addChild(playPausePause);
 //		speed1Img = new GuiImage("speed1Img", speed1, null, standardQuad, wrapper.getGuiTexture("controls/play_filled_small"), 26, 32,
@@ -245,10 +255,11 @@ public class MainGameState extends AbstractGuiState {
 	}
 
 	public void updatePlayButton() {
+		visibleControlContainer = null;
 		if (!MainApplication.getInstance().isPaused()) {
-			playPause.setTextureId(playFilledTexId);
+			setPlayButton();
 		} else {
-			playPause.setTextureId(pauseTexId);
+			setPauseButton();
 		}
 	}
 
@@ -256,47 +267,66 @@ public class MainGameState extends AbstractGuiState {
 		playPause.setTextureId(pauseTexId);
 	}
 
+	public void setPlayButton() {
+		playPause.setTextureId(playTexId);
+	}
+
 	public void updateSpeedButtons(int numberOfButtons) {
-		speed1Img.setTextureId(playFilledTexId);
+		visibleControlContainer = null;
+		speed1Img.setTextureId(speedFilledTexId);
 		if (numberOfButtons >= 2) {
-			speed2Img.setTextureId(playFilledTexId);
+			speed2Img.setTextureId(speedFilledTexId);
 		} else {
-			speed2Img.setTextureId(playUnfilledTexId);
+			speed2Img.setTextureId(speedEmptyTexId);
 		}
 		if (numberOfButtons >= 3) {
-			speed3Img.setTextureId(playFilledTexId);
+			speed3Img.setTextureId(speedFilledTexId);
 		} else {
-			speed3Img.setTextureId(playUnfilledTexId);
+			speed3Img.setTextureId(speedEmptyTexId);
 		}
 		if (numberOfButtons >= 4) {
-			speed4Img.setTextureId(playFilledTexId);
+			speed4Img.setTextureId(speedFilledTexId);
 		} else {
-			speed4Img.setTextureId(playUnfilledTexId);
+			speed4Img.setTextureId(speedEmptyTexId);
 		}
 	}
 
 	public void showFoodContainer() {
 		foodContainer.setDisabled(false);
+		foodButton.setTextureId(foodButtonActiveTexId);
 	}
 
 	public void hideFoodContainer() {
 		foodContainer.setDisabled(true);
+		foodButton.setTextureId(foodButtonInactiveTexId);
 	}
 	
 	public void toggleFoodContainer() {
 		toggleContainer(foodContainer);
+		if (visibleControlContainer == foodContainer) {
+			foodButton.setTextureId(foodButtonActiveTexId);
+		} else {
+			foodButton.setTextureId(foodButtonInactiveTexId);
+		}
 	}
 
 	public void showEnemyContainer() {
 		enemyContainer.setDisabled(false);
+		enemyButton.setTextureId(enemyButtonActiveTexId);
 	}
 
 	public void hideEnemyContainer() {
 		enemyContainer.setDisabled(true);
+		enemyButton.setTextureId(enemyButtonInactiveTexId);
 	}
 	
 	public void toggleEnemyContainer() {
 		toggleContainer(enemyContainer);
+		if (visibleControlContainer == enemyContainer) {
+			enemyButton.setTextureId(enemyButtonActiveTexId);
+		} else {
+			enemyButton.setTextureId(enemyButtonInactiveTexId);
+		}
 	}
 	
 	public void toggleContainer(GuiContainer container) {
@@ -323,12 +353,16 @@ public class MainGameState extends AbstractGuiState {
 		foodContainer.setDisabled(false);
 		foodInsectSubContainer.setDisabled(false);
 		foodSubContainerDisplayed = true;
+		foodContainer.setTextureId(foodContainerSubTexId);
+		foodButton.setTextureId(foodButtonActiveTexId);
 	}
 	
 	public void hideFoodSubContainer() {
 		foodContainer.setDisabled(false);
 		foodInsectSubContainer.setDisabled(true);
 		foodSubContainerDisplayed = false;
+		foodContainer.setTextureId(foodContainerTexId);
+		foodButton.setTextureId(foodButtonActiveTexId);
 	}
 
 	public void toggleFoodSubContainer() {
