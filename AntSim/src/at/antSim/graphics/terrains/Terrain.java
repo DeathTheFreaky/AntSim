@@ -8,12 +8,16 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bulletphysics.collision.shapes.IndexedMesh;
+
 import at.antSim.Globals;
 import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
+import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 
 /**Respresents a Terrain made up of a {@link RawModel}, a Blendmap and a {@link TerrainTexturePack}.<br>
  * The terrain's heights will be created according to the values stored in an imagefile grayscale heightmap.<br>
@@ -140,6 +144,10 @@ public class Terrain {
 				indices[pointer++] = bottomRight;
 			}
 		}
+		IndexedMesh myMesh = new IndexedMesh();
+		myMesh.numTriangles = indices.length / 3; //number of triangles -> each vertex in a triangle has a unique index, each triangle is composed of 3 vertices
+		myMesh.numVertices = vertices.length / 3; //number of vertices
+		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject(0, new IndexedMesh());
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
 	
