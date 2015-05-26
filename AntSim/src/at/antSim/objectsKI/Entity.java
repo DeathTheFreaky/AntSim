@@ -7,12 +7,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created on 18.05.2015.
@@ -34,7 +29,6 @@ public abstract class Entity {
 		//add Entity to physics and rendering hashmaps
 		physicsObjectTypeMap.put(physicsObject, type);
 		addRenderingEntity();
-		
 	}
 
 	public abstract void react(StaticPhysicsObject staticPhysicsObject);
