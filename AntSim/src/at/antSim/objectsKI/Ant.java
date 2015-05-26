@@ -46,14 +46,6 @@ public class Ant extends Entity{
 			PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
 		this.physicsObject = (DynamicPhysicsObject)physicsObject;
-		this.physicsObject.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 30, -Globals.WORLD_SIZE/2));
-		System.out.println(this.physicsObject.getLinearVelocity());
-		System.out.println(this.physicsObject.getPosition());
-		this.physicsObject.getCollisionBody().applyForce(new Vector3f(10,0,0), new Vector3f(10,0,0));
-		Vector3f v = new Vector3f(100,100,100);
-		this.physicsObject.setLinearVelocity(v);
-		System.out.println(this.physicsObject.getPosition());
-		System.out.println(this.physicsObject.getLinearVelocity());
 	}
 
 	@Override

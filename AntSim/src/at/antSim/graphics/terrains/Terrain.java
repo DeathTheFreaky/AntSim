@@ -3,19 +3,24 @@ package at.antSim.graphics.terrains;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import javax.imageio.ImageIO;
 
 import org.lwjgl.util.vector.Vector3f;
 
 import com.bulletphysics.collision.shapes.IndexedMesh;
+import com.bulletphysics.linearmath.Transform;
 
 import at.antSim.Globals;
 import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.Maths;
+import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
+import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 
@@ -31,7 +36,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 public class Terrain {
 	
 	//for 3d terrain - used with heightmap
-	private static final float MAX_HEIGHT = 40; //maximum height in positive and negative range of the terrain -> -40 to 40
+	private static final float MAX_HEIGHT = 0; //maximum height in positive and negative range of the terrain -> -40 to 40
 	private static final float MAX_PIXEL_COLOR = 256 * 256 * 256; //3 color channels -> each channel has value between 0 and 256 -> 256*256*256 colors in total 
 		
 	private float x; //position of this terrain in the worldspace -> there can be muliple terrains, eg. if terrains have size 800 and then terrain 1 starts at 0, terrain 2 at 800...
@@ -67,6 +72,8 @@ public class Terrain {
 	 * @return - the generated terrain as a {@link RawModel}
 	 */
 	private RawModel generateTerrain(OpenGLLoader loader, String heightMapStr){
+		
+		//generates terrain from (0,0,0) to (Worldsize, 0 , Worldsize)
 				
 		//load up the heightMap into a BufferedImage
 		BufferedImage heightMap = null;
@@ -112,6 +119,9 @@ public class Terrain {
 				normals[vertexPointer * 3 + 2] = normal.z;
 				textureCoords[vertexPointer * 2] = (float) j / ((float) VERTEX_COUNT - 1); //texture coordinate u corresponds to pixel at x-coordinate of height map image
 				textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) VERTEX_COUNT - 1); //texture coordinate v corresponds to pixel at y-coordinate of height map image
+				if (vertices[vertexPointer * 3 + 2] < 20) {
+				System.out.println("terrain: " + vertices[vertexPointer * 3] + ", " + vertices[vertexPointer  * 3 + 1] + ", " + vertices[vertexPointer * 3 + 2]);
+				}
 				vertexPointer++;
 			}
 		}
@@ -144,10 +154,25 @@ public class Terrain {
 				indices[pointer++] = bottomRight;
 			}
 		}
+		
+		//create indexedMesh 
+		// http://www.java-gaming.org/index.php?topic=22894.0
 		IndexedMesh myMesh = new IndexedMesh();
 		myMesh.numTriangles = indices.length / 3; //number of triangles -> each vertex in a triangle has a unique index, each triangle is composed of 3 vertices
 		myMesh.numVertices = vertices.length / 3; //number of vertices
-		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject(0, new IndexedMesh());
+		myMesh.triangleIndexBase = ByteBuffer.allocateDirect(indices.length*4).order(ByteOrder.nativeOrder());
+		myMesh.triangleIndexBase.asIntBuffer().put(indices);
+		myMesh.triangleIndexStride = 3 * 4;
+		myMesh.numVertices = vertices.length / 3;
+		myMesh.vertexBase = ByteBuffer.allocateDirect(vertices.length*4).order(ByteOrder.nativeOrder());
+		myMesh.vertexBase.asFloatBuffer().put(vertices);
+		myMesh.vertexStride = 3 * 4;
+
+		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject(0, myMesh, 
+				new Transform(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, 0, Globals.WORLD_SIZE/2), 0, 0, 0)));
+		PhysicsManager.getInstance().registerPhysicsObject(obj);
+		
+		
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
 	
