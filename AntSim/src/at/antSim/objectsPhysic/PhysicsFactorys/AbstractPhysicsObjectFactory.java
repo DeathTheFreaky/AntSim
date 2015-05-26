@@ -57,7 +57,7 @@ public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> impl
 	}
 
 	RigidBody createConeRigid(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) {
-		MotionState motionState = new DefaultMotionState();
+		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = createConeShape(height, radius, orientation);
 		return new RigidBody(mass, motionState, shape);
 	}
@@ -73,6 +73,18 @@ public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> impl
 			default:
 				throw new IllegalArgumentException("Invalid Orientation");
 		}
+	}
+
+	RigidBody createExactRigid(float mass, IndexedMesh mesh, Transform position) {
+		MotionState motionState = new DefaultMotionState(position);
+		CollisionShape shape = createExactShape(mesh);
+		return new RigidBody(mass, motionState, shape);
+	}
+
+	CollisionShape createExactShape(IndexedMesh mesh) {
+		TriangleIndexVertexArray indexVertexArray = new TriangleIndexVertexArray();
+		indexVertexArray.addIndexedMesh(mesh);
+		return new BvhTriangleMeshShape(indexVertexArray, true);
 	}
 
 }

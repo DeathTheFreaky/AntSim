@@ -1,4 +1,4 @@
-package at.antSim.objectsPhysic;
+package at.antSim.eventSystem.events;
 
 import at.antSim.eventSystem.AbstractEvent;
 import at.antSim.objectsPhysic.basics.PhysicsObject;

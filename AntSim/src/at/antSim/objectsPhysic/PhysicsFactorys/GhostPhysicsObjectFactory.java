@@ -4,7 +4,9 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
 import com.bulletphysics.collision.dispatch.GhostObject;
 import com.bulletphysics.collision.shapes.CollisionShape;
+import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.linearmath.Transform;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created on 18.05.2015.
@@ -67,5 +69,15 @@ public class GhostPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Ghos
 		CollisionShape shape = createConeShape(height, radius, orientation);
 		ghostObject.setCollisionShape(shape);
 		return new GhostPhysicsObject(ghostObject);
+	}
+
+	@Override
+	public GhostPhysicsObject createExactObject(float mass, IndexedMesh mesh) {
+		return createExactObject(mass, mesh, new Transform());
+	}
+
+	@Override
+	public GhostPhysicsObject createExactObject(float mass, IndexedMesh mesh, Transform position) {
+		throw new NotImplementedException();
 	}
 }
