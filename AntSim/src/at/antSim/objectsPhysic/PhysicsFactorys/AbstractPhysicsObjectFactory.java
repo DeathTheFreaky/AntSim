@@ -1,15 +1,9 @@
 package at.antSim.objectsPhysic.PhysicsFactorys;
 
-import at.antSim.GTPMapper.GTPCone;
-import at.antSim.GTPMapper.GTPCuboid;
-import at.antSim.GTPMapper.GTPCylinder;
-import at.antSim.GTPMapper.GTPObject;
-import at.antSim.GTPMapper.GTPSphere;
-import at.antSim.objectsPhysic.DynamicPhysicsObject;
+import at.antSim.GTPMapper.*;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
-
 import com.bulletphysics.collision.shapes.*;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.linearmath.DefaultMotionState;
@@ -42,7 +36,7 @@ public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> impl
 	 * 
 	 * @param gtpObject
 	 * @param mass
-	 * @param position - the object's initial position and rotation in the world 
+	 * @param transform - the object's initial position and rotation in the world
 	 * @return - a {@link StaticPhysicsObject}
 	 */
 	public E createPrimitive(GTPObject gtpObject, float mass, Transform transform) {
