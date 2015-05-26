@@ -77,8 +77,6 @@ public class PhysicsManager {
 	public void performCollisionDetection(float timeStep) {
 		physicsWorld.performDiscreteCollisionDetection();
 		physicsWorld.stepSimulation(timeStep, 7);
-
-
 	}
 
 	public PhysicsObject getPhysicsObject(CollisionObject colObj) {

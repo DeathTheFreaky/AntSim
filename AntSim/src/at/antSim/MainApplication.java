@@ -9,7 +9,9 @@ import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;
 import at.antSim.guiWrapper.states.*;
+import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.PhysicsManager;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -234,7 +236,7 @@ public class MainApplication {
 	private void update() {
 		long timeCurrentUpdate = System.currentTimeMillis();
 		EventManager.getInstance().workThroughQueue();
-
+		
 		//game logic
 		if (!paused && worldLoaded) {
 //			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
@@ -328,6 +330,8 @@ public class MainApplication {
 	 */
 	public void quitCurrentGame() {
 		worldLoaded = false;
+		paused = false;
+		Entity.deleteAllEntities();
 	}
 	
 	public void pause() {

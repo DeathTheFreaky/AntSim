@@ -49,13 +49,13 @@ public class Ant extends Entity{
 
 	@Override
 	public void react(StaticPhysicsObject staticPhysicsObject) {
-		System.out.println(" wow wow chill it is a tree");
+//		System.out.println(" wow wow chill it is a tree");
 		
 	}
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
-		System.out.println("dynamisch");
+//		System.out.println("dynamisch");
 	}
 	@Override
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
@@ -82,8 +82,8 @@ public class Ant extends Entity{
 	
 	@EventListener (priority = EventPriority.NORMAL)
 	public void decideEvent(CollisionEvent ce) {
-		System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
-				"\nPhyObj1: " + ce.getPhyObj1() + "\nPhyObj2: " + ce.getPhyObj2());
+//		System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
+//				"\nPhyObj1: " + ce.getPhyObj1() + "\nPhyObj2: " + ce.getPhyObj2());
 		if (ce.getPhyObj1().equals(physicsObject)) {
 			ce.getPhyObj2().receive(this);
 			ce.consume();

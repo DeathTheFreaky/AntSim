@@ -75,4 +75,12 @@ public abstract class Entity {
 	public PhysicsObject getPhysicsObject() {
 		return physicsObject;
 	}
+	
+	/**Deletes all Entities from physicsObjects and GraphicsEntities maps when game session is quit (return to main menu).
+	 * 
+	 */
+	public static void deleteAllEntities() {
+		physicsObjectTypeMap.clear();
+		renderingMap.clear();
+	}
 }
