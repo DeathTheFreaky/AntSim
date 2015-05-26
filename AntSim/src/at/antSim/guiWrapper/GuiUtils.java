@@ -9,17 +9,17 @@ public class GuiUtils {
 	 */
 	public static String getInvertCheckboxTexStr(int checked) {
 		if (checked == -1) {
-			return "checked";
+			return "controls/checked";
 		} else {
-			return "unchecked";
+			return "controls/unchecked";
 		}
 	}
 
 	public static String getCheckboxTexStr(boolean checked) {
 		if (checked) {
-			return "checked";
+			return "controls/checked";
 		} else {
-			return "unchecked";
+			return "controls/unchecked";
 		}
 	}
 }

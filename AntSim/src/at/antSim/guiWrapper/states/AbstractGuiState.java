@@ -27,7 +27,7 @@ public abstract class AbstractGuiState {
 		this.name = name;
 		
 		state = new GuiState(name);
-		standardQuad = loader.loadToVAO(positions, textureCoords, 2);
+		standardQuad = loader.loadToVAO(positions, textureCoords, 2, false);
 		
 		wrapper = GuiWrapper.getInstance();
 	}

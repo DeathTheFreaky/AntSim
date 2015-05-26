@@ -55,67 +55,67 @@ public class OptionsDisplayState extends AbstractGuiState {
 		backCmd = new BackCmd(state);
 		switchToControlsCmd = new SwitchStateOptionsCmd(args[1], state, this);
 		
-		GuiContainer mainContainer = new GuiContainer("mainContainer", null, null, standardQuad, wrapper.getGuiTexture("white"),
+		GuiContainer mainContainer = new GuiContainer("mainContainer", loader, null, null, wrapper.getGuiTexture("white"),
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(1,1,1), 1);
 
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, wrapper.getGuiTexture("font"));
 		
 		//switch between display and control options
-		GuiContainer switchContainer = new GuiContainer("switchContainer", mainContainer, null, standardQuad,  wrapper.getGuiTexture("white"), 410, 39,
+		GuiContainer switchContainer = new GuiContainer("switchContainer", loader, mainContainer, null,  wrapper.getGuiTexture("white"), 410, 39,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 30, 0f, new Vector3f(1, 0, 0), 0.5f);
-		GuiContainer displaySwitchContainer = new GuiContainer("displaySwitchContainer", switchContainer, null, standardQuad,  wrapper.getGuiTexture("white"), switchContainer.getWidth()/2, 
+		GuiContainer displaySwitchContainer = new GuiContainer("displaySwitchContainer", loader, switchContainer, null,  wrapper.getGuiTexture("white"), switchContainer.getWidth()/2, 
 				switchContainer.getHeight(), HorReference.PARENT, HorPositions.LEFT, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 1), 0.5f);
 		GuiText displaySwitchText = new GuiText("displaySwitch", textDrawer.createTextQuad("Display"), displaySwitchContainer, null, 25,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		GuiContainer controlSwitchContainer = new GuiContainer("controlSwitchContainer", switchContainer, switchToControlsCmd, standardQuad,  wrapper.getGuiTexture("white"), switchContainer.getWidth()/2, 
+		GuiContainer controlSwitchContainer = new GuiContainer("controlSwitchContainer", loader, switchContainer, switchToControlsCmd,  wrapper.getGuiTexture("white"), switchContainer.getWidth()/2, 
 				switchContainer.getHeight(), HorReference.PARENT, HorPositions.RIGHT, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 1, 0), 0.5f);
 		GuiText controlSwitchText = new GuiText("controlSwitch", textDrawer.createTextQuad("Controls"), controlSwitchContainer, null, 25,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		EventManager.getInstance().registerEventListener(controlSwitchContainer);
 		
 		//invert mouse
-		GuiContainer invertContainer = new GuiContainer("invertContainer", mainContainer, null, standardQuad,  wrapper.getGuiTexture("white"), 410, 105,
+		GuiContainer invertContainer = new GuiContainer("invertContainer", loader, mainContainer, null,  wrapper.getGuiTexture("white"), 410, 105,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 30, 0f, new Vector3f(1, 0, 0), 0.5f);
 		GuiText invertHeadline = new GuiText("invertHeadline", textDrawer.createTextQuad("Invert mouse axis"), invertContainer, null, 25,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 0);
 		
-		GuiContainer invertHorContainer = new GuiContainer("invertHorContainer", invertContainer, null, standardQuad, wrapper.getGuiTexture("white"), 410, 30,
+		GuiContainer invertHorContainer = new GuiContainer("invertHorContainer", loader, invertContainer, null, wrapper.getGuiTexture("white"), 410, 30,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 5);
 		GuiText invertHorAxisText = new GuiText("invertHorAxisText", textDrawer.createTextQuad("Horizontal axis"), invertHorContainer, null, 22,
 				HorReference.PARENT, HorPositions.LEFT, 5, VerReference.SIBLING, VerPositions.TOP, 0);
-		GuiImage checkedHorImage = new GuiImage("checkedHorImage", invertHorContainer, null, standardQuad, wrapper.getGuiTexture(GuiUtils.getInvertCheckboxTexStr(Globals.invertHorizontalAxis)), 22, 22, 
+		GuiImage checkedHorImage = new GuiImage("checkedHorImage", loader, invertHorContainer, null, wrapper.getGuiTexture(GuiUtils.getInvertCheckboxTexStr(Globals.invertHorizontalAxis)), 22, 22, 
 				HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.TOP, 0, 0f, new Vector3f(0f, 0f, 0f), 1f);
 		invertHorCmd = new InvertHorCmd(checkedHorImage);
 		invertHorContainer.setCommand(invertHorCmd);
 		EventManager.getInstance().registerEventListener(invertHorContainer);
 		
-		GuiContainer invertVerContainer = new GuiContainer("invertVerContainer", invertContainer, null, standardQuad, wrapper.getGuiTexture("white"), 410, 30,
+		GuiContainer invertVerContainer = new GuiContainer("invertVerContainer", loader, invertContainer, null, wrapper.getGuiTexture("white"), 410, 30,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 5);
 		GuiText invertVerAxisText = new GuiText("invertVerAxisText", textDrawer.createTextQuad("Vertical axis"), invertVerContainer, null, 22,
 				HorReference.PARENT, HorPositions.LEFT, 5, VerReference.SIBLING, VerPositions.TOP, 0);
-		GuiImage checkedVerImage = new GuiImage("checkedVerImage", invertVerContainer, null, standardQuad, wrapper.getGuiTexture(GuiUtils.getInvertCheckboxTexStr(Globals.invertVerticalAxis)), 22, 22, 
+		GuiImage checkedVerImage = new GuiImage("checkedVerImage", loader, invertVerContainer, null, wrapper.getGuiTexture(GuiUtils.getInvertCheckboxTexStr(Globals.invertVerticalAxis)), 22, 22, 
 				HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.TOP, 0, 0f, new Vector3f(0f, 0f, 0f), 1f);
 		invertVerCmd = new InvertVerCmd(checkedVerImage);
 		invertVerContainer.setCommand(invertVerCmd);
 		EventManager.getInstance().registerEventListener(invertVerContainer);
 		
 		//change resolution
-		GuiContainer resContainer = new GuiContainer("resContainer", mainContainer, null, standardQuad, null, 300, 360,
+		GuiContainer resContainer = new GuiContainer("resContainer", loader, mainContainer, null, null, 300, 360,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 30);
 		GuiText resHeadline = new GuiText("resHeadline", textDrawer.createTextQuad("Change resolution"), resContainer, null, 25,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.TOP, 0);
 		
-		GuiContainer fullScreenContainer = new GuiContainer("fullScreenContainer", resContainer, null, standardQuad, wrapper.getGuiTexture("white"), 410, 30,
+		GuiContainer fullScreenContainer = new GuiContainer("fullScreenContainer", loader, resContainer, null, wrapper.getGuiTexture("white"), 410, 30,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 5);
 		GuiText fullScreenAxisText = new GuiText("fullScreenAxisText", textDrawer.createTextQuad("Fullscreen"), fullScreenContainer, null, 22,
 				HorReference.PARENT, HorPositions.LEFT, 5, VerReference.SIBLING, VerPositions.TOP, 0);
-		GuiImage checkedFullScreenImage = new GuiImage("checkedFullscreenImage", fullScreenContainer, null, standardQuad, wrapper.getGuiTexture(GuiUtils.getCheckboxTexStr(Globals.fullscreen)), 22, 22, 
+		GuiImage checkedFullScreenImage = new GuiImage("checkedFullscreenImage", loader, fullScreenContainer, null, wrapper.getGuiTexture(GuiUtils.getCheckboxTexStr(Globals.fullscreen)), 22, 22, 
 				HorReference.PARENT, HorPositions.RIGHT, 5, VerReference.PARENT, VerPositions.TOP, 0, 0f, new Vector3f(0f, 0f, 0f), 1f);
 		fullScreenCmd = new FullScreenCmd(checkedFullScreenImage);
 		fullScreenContainer.setCommand(fullScreenCmd);
 		EventManager.getInstance().registerEventListener(fullScreenContainer);
 	
-		GuiContainer resolutionsContainer = new GuiContainer("fullScreenContainer", resContainer, null, standardQuad, wrapper.getGuiTexture("white"), 410, 260,
+		GuiContainer resolutionsContainer = new GuiContainer("fullScreenContainer", loader, resContainer, null, wrapper.getGuiTexture("white"), 410, 260,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 5);
 		
 		LinkedList<DisplayMode> modes = new LinkedList<>();
@@ -172,7 +172,7 @@ public class OptionsDisplayState extends AbstractGuiState {
 		}
 				
 		//back button
-		GuiContainer backContainer = new GuiContainer("backButton", mainContainer, backCmd, standardQuad, wrapper.getGuiTexture("white"), 450, 35,
+		GuiContainer backContainer = new GuiContainer("backButton", loader, mainContainer, backCmd, wrapper.getGuiTexture("white"), 450, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 50);
 		GuiText backText = new GuiText("backText", textDrawer.createTextQuad("Back"), backContainer, null, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);

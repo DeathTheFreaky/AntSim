@@ -40,26 +40,26 @@ public class OptionsControlState extends AbstractGuiState {
 		backCmd = new BackCmd(state);
 		switchToDisplayCmd = new SwitchStateOptionsCmd(args[1], state, this);
 		
-		GuiContainer mainContainer = new GuiContainer("mainContainer", null, null, standardQuad, wrapper.getGuiTexture("white"),
+		GuiContainer mainContainer = new GuiContainer("mainContainer", loader, null, null, wrapper.getGuiTexture("white"),
 				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(1,1,1), 1);
 
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, wrapper.getGuiTexture("font"));
 		
 		//switch between display and control options
-		GuiContainer switchContainer = new GuiContainer("switchContainer", mainContainer, null, standardQuad,  wrapper.getGuiTexture("white"), 410, 39,
+		GuiContainer switchContainer = new GuiContainer("switchContainer", loader, mainContainer, null,  wrapper.getGuiTexture("white"), 410, 39,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 30, 0f, new Vector3f(1, 0, 0), 0.5f);
-		GuiContainer displaySwitchContainer = new GuiContainer("displaySwitchContainer", switchContainer, switchToDisplayCmd, standardQuad,  wrapper.getGuiTexture("white"), switchContainer.getWidth()/2, 
+		GuiContainer displaySwitchContainer = new GuiContainer("displaySwitchContainer", loader, switchContainer, switchToDisplayCmd,  wrapper.getGuiTexture("white"), switchContainer.getWidth()/2, 
 				switchContainer.getHeight(), HorReference.PARENT, HorPositions.LEFT, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 1), 0.5f);
 		GuiText displaySwitchText = new GuiText("displaySwitch", textDrawer.createTextQuad("Display"), displaySwitchContainer, null, 25,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
-		GuiContainer controlSwitchContainer = new GuiContainer("controlSwitchContainer", switchContainer, null, standardQuad,  wrapper.getGuiTexture("white"), switchContainer.getWidth()/2, 
+		GuiContainer controlSwitchContainer = new GuiContainer("controlSwitchContainer", loader, switchContainer, null,  wrapper.getGuiTexture("white"), switchContainer.getWidth()/2, 
 				switchContainer.getHeight(), HorReference.PARENT, HorPositions.RIGHT, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 1, 0), 0.5f);
 		GuiText controlSwitchText = new GuiText("controlSwitch", textDrawer.createTextQuad("Controls"), controlSwitchContainer, null, 25,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		EventManager.getInstance().registerEventListener(displaySwitchContainer);
 		
 		//keybindings
-		GuiContainer keysContainer = new GuiContainer("keysContainer", mainContainer, null, standardQuad,  wrapper.getGuiTexture("white"), 720, 455,
+		GuiContainer keysContainer = new GuiContainer("keysContainer", loader, mainContainer, null,  wrapper.getGuiTexture("white"), 720, 455,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 30, 0f, new Vector3f(1, 0, 0), 0.5f);
 		
 		List<KeyNameBindingWrapper> bindings = new LinkedList<>();
@@ -85,17 +85,17 @@ public class OptionsControlState extends AbstractGuiState {
 			
 			GuiContainer keyRowContainer;
 			if (idx == 0) {
-				keyRowContainer = new GuiContainer("keyRowContainer", mainContainer, null, standardQuad,  wrapper.getGuiTexture("white"), 720, 35,
+				keyRowContainer = new GuiContainer("keyRowContainer", loader, mainContainer, null,  wrapper.getGuiTexture("white"), 720, 35,
 						HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 0), 0.5f);
 			} else {
-				keyRowContainer = new GuiContainer("keyRowContainer", mainContainer, null, standardQuad,  wrapper.getGuiTexture("white"), 720, 35,
+				keyRowContainer = new GuiContainer("keyRowContainer", loader, mainContainer, null,  wrapper.getGuiTexture("white"), 720, 35,
 						HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0, 0f, new Vector3f(0, 0, 0), 0.5f);
 			}
-			GuiContainer keyLabelContainer = new GuiContainer("keyLabelContainer", keyRowContainer, switchToDisplayCmd, standardQuad,  wrapper.getGuiTexture("white"), keyRowContainer.getWidth()/2, 
+			GuiContainer keyLabelContainer = new GuiContainer("keyLabelContainer", loader, keyRowContainer, switchToDisplayCmd,  wrapper.getGuiTexture("white"), keyRowContainer.getWidth()/2, 
 					keyRowContainer.getHeight(), HorReference.PARENT, HorPositions.LEFT, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 1), 0.5f);
 			GuiText keyLabelText = new GuiText("keyLabelText" + keyWrapper.getLabel(), textDrawer.createTextQuad(keyWrapper.getLabel()), keyLabelContainer, null, textSize,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 5);
-			GuiContainer keyNameContainer = new GuiContainer("keyNameContainer", keyRowContainer, null, standardQuad,  wrapper.getGuiTexture("white"), keyRowContainer.getWidth()/2, 
+			GuiContainer keyNameContainer = new GuiContainer("keyNameContainer", loader, keyRowContainer, null,  wrapper.getGuiTexture("white"), keyRowContainer.getWidth()/2, 
 					keyRowContainer.getHeight(), HorReference.PARENT, HorPositions.RIGHT, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 1, 0), 0.5f);
 			GuiText keyNameValue = new GuiText("keyNameValue" + keyWrapper.getLabel(), textDrawer.createTextQuad(keyWrapper.getBindingName()), keyNameContainer, null, textSize,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
@@ -116,14 +116,14 @@ public class OptionsControlState extends AbstractGuiState {
 		errText.setTransparency(1f);
 		
 		//back button
-		GuiContainer backContainer = new GuiContainer("backButton", mainContainer, backCmd, standardQuad, wrapper.getGuiTexture("white"), 450, 35,
+		GuiContainer backContainer = new GuiContainer("backButton", loader, mainContainer, backCmd, wrapper.getGuiTexture("white"), 450, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
 		GuiText backText = new GuiText("backText", textDrawer.createTextQuad("Back"), backContainer, null, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
 		EventManager.getInstance().registerEventListener(backContainer);
 		
 		//listening for keybinding overlay
-		waitingForKeyContainer = new GuiContainer("waitingForKeyContainer", mainContainer, null, standardQuad,  wrapper.getGuiTexture("white"), 630, 200,
+		waitingForKeyContainer = new GuiContainer("waitingForKeyContainer", loader, mainContainer, null,  wrapper.getGuiTexture("white"), 630, 200,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(1, 0, 0), 0.5f);		
 		waitingForKeyText = new GuiText("waitingForKeyText", textDrawer.createTextQuad("Waiting for key input..."), waitingForKeyContainer, null, 25,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);

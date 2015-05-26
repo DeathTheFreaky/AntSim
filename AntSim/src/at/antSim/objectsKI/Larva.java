@@ -16,9 +16,9 @@ public class Larva implements Feedable{
 	public void decideTask(){
 		double rndFactor = Math.random();
 		if(rndFactor > 0.25){
-			Hive.ant.add(new Forager());
+			//Hive.ant.add(new Forager());
 		}else{
-			Hive.ant.add(new Worker());
+			//Hive.ant.add(new Worker());
 		}
 	}
 }

@@ -10,7 +10,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.entities.Camera;
-import at.antSim.graphics.entities.Entity;
+import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.RawModel;

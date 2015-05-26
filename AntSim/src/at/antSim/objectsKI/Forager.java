@@ -1,10 +1,14 @@
 package at.antSim.objectsKI;
 
+import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.objectsPhysic.basics.PhysicsObject;
+
 public class Forager extends Ant implements Runnable {
 	private int threshold;
 	private int foodtransport;
 	
-	public Forager(){
+	public Forager(GraphicsEntity graphicsEntity,PhysicsObject physicsObject) {
+		super(graphicsEntity, physicsObject);
 		setHp(100);
 		setAttack(20);
 		threshold = 2;

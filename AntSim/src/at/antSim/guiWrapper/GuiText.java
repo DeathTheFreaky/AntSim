@@ -11,7 +11,7 @@ import at.antSim.guiWrapper.commands.Command;
  *
  */
 public class GuiText extends GuiElement {
-	
+		
 	/**Constructs a new {@link GuiText}.
 	 * 
 	 * @param id - the {@link GuiElement}'s id as String

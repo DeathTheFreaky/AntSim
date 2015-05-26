@@ -53,7 +53,7 @@ public class DisplayManager {
 	 * 
 	 */
 	public static void updateDisplay(){
-		Display.sync((int) (Globals.FPS_CAP * speed)); //set frame cap for smooth rendering
+		Display.sync((int) (Globals.FPS_CAP)); //set frame cap for smooth rendering
 		Display.update();
 		long currentFrameTime = getCurrentTime();
 		delta = (currentFrameTime - lastFrameTime)/1000f; //delta in seconds

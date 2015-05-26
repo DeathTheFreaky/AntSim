@@ -82,7 +82,7 @@ public class GuiRenderer {
 	 * @param element
 	 */
 	private void drawGuiElement (GuiElement element) {
-		if (element.getTextureId() >= 0) {
+		if (element.getTextureId() >= 0 && !element.isDisabled()) {
 						
 			//bind the gui element's VAO (set it as "active"), enable the gui element's positions VBO, bind and activate the cube map's textures
 			GL30.glBindVertexArray(element.getRawModel().getVaoID());

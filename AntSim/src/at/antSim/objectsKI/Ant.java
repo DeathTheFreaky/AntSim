@@ -1,9 +1,12 @@
-  package at.antSim.objectsKI;
+package at.antSim.objectsKI;
 
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
-
+import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.objectsPhysic.DynamicPhysicsObject;
+import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.basics.PhysicsObject;
 
 /**
  * 
@@ -22,7 +25,7 @@ import at.antSim.eventSystem.events.CollisionEvent;
  * @author Martin
  *
  */
-public class Ant {
+public class Ant extends Entity{
 	// search 1, food 2, war 3, nothing 0
 	private int odorStatus = 0;
 	private int hp;
@@ -34,6 +37,23 @@ public class Ant {
 	//wahrscheinlich eigene Jobklasse => fuer im Bautätige
 	// und Worker/Forager
 	private String job;
+	
+	public Ant(GraphicsEntity graphicsEntity,
+			PhysicsObject physicsObject) {
+		super(graphicsEntity, physicsObject, ObjectType.ANT);
+	}
+
+	@Override
+	public void react(StaticPhysicsObject staticPhysicsObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	public void move(){
 		//check Odor stacks
@@ -103,3 +123,4 @@ public class Ant {
 	}
 	
 }
+

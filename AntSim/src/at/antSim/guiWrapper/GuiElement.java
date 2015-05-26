@@ -3,6 +3,7 @@ package at.antSim.guiWrapper;
 import org.lwjgl.util.Point;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.opengl.Texture;
 
 import at.antSim.Globals;
 import at.antSim.eventSystem.Event;
@@ -10,6 +11,8 @@ import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
+import at.antSim.graphics.graphicsUtils.GuiQuadCreator;
+import at.antSim.graphics.graphicsUtils.Loader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.guiWrapper.commands.Command;
 
@@ -20,7 +23,7 @@ import at.antSim.guiWrapper.commands.Command;
  */
 public abstract class GuiElement {
 
-	private RawModel model; //holds geometry data
+	RawModel model; //holds geometry data
 	private Vector2f position; //need to store center position of the gui quad since gui Texture has no underlying ModelData storing positional data
 	private Vector2f scale;
 	private String id;
@@ -40,8 +43,8 @@ public abstract class GuiElement {
 	private VerReference verRef;
 	private VerPositions verPos;
 	private int verOffset;
-	private int textureWidth;
-	private int textureHeight;
+	int textureWidth;
+	int textureHeight;
 	
 	//transparency
 	private float transparency; //0: will be non-transparent, opaque; 1: will be fully transparent
@@ -52,6 +55,35 @@ public abstract class GuiElement {
 	
 	//associate gui state
 	private GuiState state;
+	
+	//disabling gui element will prevent it from drawing and disable it for events
+	private boolean disabled = false;
+	
+	/**Constructs a new {@link GuiElement}.
+	 * 
+	 * @param id - the {@link GuiElement}'s id as String
+	 * @param loader - the {@link Loader} used for loading texture coords and positions into a vao
+	 * @param parent - the {@link GuiElement}'s parenting {@link GuiContainer}
+	 * @param command - a {@link Command} to be executed when the mouse is released on this {@link GuiElement}
+	 * @param texture - a {@link Texture}
+	 * @param desiredWidth - desired width of the Gui element in pixels
+	 * @param desiredHeight - desired height of the Gui element in pixels
+	 * @param horRef - {@link HorReference} of the {@link GuiElement}
+	 * @param horPos - {@link HorPosition} of the {@link GuiElement}
+	 * @param horOffset - horizontal offset in pixels
+	 * @param verRef - {@link VerReference} of the {@link GuiElement}
+	 * @param verPos - {@link VerPosition} of the {@link GuiElement}
+	 * @param verOffset - vertical offset in pixels
+	 * @param transparency - 0: opaque, 1: fully transparent
+	 * @param blendColor - color to blend with the {@link GuiElement}'s texture
+	 * @param blendFactor - 0: draw 100% original texture, 1: fully blend texture with blendColor
+	 */
+	public GuiElement(String id, Loader loader, GuiContainer parent, Command command, Texture texture, int desiredWidth, int desiredHeight, 
+			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
+				
+		this(id, parent, command, GuiQuadCreator.createGuiQuad(texture, loader), (texture != null) ? texture.getTextureID() : -1, (texture != null) ? texture.getTextureWidth() : 0, 
+				(texture != null) ? texture.getTextureHeight() : 0, desiredWidth, desiredHeight, horRef, horPos, horOffset, verRef, verPos, verOffset, transparency, blendColor, blendFactor);
+	}
 	
 	/**Constructs a new {@link GuiElement}.
 	 * 
@@ -76,7 +108,7 @@ public abstract class GuiElement {
 	 */
 	public GuiElement(String id, GuiContainer parent, Command command, RawModel model, int textureId, int textureWidth, int textureHeight, int desiredWidth, int desiredHeight, 
 			HorReference horRef, HorPositions horPos, int horOffset, VerReference verRef, VerPositions verPos, int verOffset, float transparency, Vector3f blendColor, float blendFactor) {
-				
+		
 		this.width = desiredWidth;
 		this.height = desiredHeight;
 		this.model = model;
@@ -286,9 +318,36 @@ public abstract class GuiElement {
 	
 	@EventListener
 	public void onMouseReleased(MouseButtonReleasedEvent event){
-		if (isInsideElement(event)) {
+		if (isInsideElement(event) && !disabled) {
 			command.execute();
 			event.consume();
 		}
+	}
+	
+	/**
+	 * @param disabled - true to disable GuiElement to prevent it from rendering and receiving events
+	 */
+	public void setDisabled(boolean disabled) {
+		setDisabledOnAllChildren(disabled, this);
+	}
+
+	/**Sets disabled state for all children of a GuiElement, if it is a GuiContainer and does have children.
+	 * @param disabled
+	 * @param elem
+	 */
+	private void setDisabledOnAllChildren(boolean disabled, GuiElement elem) {
+		if (elem instanceof GuiContainer) {
+			for (GuiElement child : ((GuiContainer) elem).getAllChildren()) {
+				child.setDisabledOnAllChildren(disabled, child);
+			}
+		}
+		this.disabled = disabled;
+	}
+
+	/**
+	 * @return - true if gui element is disabled
+	 */
+	public boolean isDisabled() {
+		return disabled;
 	}
 }

@@ -18,6 +18,6 @@ public class InvertHorCmd implements Command {
 	public void execute() {
 		Globals.invertHorizontalAxis = Globals.invertHorizontalAxis * -1;
 		ConfigWriter.writeConfig();
-		img.setTextureId(GuiWrapper.getInstance().getGuiTexture(GuiUtils.getInvertCheckboxTexStr(Globals.invertHorizontalAxis)).getTextureId());
+		img.setTextureId(GuiWrapper.getInstance().getGuiTexture(GuiUtils.getInvertCheckboxTexStr(Globals.invertHorizontalAxis)).getTextureID());
 	}
 }

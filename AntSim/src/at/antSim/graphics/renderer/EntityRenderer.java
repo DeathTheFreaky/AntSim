@@ -3,6 +3,8 @@ package at.antSim.graphics.renderer;
 import java.util.List;
 import java.util.Map;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
@@ -11,13 +13,15 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.graphics.entities.Camera;
-import at.antSim.graphics.entities.Entity;
+import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.shaders.EntityShader;
 import at.antSim.graphics.textures.ModelTexture;
+import at.antSim.objectsKI.Entity;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 /**EntityRenderer renders static models.
  * 
@@ -50,7 +54,7 @@ public class EntityRenderer {
 	 * @param lights - a list of lightsources
 	 * @param camera - for creating a viewMatrix
 	 */
-	public void render(Map<TexturedModel, List<Entity>> entities, float blendFactor, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
+	public void render(float blendFactor, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
 		
 		shader.start(); 
 		
@@ -60,7 +64,7 @@ public class EntityRenderer {
 		shader.loadViewMatrix(camera);
 		shader.loadBlendFactor(blendFactor);
 		
-		for (TexturedModel model : entities.keySet()) {
+		for (TexturedModel model : Entity.getUnmodifiableRenderingMap().keySet()) {
 			
 			/*Once for each unique model: load model's texture (by binding it to texture bank) and positions, normals, texture coordinates (as VBOs inside VAO) into OpenGL 
 			* and load other model attributes as uniform variables into shader program */
@@ -69,7 +73,7 @@ public class EntityRenderer {
 			/* For every instance of a unique model: prepare the instance by loading its transformation matrix and its texture atlas offset (if needed)
 			 * and draw the model.
 			 */
-			List<Entity> batch = entities.get(model);
+			List<Entity> batch = Entity.getUnmodifiableRenderingMap().get(model);
 			for(Entity entity:batch) {
 				prepareInstance(entity); //load transformation matrix and texture atlas offset
 				
@@ -133,9 +137,11 @@ public class EntityRenderer {
 	 * @param entity - the {@link Entity} to be rendered
 	 */
 	private void prepareInstance(Entity entity) {
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), 
-				entity.getRotX(), entity.getRotY(), entity.getRotZ(), entity.getScale()); //transformation matrix to be applied in the shader program
+		ReadOnlyPhysicsObject physicsObject = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
+		Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.convertVector3f(physicsObject.getPosition()), 
+				physicsObject.getRotationAngles().x, physicsObject.getRotationAngles().y, physicsObject.getRotationAngles().z, 
+				entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
 		shader.loadTransformationMatrix(transformationMatrix); //load transformation matrix into the shader program
-		shader.loadOffset(entity.getTextureXOffset(), entity.getTextureYOffset()); //offsets could be different for each entity
+		shader.loadOffset(entity.getGraphicsEntity().getTextureXOffset(), entity.getGraphicsEntity().getTextureYOffset()); //offsets could be different for each entity
 	}
 }

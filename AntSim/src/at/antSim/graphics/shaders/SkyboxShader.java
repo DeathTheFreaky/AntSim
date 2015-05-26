@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.Globals;
+import at.antSim.MainApplication;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.Maths;
@@ -19,7 +20,7 @@ public class SkyboxShader extends ShaderProgram{
     private static final String VERTEX_FILE = Globals.SHADERS + "skyboxVertexShader.vsh";
     private static final String FRAGMENT_FILE = Globals.SHADERS + "skyboxFragmentShader.fsh";
      
-    private static final float ROTATE_SPEED = 1f; //rotation speed of skybox to simulate cloud movement
+    private static final float ROTATE_SPEED = Globals.TIMECYCLE_MULTIPLIER; //rotation speed of skybox to simulate cloud movement
     
     private int location_projectionMatrix;
     private int location_viewMatrix;
@@ -79,7 +80,11 @@ public class SkyboxShader extends ShaderProgram{
 		viewMatrix.m30 = 0;
 		viewMatrix.m31 = 0;
 		viewMatrix.m32 = 0;
-		rotation += ROTATE_SPEED * DisplayManager.getFrameTimeSeconds();
+		if (MainApplication.getInstance().isPaused()) {
+			rotation += 0;
+		} else {
+			rotation += ROTATE_SPEED*MainApplication.getInstance().getSpeed() * DisplayManager.getFrameTimeSeconds();
+		}
 		
 		//in addition to the camera's view matrix' rotation, further rotate the skybox to simulate cloud movement
 		Matrix4f.rotate((float) Math.toRadians(rotation), new Vector3f(0, 1, 0),  viewMatrix,  viewMatrix);

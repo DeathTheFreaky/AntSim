@@ -1,10 +1,14 @@
 package at.antSim.objectsKI;
 
+import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.objectsPhysic.basics.PhysicsObject;
+
 public class Worker extends Ant implements Runnable {
 
 	private int threshold;
 	
-	public Worker(){
+	public Worker(GraphicsEntity graphicsEntity,PhysicsObject physicsObject) {
+		super(graphicsEntity, physicsObject);
 		setHp(90);
 		setAttack(10);
 		threshold = 2;

@@ -1,15 +1,14 @@
 package at.antSim.graphics.shaders;
 
-import java.util.List;
-
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-
 import at.antSim.Globals;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.Maths;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.List;
 
 /**StaticShader is used for the rendering of all static models.<br>
  * 

@@ -12,14 +12,14 @@ public class Hive {
 	
 	public Hive(){
 		foodStacks = 20;
-		queen = new Queen();
+		//queen = new Queen();
 		fa.add(queen);
 	}
 	
 	//Startbedingungen aendern
 	public Hive(int food){
 		foodStacks = food;
-		queen = new Queen();
+		//queen = new Queen();
 	}
 	
 	public void addEgg(Egg e){
