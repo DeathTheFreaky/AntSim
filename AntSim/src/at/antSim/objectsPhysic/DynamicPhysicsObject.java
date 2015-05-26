@@ -1,6 +1,7 @@
 package at.antSim.objectsPhysic;
 
 import at.antSim.objectsKI.Entity;
+import com.bulletphysics.collision.dispatch.CollisionFlags;
 import com.bulletphysics.dynamics.RigidBody;
 
 /**
@@ -14,10 +15,11 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 
 	public DynamicPhysicsObject(RigidBody body) {
 		this.body = body;
+		this.body.setCollisionFlags(this.body.getCollisionFlags() | CollisionFlags.KINEMATIC_OBJECT);
 	}
 
 	@Override
-	public RigidBody getRigidBody() {
+	public RigidBody getCollisionBody() {
 		return body;
 	}
 

@@ -2,7 +2,6 @@ package at.antSim.objectsPhysic;
 
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
-
 import com.bulletphysics.linearmath.Transform;
 
 import javax.vecmath.Matrix4f;
@@ -19,13 +18,14 @@ public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOn
 	@Override
 	public Vector3f getPosition() {
 		Vector3f out = new Vector3f();
-		Transform transform = new Transform();
-		getRigidBody().getMotionState().getWorldTransform(transform);
-		Matrix4f transformMatrix = new Matrix4f();
-		transform.getMatrix(transformMatrix);
-		out.x = transformMatrix.m03/transformMatrix.m33;
-		out.y = transformMatrix.m13/transformMatrix.m33;
-		out.z = transformMatrix.m23/transformMatrix.m33;
+		getCollisionBody().getWorldTransform(new Transform(new Matrix4f(new Quat4f(), out, 1)));
+		//Transform transform = new Transform();
+		//getRigidBody().getMotionState().getWorldTransform(transform);
+		//Matrix4f transformMatrix = new Matrix4f();
+		//transform.getMatrix(transformMatrix);
+		//out.x = transformMatrix.m03/transformMatrix.m33;
+		//out.y = transformMatrix.m13/transformMatrix.m33;
+		//out.z = transformMatrix.m23/transformMatrix.m33;
 		//getRigidBody().getMotionState().getWorldTransform(new Transform(new Matrix4f(new Quat4f(), out, 1))); //does not work
 		return out;
 	}
@@ -33,7 +33,6 @@ public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOn
 	@Override
 	public Vector3f getLinearVelocity() {
 		Vector3f out = new Vector3f();
-		getRigidBody().getLinearVelocity(out);
 		return out;
 	}
 
@@ -41,9 +40,9 @@ public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOn
 	public Quat4f getRotationQuaternions() {
 		Quat4f out = new Quat4f();
 		Transform transform = new Transform();
-		getRigidBody().getMotionState().getWorldTransform(transform);
+		getCollisionBody().getWorldTransform(transform);
 		transform.getRotation(out);
-//		getRigidBody().getMotionState().getWorldTransform(new Transform(new Matrix4f(out, new Vector3f(), 1))); //does not work
+//		//getRigidBody().getMotionState().getWorldTransform(new Transform(new Matrix4f(out, new Vector3f(), 1))); //does not work
 		return out;
 	}
 	
@@ -62,7 +61,6 @@ public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOn
 	@Override
 	public Vector3f getAngularVelocity() {
 		Vector3f out = new Vector3f();
-		getRigidBody().getAngularVelocity(out);
 		return out;
 	}
 }

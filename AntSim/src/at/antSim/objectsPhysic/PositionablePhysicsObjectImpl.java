@@ -23,10 +23,10 @@ public abstract class PositionablePhysicsObjectImpl extends ReadOnlyPhysicsObjec
 	@Override
 	public void setPosition(Vector3f position) {
 		Transform bodyTransform = new Transform();
-		getRigidBody().getMotionState().getWorldTransform(bodyTransform);
+		getCollisionBody().getWorldTransform(bodyTransform);
 		Quat4f bodyRotation = new Quat4f();
 		bodyTransform.getRotation(bodyRotation);
-		getRigidBody().getMotionState().setWorldTransform(new Transform(new Matrix4f(bodyRotation, position, 1)));
+		getCollisionBody().setWorldTransform(new Transform(new Matrix4f(bodyRotation, position, 1)));
 	}
 
 	@Override
@@ -34,8 +34,8 @@ public abstract class PositionablePhysicsObjectImpl extends ReadOnlyPhysicsObjec
 		Quat4f rotation = new Quat4f();
 		QuaternionUtil.setEuler(rotation, yaw, pitch, roll);
 		Transform bodyTransform = new Transform();
-		getRigidBody().getMotionState().getWorldTransform(bodyTransform);
+		getCollisionBody().getWorldTransform(bodyTransform);
 		bodyTransform.setRotation(rotation);
-		getRigidBody().getMotionState().setWorldTransform(bodyTransform);
+		getCollisionBody().setWorldTransform(bodyTransform);
 	}
 }
