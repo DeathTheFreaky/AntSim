@@ -1,9 +1,7 @@
 package at.antSim.objectsKI;
 
-import javax.vecmath.Vector3f;
-
-import at.antSim.Globals;
 import at.antSim.eventSystem.EventListener;
+import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
@@ -46,14 +44,7 @@ public class Ant extends Entity{
 			PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
 		this.physicsObject = (DynamicPhysicsObject)physicsObject;
-		this.physicsObject.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 30, -Globals.WORLD_SIZE/2));
-		System.out.println(this.physicsObject.getLinearVelocity());
-		System.out.println(this.physicsObject.getPosition());
-		this.physicsObject.getCollisionBody().applyForce(new Vector3f(10,0,0), new Vector3f(10,0,0));
-		Vector3f v = new Vector3f(100,100,100);
-		this.physicsObject.setLinearVelocity(v);
-		System.out.println(this.physicsObject.getPosition());
-		System.out.println(this.physicsObject.getLinearVelocity());
+		EventManager.getInstance().registerEventListener(this);
 	}
 
 	@Override
@@ -64,7 +55,7 @@ public class Ant extends Entity{
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
-			
+		System.out.println("dynamisch");
 	}
 	@Override
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
@@ -90,8 +81,16 @@ public class Ant extends Entity{
 	}
 	
 	@EventListener (priority = EventPriority.NORMAL)
-	public void decideEvent(CollisionEvent ce){
-		
+	public void decideEvent(CollisionEvent ce) {
+		System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
+				"\nPhyObj1: " + ce.getPhyObj1() + "\nPhyObj2: " + ce.getPhyObj2());
+		if (ce.getPhyObj1().equals(physicsObject)) {
+			ce.getPhyObj2().receive(this);
+			ce.consume();
+		}else if (ce.getPhyObj2().equals(physicsObject)) {
+			ce.getPhyObj1().receive(this);
+			ce.consume();
+		}
 	}
 	
 	

@@ -105,10 +105,18 @@ public class WorldLoader {
 				.buildGraphicsEntity(ModelLoader.texturedModels.get("lamp"), 1, 20)
 				.buildPhysicsObject()
 				.getResult();
+
+		Entity fernTest = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 5, -7, -Globals.WORLD_SIZE/2))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("fern"), 1, 20)
+				.buildPhysicsObject()
+				.getResult();
+		PhysicsManager.getInstance().registerPhysicsObject(fernTest.getPhysicsObject());
 		
 		//add cool stanford demo dragon for specular lighting demo
 		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 30, -Globals.WORLD_SIZE/2))
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
 				.setRotation(90, 45, 90)
 				.buildGraphicsEntity(ModelLoader.texturedModels.get("dragon"), 1, 25)
 				.buildPhysicsObject()
