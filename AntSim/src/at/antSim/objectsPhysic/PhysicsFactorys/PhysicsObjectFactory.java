@@ -2,6 +2,7 @@ package at.antSim.objectsPhysic.PhysicsFactorys;
 
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.linearmath.QuaternionUtil;
 import com.bulletphysics.linearmath.Transform;
 
@@ -113,6 +114,25 @@ public interface PhysicsObjectFactory<E extends PhysicsObject> {
 	 * @throws UnsupportedOperationException
 	 */
 	E createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException;
+
+	/**
+	 * Creates and PhysicsObject representing a Exact Object with mass at (0,0,0).
+	 *
+	 * @param mass Mass of the Object
+	 * @param mesh Shape of the Object as {@link IndexedMesh}
+	 * @return
+	 */
+	E createExactObject(float mass, IndexedMesh mesh);
+
+	/**
+	 * Creates an PhysicsObject representing a Exact Object with mass.
+	 *
+	 * @param mass     Mass of the Object
+	 * @param mesh     Shape of the Object as {@link IndexedMesh}
+	 * @param position Position of the Object
+	 * @return
+	 */
+	E createExactObject(float mass, IndexedMesh mesh, Transform position);
 
 	/**
 	 * Converts the passed parameters to a {@link Transform}-Object which can be used to create PhysicsObjects at a set start location.

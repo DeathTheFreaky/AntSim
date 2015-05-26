@@ -1,6 +1,3 @@
-/**
- * 
- */
 package at.antSim.eventSystem.events;
 
 import at.antSim.eventSystem.AbstractEvent;
@@ -19,31 +16,20 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
  *
  */
 public class CollisionEvent extends AbstractEvent {
-	
-	private PhysicsObject po1;
-	private PhysicsObject po2;
 
-	public CollisionEvent(PhysicsObject po1, PhysicsObject po2){
-		this.po1 = po1;
-		this.po2 = po2;
+	private final PhysicsObject phyObj1;
+	private final PhysicsObject phyObj2;
+
+	public CollisionEvent(PhysicsObject phyObj1, PhysicsObject phyObj2) {
+		this.phyObj1 = phyObj1;
+		this.phyObj2 = phyObj2;
 	}
 
-	
-	
-	public PhysicsObject getPo1() {
-		return po1;
+	public PhysicsObject getPhyObj1() {
+		return phyObj1;
 	}
 
-	public void setPo1(PhysicsObject po1) {
-		this.po1 = po1;
+	public PhysicsObject getPhyObj2() {
+		return phyObj2;
 	}
-
-	public PhysicsObject getPo2() {
-		return po2;
-	}
-
-	public void setPo2(PhysicsObject po2) {
-		this.po2 = po2;
-	}
-	
 }

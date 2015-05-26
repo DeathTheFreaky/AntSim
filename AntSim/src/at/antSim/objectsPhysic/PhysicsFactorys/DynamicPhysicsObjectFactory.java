@@ -2,7 +2,9 @@ package at.antSim.objectsPhysic.PhysicsFactorys;
 
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.linearmath.Transform;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Created on 12.05.2015.
@@ -68,6 +70,16 @@ public class DynamicPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Dy
 	@Override
 	public DynamicPhysicsObject createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException {
 		return new DynamicPhysicsObject(createConeRigid(mass, height, radius, orientation, position));
+	}
+
+	@Override
+	public DynamicPhysicsObject createExactObject(float mass, IndexedMesh mesh) {
+		return createExactObject(mass, mesh, new Transform());
+	}
+
+	@Override
+	public DynamicPhysicsObject createExactObject(float mass, IndexedMesh mesh, Transform position) {
+		throw new NotImplementedException();
 	}
 
 	public static DynamicPhysicsObjectFactory getInstance() {

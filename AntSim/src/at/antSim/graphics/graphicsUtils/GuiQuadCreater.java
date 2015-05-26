@@ -4,11 +4,11 @@ import org.newdawn.slick.opengl.Texture;
 
 import at.antSim.graphics.models.RawModel;
 
-public class GuiQuadCreator {
+public class GuiQuadCreater {
 	
 	static float[] positions = { -1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1 }; //gui quad positions for images
 	
-	public static RawModel createGuiQuad(Texture texture, Loader loader) {
+	public static RawModel createGuiQuad(Texture texture, OpenGLLoader loader) {
 		
 		float[] textureCoords = new float[12]; //gui texture coords for images
 		
