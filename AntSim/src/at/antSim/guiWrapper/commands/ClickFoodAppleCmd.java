@@ -1,7 +1,7 @@
 package at.antSim.guiWrapper.commands;
 
 import at.antSim.MainApplication;
-import at.antSim.WorldLoader;
+import at.antSim.graphics.graphicsUtils.WorldLoader;
 
 /**
  * Created by Alexander on 19.05.2015.

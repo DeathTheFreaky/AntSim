@@ -1,6 +1,6 @@
 package at.antSim.GTPMapper;
 
-import at.antSim.EntityBuilder;
+import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
 import com.bulletphysics.linearmath.Transform;

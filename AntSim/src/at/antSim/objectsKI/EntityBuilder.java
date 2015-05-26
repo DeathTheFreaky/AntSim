@@ -1,4 +1,4 @@
-package at.antSim;
+package at.antSim.objectsKI;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -7,7 +7,6 @@ import at.antSim.GTPMapper.GTPCuboid;
 import at.antSim.GTPMapper.GTPCylinder;
 import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.graphics.models.TexturedModel;
-import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
