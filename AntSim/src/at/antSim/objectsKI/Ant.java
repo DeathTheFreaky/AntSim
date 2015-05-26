@@ -1,5 +1,8 @@
 package at.antSim.objectsKI;
 
+import javax.vecmath.Vector3f;
+
+import at.antSim.Globals;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
@@ -33,7 +36,7 @@ public class Ant extends Entity{
 	private int attack;
 	//saturate?
 	private int hunger;
-	
+	private DynamicPhysicsObject physicsObject = null;
 	
 	//wahrscheinlich eigene Jobklasse => fuer im Bautätige
 	// und Worker/Forager
@@ -42,18 +45,26 @@ public class Ant extends Entity{
 	public Ant(GraphicsEntity graphicsEntity,
 			PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
+		this.physicsObject = (DynamicPhysicsObject)physicsObject;
+		this.physicsObject.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 30, -Globals.WORLD_SIZE/2));
+		System.out.println(this.physicsObject.getLinearVelocity());
+		System.out.println(this.physicsObject.getPosition());
+		this.physicsObject.getCollisionBody().applyForce(new Vector3f(10,0,0), new Vector3f(10,0,0));
+		Vector3f v = new Vector3f(100,100,100);
+		this.physicsObject.setLinearVelocity(v);
+		System.out.println(this.physicsObject.getPosition());
+		System.out.println(this.physicsObject.getLinearVelocity());
 	}
 
 	@Override
 	public void react(StaticPhysicsObject staticPhysicsObject) {
-		// TODO Auto-generated method stub
+		System.out.println(" wow wow chill it is a tree");
 		
 	}
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
-		// TODO Auto-generated method stub
-		
+			
 	}
 	@Override
 	public void react(GhostPhysicsObject ghostPhysicsObject) {

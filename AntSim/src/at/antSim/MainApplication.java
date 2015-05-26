@@ -26,6 +26,7 @@ import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;
+import at.antSim.objectsPhysic.PhysicsManager;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -247,6 +248,7 @@ public class MainApplication {
 		//game logic
 		if (!paused && worldLoaded) {
 //			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
+			PhysicsManager.getInstance().performCollisionDetection();
 			statsCtrTest++;
 		}		
 	}

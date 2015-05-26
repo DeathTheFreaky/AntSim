@@ -9,6 +9,7 @@ import at.antSim.graphics.textures.TerrainTexturePack;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
+import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 
@@ -25,8 +26,6 @@ import java.util.Random;
 public class WorldLoader {
 	
 	private static EntityBuilder builder = new EntityBuilderImpl();
-	private static StaticPhysicsObjectFactory staticFactory = StaticPhysicsObjectFactory.getInstance();
-	private static DynamicPhysicsObjectFactory dynamicFactory = DynamicPhysicsObjectFactory.getInstance();
 	
 	/**Loads the world's terrain.
 	 * 
@@ -115,6 +114,7 @@ public class WorldLoader {
 				.buildGraphicsEntity(ModelLoader.texturedModels.get("dragon"), 1, 25)
 				.buildPhysicsObject()
 				.getResult();
+		PhysicsManager.getInstance().registerPhysicsObject(dragon.getPhysicsObject());
 	}
 	
 	/**Loads the world's light sources.
