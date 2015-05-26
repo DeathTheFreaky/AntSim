@@ -1,5 +1,6 @@
 package at.antSim.GTPMapper;
 
+import at.antSim.EntityBuilder;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
@@ -20,5 +21,10 @@ public class GTPSphere extends GTPObject {
 
 	public float getRadious() {
 		return radious;
+	}
+
+	@Override
+	public void createPrimitive(EntityBuilder builder) {
+		builder.createSphere(this);
 	}
 }

@@ -26,42 +26,6 @@ import javax.vecmath.Vector3f;
  */
 public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> implements PhysicsObjectFactory<E> {
 	
-	/**Creates a new StaticPhysicsObject. 
-	 * 
-	 * @param gtpObject
-	 * @param mass
-	 * @return - a {@link StaticPhysicsObject}
-	 */
-	public E createPrimitive(GTPObject gtpObject, float mass) {
-		Matrix4f matrix = new Matrix4f();
-		matrix.setIdentity();
-		return createPrimitive(gtpObject, mass, new Transform(matrix));
-	}
-	
-	/**Creates a new StaticPhysicsObject. 
-	 * 
-	 * @param gtpObject
-	 * @param mass
-	 * @param position - the object's initial position and rotation in the world 
-	 * @return - a {@link StaticPhysicsObject}
-	 */
-	public E createPrimitive(GTPObject gtpObject, float mass, Transform transform) {
-		if (gtpObject instanceof GTPCone) {
-			GTPCone cone = (GTPCone) gtpObject;
-			return createCone(mass, cone.getHeight(), cone.getRadius(), cone.getOrienation(), transform);
-		} else if (gtpObject instanceof GTPCuboid) {
-			GTPCuboid cuboid = (GTPCuboid) gtpObject;
-			return createCuboid(mass, cuboid.getxLength(), cuboid.getyLength(), cuboid.getzLength(), transform);
-		} else if (gtpObject instanceof GTPCylinder) {
-			GTPCylinder cylinder = (GTPCylinder) gtpObject;
-			return createCylinder(mass, cylinder.getHeight(), cylinder.getRadius(), cylinder.getOrientation(), transform);
-		} else if (gtpObject instanceof GTPSphere) {
-			GTPSphere sphere = (GTPSphere) gtpObject;
-			return createSphere(mass, sphere.getRadious(), transform);
-		}
-		return null;
-	}
-
 	RigidBody createSphereRigid(float mass, float radius, Transform position) {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = createSphereShape(radius);

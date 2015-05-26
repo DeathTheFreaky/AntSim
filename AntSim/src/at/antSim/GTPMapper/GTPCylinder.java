@@ -1,5 +1,6 @@
 package at.antSim.GTPMapper;
 
+import at.antSim.EntityBuilder;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
@@ -61,5 +62,10 @@ public class GTPCylinder extends GTPObject {
 
 	public PhysicsObjectOrientation getOrientation() {
 		return orientation;
+	}
+
+	@Override
+	public void createPrimitive(EntityBuilder builder) {
+		builder.createCylinder(this);
 	}
 }

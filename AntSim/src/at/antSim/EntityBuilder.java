@@ -1,58 +1,78 @@
 package at.antSim;
 
-import at.antSim.GTPMapper.GTPMapper;
-import at.antSim.GTPMapper.GTPObject;
-import at.antSim.graphics.entities.GraphicsEntity;
-import at.antSim.graphics.graphicsUtils.Maths;
-import at.antSim.graphics.graphicsUtils.ModelLoader;
-import at.antSim.objectsKI.Ant;
-import at.antSim.objectsKI.Enemy;
+import org.lwjgl.util.vector.Vector3f;
+
+import at.antSim.GTPMapper.GTPCone;
+import at.antSim.GTPMapper.GTPCuboid;
+import at.antSim.GTPMapper.GTPCylinder;
+import at.antSim.GTPMapper.GTPSphere;
+import at.antSim.graphics.models.TexturedModel;
 import at.antSim.objectsKI.Entity;
-import at.antSim.objectsKI.EnvironmentObject;
-import at.antSim.objectsKI.Food;
-import at.antSim.objectsKI.Pheronome;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
-import com.bulletphysics.linearmath.Transform;
-
+/**Provides methods for creating a new {@link Entity}.
+ * 
+ * @author Flo
+ *
+ */
 public interface EntityBuilder {
 	
+	/**Builds the {@link GraphicsEntity} for the {@link Entity}.
+	 * 
+	 * @param texturedModel
+	 * @param textureIndex
+	 * @param scale
+	 */
+	public EntityBuilder buildGraphicsEntity(TexturedModel texturedModel, int textureIndex, float scale);
 	
-//
-//	Entity entity;
-//	PhysicsObject physicsObject = null;
-//	GraphicsEntity graphicsEntity = new GraphicsEntity(ModelLoader.texturedModels.get(modelId), textureIndex, scale);
-//	GTPObject gtpObject = GTPMapper.getObject(graphicsEntity, scale, graphicsEntity.getModel().getPrimitiveType());
-//	
-//	PhysicsObjectFactory factory;
-//	
-//	if (mass < 0) {
-//		mass = graphicsEntity.getModel().getMass();
-//	} else if (mass == 0) { //do all objects need mass? if no, delete this
-//		mass = ModelLoader.massDummie;
-//	}
-//	
-//	switch(factoryType) {
-//	case STATIC:
-//		factory = staticFactory;
-//		physicsObject = staticFactory.createPrimitive(gtpObject, mass, new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
-//		break;
-//	case DYNAMIC:
-//		physicsObject = dynamicFactory.createPrimitive(gtpObject, mass, new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
-//		break;
-//	}
-//	
-//	switch (graphicsEntity.getModel().getObjectType()) {
-//	case ANT:
-//		return new Ant(graphicsEntity, physicsObject);
-//	case ENEMY:
-//		return new Enemy(graphicsEntity, physicsObject);
-//	case ENVIRONMENT:
-//		return new EnvironmentObject(graphicsEntity, physicsObject);
-//	case FOOD:
-//		return new Food(graphicsEntity, physicsObject);
-//	case PHEROMONE:
-//		return new Pheronome(graphicsEntity, physicsObject);
-//	}
+	/**Builds the {@link PhysicsObject} for the {@link Entity}.
+	 * 
+	 * @param mass
+	 * @param position
+	 * @param rx
+	 * @param ry
+	 * @param rz
+	 */
+	public EntityBuilder buildPhysicsObject();
+	
+	/**Sets the {@link PhysicsObjectFactory} to be used for building the {@link Entity}.
+	 * 
+	 * @param factory
+	 */
+	public EntityBuilder setFactory(PhysicsObjectFactory factory);
+	
+	/**Sets the {@link Entity}'s mass.<br>
+	 * If not set, the default model's mass will be used.
+	 * 
+	 * @param mass
+	 */
+	public EntityBuilder setMass(float mass);
+	
+	/**Sets the {@link Entity}'s position.
+	 * 
+	 * @param position
+	 */
+	public EntityBuilder setPosition(Vector3f position);
+	
+	/**Sets the {@link Entity}'s rotation.
+	 * 
+	 * @param rx
+	 * @param ry
+	 * @param rz
+	 */
+	public EntityBuilder setRotation(float rx, float ry, float rz);
+	
+	public void createCone(GTPCone cone);
+	
+	public void createCuboid(GTPCuboid cuboid);
+	
+	public void createCylinder(GTPCylinder cylinder);
+	
+	public void createSphere(GTPSphere sphere);
+	
+	/**
+	 * @return - the created {@link Entity}
+	 */
+	public Entity getResult();
 }
