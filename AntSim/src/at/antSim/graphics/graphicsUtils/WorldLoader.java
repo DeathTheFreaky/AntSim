@@ -25,8 +25,6 @@ import java.util.Random;
 public class WorldLoader {
 	
 	private static EntityBuilder builder = new EntityBuilderImpl();
-	private static StaticPhysicsObjectFactory staticFactory = StaticPhysicsObjectFactory.getInstance();
-	private static DynamicPhysicsObjectFactory dynamicFactory = DynamicPhysicsObjectFactory.getInstance();
 	
 	/**Loads the world's terrain.
 	 * 
