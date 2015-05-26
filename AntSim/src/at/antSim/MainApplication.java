@@ -1,19 +1,5 @@
 package at.antSim;
 
-import java.util.HashMap;
-import java.util.List;
-
-import at.antSim.guiWrapper.states.AbstractGuiState;
-import at.antSim.guiWrapper.states.LoadingState;
-import at.antSim.guiWrapper.states.MainGameState;
-import at.antSim.guiWrapper.states.OptionsControlState;
-import at.antSim.guiWrapper.states.OptionsDisplayState;
-import at.antSim.guiWrapper.states.PauseState;
-import at.antSim.guiWrapper.states.StartMenuState;
-
-import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector3f;
-
 import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.GraphicsEntity;
@@ -24,6 +10,12 @@ import at.antSim.graphics.graphicsUtils.MousePicker;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;
+import at.antSim.guiWrapper.states.*;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -208,7 +200,6 @@ public class MainApplication {
 			//update camera and mouse picker 
 			//camera movement should not be affected by game speed since it works with movement speeds multiplied with time elapsed since last frame update
 			if (worldLoaded) {
-				
 				camera.move(terrain); //every single frame check for key inputs which move the camera
 				picker.update();
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
@@ -374,6 +365,10 @@ public class MainApplication {
 	
 	public MovingEntity getMovingEntity() {
 		return movingEntity;
+	}
+
+	public Camera getCamera() {
+		return camera;
 	}
 		
 	/**

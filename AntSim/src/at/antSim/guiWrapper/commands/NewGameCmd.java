@@ -1,12 +1,7 @@
 package at.antSim.guiWrapper.commands;
 
-import at.antSim.AntSim;
 import at.antSim.MainApplication;
-import at.antSim.graphics.graphicsUtils.Loader;
-import at.antSim.graphics.renderer.MasterRenderer;
-import at.antSim.guiWrapper.GuiWrapper;
-
-import org.lwjgl.Sys;
+import at.antSim.eventSystem.EventManager;
 
 /**Starts a new game.
  * 
@@ -16,6 +11,7 @@ public class NewGameCmd implements Command {
 
 	@Override
 	public void execute() {
+		EventManager.getInstance().registerEventListener(MainApplication.getInstance().getCamera());
 		MainApplication.getInstance().triggerWorldLoad();
 	}
 }
