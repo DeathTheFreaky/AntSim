@@ -176,6 +176,15 @@ public final class ObjectConverter {
     public static double pStringToDouble(String value) {
         return Double.parseDouble(value);
     }
+
+    /**
+     * Converts String to double.
+     * @param value The String to be converted.
+     * @return The converted float value.
+     */
+    public static float pStringToFloat(String value) {
+        return Float.parseFloat(value);
+    }
     
     /**
      * Converts double to String.
@@ -276,5 +285,14 @@ public final class ObjectConverter {
      */
     public static String oDoubleToString(Double value) {
         return value.toString();
+    }
+
+    /**
+     * Converts String to Float.
+     * @param value The String to be converted.
+     * @return The converted Float value.
+     */
+    public static Float oStringToFloat(String value) {
+        return Float.valueOf(value);
     }
 }
