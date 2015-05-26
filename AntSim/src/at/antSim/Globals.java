@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 public final class Globals {
 	
 	//global Constants
-	public static String WORKING_DIR = System.getProperty("user.dir");
+	public static final String WORKING_DIR = System.getProperty("user.dir");
 	public static final String RESOURCES = WORKING_DIR + "\\res\\";
 	public static final String MODELS = RESOURCES + "models\\";
 	public static final String TEXTURES = RESOURCES + "textures\\";
@@ -34,6 +34,7 @@ public final class Globals {
 	public static boolean fullscreen;
 	public static int fontRows = 16;
 	public static int fontCols = 16;
+	public static float gravity = 8.13f;
 	
 	public static int moveForwardKey;
 	public static int moveBackwardKey;

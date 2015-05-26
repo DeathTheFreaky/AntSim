@@ -1,5 +1,6 @@
 package at.antSim.objectsPhysic;
 
+import at.antSim.Globals;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
@@ -42,7 +43,7 @@ public class PhysicsManager {
 		BroadphaseInterface broadphaseInterface = new DbvtBroadphase();
 		ConstraintSolver constraintSolver = new SequentialImpulseConstraintSolver();
 		physicsWorld = new SimpleDynamicsWorld(dispatcher, broadphaseInterface, constraintSolver, collisionConfiguration);
-		physicsWorld.setGravity(new Vector3f(0, (float) 8.13, 0));
+		physicsWorld.setGravity(new Vector3f(0, (float) Globals.gravity, 0));
 	}
 
 	public void registerPhysicsObject(PhysicsObject physicsObject) {
