@@ -1,11 +1,13 @@
 package at.antSim.objectsPhysic;
 
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.broadphase.Dispatcher;
 import com.bulletphysics.collision.dispatch.CollisionConfiguration;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
+import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.SimpleDynamicsWorld;
@@ -14,6 +16,8 @@ import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSo
 
 import javax.vecmath.Vector3f;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created on 12.05.2015.
@@ -29,7 +33,10 @@ public class PhysicsManager {
 
 	private DynamicsWorld physicsWorld;
 
+	private final Map<CollisionObject, PhysicsObject> physicsObjectMap = new HashMap<>();
+
 	protected PhysicsManager() {
+		BulletGlobals.setContactProcessedCallback(new ContactProcessedCallbackImpl());
 		CollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
 		Dispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
 		BroadphaseInterface broadphaseInterface = new DbvtBroadphase();
@@ -40,6 +47,7 @@ public class PhysicsManager {
 
 	public void registerPhysicsObject(PhysicsObject physicsObject) {
 		physicsWorld.addCollisionObject(physicsObject.getCollisionBody());
+		physicsObjectMap.put(physicsObject.getCollisionBody(), physicsObject);
 	}
 
 	public void registerPhysicsObject(Collection<PhysicsObject> physicsObjects) {
@@ -50,6 +58,7 @@ public class PhysicsManager {
 
 	public void unregisterPhysicsObject(PhysicsObject physicsObject) {
 		physicsWorld.removeCollisionObject(physicsObject.getCollisionBody());
+		physicsObjectMap.remove(physicsObject.getCollisionBody());
 	}
 
 	public void unregisterPhysicsObject(Collection<PhysicsObject> physicsObjects) {
@@ -60,5 +69,9 @@ public class PhysicsManager {
 
 	public void performCollisionDetection() {
 		physicsWorld.performDiscreteCollisionDetection();
+	}
+
+	public PhysicsObject getPhysicsObject(CollisionObject colObj) {
+		return physicsObjectMap.get(colObj);
 	}
 }
