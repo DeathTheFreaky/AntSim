@@ -12,6 +12,7 @@
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/lwjgl-2.9.3/lwjgl-2.9.3/slick-util.jar!/"/>
 	</lib>
 	<lib name="jbullet.jar" scope="COMPILE">
+		<srcroot url="file://jBulletSrc"/>
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/AntSim/libs/jbullet-20101010/dist/jbullet.jar!/"/>
 	</lib>
 	<lib name="vecmath.jar" scope="COMPILE">

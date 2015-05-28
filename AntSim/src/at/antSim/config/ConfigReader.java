@@ -1,20 +1,12 @@
 package at.antSim.config;
 
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.lang.reflect.Field;
-
 import at.antSim.Globals;
 import at.antSim.exceptions.ConfigParseException;
 import org.lwjgl.input.Keyboard;
+
+import java.awt.*;
+import java.io.*;
+import java.lang.reflect.Field;
 
 
 /**Parses a config file and stores its entries in {@link Globals}.
@@ -126,8 +118,8 @@ public class ConfigReader {
 			Globals.moveBackwardKey = Keyboard.KEY_S;
 			Globals.moveLeftKey = Keyboard.KEY_A;
 			Globals.moveRightKey = Keyboard.KEY_D;
-			Globals.moveUpKey = Keyboard.KEY_LSHIFT;
-			Globals.moveDownKey = Keyboard.KEY_SPACE;
+			Globals.moveUpKey = Keyboard.KEY_SPACE;
+			Globals.moveDownKey = Keyboard.KEY_LSHIFT;
 			Globals.tiltDownKey = Keyboard.KEY_UP;
 			Globals.tiltUpKey = Keyboard.KEY_DOWN;
 			Globals.turnLeftKey = Keyboard.KEY_LEFT;

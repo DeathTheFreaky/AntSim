@@ -11,7 +11,6 @@ import at.antSim.guiWrapper.GuiWrapper;
 import at.antSim.guiWrapper.states.*;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.PhysicsManager;
-
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -128,6 +127,7 @@ public class MainApplication {
 	private boolean paused = false;
 	
 	private float normalSpeedTime = 1/60f; //update logic 60times a second on normal speed
+	private float speed = 1f;
 	private float timeStep = normalSpeedTime;
 	private float timeAccumulator = 0;
 	private float statsTimeStep = 1f;
@@ -241,6 +241,7 @@ public class MainApplication {
 		if (!paused && worldLoaded) {
 //			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
 			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
+			timeSinceLastUpdate *= speed;
 			statsCtrTest++;
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate);
 		}
@@ -355,6 +356,7 @@ public class MainApplication {
 	}
 	
 	public void setSpeed(float speed) {
+		this.speed = speed;
 		float prevSpeed = normalSpeedTime/timeStep;
 		timeStep = normalSpeedTime / speed;
 		renderer.adaptTime(speed/prevSpeed, speed);
