@@ -18,6 +18,7 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 		this.body = body;
 		this.body.setCollisionFlags(this.body.getCollisionFlags() & CollisionFlags.KINEMATIC_OBJECT);
 		this.body.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
+		this.body.setUserPointer(this);
 	}
 
 	@Override

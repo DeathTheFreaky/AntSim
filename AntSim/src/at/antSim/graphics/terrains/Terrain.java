@@ -14,8 +14,8 @@ import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.linearmath.Transform;
 
 import at.antSim.Globals;
-import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.Maths;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.textures.TerrainTexture;

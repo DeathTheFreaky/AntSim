@@ -17,6 +17,7 @@ public class GhostPhysicsObject extends PositionablePhysicsObjectImpl {
 	public GhostPhysicsObject(GhostObject body) {
 		this.body = body;
 		this.body.setCollisionFlags(this.body.getCollisionFlags() | CollisionFlags.NO_CONTACT_RESPONSE);
+		this.body.setUserPointer(this);
 	}
 
 	@Override
