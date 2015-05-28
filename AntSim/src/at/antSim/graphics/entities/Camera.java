@@ -1,5 +1,6 @@
 package at.antSim.graphics.entities;
 
+import at.antSim.eventSystem.EventManager;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -52,7 +53,7 @@ public class Camera {
 	private float verticalOffset = 0;
 	private float pitch = 30; //how high or low the camera is aiming
 	private float yaw; //how much left or right the camera is aiming
-	private float roll; //the camera's tilt - at 180° it is upside down
+	private float roll; //the camera's tilt - at 180ï¿½ it is upside down
 	
 	//reference point's position and rotation
 	private Vector3f refPointPosition;
@@ -257,6 +258,7 @@ public class Camera {
 		if (event.getKey() == Keyboard.KEY_ESCAPE) {
 			MainApplication.getInstance().pause();
 			GuiWrapper.getInstance().setCurrentState(pauseMenuName);
+			EventManager.getInstance().unregisterEventListener(this);
 		}
 	}
 	

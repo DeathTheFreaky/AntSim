@@ -377,6 +377,10 @@ public class MainApplication {
 	public MovingEntity getMovingEntity() {
 		return movingEntity;
 	}
+
+	public Camera getCamera() {
+		return camera;
+	}
 		
 	/**
 	 * @return - the one and only instance of {@link MainApplication}
