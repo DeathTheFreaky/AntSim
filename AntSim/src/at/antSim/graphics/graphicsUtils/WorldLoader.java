@@ -9,10 +9,8 @@ import at.antSim.graphics.textures.TerrainTexturePack;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
-import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
-import at.antSim.objectsPhysic.PhysicsManager;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -122,7 +120,7 @@ public class WorldLoader {
 				.buildGraphicsEntity(ModelLoader.texturedModels.get("dragon"), 1, 25)
 				.buildPhysicsObject()
 				.registerResult();
-		PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
+		//PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
 	}
 	
 	/**Loads the world's light sources.
