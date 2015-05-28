@@ -16,6 +16,7 @@ public class StaticPhysicsObject extends PositionablePhysicsObjectImpl {
 	public StaticPhysicsObject(RigidBody body) {
 		this.body = body;
 		this.body.setCollisionFlags(this.body.getCollisionFlags() & CollisionFlags.STATIC_OBJECT);
+		this.body.setUserPointer(this);
 	}
 
 	@Override
