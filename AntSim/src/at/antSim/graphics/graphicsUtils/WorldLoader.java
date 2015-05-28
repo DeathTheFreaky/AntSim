@@ -109,7 +109,7 @@ public class WorldLoader {
 		
 		//add cool stanford demo dragon for specular lighting demo
 		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 30, -Globals.WORLD_SIZE/2))
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
 				.setRotation(90, 45, 90)
 				.buildGraphicsEntity(ModelLoader.texturedModels.get("dragon"), 1, 25)
 				.buildPhysicsObject()
