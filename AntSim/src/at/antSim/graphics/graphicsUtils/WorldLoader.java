@@ -11,7 +11,6 @@ import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
-import at.antSim.objectsPhysic.PhysicsManager;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -58,39 +57,39 @@ public class WorldLoader {
 				
 		//create a random flora
 		Random random = new Random(676452);
-//		for (int i = 0; i < 1200; i++) {
-//			if (i % 20 == 0) {
-//				float x = random.nextFloat() * Globals.WORLD_SIZE;
-//				float z = random.nextFloat() * -Globals.WORLD_SIZE;
-//				float y = terrain.getHeightOfTerrain(x, z);
-//				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//					.setPosition(new Vector3f(x, y, z))
-//					.setRotation(0, random.nextFloat() * 360, 0)
-//					.buildGraphicsEntity(ModelLoader.texturedModels.get("fern"), random.nextInt(4), 20f)
-//					.buildPhysicsObject()
-//					.registerResult();
-//			}
-//			if (i % 5 == 0) {
-//				float x = random.nextFloat() * Globals.WORLD_SIZE;
-//				float z = random.nextFloat() * -Globals.WORLD_SIZE;
-//				float y = terrain.getHeightOfTerrain(x, z);
-//				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//					.setPosition(new Vector3f(x, y, z))
-//					.setRotation(0, random.nextFloat() * 360, 0)
-//					.buildGraphicsEntity(ModelLoader.texturedModels.get("grass"), 1, random.nextFloat() * 2f + 25f)
-//					.buildPhysicsObject()
-//					.registerResult();
-//				x = random.nextFloat() * Globals.WORLD_SIZE;
-//				z = random.nextFloat() * -Globals.WORLD_SIZE;
-//				y = terrain.getHeightOfTerrain(x, z);
-//				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//					.setPosition(new Vector3f(x, y, z))
-//					.setRotation(0, random.nextFloat() * 360, 0)
-//					.buildGraphicsEntity(ModelLoader.texturedModels.get("tree"), 1, random.nextFloat() * 5f + 20f)
-//					.buildPhysicsObject()
-//					.registerResult();
-//			}
-//		} 
+		for (int i = 0; i < 1200; i++) {
+			if (i % 20 == 0) {
+				float x = random.nextFloat() * Globals.WORLD_SIZE;
+				float z = random.nextFloat() * -Globals.WORLD_SIZE;
+				float y = terrain.getHeightOfTerrain(x, z);
+				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+					.setPosition(new Vector3f(x, y, z))
+					.setRotation(0, random.nextFloat() * 360, 0)
+					.buildGraphicsEntity(ModelLoader.texturedModels.get("fern"), random.nextInt(4), 20f)
+					.buildPhysicsObject()
+					.registerResult();
+			}
+			if (i % 5 == 0) {
+				float x = random.nextFloat() * Globals.WORLD_SIZE;
+				float z = random.nextFloat() * -Globals.WORLD_SIZE;
+				float y = terrain.getHeightOfTerrain(x, z);
+				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+					.setPosition(new Vector3f(x, y, z))
+					.setRotation(0, random.nextFloat() * 360, 0)
+					.buildGraphicsEntity(ModelLoader.texturedModels.get("grass"), 1, random.nextFloat() * 2f + 25f)
+					.buildPhysicsObject()
+					.registerResult();
+				x = random.nextFloat() * Globals.WORLD_SIZE;
+				z = random.nextFloat() * -Globals.WORLD_SIZE;
+				y = terrain.getHeightOfTerrain(x, z);
+				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+					.setPosition(new Vector3f(x, y, z))
+					.setRotation(0, random.nextFloat() * 360, 0)
+					.buildGraphicsEntity(ModelLoader.texturedModels.get("tree"), 1, random.nextFloat() * 5f + 20f)
+					.buildPhysicsObject()
+					.registerResult();
+			}
+		}
 		
 		//add some lamps
 //		Entity lamp1 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
