@@ -9,8 +9,10 @@ import at.antSim.graphics.textures.TerrainTexturePack;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
+import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsManager;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -109,12 +111,12 @@ public class WorldLoader {
 		
 		//add cool stanford demo dragon for specular lighting demo
 		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 1000, -Globals.WORLD_SIZE/2))
 				.setRotation(90, 45, 90)
 				.buildGraphicsEntity(ModelLoader.texturedModels.get("dragon"), 1, 25)
 				.buildPhysicsObject()
 				.registerResult();
-//		PhysicsManager.getInstance().registerPhysicsObject(dragon.getPhysicsObject());
+		PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
 	}
 	
 	/**Loads the world's light sources.

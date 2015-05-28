@@ -37,6 +37,8 @@ public class PhysicsManager {
 
 	private final Map<CollisionObject, PhysicsObject> physicsObjectMap = new HashMap<>();
 
+	public DynamicPhysicsObject observingPhysicsObject = null;
+
 	protected PhysicsManager() {
 		BulletGlobals.setContactProcessedCallback(new ContactProcessedCallbackImpl());
 		CollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
@@ -76,6 +78,11 @@ public class PhysicsManager {
 	}
 
 	public void performCollisionDetection(float timeStep) {
+		if (observingPhysicsObject != null) {
+			System.out.println("Position: " + observingPhysicsObject.getPosition() + " timeStep: " + timeStep);
+		}
+		if(timeStep == 0)
+			return;
 		physicsWorld.performDiscreteCollisionDetection();
 		physicsWorld.stepSimulation(timeStep, 7);
 	}
