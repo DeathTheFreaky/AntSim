@@ -6,7 +6,11 @@ import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
+import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsManager;
+import at.antSim.objectsPhysic.StaticPhysicsObject;
 import com.bulletphysics.collision.shapes.IndexedMesh;
+import com.bulletphysics.linearmath.Transform;
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.imageio.ImageIO;
@@ -157,9 +161,9 @@ public class Terrain {
 		myMesh.vertexBase.asFloatBuffer().put(vertices);
 		myMesh.vertexStride = 3 * 4;
 
-//		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject(0, myMesh, 
-//				new Transform(Maths.createTransformationMatrix(new Vector3f(0, 0, -Globals.WORLD_SIZE), 0, 0, 0)));
-//		PhysicsManager.getInstance().registerPhysicsObject(obj);		
+		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject(0, myMesh,
+				new Transform(Maths.createTransformationMatrix(new Vector3f(0, 0, -Globals.WORLD_SIZE), 0, 0, 0)));
+		PhysicsManager.getInstance().registerPhysicsObject(obj);
 		
 		return loader.loadToVAO(vertices, textureCoords, normals, indices);
 	}
