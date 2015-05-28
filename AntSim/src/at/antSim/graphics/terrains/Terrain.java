@@ -1,29 +1,20 @@
 package at.antSim.graphics.terrains;
 
-<<<<<<< Temporary merge branch 1
+import at.antSim.Globals;
+import at.antSim.graphics.graphicsUtils.Maths;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
+import at.antSim.graphics.models.RawModel;
+import at.antSim.graphics.textures.TerrainTexture;
+import at.antSim.graphics.textures.TerrainTexturePack;
+import com.bulletphysics.collision.shapes.IndexedMesh;
+import org.lwjgl.util.vector.Vector3f;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import javax.imageio.ImageIO;
-
-import org.lwjgl.util.vector.Vector3f;
-
-import com.bulletphysics.collision.shapes.IndexedMesh;
-import com.bulletphysics.linearmath.Transform;
-
-import at.antSim.Globals;
-import at.antSim.graphics.graphicsUtils.OpenGLLoader;
-import at.antSim.graphics.graphicsUtils.Maths;
-import at.antSim.graphics.graphicsUtils.WorldLoader;
-import at.antSim.graphics.models.RawModel;
-import at.antSim.graphics.textures.TerrainTexture;
-import at.antSim.graphics.textures.TerrainTexturePack;
-import at.antSim.objectsPhysic.PhysicsManager;
-import at.antSim.objectsPhysic.StaticPhysicsObject;
-import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 
 /**Respresents a Terrain made up of a {@link RawModel}, a Blendmap and a {@link TerrainTexturePack}.<br>
  * The terrain's heights will be created according to the values stored in an imagefile grayscale heightmap.<br>
