@@ -44,6 +44,7 @@ public class PhysicsManager {
 		BroadphaseInterface broadphaseInterface = new DbvtBroadphase();
 		ConstraintSolver constraintSolver = new SequentialImpulseConstraintSolver();
 		physicsWorld = new SimpleDynamicsWorld(dispatcher, broadphaseInterface, constraintSolver, collisionConfiguration);
+		physicsWorld.getPairCache().setOverlapFilterCallback(new CollisionFilterCallback());
 		physicsWorld.setGravity(new Vector3f(0, Globals.gravity, 0));
 	}
 
