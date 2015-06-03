@@ -4,6 +4,7 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
 import com.bulletphysics.collision.shapes.*;
 import com.bulletphysics.dynamics.RigidBody;
+import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.MotionState;
 import com.bulletphysics.linearmath.Transform;
@@ -20,7 +21,9 @@ public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> impl
 	RigidBody createSphereRigid(float mass, float radius, Transform position) {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = createSphereShape(radius);
-		return new RigidBody(mass, motionState, shape);
+		RigidBodyConstructionInfo info = new RigidBodyConstructionInfo(mass, motionState, shape);
+		info.restitution = 0;
+		return new RigidBody(info);
 	}
 
 	CollisionShape createSphereShape(float radius) {
@@ -30,7 +33,9 @@ public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> impl
 	RigidBody createCuboidRigid(float mass, float xLength, float yLength, float zLength, Transform position) {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = createCuboidShape(xLength, yLength, zLength);
-		return new RigidBody(mass, motionState, shape);
+		RigidBodyConstructionInfo info = new RigidBodyConstructionInfo(mass, motionState, shape);
+		info.restitution = 0;
+		return new RigidBody(info);
 	}
 
 	CollisionShape createCuboidShape(float xLength, float yLength, float zLength) {
@@ -40,7 +45,9 @@ public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> impl
 	RigidBody createCylinderRigid(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = createCylinderShape(height, radius, orientation);
-		return new RigidBody(mass, motionState, shape);
+		RigidBodyConstructionInfo info = new RigidBodyConstructionInfo(mass, motionState, shape);
+		info.restitution = 0;
+		return new RigidBody(info);
 	}
 
 	CollisionShape createCylinderShape(float height, float radius, PhysicsObjectOrientation orientation) {
@@ -59,7 +66,9 @@ public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> impl
 	RigidBody createConeRigid(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = createConeShape(height, radius, orientation);
-		return new RigidBody(mass, motionState, shape);
+		RigidBodyConstructionInfo info = new RigidBodyConstructionInfo(mass, motionState, shape);
+		info.restitution = 0;
+		return new RigidBody(info);
 	}
 
 	CollisionShape createConeShape(float height, float radius, PhysicsObjectOrientation orientation) {
@@ -78,7 +87,9 @@ public abstract class AbstractPhysicsObjectFactory<E extends PhysicsObject> impl
 	RigidBody createExactRigid(float mass, IndexedMesh mesh, Transform position) {
 		MotionState motionState = new DefaultMotionState(position);
 		CollisionShape shape = createExactShape(mesh);
-		return new RigidBody(mass, motionState, shape);
+		RigidBodyConstructionInfo info = new RigidBodyConstructionInfo(mass, motionState, shape);
+		info.restitution = 0;
+		return new RigidBody(info);
 	}
 
 	CollisionShape createExactShape(IndexedMesh mesh) {
