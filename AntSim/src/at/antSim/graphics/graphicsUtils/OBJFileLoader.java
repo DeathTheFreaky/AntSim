@@ -213,7 +213,7 @@ public class OBJFileLoader {
         float yLength;
         float zLength;
         
-        //find max extents for each axis to calculate lengths
+        //find max extents for each axis to calculate lengths in arbitrary origins from obj model -> it is possible that y values stretch from 0.3 to 2.3 instead of -1 to +1
         float maxNegX = 0;
         float maxPosX = 0;
         float maxNegY = 0;
@@ -242,19 +242,42 @@ public class OBJFileLoader {
             if (z > maxPosZ) maxPosZ = z;
             else if (z < maxNegZ) maxNegZ = z;
             
-            verticesArray[i * 3] = x;
-            verticesArray[i * 3 + 1] = y;
-            verticesArray[i * 3 + 2] = z;
-            texturesArray[i * 2] = textureCoord.x;
-            texturesArray[i * 2 + 1] = 1 - textureCoord.y;
-            normalsArray[i * 3] = normalVector.x;
-            normalsArray[i * 3 + 1] = normalVector.y;
-            normalsArray[i * 3 + 2] = normalVector.z;
         }
         
         xLength = maxPosX - maxNegX;
         yLength = maxPosY - maxNegY;
         zLength = maxPosZ - maxNegZ;
+        
+        System.out.println("xLength: " + xLength);
+        System.out.println("yLength: " + yLength);
+        System.out.println("zLength: " + zLength);
+        
+        System.out.println("maxX: " + maxPosX + ", minX: " + maxNegX);
+        System.out.println("maxY: " + maxPosY + ", minY: " + maxNegY);
+        System.out.println("maxZ: " + maxPosZ + ", minZ: " + maxNegZ);
+        
+        //set origin to 0,0
+        for (int i = 0; i < vertices.size(); i++) {
+        	
+            Vertex currentVertex = vertices.get(i);
+            
+            Vector3f position = (Vector3f) currentVertex.getPosition();
+            Vector2f textureCoord = (Vector2f) textures.get(currentVertex.getTextureIndex());
+            Vector3f normalVector = (Vector3f) normals.get(currentVertex.getNormalIndex());
+            
+            float x = position.x * normalizeMultiplier, y = position.y * normalizeMultiplier, z = position.z * normalizeMultiplier;
+            
+            verticesArray[i * 3] = x - (-1 - maxNegX);
+            verticesArray[i * 3 + 1] = y - (-1 - maxNegY);
+            verticesArray[i * 3 + 2] = z - (-1 - maxNegZ);
+            texturesArray[i * 2] = textureCoord.x;
+            texturesArray[i * 2 + 1] = 1 - textureCoord.y;
+            normalsArray[i * 3] = normalVector.x;
+            normalsArray[i * 3 + 1] = normalVector.y;
+            normalsArray[i * 3 + 2] = normalVector.z;
+            
+            System.out.println("x: " + verticesArray[i * 3] + ", y: " + verticesArray[i * 3 + 1] + ", z: " + verticesArray[i * 3 + 2]);
+        }
         
         return new OBJLoaderGeometryData(furthestPoint * normalizeMultiplier, xLength, yLength, zLength);
     }
@@ -296,7 +319,7 @@ public class OBJFileLoader {
         yLength = maxPosY - maxNegY;
         zLength = maxPosZ - maxNegZ;
         
-        return 1/java.lang.Math.max(xLength, java.lang.Math.max(yLength, zLength));
+        return 1/java.lang.Math.max(xLength, java.lang.Math.max(yLength, zLength)) * 2;
 	}
 
 	/**Deals with vertices that have already been indexed (by their positional data in vertices array).<br>

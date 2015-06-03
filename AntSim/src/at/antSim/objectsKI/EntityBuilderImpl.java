@@ -48,6 +48,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 		graphicsEntity = new GraphicsEntity(texturedModel, textureIndex, scale);
 		gtpObject = GTPMapper.getObject(graphicsEntity, scale, graphicsEntity.getModel().getPrimitiveType());
 		mass = graphicsEntity.getModel().getMass(); //set default mass
+		position.y = position.y + graphicsEntity.getModel().getRawModel().getyLength()/2 * scale;
 		return this;
 	}
 
