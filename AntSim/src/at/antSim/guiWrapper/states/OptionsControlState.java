@@ -62,7 +62,7 @@ public class OptionsControlState extends AbstractGuiState {
 		
 		// Key Bindings
 		// Key container
-		GuiContainer keysContainer = new GuiContainer("keysContainer", loader, optionsContainer, null,  wrapper.getGuiTexture("white"), 700, 455,
+		GuiContainer keysContainer = new GuiContainer("keysContainer", loader, optionsContainer, null,  null, 700, 455,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 30, 0f, new Vector3f(1, 0, 0), 0.5f);
 		
 		List<KeyNameBindingWrapper> bindings = new LinkedList<>();
@@ -84,21 +84,21 @@ public class OptionsControlState extends AbstractGuiState {
 		int idx = 0;
 		for (KeyNameBindingWrapper keyWrapper : bindings) {
 			
-			int textSize = 22;
+			int textSize = 18;
 			
 			GuiContainer keyRowContainer;
 			if (idx == 0) {
-				keyRowContainer = new GuiContainer("keyRowContainer", loader, optionsContainer, null,  wrapper.getGuiTexture("white"), 700, 35,
+				keyRowContainer = new GuiContainer("keyRowContainer", loader, optionsContainer, null, null, 690, 35,
 						HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 0), 0.5f);
 			} else {
-				keyRowContainer = new GuiContainer("keyRowContainer", loader, optionsContainer, null,  wrapper.getGuiTexture("white"), 700, 35,
+				keyRowContainer = new GuiContainer("keyRowContainer", loader, optionsContainer, null,  null, 690, 35,
 						HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0, 0f, new Vector3f(0, 0, 0), 0.5f);
 			}
-			GuiContainer keyLabelContainer = new GuiContainer("keyLabelContainer", loader, keyRowContainer, switchToDisplayCmd,  wrapper.getGuiTexture("white"), keyRowContainer.getWidth()/2, 
+			GuiContainer keyLabelContainer = new GuiContainer("keyLabelContainer", loader, keyRowContainer, switchToDisplayCmd,  null, keyRowContainer.getWidth()/2,
 					keyRowContainer.getHeight(), HorReference.PARENT, HorPositions.LEFT, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 1), 0.5f);
 			GuiText keyLabelText = new GuiText("keyLabelText" + keyWrapper.getLabel(), textDrawer.createTextQuad(keyWrapper.getLabel()), keyLabelContainer, null, textSize,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 5);
-			GuiContainer keyNameContainer = new GuiContainer("keyNameContainer", loader, keyRowContainer, null,  wrapper.getGuiTexture("white"), keyRowContainer.getWidth()/2, 
+			GuiContainer keyNameContainer = new GuiContainer("keyNameContainer", loader, keyRowContainer, null,  null, keyRowContainer.getWidth()/2,
 					keyRowContainer.getHeight(), HorReference.PARENT, HorPositions.RIGHT, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 1, 0), 0.5f);
 			GuiText keyNameValue = new GuiText("keyNameValue" + keyWrapper.getLabel(), textDrawer.createTextQuad(keyWrapper.getBindingName()), keyNameContainer, null, textSize,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);

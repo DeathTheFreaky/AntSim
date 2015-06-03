@@ -69,7 +69,7 @@ public class OptionsDisplayState extends AbstractGuiState {
 		// invert mouse
 		// Invertion Super Container
 		GuiContainer invertContainer = new GuiContainer("invertContainer", loader, optionsContainer, null, null, 400, 105,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 20, 0f, new Vector3f(1, 0, 0), 0.5f);
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 40, 0f, new Vector3f(1, 0, 0), 0.5f);
 		GuiImage invertHeadline = new GuiImage("invertHeadline", loader, invertContainer, null, wrapper.getGuiTexture("optionsMenu/invertMouse"), 250, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 0), 0f);
 
@@ -100,7 +100,7 @@ public class OptionsDisplayState extends AbstractGuiState {
 
 		// Change resolution
 		GuiContainer resContainer = new GuiContainer("resContainer", loader, optionsContainer, null, null, 300, 360,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 20);
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 40);
 		GuiImage resHeadline = new GuiImage("resHeadline", loader, resContainer, null, wrapper.getGuiTexture("optionsMenu/resolution"), 100, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 0), 0f);
 
@@ -147,7 +147,7 @@ public class OptionsDisplayState extends AbstractGuiState {
 		
 		Command orResolutionCmd = new ResCmd(width, height);
 		resCmds.add((ResCmd) orResolutionCmd);
-		GuiText orResolutionText = new GuiText("resText0", textDrawer.createTextQuad(str4(width) + "x" + str4(height)), resolutionsContainer, orResolutionCmd, 22,
+		GuiText orResolutionText = new GuiText("resText0", textDrawer.createTextQuad(str4(width) + "x" + str4(height)), resolutionsContainer, orResolutionCmd, 18,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 4);
 		EventManager.getInstance().registerEventListener(orResolutionText);
 		
@@ -155,7 +155,7 @@ public class OptionsDisplayState extends AbstractGuiState {
 		for (DisplayMode mode : displayedModes) {
 			Command resolutionCmd = new ResCmd(mode.getWidth(), mode.getHeight());
 			resCmds.add((ResCmd) resolutionCmd);
-			GuiText resolutionText = new GuiText("resText" + idx, textDrawer.createTextQuad(str4(mode.getWidth()) + "x" + str4(mode.getHeight())), resolutionsContainer, resolutionCmd, 22,
+			GuiText resolutionText = new GuiText("resText" + idx, textDrawer.createTextQuad(str4(mode.getWidth()) + "x" + str4(mode.getHeight())), resolutionsContainer, resolutionCmd, 18,
 					HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 4);
 			EventManager.getInstance().registerEventListener(resolutionText);
 			idx++;
