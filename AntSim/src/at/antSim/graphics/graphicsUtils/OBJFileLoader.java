@@ -36,12 +36,12 @@ public class OBJFileLoader {
 	 */
 	public static ModelData loadOBJ(String objFileName) {
 		
-		if (objFileName.equals("fern")) {
-			debug = true;
-		} else {
-			debug = false;
-		}
-		
+//		if (objFileName.equals("sphere")) {
+//			debug = true;
+//		} else {
+//			debug = false;
+//		}
+//		
 		//initialize filereader, bufferedreader and arraylists holding the data
         FileReader isr = null;
         File objFile = new File(Globals.MODELS + objFileName + ".obj");
@@ -58,8 +58,13 @@ public class OBJFileLoader {
         List<Integer> indices = new ArrayList<Integer>(); //will contain: vertex1index, texture1index, normal1index, vertex2index, texture2index, normal2index...
        
         try {
+        	int linectr = 0;
             while (true) {
                 line = reader.readLine();
+                
+                if (debug) System.out.println("linectr: " + linectr);
+                
+                linectr++;
                 
                 //parse a model's vertices' x,y,z coordinates as floats, create a Vertex Object with these coordinates, add this Vertex Object to list of vertices
                 if (line.startsWith("v ")) {
@@ -121,6 +126,7 @@ public class OBJFileLoader {
              *  
              *  For more information on the obj file format see: http://www.scratchapixel.com/old/lessons/3d-advanced-lessons/obj-file-format/obj-file-format/
              * */
+            
             while (line != null && line.startsWith("f ")) {
                 String[] currentLine = line.split(" "); 
                 String[] vertex1 = currentLine[1].split("/");
@@ -130,6 +136,7 @@ public class OBJFileLoader {
                 processVertex(vertex2, vertices, indices);
                 processVertex(vertex3, vertices, indices);
                 line = reader.readLine();
+                linectr++;
             }
             reader.close();
         } catch (IOException e) {
@@ -279,6 +286,12 @@ public class OBJFileLoader {
         }
         
         if (debug) {
+        	System.out.println("maxPosX: " + maxPosX);
+        	System.out.println("minPosX: " + maxNegX);
+        	System.out.println("maxPosY: " + maxPosY);
+        	System.out.println("minPosY: " + maxNegY);
+        	System.out.println("maxPosZ: " + maxPosZ);
+        	System.out.println("minPosZ: " + maxNegZ);
         	System.out.println("xLength: " + xLength);
         	System.out.println("yLength: " + yLength);
         	System.out.println("zLength: " + zLength);

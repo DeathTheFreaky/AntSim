@@ -106,25 +106,25 @@ public class WorldLoader {
 				.buildPhysicsObject()
 				.registerResult();
 		
-		Entity fernTest = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+		Entity sphereTest = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
 				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity(ModelLoader.texturedModels.get("fern"), 1, 20)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("cylinder"), 1, 40)
 				.buildPhysicsObject()
 				.registerResult();
 		
-//		Entity blueCube = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity(ModelLoader.texturedModels.get("blueCube"), 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
+		Entity blueCube = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("cylinder"), 1, 20)
+				.buildPhysicsObject()
+				.registerResult();
 		
 		//add cool stanford demo dragon for specular lighting demo
 		Entity redCube = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
 				.setRotation(90, 45, 90)
-				.buildGraphicsEntity(ModelLoader.texturedModels.get("redCube"), 1, 25)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("sphere"), 1, 25)
 				.buildPhysicsObject()
 				.registerResult();
 		
