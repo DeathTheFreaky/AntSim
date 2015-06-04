@@ -4,14 +4,19 @@ import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
+import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.*;
 import at.antSim.guiWrapper.commands.*;
+import at.antSim.objectsKI.EntityBuilder;
+import at.antSim.objectsKI.EntityBuilderImpl;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 
 /**Gui for the main application.
  * 
@@ -23,6 +28,10 @@ public class MainGameState extends AbstractGuiState {
 	HashMap<String, GuiContainer> statContainers;
 	OpenGLTextDrawer textDrawer;
 	int textSize;
+	
+	EntityBuilder builder;
+	Terrain terrain;
+	Random random;
 
 	GuiContainer playPauseContainer;
 	GuiContainer speedContainer;
@@ -59,6 +68,9 @@ public class MainGameState extends AbstractGuiState {
 	
 	public MainGameState(OpenGLLoader loader, String name) {
 		super(loader, name);
+		
+		builder = new EntityBuilderImpl();
+		random = new Random();
 	}
 
 	@Override
@@ -125,13 +137,13 @@ public class MainGameState extends AbstractGuiState {
 		Command toggleSpeed4Cmd = new ToggleSpeedCmd(4f, this, 4);
 		Command toggleFoodCmd = new ToggleFoodCmd(this);
 		Command toggleFoodSubCmd = new ToggleFoodSubCmd(this);
-		Command clickFoodAppleCmd = new ClickFoodAppleCmd();
-		Command clickFoodSquirrelCmd = new ClickFoodSquirrelCmd();
-		Command clickFoodAntCmd = new ClickFoodAntCmd();
-		Command clickFoodGrasshopperCmd = new ClickFoodGrasshopperCmd();
+		Command clickFoodAppleCmd = new ClickFoodAppleCmd(builder, random);
+		Command clickFoodSquirrelCmd = new ClickFoodSquirrelCmd(builder, random);
+		Command clickFoodAntCmd = new ClickFoodAntCmd(builder, random);
+		Command clickFoodGrasshopperCmd = new ClickFoodGrasshopperCmd(builder, random);
 		Command toggleEnemyCmd = new ToggleEnemyCmd(this);
-		Command clickEnemyAntCmd = new ClickEnemyAntCmd();
-		Command clickEnemyGrasshopperCmd = new ClickEnemyGrasshopperCmd();
+		Command clickEnemyAntCmd = new ClickEnemyAntCmd(builder, random);
+		Command clickEnemyGrasshopperCmd = new ClickEnemyGrasshopperCmd(builder, random);
 
 		// Controls bar
 		GuiContainer controlsBar = new GuiContainer("controlsBar", loader, null, null, null, 251, 35,
@@ -372,4 +384,8 @@ public class MainGameState extends AbstractGuiState {
 			showFoodSubContainer();
 		}
 	}
+	
+	public void setTerrain(Terrain terrain) {
+		this.terrain = terrain;
+	};
 }

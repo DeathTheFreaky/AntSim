@@ -109,14 +109,7 @@ public class WorldLoader {
 		Entity sphereTest = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
 				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity(ModelLoader.texturedModels.get("cylinder"), 1, 40)
-				.buildPhysicsObject()
-				.registerResult();
-		
-		Entity blueCube = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
-				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity(ModelLoader.texturedModels.get("cylinder"), 1, 20)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("cylinder"), 1, 10)
 				.buildPhysicsObject()
 				.registerResult();
 		

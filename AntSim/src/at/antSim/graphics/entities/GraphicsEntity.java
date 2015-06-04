@@ -89,4 +89,8 @@ public class GraphicsEntity {
 	public void setTextureIndex(int textureIndex) {
 		this.textureIndex = textureIndex;
 	}
+	
+	public int getTextureIndex() {
+		return textureIndex;
+	}
 }

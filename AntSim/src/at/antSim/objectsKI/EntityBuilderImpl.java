@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bulletphysics.linearmath.Transform;
 
+import at.antSim.MovingEntity;
 import at.antSim.GTPMapper.GTPCone;
 import at.antSim.GTPMapper.GTPCuboid;
 import at.antSim.GTPMapper.GTPCylinder;

@@ -2,6 +2,7 @@ package at.antSim.guiWrapper.states;
 
 import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.models.RawModel;
+import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiElement;
 import at.antSim.guiWrapper.GuiState;
 import at.antSim.guiWrapper.GuiWrapper;
@@ -50,5 +51,5 @@ public abstract class AbstractGuiState {
 	 */
 	public String getName() {
 		return name;
-	};
+	}
 }

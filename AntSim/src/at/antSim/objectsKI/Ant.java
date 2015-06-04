@@ -70,8 +70,8 @@ public class Ant extends Entity {
 					|| physicsObject.getLinearVelocity().z < velocityZ) {
 				Vector3f v = new Vector3f(velocityX, 0, velocityZ);
 				physicsObject.setLinearVelocity(v);
-				 System.out.println("Ant: " + physicsObject.getPosition() +
-				 " Ground: " + staticPhysicsObject.getPosition());
+//				 System.out.println("Ant: " + physicsObject.getPosition() +
+//				 " Ground: " + staticPhysicsObject.getPosition());
 			}
 		} else {
 			// Not colliding with the ground but something else like a tree 
@@ -80,9 +80,9 @@ public class Ant extends Entity {
 				Vector3f v;
 				v = new Vector3f(velocityX + 10, 0, velocityZ);
 				physicsObject.setLinearVelocity(v);
-				System.out.println("velocity: "
-						+ physicsObject.getLinearVelocity() + " helper "
-						+ velocityhelper);
+//				System.out.println("velocity: "
+//						+ physicsObject.getLinearVelocity() + " helper "
+//						+ velocityhelper);
 			} else {
 				Vector3f v;
 				if (lastposition == physicsObject.getPosition().x) {
@@ -96,10 +96,10 @@ public class Ant extends Entity {
 					velocityhelper = 0;
 				}
 			}
-			System.out.println("Ant: " + physicsObject.getPosition().x
-					+ " lastposition: " + lastposition + " velocity: "
-					+ physicsObject.getLinearVelocity() + " helper "
-					+ velocityhelper);
+//			System.out.println("Ant: " + physicsObject.getPosition().x
+//					+ " lastposition: " + lastposition + " velocity: "
+//					+ physicsObject.getLinearVelocity() + " helper "
+//					+ velocityhelper);
 
 		}
 	}
