@@ -128,6 +128,13 @@ public class WorldLoader {
 				.buildPhysicsObject()
 				.registerResult();
 		
+		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
+				.setRotation(90, 45, 90)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("dragon"), 1, 25)
+				.buildPhysicsObject()
+				.registerResult();
+		
 	}
 	
 	/**Loads the world's light sources.
