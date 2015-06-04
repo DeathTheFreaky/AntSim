@@ -27,14 +27,14 @@ public class ModelLoader {
 	public static void loadTexturedModels(OpenGLLoader loader) {
 		
 		//first String in array is name of obj file, second is name of texture, third is desired name of TexturedModel in Hashmap
-//		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
-//		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie));
-//		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
-//		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
-//		modelPresets.add(new ModelNamesAndTypes("cube", "green", "greenCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
-//		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
-//		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("cube", "green", "greenCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);
@@ -46,14 +46,14 @@ public class ModelLoader {
 		}
 		
 		texturedModels.get("fern").getTexture().setNumberOfRows(2); //set number of rows inside texture atlas
-//		
-//		//set parameters for specular lighting for demo dragon
-//		texturedModels.get("dragon").getTexture().setShineDamper(10); //set shine damper for specular lighting
-//		texturedModels.get("dragon").getTexture().setReflectivity(1); //set reflectivity for specular lighting
-//		
-//		//set transparency and fake lighting for grass and fern (to avoid weird shadow look)
-//		texturedModels.get("grass").getTexture().setHasTransparency(true);
-//		texturedModels.get("grass").getTexture().setUseFakeLighting(true);
+		
+		//set parameters for specular lighting for demo dragon
+		texturedModels.get("dragon").getTexture().setShineDamper(10); //set shine damper for specular lighting
+		texturedModels.get("dragon").getTexture().setReflectivity(1); //set reflectivity for specular lighting
+		
+		//set transparency and fake lighting for grass and fern (to avoid weird shadow look)
+		texturedModels.get("grass").getTexture().setHasTransparency(true);
+		texturedModels.get("grass").getTexture().setUseFakeLighting(true);
 		texturedModels.get("fern").getTexture().setHasTransparency(true);
 		texturedModels.get("fern").getTexture().setUseFakeLighting(true);
 		

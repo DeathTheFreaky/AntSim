@@ -24,6 +24,8 @@ import at.antSim.graphics.models.ModelData;
  *
  */
 public class OBJFileLoader {
+	
+	static boolean debug = false;
 		
 	/**Takes in an .obj File, extracts all data from it (vertices, texture coordinates, normals, indices)
 	 * and returns a {@link RawModel} built on this data.
@@ -33,6 +35,12 @@ public class OBJFileLoader {
 	 * @return - the {@link RawModel} created from the data in the .obj File
 	 */
 	public static ModelData loadOBJ(String objFileName) {
+		
+		if (objFileName.equals("fern")) {
+			debug = true;
+		} else {
+			debug = false;
+		}
 		
 		//initialize filereader, bufferedreader and arraylists holding the data
         FileReader isr = null;
@@ -231,10 +239,6 @@ public class OBJFileLoader {
             
             float x = position.x * normalizeMultiplier, y = position.y * normalizeMultiplier, z = position.z * normalizeMultiplier;
             
-            if (currentVertex.getLength() > furthestPoint) {
-                furthestPoint = currentVertex.getLength();
-            }
-            
             if (x > maxPosX) maxPosX = x;
             else if (x < maxNegX) maxNegX = x;
             if (y > maxPosY) maxPosY = y;
@@ -248,14 +252,6 @@ public class OBJFileLoader {
         yLength = maxPosY - maxNegY;
         zLength = maxPosZ - maxNegZ;
         
-        System.out.println("xLength: " + xLength);
-        System.out.println("yLength: " + yLength);
-        System.out.println("zLength: " + zLength);
-        
-        System.out.println("maxX: " + maxPosX + ", minX: " + maxNegX);
-        System.out.println("maxY: " + maxPosY + ", minY: " + maxNegY);
-        System.out.println("maxZ: " + maxPosZ + ", minZ: " + maxNegZ);
-        
         //set origin to 0,0
         for (int i = 0; i < vertices.size(); i++) {
         	
@@ -264,22 +260,32 @@ public class OBJFileLoader {
             Vector3f position = (Vector3f) currentVertex.getPosition();
             Vector2f textureCoord = (Vector2f) textures.get(currentVertex.getTextureIndex());
             Vector3f normalVector = (Vector3f) normals.get(currentVertex.getNormalIndex());
+                                    
+            float x = position.x * normalizeMultiplier - (maxPosX - xLength/2), y = position.y * normalizeMultiplier  - (maxPosY - yLength/2), z = position.z * normalizeMultiplier  - (maxPosZ - zLength/2);
             
-            float x = position.x * normalizeMultiplier, y = position.y * normalizeMultiplier, z = position.z * normalizeMultiplier;
+            Vector3f furthestPointCalculator = new Vector3f(x, y, z);
+            if (furthestPointCalculator.length() > furthestPoint) {
+                furthestPoint = furthestPointCalculator.length();
+            }
             
-            verticesArray[i * 3] = x - (-1 - maxNegX);
-            verticesArray[i * 3 + 1] = y - (-1 - maxNegY);
-            verticesArray[i * 3 + 2] = z - (-1 - maxNegZ);
+            verticesArray[i * 3] = x;
+            verticesArray[i * 3 + 1] = y;
+            verticesArray[i * 3 + 2] = z;
             texturesArray[i * 2] = textureCoord.x;
             texturesArray[i * 2 + 1] = 1 - textureCoord.y;
             normalsArray[i * 3] = normalVector.x;
             normalsArray[i * 3 + 1] = normalVector.y;
             normalsArray[i * 3 + 2] = normalVector.z;
-            
-            System.out.println("x: " + verticesArray[i * 3] + ", y: " + verticesArray[i * 3 + 1] + ", z: " + verticesArray[i * 3 + 2]);
         }
         
-        return new OBJLoaderGeometryData(furthestPoint * normalizeMultiplier, xLength, yLength, zLength);
+        if (debug) {
+        	System.out.println("xLength: " + xLength);
+        	System.out.println("yLength: " + yLength);
+        	System.out.println("zLength: " + zLength);
+        	System.out.println("furthestPoint: " + furthestPoint);
+        }
+        
+        return new OBJLoaderGeometryData(furthestPoint, xLength, yLength, zLength);
     }
 	
 	/**Finds multiplier to normalize a model used for dividing all its positional data with the length of the axis with the biggest extent.

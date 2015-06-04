@@ -45,7 +45,10 @@ public class EntityBuilderImpl implements EntityBuilder {
 	
 	@Override
 	public EntityBuilder buildGraphicsEntity(TexturedModel texturedModel, int textureIndex, float scale) {
-		graphicsEntity = new GraphicsEntity(texturedModel, textureIndex, scale);
+		
+		scale = scale/2; //use scale/2 because entity has length of 2 on longest axis but scale shall refer to actual size of object
+		
+		graphicsEntity = new GraphicsEntity(texturedModel, textureIndex, scale); 
 		gtpObject = GTPMapper.getObject(graphicsEntity, scale, graphicsEntity.getModel().getPrimitiveType());
 		mass = graphicsEntity.getModel().getMass(); //set default mass
 		position.y = position.y + graphicsEntity.getModel().getRawModel().getyLength()/2 * scale;

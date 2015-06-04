@@ -14,7 +14,7 @@ public class GTPSphere extends GTPObject {
 	private float radious;
 
 	public GTPSphere(GraphicsEntity graphicsEntity, float scale) {
-		this.radious = graphicsEntity.getModel().getRawModel().getFurthestPoint() * scale;
+		this.radious = graphicsEntity.getModel().getRawModel().getFurthestPoint() * scale; 
 //		System.out.println(graphicsEntity + " - furthest point: " + graphicsEntity.getModel().getRawModel().getFurthestPoint());
 //		System.out.println(graphicsEntity + " - radious: " + radious);
 	}
