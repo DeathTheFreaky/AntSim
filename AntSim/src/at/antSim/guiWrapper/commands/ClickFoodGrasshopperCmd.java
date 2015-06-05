@@ -8,6 +8,7 @@ import at.antSim.MainApplication;
 import at.antSim.graphics.graphicsUtils.ModelLoader;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
+import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 
 /**
@@ -16,7 +17,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 public class ClickFoodGrasshopperCmd extends MovingEntityCmd {
 	
 	public ClickFoodGrasshopperCmd(EntityBuilder builder, Random random) {
-		super(builder, random, ModelLoader.texturedModels.get("greenCube"));
+		super(builder, random, "greenCube");
 	}
 
 	@Override
@@ -24,7 +25,9 @@ public class ClickFoodGrasshopperCmd extends MovingEntityCmd {
 		Entity movingEntity = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 			.setPosition(new Vector3f(0,0,0)) //position will be set later anyway in main loop according to mouse position
 			.setRotation(0, random.nextFloat() * 360, 0)
-			.buildGraphicsEntity(texturedModel, 1, 20)
+			.buildGraphicsEntity(type, 1, 20)
+			.setType("movingEntity")
+			.setObjectType(ObjectType.MOVING)
 			.buildPhysicsObject()
 			.registerResult();
 		MainApplication.getInstance().getMovingEntity().setEntity(movingEntity);

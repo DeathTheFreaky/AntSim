@@ -38,6 +38,8 @@ public class EntityShader extends ShaderProgram {
 	private int location_fogColor1;
     private int location_fogColor2;
     private int location_blendFactor;
+    private int location_movingEntityColor;
+    private int location_movingEntityBlendFactor;
 	
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
@@ -73,6 +75,9 @@ public class EntityShader extends ShaderProgram {
         location_fogColor2 = super.getUniformLocation("fogColor2");
         location_blendFactor = super.getUniformLocation("blendFactor");
 		
+        location_movingEntityColor = super.getUniformLocation("movingEntityColor");
+        location_movingEntityBlendFactor = super.getUniformLocation("movingEntityBlendFactor");
+        
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColor = new int[MAX_LIGHTS];
 		location_attenuation = new int[MAX_LIGHTS];
@@ -172,11 +177,27 @@ public class EntityShader extends ShaderProgram {
 		super.loadVector(location_fogColor2, nightFog);
 	}
 	
-	/**Loads a blend factor into shader uniform variable.
+	/**Loads a blend factor for fog into shader uniform variable.
 	 * 
 	 * @param blend - the blend factor to load into the shader uniform variable
 	 */
 	public void loadBlendFactor(float blend) {
 		super.loadFloat(location_blendFactor, blend);
+	}
+	
+	/**Loads moving entity blend color into shader uniform variable.
+	 * 
+	 * @param blendColor - a Vector3f of r,g,b
+	 */
+	public void loadMovingEntityColor(Vector3f blendColor) {
+		super.loadVector(location_movingEntityColor, blendColor);
+	}
+	
+	/**Loads a blend factor for moving entity into shader uniform variable.
+	 * 
+	 * @param blend - the blend factor to load into the shader uniform variable
+	 */
+	public void loadMovingEntityBlend(float blend) {
+		super.loadFloat(location_movingEntityBlendFactor, blend);
 	}
 }

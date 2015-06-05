@@ -14,6 +14,7 @@ import at.antSim.graphics.terrains.Terrain;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
+import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 
@@ -23,7 +24,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 public class ClickFoodAppleCmd extends MovingEntityCmd {
 	
 	public ClickFoodAppleCmd(EntityBuilder builder, Random random) {
-		super(builder, random, ModelLoader.texturedModels.get("cylinder"));
+		super(builder, random, "cylinder");
 	}
 
 	@Override
@@ -31,7 +32,9 @@ public class ClickFoodAppleCmd extends MovingEntityCmd {
 		Entity movingEntity = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 			.setPosition(new Vector3f(0,0,0)) //position will be set later anyway in main loop according to mouse position
 			.setRotation(0, random.nextFloat() * 360, 0)
-			.buildGraphicsEntity(texturedModel, 1, 10)
+			.buildGraphicsEntity(type, 1, 10)
+			.setType("movingEntity")
+			.setObjectType(ObjectType.MOVING)
 			.buildPhysicsObject()
 			.registerResult();
 		MainApplication.getInstance().getMovingEntity().setEntity(movingEntity);

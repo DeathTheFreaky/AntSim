@@ -161,7 +161,7 @@ public class Terrain {
 		myMesh.vertexBase.asFloatBuffer().put(vertices);
 		myMesh.vertexStride = 3 * 4;
 
-		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject(0, myMesh,
+		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject("terrain", 0, myMesh,
 				new Transform(Maths.createTransformationMatrix(new Vector3f(0, 0, -Globals.WORLD_SIZE), 0, 0, 0)));
 		PhysicsManager.getInstance().registerPhysicsObject(obj);
 		

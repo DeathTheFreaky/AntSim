@@ -44,7 +44,7 @@ public class ModelLoader {
 			rawModel.setFurthestPoint(modelData.getFurthestPoint());
 			rawModel.setLenghts(modelData.getxLength(), modelData.getyLength(), modelData.getzLength());
 			ModelTexture modelTexture = new ModelTexture(loader.loadTexture(modelPreset.textureFileName));
-			texturedModels.put(modelPreset.key, new TexturedModel(rawModel, modelTexture, modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass));
+			texturedModels.put(modelPreset.key, new TexturedModel(rawModel, modelTexture, modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.key));
 		}
 		
 		texturedModels.get("fern").getTexture().setNumberOfRows(2); //set number of rows inside texture atlas

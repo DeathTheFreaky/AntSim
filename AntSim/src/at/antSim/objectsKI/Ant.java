@@ -140,8 +140,8 @@ public class Ant extends Entity {
 
 	@EventListener(priority = EventPriority.NORMAL)
 	public void decideEvent(CollisionEvent ce) {
-		// System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
-		// "\nPhyObj1: " + ce.getPhyObj1() + "\nPhyObj2: " + ce.getPhyObj2());
+		 System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
+		 "\nPhyObj1: " + ce.getPhyObj1() + "\nPhyObj2: " + ce.getPhyObj2());
 		if (ce.getPhyObj1().equals(physicsObject)) {
 			ce.getPhyObj2().receive(this);
 			ce.consume();

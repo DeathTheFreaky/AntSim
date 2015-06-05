@@ -8,20 +8,14 @@ import org.lwjgl.util.vector.Vector3f;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.EventPriority;
+import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.eventSystem.events.KeyReleasedEvent;
-import at.antSim.eventSystem.events.MouseButtonPressedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.graphics.graphicsUtils.Maths;
-import at.antSim.graphics.graphicsUtils.ModelLoader;
 import at.antSim.graphics.models.TexturedModel;
-import at.antSim.objectsKI.Ant;
-import at.antSim.objectsKI.Enemy;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
-import at.antSim.objectsKI.EnvironmentObject;
-import at.antSim.objectsKI.Food;
-import at.antSim.objectsKI.Pheronome;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
@@ -36,7 +30,7 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 public class MovingEntity {
 	
 	private Entity entity;
-	private boolean moving;
+	private boolean colliding = false;
 	
 	EntityBuilder builder;
 	Random random;
@@ -71,7 +65,7 @@ public class MovingEntity {
 	public void placeEntityOnTerrain(MouseButtonReleasedEvent event){
 		if (event.getButton() == 0) { //place entity on terrain if left mouse button is pressed
 			//do some collision detection here -> only place entity if it does not overlap with another entity
-			if (1 == 1) { //not collides
+			if (!colliding) { //not collides
 				
 				PhysicsObjectFactory placedEntityFactory = null;
 				
@@ -106,13 +100,11 @@ public class MovingEntity {
 				Entity placedEntity = builder.setFactory(placedEntityFactory)
 						.setPosition(placedPosition) //position will be set later anyway in main loop according to mouse position
 						.setRotation(0, random.nextFloat() * 360, 0)
-						.buildGraphicsEntity(placedTextureModel, placedTextureIndex, placedScale)
+						.buildGraphicsEntity(placedTextureModel.getType(), placedTextureIndex, placedScale)
 						.buildPhysicsObject()
 						.registerResult();
 				
-			} else {
-				System.out.println("cannot be placed cause collides");
-			}
+			} 
 		}
 	}
 	
@@ -128,5 +120,28 @@ public class MovingEntity {
 			event.consume();
 			EventManager.getInstance().unregisterEventListener(this);
 		}
+	}
+	
+	@EventListener(priority = EventPriority.HIGH)
+	public void decideEvent(CollisionEvent ce) {
+		if ((ce.getPhyObj1().getType().equals("movingEntity") && !ce.getPhyObj2().getType().equals("terrain")) || 
+				(ce.getPhyObj2().getType().equals("movingEntity") && !ce.getPhyObj1().getType().equals("terrain"))) {
+			this.colliding = true;
+		} 
+	}
+	
+	/**Used to reset colliding to false for each collision cycle before checking for collision events.
+	 * 
+	 * @param colliding
+	 */
+	public void setColliding(boolean colliding) {
+		this.colliding = colliding;
+	}
+	
+	/**Indicates whether the MovingEntity is colliding with another object.
+	 * @return - true if MovingEntity is colliding with another object
+	 */
+	public boolean isColliding() {
+		return colliding;
 	}
 }

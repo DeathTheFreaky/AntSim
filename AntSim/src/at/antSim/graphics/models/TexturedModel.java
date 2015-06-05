@@ -12,13 +12,15 @@ import at.antSim.objectsKI.ObjectType;
  */
 public class TexturedModel {
 	
+	private String type;
 	private RawModel rawModel;
 	private ModelTexture texture;
 	private PrimitiveType sphereType;
 	private ObjectType objectType;
 	private float mass;
 	
-	public TexturedModel(RawModel model, ModelTexture texture, PrimitiveType sphereType, ObjectType objectType, float mass) {
+	public TexturedModel(RawModel model, ModelTexture texture, PrimitiveType sphereType, ObjectType objectType, float mass, String type) {
+		this.type = type;
 		this.rawModel = model;
 		this.texture = texture;
 		this.sphereType = sphereType;
@@ -44,5 +46,9 @@ public class TexturedModel {
 	
 	public float getMass() {
 		return mass;
+	}
+	
+	public String getType() {
+		return type;
 	}
 }

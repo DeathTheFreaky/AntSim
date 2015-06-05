@@ -247,16 +247,16 @@ public class MainApplication {
 	 */
 	private void update() {
 		long timeCurrentUpdate = System.currentTimeMillis();
-		EventManager.getInstance().workThroughQueue();
 		
 		//game logic
 		if (!paused && worldLoaded) {
-//			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
 			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
 			timeSinceLastUpdate *= speed;
 			statsCtrTest++;
-			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate);
+			movingEntity.setColliding(false); //assume that moving Entity does not collide by default, if it collides, a collision event...
+			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 		}
+		EventManager.getInstance().workThroughQueue(); //work through events after performing collision in order not to overwrite collision state of moving entity for rendering
 		timeLastLogicUpdate = timeCurrentUpdate;
 	}
 

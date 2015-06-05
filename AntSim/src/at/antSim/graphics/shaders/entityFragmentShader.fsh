@@ -22,6 +22,8 @@ uniform float reflectivity; //how much light a surface reflects (roughness of te
 uniform vec3 fogColor1; //mix terrain with fog color in the distance
 uniform vec3 fogColor2; //mix terrain with fog color in the distance
 uniform float blendFactor; //0: just the first texture, 1: just the second texture
+uniform vec3 movingEntityColor; //used to blend movingEntity model to indicate if it collides with another entity
+uniform float movingEntityBlendFactor; //regulates how strong the movingEntity shall be blended
 
 //Textures are not passed to a shader. They need to be bound (one or multiple textures) to the GL state, and they stay bound until a different texture is bound.
 //Then the fragment shader samples (i.e. "texture fetch") the texture. The fragment shader uses sampler2D uniforms to determine which texture unit to sample from.
@@ -78,5 +80,9 @@ void main(void) {
 	outColor = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0) ; 
 	//apply fog: create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility:  original pixel color
 	outColor = mix(vec4(finalFogColor, 1.0), outColor, visibility); 
-
+		
+	//color moving entity in red if it collides or green if it does not collide and hence can be placed on the terrain
+	if (movingEntityBlendFactor > 0) {
+		outColor = mix(vec4(movingEntityColor, 1.0), outColor, movingEntityBlendFactor);
+	}
 }

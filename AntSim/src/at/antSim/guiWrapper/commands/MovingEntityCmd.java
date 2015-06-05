@@ -17,19 +17,19 @@ public abstract class MovingEntityCmd implements Command {
 	
 	EntityBuilder builder;
 	Random random;
-	TexturedModel texturedModel; //used as key to check if currently selected model equals newly picked model or not
+	String type; //used as key to obtain TexturedModel from the HashMap storing all texturedModels and to set the type of the physicsObject
 	
-	public MovingEntityCmd(EntityBuilder builder, Random random, TexturedModel texturedModel) {
+	public MovingEntityCmd(EntityBuilder builder, Random random, String type) {
 		this.builder = builder;
 		this.random = random;
-		this.texturedModel = texturedModel;
+		this.type = type;
 	}
 	
 	@Override
 	public void execute() {
 		if (MainApplication.getInstance().getMovingEntity().getEntity() == null) {
 			createMovingEntity();
-		} else if (texturedModel != MainApplication.getInstance().getMovingEntity().getEntity().getGraphicsEntity().getModel()) {
+		} else if (!type.equals(MainApplication.getInstance().getMovingEntity().getEntity().getPhysicsObject().getType())) {
 			MainApplication.getInstance().getMovingEntity().setEntity(null);
 			createMovingEntity();
 		} else {

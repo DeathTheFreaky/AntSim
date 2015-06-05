@@ -13,6 +13,7 @@ import at.antSim.GTPMapper.GTPObject;
 import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.graphicsUtils.Maths;
+import at.antSim.graphics.graphicsUtils.ModelLoader;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
@@ -29,12 +30,14 @@ public class EntityBuilderImpl implements EntityBuilder {
 	GTPObject gtpObject;
 	PhysicsObject physicsObject;
 	PhysicsObjectFactory factory;
+	ObjectType objectType;
 	
 	float mass;
 	Vector3f position;
 	float rx;
 	float rz;
 	float ry;
+	String type = null;
 	
 	public EntityBuilderImpl() {
 		mass = 0;
@@ -45,13 +48,15 @@ public class EntityBuilderImpl implements EntityBuilder {
 	}
 	
 	@Override
-	public EntityBuilder buildGraphicsEntity(TexturedModel texturedModel, int textureIndex, float scale) {
+	public EntityBuilder buildGraphicsEntity(String type, int textureIndex, float scale) {
 		
 		scale = scale/2; //use scale/2 because entity has length of 2 on longest axis but scale shall refer to actual size of object
 		
-		graphicsEntity = new GraphicsEntity(texturedModel, textureIndex, scale); 
+		graphicsEntity = new GraphicsEntity(ModelLoader.texturedModels.get(type), textureIndex, scale); 
 		gtpObject = GTPMapper.getObject(graphicsEntity, scale, graphicsEntity.getModel().getPrimitiveType());
 		mass = graphicsEntity.getModel().getMass(); //set default mass
+		this.type = type;
+		objectType = graphicsEntity.getModel().getObjectType();
 		position.y = position.y + graphicsEntity.getModel().getRawModel().getyLength()/2 * scale;
 		return this;
 	}
@@ -66,22 +71,22 @@ public class EntityBuilderImpl implements EntityBuilder {
 
 	@Override
 	public void createCone(GTPCone cone) {
-		physicsObject = factory.createCone(mass, cone.getHeight(), cone.getRadius(), cone.getOrienation(), new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+		physicsObject = factory.createCone(type, mass, cone.getHeight(), cone.getRadius(), cone.getOrienation(), new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
 	}
 
 	@Override
 	public void createCuboid(GTPCuboid cuboid) {
-		physicsObject = factory.createCuboid(mass, cuboid.getxLength(), cuboid.getyLength(), cuboid.getzLength(), new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+		physicsObject = factory.createCuboid(type, mass, cuboid.getxLength(), cuboid.getyLength(), cuboid.getzLength(), new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
 	}
 
 	@Override
 	public void createCylinder(GTPCylinder cylinder) {
-		physicsObject = factory.createCylinder(mass, cylinder.getHeight(), cylinder.getRadius(), cylinder.getOrientation(), new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+		physicsObject = factory.createCylinder(type, mass, cylinder.getHeight(), cylinder.getRadius(), cylinder.getOrientation(), new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
 	}
 
 	@Override
 	public void createSphere(GTPSphere sphere) {
-		physicsObject = factory.createSphere(mass, sphere.getRadious(),  new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+		physicsObject = factory.createSphere(type, mass, sphere.getRadious(),  new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
 	}
 
 	@Override
@@ -108,7 +113,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 	public Entity registerResult() {
 		if (graphicsEntity != null) {
 			PhysicsManager.getInstance().registerPhysicsObject(physicsObject);
-			switch (graphicsEntity.getModel().getObjectType()) {
+			switch (objectType) {
 			case ANT:
 				return new Ant(graphicsEntity, physicsObject);
 			case ENEMY:
@@ -119,6 +124,8 @@ public class EntityBuilderImpl implements EntityBuilder {
 				return new Food(graphicsEntity, physicsObject);
 			case PHEROMONE:
 				return new Pheronome(graphicsEntity, physicsObject);
+			case MOVING:
+				return new Moving(graphicsEntity, physicsObject);
 			}
 		}
 		return null;
@@ -127,6 +134,18 @@ public class EntityBuilderImpl implements EntityBuilder {
 	@Override
 	public EntityBuilder setFactory(PhysicsObjectFactory factory) {
 		this.factory = factory;
+		return this;
+	}
+
+	@Override
+	public EntityBuilder setType(String type) {
+		this.type = type;
+		return this;
+	}
+
+	@Override
+	public EntityBuilder setObjectType(ObjectType objectType) {
+		this.objectType = objectType;
 		return this;
 	}
 }
