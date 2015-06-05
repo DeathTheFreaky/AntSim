@@ -14,6 +14,8 @@ import javax.vecmath.Vector3f;
  * @author Clemens
  */
 public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOnlyPhysicsObject {
+	
+	int debugId;
 
 	@Override
 	public Vector3f getPosition() {
@@ -63,5 +65,13 @@ public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOn
 	public Vector3f getAngularVelocity() {
 		Vector3f out = new Vector3f();
 		return out;
+	}
+
+	public int getDebugId() {
+		return debugId;
+	}
+
+	public void setDebugId(int debugId) {
+		this.debugId = debugId;
 	}
 }

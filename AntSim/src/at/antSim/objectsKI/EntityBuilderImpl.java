@@ -1,9 +1,12 @@
 package at.antSim.objectsKI;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import com.bulletphysics.linearmath.Transform;
 
+import at.antSim.MainApplication;
 import at.antSim.MovingEntity;
 import at.antSim.GTPMapper.GTPCone;
 import at.antSim.GTPMapper.GTPCuboid;
@@ -18,6 +21,7 @@ import at.antSim.graphics.models.TexturedModel;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 /**Implements {@link EntityBuilder}.
  * 
@@ -33,18 +37,14 @@ public class EntityBuilderImpl implements EntityBuilder {
 	ObjectType objectType;
 	
 	float mass;
-	Vector3f position;
-	float rx;
-	float rz;
-	float ry;
+	Vector3f position = new Vector3f();
+	Vector3f rotation = null;
+	Quat4f quat = new Quat4f();
+	Transform transform = new Transform();
 	String type = null;
 	
 	public EntityBuilderImpl() {
 		mass = 0;
-		position = new Vector3f(0, 0, 0);
-		rx = 0;
-		ry = 0;
-		rz = 0;
 	}
 	
 	@Override
@@ -58,6 +58,12 @@ public class EntityBuilderImpl implements EntityBuilder {
 		this.type = type;
 		objectType = graphicsEntity.getModel().getObjectType();
 		position.y = position.y + graphicsEntity.getModel().getRawModel().getyLength()/2 * scale;
+		if (rotation != null) {
+			transform.set(Maths.createTransformationMatrix(position, rotation.x, rotation.y, rotation.z));
+		} else {
+			transform.set(Maths.createTransformationMatrix(position, 0, 0, 0));
+			transform.setRotation(quat);
+		}
 		return this;
 	}
 
@@ -71,22 +77,22 @@ public class EntityBuilderImpl implements EntityBuilder {
 
 	@Override
 	public void createCone(GTPCone cone) {
-		physicsObject = factory.createCone(type, mass, cone.getHeight(), cone.getRadius(), cone.getOrienation(), new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+		physicsObject = factory.createCone(type, mass, cone.getHeight(), cone.getRadius(), cone.getOrienation(), transform);
 	}
 
 	@Override
 	public void createCuboid(GTPCuboid cuboid) {
-		physicsObject = factory.createCuboid(type, mass, cuboid.getxLength(), cuboid.getyLength(), cuboid.getzLength(), new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+		physicsObject = factory.createCuboid(type, mass, cuboid.getxLength(), cuboid.getyLength(), cuboid.getzLength(), transform);
 	}
 
 	@Override
 	public void createCylinder(GTPCylinder cylinder) {
-		physicsObject = factory.createCylinder(type, mass, cylinder.getHeight(), cylinder.getRadius(), cylinder.getOrientation(), new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+		physicsObject = factory.createCylinder(type, mass, cylinder.getHeight(), cylinder.getRadius(), cylinder.getOrientation(), transform);
 	}
 
 	@Override
 	public void createSphere(GTPSphere sphere) {
-		physicsObject = factory.createSphere(type, mass, sphere.getRadious(),  new Transform(Maths.createTransformationMatrix(position, rx, ry, rz)));
+		physicsObject = factory.createSphere(type, mass, sphere.getRadious(), transform);
 	}
 
 	@Override
@@ -103,9 +109,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 
 	@Override
 	public EntityBuilder setRotation(float rx, float ry, float rz) {
-		this.rx = rx;
-		this.ry = ry;
-		this.rz = rz;
+		rotation = new Vector3f(rx, ry, rz);
 		return this;
 	}
 
@@ -128,6 +132,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 				return new Moving(graphicsEntity, physicsObject);
 			}
 		}
+		((ReadOnlyPhysicsObject) physicsObject).setDebugId(MainApplication.getInstance().getIdCtr());
 		return null;
 	}
 
@@ -146,6 +151,13 @@ public class EntityBuilderImpl implements EntityBuilder {
 	@Override
 	public EntityBuilder setObjectType(ObjectType objectType) {
 		this.objectType = objectType;
+		return this;
+	}
+
+	@Override
+	public EntityBuilder setRotation(Quat4f quat) {
+		this.quat = quat;
+		rotation = null;
 		return this;
 	}
 }

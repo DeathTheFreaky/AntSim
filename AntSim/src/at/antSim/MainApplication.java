@@ -152,6 +152,8 @@ public class MainApplication {
 		INSTANCE = new MainApplication();
 	}
 	
+	int idCtr;
+	
 	/**Launches the simulation loop.<br>
 	 * Logic will be updated according according to FPS_CAP * speed,
 	 * while rendering will only occur at FPS_CAP.
@@ -246,17 +248,20 @@ public class MainApplication {
 	 * 
 	 */
 	private void update() {
+		
 		long timeCurrentUpdate = System.currentTimeMillis();
+		
+		movingEntity.setColliding(false); //assume that moving Entity does not collide by default, if it collides, a collision event...
+		EventManager.getInstance().workThroughQueue();
 		
 		//game logic
 		if (!paused && worldLoaded) {
 			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
 			timeSinceLastUpdate *= speed;
 			statsCtrTest++;
-			movingEntity.setColliding(false); //assume that moving Entity does not collide by default, if it collides, a collision event...
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 		}
-		EventManager.getInstance().workThroughQueue(); //work through events after performing collision in order not to overwrite collision state of moving entity for rendering
+		//EventManager.getInstance().workThroughQueue(); //work through events again after performing collision in order not to overwrite collision state of moving entity for rendering
 		timeLastLogicUpdate = timeCurrentUpdate;
 	}
 
@@ -400,5 +405,10 @@ public class MainApplication {
 	 */
 	public static MainApplication getInstance() {
 		return INSTANCE;
+	}
+	
+	public int getIdCtr() {
+		idCtr++;
+		return idCtr - 1;
 	}
 }

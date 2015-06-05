@@ -1,5 +1,7 @@
 package at.antSim.objectsKI;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.GTPMapper.GTPCone;
@@ -75,6 +77,12 @@ public interface EntityBuilder {
 	 * @param rz
 	 */
 	public EntityBuilder setRotation(float rx, float ry, float rz);
+	
+	/**Sets the Entity's rotation with quaternions.
+	 * @param quat
+	 * @return
+	 */
+	public EntityBuilder setRotation(Quat4f quat);
 	
 	public void createCone(GTPCone cone);
 	

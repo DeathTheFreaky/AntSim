@@ -2,8 +2,12 @@ package at.antSim;
 
 import java.util.Random;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.sun.javafx.geom.Vec3f;
 
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventManager;
@@ -73,19 +77,26 @@ public class MovingEntity {
 				switch (entity.getGraphicsEntity().getModel().getObjectType()) {
 				case ANT:
 					placedEntityFactory = DynamicPhysicsObjectFactory.getInstance();
+					break;
 				case ENEMY:
 					placedEntityFactory = DynamicPhysicsObjectFactory.getInstance();
+					break;
 				case ENVIRONMENT:
 					placedEntityFactory = StaticPhysicsObjectFactory.getInstance();
+					break;
 				case FOOD:
 					placedEntityFactory = StaticPhysicsObjectFactory.getInstance();
+					break;
 				case PHEROMONE:
 					placedEntityFactory = GhostPhysicsObjectFactory.getInstance();
+					break;
 				}
 				
 				//store data of currently moving entity which has to be dynamic to enable collision detection
 				Vector3f placedPosition = Maths.convertVector3f(((ReadOnlyPhysicsObject) entity.getPhysicsObject()).getPosition());
 				placedPosition.y = placedPosition.y - entity.getGraphicsEntity().getModel().getRawModel().getyLength()/2 * entity.getGraphicsEntity().getScale();
+				ReadOnlyPhysicsObject po = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
+				Quat4f placedQuats = po.getRotationQuaternions();
 				TexturedModel placedTextureModel = entity.getGraphicsEntity().getModel();
 				int placedTextureIndex = entity.getGraphicsEntity().getTextureIndex();
 				float placedScale = entity.getGraphicsEntity().getScale() * 2; //*2 because scale is divided by two when creating graphics entity to reflect exect measurement
@@ -95,15 +106,15 @@ public class MovingEntity {
 				entity = null;
 				event.consume();
 				EventManager.getInstance().unregisterEventListener(this);
-				
+								
 				//place entity equaling moving entity, but which can be static, dynamic or ghost
 				Entity placedEntity = builder.setFactory(placedEntityFactory)
-						.setPosition(placedPosition) //position will be set later anyway in main loop according to mouse position
-						.setRotation(0, random.nextFloat() * 360, 0)
-						.buildGraphicsEntity(placedTextureModel.getType(), placedTextureIndex, placedScale)
-						.buildPhysicsObject()
-						.registerResult();
-				
+					.setPosition(placedPosition) //position will be set later anyway in main loop according to mouse position
+					//.setRotation(placedRotation.x, placedRotation.y, placedRotation.z)
+					.setRotation(placedQuats)
+					.buildGraphicsEntity(placedTextureModel.getType(), placedTextureIndex, placedScale)
+					.buildPhysicsObject()
+					.registerResult();
 			} 
 		}
 	}
@@ -123,9 +134,16 @@ public class MovingEntity {
 	}
 	
 	@EventListener(priority = EventPriority.HIGH)
-	public void decideEvent(CollisionEvent ce) {
+	public void collideEvent(CollisionEvent ce) {
 		if ((ce.getPhyObj1().getType().equals("movingEntity") && !ce.getPhyObj2().getType().equals("terrain")) || 
-				(ce.getPhyObj2().getType().equals("movingEntity") && !ce.getPhyObj1().getType().equals("terrain"))) {
+				(!ce.getPhyObj1().getType().equals("terrain") && ce.getPhyObj2().getType().equals("movingEntity"))) {
+			
+			ReadOnlyPhysicsObject ob1 = (ReadOnlyPhysicsObject) ce.getPhyObj1();
+			ReadOnlyPhysicsObject ob2 = (ReadOnlyPhysicsObject) ce.getPhyObj2();
+			
+			System.out.println("collision occured between " + ce.getPhyObj1().getType() + ob1.getDebugId() + "(" + ce.getPhyObj1() + ") and " + ce.getPhyObj2().getType() + ob2.getDebugId() + "(" + ce.getPhyObj2() + ")");
+			
+			ce.consume();
 			this.colliding = true;
 		} 
 	}
