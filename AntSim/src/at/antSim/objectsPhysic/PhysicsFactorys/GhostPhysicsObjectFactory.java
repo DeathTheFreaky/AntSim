@@ -14,6 +14,10 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  * @author Clemens
  */
 public class GhostPhysicsObjectFactory extends AbstractPhysicsObjectFactory<GhostPhysicsObject> {
+	
+	private static GhostPhysicsObjectFactory INSTANCE = null;
+	
+	private GhostPhysicsObjectFactory() {};
 
 	@Override
 	public GhostPhysicsObject createSphere(float mass, float radius) throws UnsupportedOperationException {
@@ -79,5 +83,12 @@ public class GhostPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Ghos
 	@Override
 	public GhostPhysicsObject createExactObject(float mass, IndexedMesh mesh, Transform position) {
 		throw new NotImplementedException();
+	}
+
+	public static PhysicsObjectFactory getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new GhostPhysicsObjectFactory();
+		}
+		return INSTANCE;
 	}
 }

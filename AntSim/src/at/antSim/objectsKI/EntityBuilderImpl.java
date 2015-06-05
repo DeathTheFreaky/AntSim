@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bulletphysics.linearmath.Transform;
 
+import at.antSim.MovingEntity;
 import at.antSim.GTPMapper.GTPCone;
 import at.antSim.GTPMapper.GTPCuboid;
 import at.antSim.GTPMapper.GTPCylinder;
@@ -45,9 +46,13 @@ public class EntityBuilderImpl implements EntityBuilder {
 	
 	@Override
 	public EntityBuilder buildGraphicsEntity(TexturedModel texturedModel, int textureIndex, float scale) {
-		graphicsEntity = new GraphicsEntity(texturedModel, textureIndex, scale);
+		
+		scale = scale/2; //use scale/2 because entity has length of 2 on longest axis but scale shall refer to actual size of object
+		
+		graphicsEntity = new GraphicsEntity(texturedModel, textureIndex, scale); 
 		gtpObject = GTPMapper.getObject(graphicsEntity, scale, graphicsEntity.getModel().getPrimitiveType());
 		mass = graphicsEntity.getModel().getMass(); //set default mass
+		position.y = position.y + graphicsEntity.getModel().getRawModel().getyLength()/2 * scale;
 		return this;
 	}
 

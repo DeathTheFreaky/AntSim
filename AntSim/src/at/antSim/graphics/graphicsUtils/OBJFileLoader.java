@@ -24,6 +24,8 @@ import at.antSim.graphics.models.ModelData;
  *
  */
 public class OBJFileLoader {
+	
+	static boolean debug = false;
 		
 	/**Takes in an .obj File, extracts all data from it (vertices, texture coordinates, normals, indices)
 	 * and returns a {@link RawModel} built on this data.
@@ -34,6 +36,12 @@ public class OBJFileLoader {
 	 */
 	public static ModelData loadOBJ(String objFileName) {
 		
+//		if (objFileName.equals("sphere")) {
+//			debug = true;
+//		} else {
+//			debug = false;
+//		}
+//		
 		//initialize filereader, bufferedreader and arraylists holding the data
         FileReader isr = null;
         File objFile = new File(Globals.MODELS + objFileName + ".obj");
@@ -50,8 +58,13 @@ public class OBJFileLoader {
         List<Integer> indices = new ArrayList<Integer>(); //will contain: vertex1index, texture1index, normal1index, vertex2index, texture2index, normal2index...
        
         try {
+        	int linectr = 0;
             while (true) {
                 line = reader.readLine();
+                
+                if (debug) System.out.println("linectr: " + linectr);
+                
+                linectr++;
                 
                 //parse a model's vertices' x,y,z coordinates as floats, create a Vertex Object with these coordinates, add this Vertex Object to list of vertices
                 if (line.startsWith("v ")) {
@@ -113,6 +126,7 @@ public class OBJFileLoader {
              *  
              *  For more information on the obj file format see: http://www.scratchapixel.com/old/lessons/3d-advanced-lessons/obj-file-format/obj-file-format/
              * */
+            
             while (line != null && line.startsWith("f ")) {
                 String[] currentLine = line.split(" "); 
                 String[] vertex1 = currentLine[1].split("/");
@@ -122,6 +136,7 @@ public class OBJFileLoader {
                 processVertex(vertex2, vertices, indices);
                 processVertex(vertex3, vertices, indices);
                 line = reader.readLine();
+                linectr++;
             }
             reader.close();
         } catch (IOException e) {
@@ -213,7 +228,7 @@ public class OBJFileLoader {
         float yLength;
         float zLength;
         
-        //find max extents for each axis to calculate lengths
+        //find max extents for each axis to calculate lengths in arbitrary origins from obj model -> it is possible that y values stretch from 0.3 to 2.3 instead of -1 to +1
         float maxNegX = 0;
         float maxPosX = 0;
         float maxNegY = 0;
@@ -231,16 +246,34 @@ public class OBJFileLoader {
             
             float x = position.x * normalizeMultiplier, y = position.y * normalizeMultiplier, z = position.z * normalizeMultiplier;
             
-            if (currentVertex.getLength() > furthestPoint) {
-                furthestPoint = currentVertex.getLength();
-            }
-            
             if (x > maxPosX) maxPosX = x;
             else if (x < maxNegX) maxNegX = x;
             if (y > maxPosY) maxPosY = y;
             else if (y < maxNegY) maxNegY = y;
             if (z > maxPosZ) maxPosZ = z;
             else if (z < maxNegZ) maxNegZ = z;
+            
+        }
+        
+        xLength = maxPosX - maxNegX;
+        yLength = maxPosY - maxNegY;
+        zLength = maxPosZ - maxNegZ;
+        
+        //set origin to 0,0
+        for (int i = 0; i < vertices.size(); i++) {
+        	
+            Vertex currentVertex = vertices.get(i);
+            
+            Vector3f position = (Vector3f) currentVertex.getPosition();
+            Vector2f textureCoord = (Vector2f) textures.get(currentVertex.getTextureIndex());
+            Vector3f normalVector = (Vector3f) normals.get(currentVertex.getNormalIndex());
+                                    
+            float x = position.x * normalizeMultiplier - (maxPosX - xLength/2), y = position.y * normalizeMultiplier  - (maxPosY - yLength/2), z = position.z * normalizeMultiplier  - (maxPosZ - zLength/2);
+            
+            Vector3f furthestPointCalculator = new Vector3f(x, y, z);
+            if (furthestPointCalculator.length() > furthestPoint) {
+                furthestPoint = furthestPointCalculator.length();
+            }
             
             verticesArray[i * 3] = x;
             verticesArray[i * 3 + 1] = y;
@@ -252,11 +285,20 @@ public class OBJFileLoader {
             normalsArray[i * 3 + 2] = normalVector.z;
         }
         
-        xLength = maxPosX - maxNegX;
-        yLength = maxPosY - maxNegY;
-        zLength = maxPosZ - maxNegZ;
+        if (debug) {
+        	System.out.println("maxPosX: " + maxPosX);
+        	System.out.println("minPosX: " + maxNegX);
+        	System.out.println("maxPosY: " + maxPosY);
+        	System.out.println("minPosY: " + maxNegY);
+        	System.out.println("maxPosZ: " + maxPosZ);
+        	System.out.println("minPosZ: " + maxNegZ);
+        	System.out.println("xLength: " + xLength);
+        	System.out.println("yLength: " + yLength);
+        	System.out.println("zLength: " + zLength);
+        	System.out.println("furthestPoint: " + furthestPoint);
+        }
         
-        return new OBJLoaderGeometryData(furthestPoint * normalizeMultiplier, xLength, yLength, zLength);
+        return new OBJLoaderGeometryData(furthestPoint, xLength, yLength, zLength);
     }
 	
 	/**Finds multiplier to normalize a model used for dividing all its positional data with the length of the axis with the biggest extent.
@@ -296,7 +338,7 @@ public class OBJFileLoader {
         yLength = maxPosY - maxNegY;
         zLength = maxPosZ - maxNegZ;
         
-        return 1/java.lang.Math.max(xLength, java.lang.Math.max(yLength, zLength));
+        return 1/java.lang.Math.max(xLength, java.lang.Math.max(yLength, zLength)) * 2;
 	}
 
 	/**Deals with vertices that have already been indexed (by their positional data in vertices array).<br>

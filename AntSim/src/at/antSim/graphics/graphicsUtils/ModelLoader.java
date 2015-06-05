@@ -31,7 +31,12 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("cube", "green", "greenCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "sphere", PrimitiveType.SPHERE, ObjectType.ENEMY, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);

@@ -92,35 +92,42 @@ public class WorldLoader {
 		}
 		
 		//add some lamps
-//		Entity lamp1 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//			.setPosition(new Vector3f(185, -4.7f, -293))
-//			.setRotation(0, random.nextFloat() * 360, 0)
-//			.buildGraphicsEntity(ModelLoader.texturedModels.get("lamp"), 1, 20)
-//			.buildPhysicsObject()
-//			.registerResult();
-//
-//		Entity lamp2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(370, 4.2f, -300))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity(ModelLoader.texturedModels.get("lamp"), 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
-//		PhysicsManager.getInstance().registerPhysicsObject(lamp2.getPhysicsObject());
-//		Entity fernTest = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 5, -7, -Globals.WORLD_SIZE/2))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity(ModelLoader.texturedModels.get("fern"), 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
+		Entity lamp1 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+			.setPosition(new Vector3f(185, -4.7f, -293))
+			.setRotation(0, random.nextFloat() * 360, 0)
+			.buildGraphicsEntity(ModelLoader.texturedModels.get("lamp"), 1, 20)
+			.buildPhysicsObject()
+			.registerResult();
+
+		Entity lamp2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(370, 4.2f, -300))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("lamp"), 1, 20)
+				.buildPhysicsObject()
+				.registerResult();
+		
+		Entity sphereTest = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("cylinder"), 1, 10)
+				.buildPhysicsObject()
+				.registerResult();
 		
 		//add cool stanford demo dragon for specular lighting demo
+		Entity redCube = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
+				.setRotation(90, 45, 90)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("sphere"), 1, 25)
+				.buildPhysicsObject()
+				.registerResult();
+		
 		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 1000, -Globals.WORLD_SIZE/2))
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
 				.setRotation(90, 45, 90)
 				.buildGraphicsEntity(ModelLoader.texturedModels.get("dragon"), 1, 25)
 				.buildPhysicsObject()
 				.registerResult();
-		//PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
+		
 	}
 	
 	/**Loads the world's light sources.
