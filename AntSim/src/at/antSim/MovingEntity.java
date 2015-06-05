@@ -141,7 +141,7 @@ public class MovingEntity {
 			ReadOnlyPhysicsObject ob1 = (ReadOnlyPhysicsObject) ce.getPhyObj1();
 			ReadOnlyPhysicsObject ob2 = (ReadOnlyPhysicsObject) ce.getPhyObj2();
 			
-			System.out.println("collision occured between " + ce.getPhyObj1().getType() + ob1.getDebugId() + "(" + ce.getPhyObj1() + ") and " + ce.getPhyObj2().getType() + ob2.getDebugId() + "(" + ce.getPhyObj2() + ")");
+//			System.out.println("collision occured between " + ce.getPhyObj1().getType() + ob1.getDebugId() + "(" + ce.getPhyObj1() + ") and " + ce.getPhyObj2().getType() + ob2.getDebugId() + "(" + ce.getPhyObj2() + ")");
 			
 			ce.consume();
 			this.colliding = true;

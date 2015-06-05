@@ -146,13 +146,13 @@ public class MainApplication {
 
 	private HashMap<String, Integer> stats = new HashMap<>();
 	
+	int idCtr = 0;
+	
 	private MainApplication() {};
 	
 	static {
 		INSTANCE = new MainApplication();
 	}
-	
-	int idCtr;
 	
 	/**Launches the simulation loop.<br>
 	 * Logic will be updated according according to FPS_CAP * speed,
@@ -408,7 +408,9 @@ public class MainApplication {
 	}
 	
 	public int getIdCtr() {
+		int retVal = idCtr;
 		idCtr++;
-		return idCtr - 1;
+		System.out.println("id ctr is now " + idCtr);
+		return retVal;
 	}
 }
