@@ -4,6 +4,7 @@ import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
@@ -57,6 +58,7 @@ public abstract class Entity {
 	 * Deletes this Entity, removing it from the physicsObjectTypeMap and the renderingMap.
 	 */
 	public void delete() {
+		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
 		physicsObjectTypeMap.remove(this);
 		renderingMap.get(graphicsEntity.getModel()).remove(this);
 	}
@@ -80,6 +82,9 @@ public abstract class Entity {
 	 * 
 	 */
 	public static void deleteAllEntities() {
+		for (PhysicsObject po : physicsObjectTypeMap.keySet()) {
+			PhysicsManager.getInstance().unregisterPhysicsObject(po);
+		}
 		physicsObjectTypeMap.clear();
 		renderingMap.clear();
 	}

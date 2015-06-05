@@ -102,7 +102,7 @@ public class PhysicsManager {
 		
 		System.out.println("physicsObjectMap has " + physicsObjectMap.size() + " entries");
 		for (Entry<CollisionObject, PhysicsObject> entry : physicsObjectMap.entrySet()) {
-			System.out.println(entry.getKey() + ": " + entry.getValue().getType() + ((ReadOnlyPhysicsObject) entry.getValue()).getDebugId() + " (" + entry.getValue() + ")");
+			System.out.println(entry.getKey() + ": " + entry.getValue().getType() + " (" + entry.getValue() + ")");
 		}
 	}
 }

@@ -145,9 +145,7 @@ public class MainApplication {
 	private int statsCtrTest = 0;
 
 	private HashMap<String, Integer> stats = new HashMap<>();
-	
-	int idCtr = 0;
-	
+		
 	private MainApplication() {};
 	
 	static {
@@ -406,12 +404,5 @@ public class MainApplication {
 	 */
 	public static MainApplication getInstance() {
 		return INSTANCE;
-	}
-	
-	public int getIdCtr() {
-		int retVal = idCtr;
-		idCtr++;
-		System.out.println("id ctr is now " + idCtr);
-		return retVal;
 	}
 }

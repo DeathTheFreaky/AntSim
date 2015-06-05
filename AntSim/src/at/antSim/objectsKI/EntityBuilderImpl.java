@@ -116,7 +116,6 @@ public class EntityBuilderImpl implements EntityBuilder {
 	@Override
 	public Entity registerResult() {
 		if (graphicsEntity != null) {
-			((ReadOnlyPhysicsObject) physicsObject).setDebugId(MainApplication.getInstance().getIdCtr());
 			PhysicsManager.getInstance().registerPhysicsObject(physicsObject);
 			switch (objectType) {
 			case ANT:

@@ -34,8 +34,4 @@ public interface ReadOnlyPhysicsObject {
 	 * @return Returns the angular velocity of the Object represented as {@link Vector3f vector}
 	 */
 	Vector3f getAngularVelocity();
-	
-	int getDebugId();
-	
-	void setDebugId(int debugId);
 }
