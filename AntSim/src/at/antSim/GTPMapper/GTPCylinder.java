@@ -34,20 +34,20 @@ public class GTPCylinder extends GTPObject {
 		if (xLength > yLength && xLength > zLength) {
 //			System.out.println("xOrientation");
 			height = xLength;
-			if (yLength > zLength) radius = yLength;
-			else radius = zLength;
+			if (yLength > zLength) radius = yLength/2;
+			else radius = zLength/2;
 			orientation = PhysicsObjectOrientation.X;
 		} else if (yLength > xLength && yLength > zLength) {
 //			System.out.println("yOrientation");
 			height = yLength;
-			if (xLength > zLength) radius = xLength;
-			else radius = zLength;
+			if (xLength > zLength) radius = xLength/2;
+			else radius = zLength/2;
 			orientation = PhysicsObjectOrientation.Y;
 		} else if (zLength > xLength && zLength > yLength) {
 //			System.out.println("zOrientation");
 			height = zLength;
-			if (yLength > xLength) radius = yLength;
-			else radius = xLength;
+			if (yLength > xLength) radius = yLength/2;
+			else radius = xLength/2;
 			orientation = PhysicsObjectOrientation.Z;
 		}
 	}
