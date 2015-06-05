@@ -10,6 +10,7 @@ import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 
 /**
  * Created by Alexander on 19.05.2015.

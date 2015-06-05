@@ -136,7 +136,7 @@ public class MovingEntity {
 	@EventListener(priority = EventPriority.HIGH)
 	public void collideEvent(CollisionEvent ce) {
 		if ((ce.getPhyObj1().getType().equals("movingEntity") && !ce.getPhyObj2().getType().equals("terrain")) || 
-				(!ce.getPhyObj1().getType().equals("terrain") && ce.getPhyObj2().getType().equals("movingEntity"))) {
+				(!ce.getPhyObj1().getType().equals("terrain") && ce.getPhyObj2().getType().equals("movingEntity")) && ce.getPhyObj1() != ce.getPhyObj2()) { //two same objects should never collide anyway...
 			
 			ReadOnlyPhysicsObject ob1 = (ReadOnlyPhysicsObject) ce.getPhyObj1();
 			ReadOnlyPhysicsObject ob2 = (ReadOnlyPhysicsObject) ce.getPhyObj2();

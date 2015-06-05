@@ -16,6 +16,7 @@ import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 
 /**
