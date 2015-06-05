@@ -259,6 +259,7 @@ public class MainApplication {
 			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
 			timeSinceLastUpdate *= speed;
 			statsCtrTest++;
+			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 		}
 		//EventManager.getInstance().workThroughQueue(); //work through events again after performing collision in order not to overwrite collision state of moving entity for rendering
