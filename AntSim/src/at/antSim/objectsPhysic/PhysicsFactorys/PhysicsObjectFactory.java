@@ -20,27 +20,30 @@ public interface PhysicsObjectFactory<E extends PhysicsObject> {
 	/**
 	 * Creates an PhysicsObject representing a Sphere with mass and radius at (0,0,0).
 	 *
+	 * @param type     Type of the Object
 	 * @param mass   Mass of the Object
 	 * @param radius Radius of the Sphere
 	 * @return
 	 * @throws UnsupportedOperationException
 	 */
-	E createSphere(float mass, float radius) throws UnsupportedOperationException;
+	E createSphere(String type, float mass, float radius) throws UnsupportedOperationException;
 
 	/**
 	 * Creates an PhysicsObject representing a Sphere with mass and radius.
 	 *
+	 * @param type     Type of the Object
 	 * @param mass     Mass of the Object
 	 * @param radius   Radius of the Sphere
 	 * @param position Position of the Sphere
 	 * @return
 	 * @throws UnsupportedOperationException
 	 */
-	E createSphere(float mass, float radius, Transform position) throws UnsupportedOperationException;
+	E createSphere(String type, float mass, float radius, Transform position) throws UnsupportedOperationException;
 
 	/**
 	 * Creates an PhysicsObject representing a Cuboid with mass and x y z dimensions at (0,0,0).
 	 *
+	 * @param type     Type of the Object
 	 * @param mass    Mass of the Object
 	 * @param xLength Length in X-dimension
 	 * @param yLength Length in Y-dimension
@@ -48,11 +51,12 @@ public interface PhysicsObjectFactory<E extends PhysicsObject> {
 	 * @return
 	 * @throws UnsupportedOperationException
 	 */
-	E createCuboid(float mass, float xLength, float yLength, float zLength) throws UnsupportedOperationException;
+	E createCuboid(String type, float mass, float xLength, float yLength, float zLength) throws UnsupportedOperationException;
 
 	/**
 	 * Creates an PhysicsObject representing a Cuboid with mass and x y z dimensions.
 	 *
+	 * @param type     Type of the Object
 	 * @param mass     Mass of the Object
 	 * @param xLength  Length in X-dimension
 	 * @param yLength  Length in Y-dimension
@@ -61,11 +65,12 @@ public interface PhysicsObjectFactory<E extends PhysicsObject> {
 	 * @return
 	 * @throws UnsupportedOperationException
 	 */
-	E createCuboid(float mass, float xLength, float yLength, float zLength, Transform position) throws UnsupportedOperationException;
+	E createCuboid(String type, float mass, float xLength, float yLength, float zLength, Transform position) throws UnsupportedOperationException;
 
 	/**
 	 * Creates an PhysicsObject representing a Cylinder with mass, height, radius and oriented on the axis at (0,0,0).
 	 *
+	 * @param type     Type of the Object
 	 * @param mass        Mass of the Object
 	 * @param height      Height of the Cylinder in the specified orientation
 	 * @param radius      Radius of the Cylinder
@@ -73,12 +78,13 @@ public interface PhysicsObjectFactory<E extends PhysicsObject> {
 	 * @return
 	 * @throws UnsupportedOperationException
 	 */
-	E createCylinder(float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException;
+	E createCylinder(String type, float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException;
 
 
 	/**
 	 * Creates an PhysicsObject representing a Cylinder with mass, height, radius and oriented on the axis.
 	 *
+	 * @param type     Type of the Object
 	 * @param mass        Mass of the Object
 	 * @param height      Height of the Cylinder in the specified orientation
 	 * @param radius      Radius of the Cylinder
@@ -87,11 +93,12 @@ public interface PhysicsObjectFactory<E extends PhysicsObject> {
 	 * @return
 	 * @throws UnsupportedOperationException
 	 */
-	E createCylinder(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException;
+	E createCylinder(String type, float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException;
 
 	/**
 	 * Creates an PhysicsObject representing a Cone with mass, height, radius and oriented on the axis at (0,0,0).
 	 *
+	 * @param type     Type of the Object
 	 * @param mass        Mass of the Object
 	 * @param height      Height of the Cone in the specified orientation
 	 * @param radius      Radius of the Cone
@@ -99,12 +106,13 @@ public interface PhysicsObjectFactory<E extends PhysicsObject> {
 	 * @return
 	 * @throws UnsupportedOperationException
 	 */
-	E createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException;
+	E createCone(String type, float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException;
 
 
 	/**
 	 * Creates an PhysicsObject representing a Cone with mass, height, radius and oriented on the axis.
 	 *
+	 * @param type     Type of the Object
 	 * @param mass        Mass of the Object
 	 * @param height      Height of the Cone in the specified orientation
 	 * @param radius      Radius of the Cone
@@ -113,26 +121,28 @@ public interface PhysicsObjectFactory<E extends PhysicsObject> {
 	 * @return
 	 * @throws UnsupportedOperationException
 	 */
-	E createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException;
+	E createCone(String type, float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException;
 
 	/**
 	 * Creates and PhysicsObject representing a Exact Object with mass at (0,0,0).
 	 *
+	 * @param type     Type of the Object
 	 * @param mass Mass of the Object
 	 * @param mesh Shape of the Object as {@link IndexedMesh}
 	 * @return
 	 */
-	E createExactObject(float mass, IndexedMesh mesh);
+	E createExactObject(String type, float mass, IndexedMesh mesh);
 
 	/**
 	 * Creates an PhysicsObject representing a Exact Object with mass.
 	 *
+	 * @param type     Type of the Object
 	 * @param mass     Mass of the Object
 	 * @param mesh     Shape of the Object as {@link IndexedMesh}
 	 * @param position Position of the Object
 	 * @return
 	 */
-	E createExactObject(float mass, IndexedMesh mesh, Transform position);
+	E createExactObject(String type, float mass, IndexedMesh mesh, Transform position);
 
 	/**
 	 * Converts the passed parameters to a {@link Transform}-Object which can be used to create PhysicsObjects at a set start location.

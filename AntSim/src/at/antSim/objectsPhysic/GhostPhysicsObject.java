@@ -13,9 +13,11 @@ import com.bulletphysics.collision.dispatch.GhostObject;
 public class GhostPhysicsObject extends PositionablePhysicsObjectImpl {
 
 	final CollisionObject body;
+	final String type;
 
-	public GhostPhysicsObject(GhostObject body) {
+	public GhostPhysicsObject(GhostObject body, String type) {
 		this.body = body;
+		this.type = type;
 		this.body.setCollisionFlags(this.body.getCollisionFlags() | CollisionFlags.NO_CONTACT_RESPONSE);
 		this.body.setUserPointer(this);
 	}
@@ -28,5 +30,10 @@ public class GhostPhysicsObject extends PositionablePhysicsObjectImpl {
 	@Override
 	public void receive(Entity entity) {
 		entity.react(this);
+	}
+
+	@Override
+	public String getType() {
+		return type;
 	}
 }

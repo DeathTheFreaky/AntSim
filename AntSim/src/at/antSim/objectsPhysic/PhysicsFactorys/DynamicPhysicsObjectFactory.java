@@ -20,52 +20,52 @@ public class DynamicPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Dy
 	}
 
 	@Override
-	public DynamicPhysicsObject createSphere(float mass, float radius) throws UnsupportedOperationException {
-		return createSphere(mass, radius, new Transform());
+	public DynamicPhysicsObject createSphere(String type, float mass, float radius) throws UnsupportedOperationException {
+		return createSphere(type, mass, radius, new Transform());
 	}
 
 	@Override
-	public DynamicPhysicsObject createSphere(float mass, float radius, Transform position) throws UnsupportedOperationException {
-		return new DynamicPhysicsObject(createSphereRigid(mass, radius, position));
+	public DynamicPhysicsObject createSphere(String type, float mass, float radius, Transform position) throws UnsupportedOperationException {
+		return new DynamicPhysicsObject(createSphereRigid(mass, radius, position), type);
 	}
 
 	@Override
-	public DynamicPhysicsObject createCuboid(float mass, float xLength, float yLength, float zLength) throws UnsupportedOperationException {
-		return createCuboid(mass, xLength, yLength, zLength, new Transform());
+	public DynamicPhysicsObject createCuboid(String type, float mass, float xLength, float yLength, float zLength) throws UnsupportedOperationException {
+		return createCuboid(type, mass, xLength, yLength, zLength, new Transform());
 	}
 
 	@Override
-	public DynamicPhysicsObject createCuboid(float mass, float xLength, float yLength, float zLength, Transform position) throws UnsupportedOperationException {
-		return new DynamicPhysicsObject(createCuboidRigid(mass, xLength, yLength, zLength, position));
+	public DynamicPhysicsObject createCuboid(String type, float mass, float xLength, float yLength, float zLength, Transform position) throws UnsupportedOperationException {
+		return new DynamicPhysicsObject(createCuboidRigid(mass, xLength, yLength, zLength, position), type);
 	}
 
 	@Override
-	public DynamicPhysicsObject createCylinder(float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException {
-		return createCylinder(mass, height, radius, orientation, new Transform());
+	public DynamicPhysicsObject createCylinder(String type, float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException {
+		return createCylinder(type, mass, height, radius, orientation, new Transform());
 	}
 
 	@Override
-	public DynamicPhysicsObject createCylinder(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException {
-		return new DynamicPhysicsObject(createCylinderRigid(mass, height, radius, orientation, position));
+	public DynamicPhysicsObject createCylinder(String type, float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException {
+		return new DynamicPhysicsObject(createCylinderRigid(mass, height, radius, orientation, position), type);
 	}
 
 	@Override
-	public DynamicPhysicsObject createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException {
-		return createCone(mass, height, radius, orientation, new Transform());
+	public DynamicPhysicsObject createCone(String type, float mass, float height, float radius, PhysicsObjectOrientation orientation) throws UnsupportedOperationException {
+		return createCone(type, mass, height, radius, orientation, new Transform());
 	}
 
 	@Override
-	public DynamicPhysicsObject createCone(float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException {
-		return new DynamicPhysicsObject(createConeRigid(mass, height, radius, orientation, position));
+	public DynamicPhysicsObject createCone(String type, float mass, float height, float radius, PhysicsObjectOrientation orientation, Transform position) throws UnsupportedOperationException {
+		return new DynamicPhysicsObject(createConeRigid(mass, height, radius, orientation, position), type);
 	}
 
 	@Override
-	public DynamicPhysicsObject createExactObject(float mass, IndexedMesh mesh) {
-		return createExactObject(mass, mesh, new Transform());
+	public DynamicPhysicsObject createExactObject(String type, float mass, IndexedMesh mesh) {
+		return createExactObject(type, mass, mesh, new Transform());
 	}
 
 	@Override
-	public DynamicPhysicsObject createExactObject(float mass, IndexedMesh mesh, Transform position) {
+	public DynamicPhysicsObject createExactObject(String type, float mass, IndexedMesh mesh, Transform position) {
 		throw new NotImplementedException();
 	}
 
