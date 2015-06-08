@@ -17,6 +17,7 @@ import at.antSim.eventSystem.events.KeyReleasedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.TexturedModel;
+import at.antSim.graphics.terrains.Terrain;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
@@ -72,14 +73,17 @@ public class MovingEntity {
 			if (!colliding) { //not collides
 				
 				PhysicsObjectFactory placedEntityFactory = null;
+				float dropHeight = 0;
 				
 				//detect if new entity is static, dynamic or ghost
 				switch (entity.getGraphicsEntity().getModel().getObjectType()) {
 				case ANT:
 					placedEntityFactory = DynamicPhysicsObjectFactory.getInstance();
+					dropHeight = Terrain.MAX_HEIGHT/4;
 					break;
 				case ENEMY:
 					placedEntityFactory = DynamicPhysicsObjectFactory.getInstance();
+					dropHeight = Terrain.MAX_HEIGHT/4;
 					break;
 				case ENVIRONMENT:
 					placedEntityFactory = StaticPhysicsObjectFactory.getInstance();
@@ -94,7 +98,7 @@ public class MovingEntity {
 				
 				//store data of currently moving entity which has to be dynamic to enable collision detection
 				Vector3f placedPosition = Maths.convertVector3f(((ReadOnlyPhysicsObject) entity.getPhysicsObject()).getPosition());
-				placedPosition.y = placedPosition.y - entity.getGraphicsEntity().getModel().getRawModel().getyLength()/2 * entity.getGraphicsEntity().getScale();
+				placedPosition.y = placedPosition.y - entity.getGraphicsEntity().getModel().getRawModel().getyLength()/2 * entity.getGraphicsEntity().getScale() + dropHeight;
 				ReadOnlyPhysicsObject po = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
 				Quat4f placedQuats = po.getRotationQuaternions();
 				TexturedModel placedTextureModel = entity.getGraphicsEntity().getModel();
