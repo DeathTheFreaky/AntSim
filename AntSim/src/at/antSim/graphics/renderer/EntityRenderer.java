@@ -154,7 +154,7 @@ public class EntityRenderer {
 	private void prepareInstance(Entity entity) {
 		ReadOnlyPhysicsObject physicsObject = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.convertVector3f(physicsObject.getPosition()), 
-				physicsObject.getRotationAngles().x, physicsObject.getRotationAngles().y, physicsObject.getRotationAngles().z, 
+				physicsObject.getRotationDegrees().x, physicsObject.getRotationDegrees().y, physicsObject.getRotationDegrees().z, 
 				entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
 		shader.loadTransformationMatrix(transformationMatrix); //load transformation matrix into the shader program
 		shader.loadOffset(entity.getGraphicsEntity().getTextureXOffset(), entity.getGraphicsEntity().getTextureYOffset()); //offsets could be different for each entity

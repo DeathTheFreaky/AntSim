@@ -96,6 +96,8 @@ public class MovingEntity {
 					break;
 				}
 				
+//				placedEntityFactory = GhostPhysicsObjectFactory.getInstance();
+				
 				//store data of currently moving entity which has to be dynamic to enable collision detection
 				Vector3f placedPosition = Maths.convertVector3f(((ReadOnlyPhysicsObject) entity.getPhysicsObject()).getPosition());
 				placedPosition.y = placedPosition.y - entity.getGraphicsEntity().getModel().getRawModel().getyLength()/2 * entity.getGraphicsEntity().getScale() + dropHeight;
@@ -139,13 +141,16 @@ public class MovingEntity {
 	
 	@EventListener(priority = EventPriority.HIGH)
 	public void collideEvent(CollisionEvent ce) {
-		if ((ce.getPhyObj1().getType().equals("movingEntity") && !ce.getPhyObj2().getType().equals("terrain")) || 
-				(!ce.getPhyObj1().getType().equals("terrain") && ce.getPhyObj2().getType().equals("movingEntity")) && ce.getPhyObj1() != ce.getPhyObj2()) { //two same objects should never collide anyway...
+		
+		if((ce.getPhyObj1().equals(entity.getPhysicsObject()) && !ce.getPhyObj2().getType().equals("terrain"))
+				|| (ce.getPhyObj2().equals(entity.getPhysicsObject()) && !ce.getPhyObj1().getType().equals("terrain"))){
+//		if ((ce.getPhyObj1().getType().equals("movingEntity") && !ce.getPhyObj2().getType().equals("terrain")) || 
+//				(!ce.getPhyObj1().getType().equals("terrain") && ce.getPhyObj2().getType().equals("movingEntity")) && ce.getPhyObj1() != ce.getPhyObj2()) { //two same objects should never collide anyway...
 			
 			ReadOnlyPhysicsObject ob1 = (ReadOnlyPhysicsObject) ce.getPhyObj1();
 			ReadOnlyPhysicsObject ob2 = (ReadOnlyPhysicsObject) ce.getPhyObj2();
 			
-//			System.out.println("collision occured between " + ce.getPhyObj1().getType() + "(" + ce.getPhyObj1() + ") and " + ce.getPhyObj2().getType() + "(" + ce.getPhyObj2() + ")");
+			System.out.println("collision occured between " + ce.getPhyObj1().getType() + "(" + ce.getPhyObj1() + ") and " + ce.getPhyObj2().getType() + "(" + ce.getPhyObj2() + ")");
 			
 			ce.consume();
 			this.colliding = true;

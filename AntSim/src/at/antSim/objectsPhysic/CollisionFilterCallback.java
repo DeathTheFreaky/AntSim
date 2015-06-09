@@ -15,7 +15,9 @@ public class CollisionFilterCallback extends OverlapFilterCallback {
 
 		if (((CollisionObject) broadphaseProxy.clientObject).isStaticObject() && ((CollisionObject) broadphaseProxy1.clientObject).isStaticObject())
 			return false;
-
+		
+//		System.out.println("collision between " + ((CollisionObject) broadphaseProxy.clientObject) + " and " + (CollisionObject) broadphaseProxy1.clientObject);
+		
 		boolean collides = (broadphaseProxy.collisionFilterGroup & broadphaseProxy1.collisionFilterMask) != 0;
 		collides = collides && (broadphaseProxy1.collisionFilterGroup & broadphaseProxy.collisionFilterMask) != 0;
 

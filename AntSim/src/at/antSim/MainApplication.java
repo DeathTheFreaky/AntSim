@@ -14,6 +14,7 @@ import at.antSim.guiWrapper.states.*;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 import org.lwjgl.opengl.Display;
@@ -217,10 +218,9 @@ public class MainApplication {
 				if (terrainPoint != null && movingEntity.getEntity() != null) {
 					PhysicsObject phyObj = movingEntity.getEntity().getPhysicsObject();
 					GraphicsEntity graphicsEntity = movingEntity.getEntity().getGraphicsEntity();
-					Vector3f correctedTerrainPoint = new Vector3f(terrainPoint.x, terrainPoint.y + graphicsEntity.getModel().getRawModel().getyLength() / 2 * graphicsEntity.getScale(), terrainPoint.z);
-					ReadOnlyPhysicsObject readOnlyPhyObj = (ReadOnlyPhysicsObject) phyObj;
-					phyObj.getCollisionBody().setWorldTransform(new Transform(Maths.createTransformationMatrix(new Vector3f(correctedTerrainPoint), 
-							readOnlyPhyObj.getRotationAngles().x, readOnlyPhyObj.getRotationAngles().y, readOnlyPhyObj.getRotationAngles().z)));
+					Vector3f correctedTerrainPoint = new Vector3f(terrainPoint.x, terrainPoint.y + graphicsEntity.getModel().getRawModel().getyLength() / 2 * graphicsEntity.getScale() + 10, terrainPoint.z);
+					PositionablePhysicsObject posPhyObj = (PositionablePhysicsObject) phyObj;
+					posPhyObj.setPosition(new javax.vecmath.Vector3f(correctedTerrainPoint.x, correctedTerrainPoint.y, correctedTerrainPoint.z));
 				}
 				
 				renderer.processTerrain(terrain);
@@ -260,7 +260,6 @@ public class MainApplication {
 //			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 		}
-		//EventManager.getInstance().workThroughQueue(); //work through events again after performing collision in order not to overwrite collision state of moving entity for rendering
 		timeLastLogicUpdate = timeCurrentUpdate;
 	}
 
