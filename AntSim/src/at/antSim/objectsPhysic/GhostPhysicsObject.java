@@ -5,6 +5,8 @@ import com.bulletphysics.collision.dispatch.CollisionFlags;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.GhostObject;
 
+import javax.vecmath.Vector3f;
+
 /**
  * Created on 18.05.2015.
  *
@@ -30,6 +32,27 @@ public class GhostPhysicsObject extends PositionablePhysicsObjectImpl {
 	@Override
 	public void receive(Entity entity) {
 		entity.react(this);
+	}
+
+	@Override
+	public void setPosition(float posX, float posZ, float posY) {
+		setPosition(new Vector3f(posX, posY, posZ));
+	}
+
+	@Override
+	public void setPosition(Vector3f position) {
+		PhysicsManager physicsManager = PhysicsManager.getInstance();
+		physicsManager.unregisterPhysicsObject(this);
+		super.setPosition(position);
+		physicsManager.registerPhysicsObject(this);
+	}
+
+	@Override
+	public void setRotation(float yaw, float pitch, float roll) {
+		PhysicsManager physicsManager = PhysicsManager.getInstance();
+		physicsManager.unregisterPhysicsObject(this);
+		super.setRotation(yaw, pitch, roll);
+		physicsManager.registerPhysicsObject(this);
 	}
 
 	@Override
