@@ -85,7 +85,7 @@ public class PhysicsManager {
 		if (observingPhysicsObject != null) {
 			System.out.println("Position: " + observingPhysicsObject.getPosition() + " timeStep: " + timeStep);
 		}
-		if(timeStep == 0)
+		if(timeStep < 0.01 || timeStep > 2.0)
 			return;
 		physicsWorld.performDiscreteCollisionDetection();
 		physicsWorld.stepSimulation(timeStep, 7);
