@@ -115,12 +115,50 @@ public class WorldLoader {
 		
 		//add cool stanford demo dragon for specular lighting demo
 		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 1000, -Globals.WORLD_SIZE/2))
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
 				.setRotation(90, 45, 90)
 				.buildGraphicsEntity(ModelLoader.texturedModels.get("dragon"), 1, 25)
 				.buildPhysicsObject()
 				.registerResult();
 		//PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
+
+		Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(370, 4.2f, -300))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("stomp"), 1, 20)
+				.buildPhysicsObject()
+				.registerResult();
+
+		// new
+//		Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(300, 4.2f, -300))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity(ModelLoader.texturedModels.get("rock"), 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+
+		Entity antBlack = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(360, 4.2f, -300))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("antBlack"), 1, 20)
+				.buildPhysicsObject()
+				.registerResult();
+
+		Entity antRed = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(360, 4.2f, -300))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("antRed"), 1, 20)
+				.buildPhysicsObject()
+				.registerResult();
+
+		Entity antDark = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity(ModelLoader.texturedModels.get("antDark"), 1, 100)
+				.buildPhysicsObject()
+				.registerResult();
+
+		// end of new
 	}
 	
 	/**Loads the world's light sources.
@@ -133,7 +171,6 @@ public class WorldLoader {
 		
 		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); //sun
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
-		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		
 		return lights;
 	}

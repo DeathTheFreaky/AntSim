@@ -1,7 +1,7 @@
 displayWidth = 1024
-displayHeight = 768
+displayHeight = 700
 displaySaveWidth = 1280
-displaySaveHeight = 720
+displaySaveHeight = 700
 fullscreen = false
 fontRows = 16
 fontCols = 16
