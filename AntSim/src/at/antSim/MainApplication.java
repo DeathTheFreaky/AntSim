@@ -256,7 +256,7 @@ public class MainApplication {
 		if (!paused && worldLoaded) {
 			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
 			timeSinceLastUpdate *= speed;
-			System.out.println("time since last updates: " + timeSinceLastUpdate);
+//			System.out.println("time since last updates: " + timeSinceLastUpdate);
 			statsCtrTest++;
 //			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
