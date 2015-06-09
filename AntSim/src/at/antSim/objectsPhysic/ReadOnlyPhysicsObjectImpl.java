@@ -14,7 +14,7 @@ import javax.vecmath.Vector3f;
  * @author Clemens
  */
 public abstract class ReadOnlyPhysicsObjectImpl implements PhysicsObject, ReadOnlyPhysicsObject {
-
+	
 	@Override
 	public Vector3f getPosition() {
 		Vector3f out = new Vector3f();

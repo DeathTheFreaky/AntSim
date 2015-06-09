@@ -316,7 +316,7 @@ public abstract class GuiElement {
 		
 	}
 	
-	@EventListener
+	@EventListener (priority = EventPriority.HIGH)
 	public void onMouseReleased(MouseButtonReleasedEvent event){
 		if (isInsideElement(event) && !disabled) {
 			command.execute();

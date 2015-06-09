@@ -13,6 +13,7 @@ import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.MainApplication;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
@@ -32,6 +33,8 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 public class EntityRenderer {
 	
 	private EntityShader shader;
+	private final Vector3f COLLIDING_COLOR = new Vector3f(1,0,0);
+	private final Vector3f NOT_COLLIDING_COLOR = new Vector3f(0,1,0);
 	
 	/**Creates a new EntityRenderer which can be used by {@link MasterRenderer} to delegate rendering functions.
 	 * 
@@ -77,6 +80,17 @@ public class EntityRenderer {
 			List<Entity> batch = Entity.getUnmodifiableRenderingMap().get(model);
 			for(Entity entity:batch) {
 				prepareInstance(entity); //load transformation matrix and texture atlas offset
+				
+				if (MainApplication.getInstance().getMovingEntity().getEntity() == entity) {
+					shader.loadMovingEntityBlend(0.75f);
+					if (MainApplication.getInstance().getMovingEntity().isColliding()) {
+						shader.loadMovingEntityColor(COLLIDING_COLOR);
+					} else {
+						shader.loadMovingEntityColor(NOT_COLLIDING_COLOR);
+					}
+				} else {
+					shader.loadMovingEntityBlend(0.0f);
+				}
 				
 				//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 

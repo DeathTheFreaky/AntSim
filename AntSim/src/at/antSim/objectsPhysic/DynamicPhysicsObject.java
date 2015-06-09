@@ -13,9 +13,11 @@ import com.bulletphysics.dynamics.RigidBody;
 public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 
 	final RigidBody body;
+	final String type;
 
-	public DynamicPhysicsObject(RigidBody body) {
+	public DynamicPhysicsObject(RigidBody body, String type) {
 		this.body = body;
+		this.type = type;
 		this.body.setCollisionFlags(this.body.getCollisionFlags() & CollisionFlags.KINEMATIC_OBJECT);
 		this.body.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		this.body.setUserPointer(this);
@@ -29,5 +31,10 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 	@Override
 	public void receive(Entity entity) {
 		entity.react(this);
+	}
+
+	@Override
+	public String getType() {
+		return type;
 	}
 }

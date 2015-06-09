@@ -32,7 +32,7 @@ import java.nio.ByteOrder;
 public class Terrain {
 	
 	//for 3d terrain - used with heightmap
-	private static final float MAX_HEIGHT = 40; //maximum height in positive and negative range of the terrain -> -40 to 40
+	public static final float MAX_HEIGHT = 40; //maximum height in positive and negative range of the terrain -> -40 to 40
 	private static final float MAX_PIXEL_COLOR = 256 * 256 * 256; //3 color channels -> each channel has value between 0 and 256 -> 256*256*256 colors in total 
 		
 	private float x; //position of this terrain in the worldspace -> there can be muliple terrains, eg. if terrains have size 800 and then terrain 1 starts at 0, terrain 2 at 800...
@@ -161,7 +161,7 @@ public class Terrain {
 		myMesh.vertexBase.asFloatBuffer().put(vertices);
 		myMesh.vertexStride = 3 * 4;
 
-		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject(0, myMesh,
+		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject("terrain", 0, myMesh,
 				new Transform(Maths.createTransformationMatrix(new Vector3f(0, 0, -Globals.WORLD_SIZE), 0, 0, 0)));
 		PhysicsManager.getInstance().registerPhysicsObject(obj);
 		

@@ -5,14 +5,21 @@ import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.*;
+import at.antSim.graphics.models.RawModel;
+import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;
 import at.antSim.guiWrapper.states.*;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.PhysicsManager;
+import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.bulletphysics.linearmath.Transform;
 
 import java.util.HashMap;
 import java.util.List;
@@ -138,7 +145,7 @@ public class MainApplication {
 	private int statsCtrTest = 0;
 
 	private HashMap<String, Integer> stats = new HashMap<>();
-	
+		
 	private MainApplication() {};
 	
 	static {
@@ -208,7 +215,12 @@ public class MainApplication {
 				picker.update();
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 				if (terrainPoint != null && movingEntity.getEntity() != null) {
-//					movingEntity.getGraphicsEntity().setPosition(terrainPoint);
+					PhysicsObject phyObj = movingEntity.getEntity().getPhysicsObject();
+					GraphicsEntity graphicsEntity = movingEntity.getEntity().getGraphicsEntity();
+					Vector3f correctedTerrainPoint = new Vector3f(terrainPoint.x, terrainPoint.y + graphicsEntity.getModel().getRawModel().getyLength() / 2 * graphicsEntity.getScale(), terrainPoint.z);
+					ReadOnlyPhysicsObject readOnlyPhyObj = (ReadOnlyPhysicsObject) phyObj;
+					phyObj.getCollisionBody().setWorldTransform(new Transform(Maths.createTransformationMatrix(new Vector3f(correctedTerrainPoint), 
+							readOnlyPhyObj.getRotationAngles().x, readOnlyPhyObj.getRotationAngles().y, readOnlyPhyObj.getRotationAngles().z)));
 				}
 				
 				renderer.processTerrain(terrain);
@@ -234,17 +246,22 @@ public class MainApplication {
 	 * 
 	 */
 	private void update() {
+		
 		long timeCurrentUpdate = System.currentTimeMillis();
+		
+		movingEntity.setColliding(false); //assume that moving Entity does not collide by default, if it collides, a collision event...
 		EventManager.getInstance().workThroughQueue();
 		
 		//game logic
 		if (!paused && worldLoaded) {
-//			WorldLoader.specificEntities.get("dragon").increaseRotation(0f, 5f, 0f);
 			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
 			timeSinceLastUpdate *= speed;
+			System.out.println("time since last updates: " + timeSinceLastUpdate);
 			statsCtrTest++;
-			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate);
+//			PhysicsManager.getInstance().printAllCollisionObjects();
+			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 		}
+		//EventManager.getInstance().workThroughQueue(); //work through events again after performing collision in order not to overwrite collision state of moving entity for rendering
 		timeLastLogicUpdate = timeCurrentUpdate;
 	}
 
@@ -264,7 +281,6 @@ public class MainApplication {
 				
 		startMenuState.initializeState(optionsDisplayState.getName());
 		loadingState.initializeState();
-		mainGameState.initializeState();
 		optionsDisplayState.initializeState(startMenuState.getName(), optionsControlsState.getName());
 		optionsControlsState.initializeState(startMenuState.getName(), optionsDisplayState.getName());
 		pauseState.initializeState(mainGameState.getName(), startMenuState.getName(), optionsDisplayState.getName());
@@ -307,6 +323,8 @@ public class MainApplication {
 			//indicate to main game loop that world has finished loadings
 			worldLoaded = true;
 			
+			mainGameState.initializeState(); //commands in mainGameState need data from this method 
+						
 			//sets gui to main game state once world has finished loading
 			GuiWrapper.getInstance().setCurrentState(mainGameState.getName());
 		}

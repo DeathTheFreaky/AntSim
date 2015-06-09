@@ -1,5 +1,7 @@
 package at.antSim.objectsKI;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.GTPMapper.GTPCone;
@@ -19,11 +21,11 @@ public interface EntityBuilder {
 	
 	/**Builds the {@link GraphicsEntity} for the {@link Entity}.
 	 * 
-	 * @param texturedModel
+	 * @param type - key used to obtain TexturedModel, also functions as physicsObject.type for reacting to collisions
 	 * @param textureIndex
 	 * @param scale
 	 */
-	public EntityBuilder buildGraphicsEntity(TexturedModel texturedModel, int textureIndex, float scale);
+	public EntityBuilder buildGraphicsEntity(String type, int textureIndex, float scale);
 	
 	/**Builds the {@link PhysicsObject} for the {@link Entity}.
 	 * 
@@ -54,6 +56,20 @@ public interface EntityBuilder {
 	 */
 	public EntityBuilder setPosition(Vector3f position);
 	
+	/**Used to set a different type for the physicsObject than the default one deriving from the graphicsEntity builder method.
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public EntityBuilder setType(String type);
+	
+	/**Used to set ObjectType to a different value than the default derived from the graphicsEntitie's TexturedModel.
+	 * 
+	 * @param objectType
+	 * @return
+	 */
+	public EntityBuilder setObjectType(ObjectType objectType);
+	
 	/**Sets the {@link Entity}'s rotation.
 	 * 
 	 * @param rx
@@ -61,6 +77,12 @@ public interface EntityBuilder {
 	 * @param rz
 	 */
 	public EntityBuilder setRotation(float rx, float ry, float rz);
+	
+	/**Sets the Entity's rotation with quaternions.
+	 * @param quat
+	 * @return
+	 */
+	public EntityBuilder setRotation(Quat4f quat);
 	
 	public void createCone(GTPCone cone);
 	

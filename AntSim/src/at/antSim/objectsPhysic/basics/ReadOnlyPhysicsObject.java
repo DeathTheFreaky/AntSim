@@ -9,6 +9,7 @@ import javax.vecmath.Vector3f;
  * @author Clemens
  */
 public interface ReadOnlyPhysicsObject {
+	
 	/**
 	 * @return Returns the position of the Object represented as {@link Vector3f vector}
 	 */

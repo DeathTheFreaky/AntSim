@@ -6,5 +6,5 @@ package at.antSim.objectsKI;
  * @author Clemens
  */
 public enum ObjectType {
-	ANT, FOOD, ENEMY, ENVIRONMENT, PHEROMONE
+	ANT, FOOD, ENEMY, ENVIRONMENT, PHEROMONE, MOVING
 }
