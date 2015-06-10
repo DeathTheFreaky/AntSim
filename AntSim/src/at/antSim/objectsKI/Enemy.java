@@ -46,5 +46,4 @@ public class Enemy extends Entity {
 			System.out.println("me: " + physicsObject);
 		}
 	}
-
 }

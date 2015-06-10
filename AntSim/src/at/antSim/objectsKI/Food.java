@@ -34,5 +34,4 @@ public class Food extends Entity {
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
 		// TODO Auto-generated method stub
 	}
-
 }

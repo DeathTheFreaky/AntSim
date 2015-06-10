@@ -34,5 +34,4 @@ public class Pheronome extends Entity {
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
 		// TODO Auto-generated method stub
 	}
-
 }

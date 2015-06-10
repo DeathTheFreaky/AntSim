@@ -20,9 +20,7 @@ public class ContactProcessedCallbackImpl extends ContactProcessedCallback {
 		if (colObj instanceof CollisionObject && colObj1 instanceof CollisionObject) {
 			PhysicsObject phyObj = (PhysicsObject)((CollisionObject) colObj).getUserPointer(); //PhysicsManager.getInstance().getPhysicsObject((CollisionObject)colObj);
 			PhysicsObject phyObj1 = (PhysicsObject)((CollisionObject) colObj1).getUserPointer(); //PhysicsManager.getInstance().getPhysicsObject((CollisionObject)colObj1);
-			
-//			System.out.println("collision between " + phyObj + " and " + phyObj1);
-			
+						
 			if (phyObj != null && phyObj1 != null) {
 				EventManager.getInstance().addEventToQueue(new CollisionEvent(phyObj, phyObj1));
 				return true;

@@ -218,7 +218,7 @@ public class MainApplication {
 				if (terrainPoint != null && movingEntity.getEntity() != null) {
 					PhysicsObject phyObj = movingEntity.getEntity().getPhysicsObject();
 					GraphicsEntity graphicsEntity = movingEntity.getEntity().getGraphicsEntity();
-					Vector3f correctedTerrainPoint = new Vector3f(terrainPoint.x, terrainPoint.y + graphicsEntity.getModel().getRawModel().getyLength() / 2 * graphicsEntity.getScale() + 10, terrainPoint.z);
+					Vector3f correctedTerrainPoint = new Vector3f(terrainPoint.x, terrainPoint.y + graphicsEntity.getModel().getRawModel().getyLength() / 2 * graphicsEntity.getScale(), terrainPoint.z);
 					PositionablePhysicsObject posPhyObj = (PositionablePhysicsObject) phyObj;
 					posPhyObj.setPosition(new javax.vecmath.Vector3f(correctedTerrainPoint.x, correctedTerrainPoint.y, correctedTerrainPoint.z));
 				}
