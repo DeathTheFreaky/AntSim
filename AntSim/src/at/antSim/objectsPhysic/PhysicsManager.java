@@ -13,6 +13,7 @@ import com.bulletphysics.collision.dispatch.CollisionConfiguration;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
+import com.bulletphysics.collision.dispatch.GhostPairCallback;
 import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.SimpleDynamicsWorld;
@@ -47,11 +48,13 @@ public class PhysicsManager {
 	protected PhysicsManager() {
 		BulletGlobals.setContactProcessedCallback(new ContactProcessedCallbackImpl());
 		CollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
-		Dispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
+		CollisionDispatcher dispatcher = new CustomCollisionDispatcher(collisionConfiguration);
+//		dispatcher.setNearCallback(new CollisionNearCallback());
 		BroadphaseInterface broadphaseInterface = new DbvtBroadphase();
 		ConstraintSolver constraintSolver = new SequentialImpulseConstraintSolver();
 		physicsWorld = new SimpleDynamicsWorld(dispatcher, broadphaseInterface, constraintSolver, collisionConfiguration);
 		physicsWorld.getPairCache().setOverlapFilterCallback(new CollisionFilterCallback());
+		physicsWorld.getPairCache().setInternalGhostPairCallback(new GhostPairCallback());
 		physicsWorld.setGravity(new Vector3f(0, Globals.gravity, 0));
 	}
 

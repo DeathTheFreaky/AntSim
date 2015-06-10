@@ -19,6 +19,7 @@ import com.bulletphysics.collision.dispatch.CollisionObject;
  * @author Clemens
  */
 public class CollisionFilterCallback extends OverlapFilterCallback {
+	
 	@Override
 	public boolean needBroadphaseCollision(BroadphaseProxy broadphaseProxy, BroadphaseProxy broadphaseProxy1) {
 		
