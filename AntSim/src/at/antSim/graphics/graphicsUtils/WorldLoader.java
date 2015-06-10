@@ -133,12 +133,12 @@ public class WorldLoader {
 //				.buildPhysicsObject()
 //				.registerResult();
 //		
-//		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
-//				.setRotation(90, 45, 90)
-//				.buildGraphicsEntity("dragon", 1, 25)
-//				.buildPhysicsObject()
-//				.registerResult();
+		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
+				.setRotation(90, 45, 90)
+				.buildGraphicsEntity("dragon", 1, 25)
+				.buildPhysicsObject()
+				.registerResult();
 		
 	}
 	

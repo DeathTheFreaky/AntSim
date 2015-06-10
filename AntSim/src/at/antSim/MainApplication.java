@@ -11,7 +11,10 @@ import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;
 import at.antSim.guiWrapper.states.*;
+import at.antSim.objectsKI.Enemy;
 import at.antSim.objectsKI.Entity;
+import at.antSim.objectsKI.EntityBuilder;
+import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
@@ -24,6 +27,7 @@ import com.bulletphysics.linearmath.Transform;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -146,6 +150,9 @@ public class MainApplication {
 	private int statsCtrTest = 0;
 
 	private HashMap<String, Integer> stats = new HashMap<>();
+	
+	private EntityBuilder defaultEntityBuilder;
+	private Random defaultRandom;
 		
 	private MainApplication() {};
 	
@@ -163,6 +170,7 @@ public class MainApplication {
 	public void launch(OpenGLLoader loader, MasterRenderer renderer) {
 		
 		this.renderer = renderer;
+		defaultEntityBuilder = new EntityBuilderImpl();
 		
 		GuiWrapper.getInstance().setLoader(loader);
 		loadGui(loader);
@@ -258,6 +266,7 @@ public class MainApplication {
 			timeSinceLastUpdate *= speed;
 //			System.out.println("time since last updates: " + timeSinceLastUpdate);
 			statsCtrTest++;
+			Enemy.updatePositionLocators(); //ensure the PositionLocators follow their target's position
 //			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 		}
@@ -398,7 +407,11 @@ public class MainApplication {
 	public Camera getCamera() {
 		return camera;
 	}
-		
+	
+	public EntityBuilder getDefaultEntityBuilder() {
+		return defaultEntityBuilder;
+	}
+	
 	/**
 	 * @return - the one and only instance of {@link MainApplication}
 	 */

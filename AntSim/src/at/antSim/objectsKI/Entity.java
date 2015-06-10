@@ -20,6 +20,7 @@ public abstract class Entity {
 
 	static final Map<PhysicsObject, ObjectType> physicsObjectTypeMap = new HashMap<PhysicsObject, ObjectType>();
 	static final Map<TexturedModel, List<Entity>> renderingMap = new HashMap<TexturedModel, List<Entity>>();
+	static final List<Entity> entities = new LinkedList<>(); //used to delete all entities
 
 	final GraphicsEntity graphicsEntity;
 	final PhysicsObject physicsObject;
@@ -85,8 +86,8 @@ public abstract class Entity {
 	 * 
 	 */
 	public static void deleteAllEntities() {
-		for (PhysicsObject po : physicsObjectTypeMap.keySet()) {
-			PhysicsManager.getInstance().unregisterPhysicsObject(po);
+		for (Entity entity : entities) {
+			entity.delete();
 		}
 		physicsObjectTypeMap.clear();
 		renderingMap.clear();

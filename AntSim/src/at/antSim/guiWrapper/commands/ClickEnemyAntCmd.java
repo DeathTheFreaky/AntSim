@@ -18,7 +18,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 public class ClickEnemyAntCmd extends MovingEntityCmd {
 	
 	public ClickEnemyAntCmd(EntityBuilder builder, Random random) {
-		super(builder, random, "redCube");
+		super(builder, random, "ant");
 	}
 
 	@Override

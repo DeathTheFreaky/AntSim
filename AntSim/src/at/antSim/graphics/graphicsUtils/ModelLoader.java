@@ -1,5 +1,6 @@
 package at.antSim.graphics.graphicsUtils;
 
+import at.antSim.Globals;
 import at.antSim.GTPMapper.PrimitiveType;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.models.ModelData;
@@ -14,7 +15,7 @@ import java.util.LinkedList;
 
 public class ModelLoader {
 	
-	public static float massDummie = 1f;
+	public static float massDummie = Globals.MASS_DUMMIE;
 	
 	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
 	private static LinkedList<ModelNamesAndTypes> modelPresets = new LinkedList<>(); //names of all obj files and associated textures to be loaded
@@ -37,6 +38,7 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "sphere", PrimitiveType.SPHERE, ObjectType.ENEMY, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "ant", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);

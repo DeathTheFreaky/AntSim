@@ -28,6 +28,10 @@ public final class Globals {
 	public static final float WORLD_SIZE = 800; //square
 	public static final float TIMECYCLE_MULTIPLIER = 4.0f;
 	
+	//default additional margin for a positionLocator
+	public static final float POSITION_LOCATOR_MARGIN = 10;
+	public static final float MASS_DUMMIE = 1;
+	
 	//bit masks for collision filtering
 	public static final short COL_ALL = CollisionFilterGroups.ALL_FILTER;
 	public static final short COL_DEFAULT = CollisionFilterGroups.DEFAULT_FILTER;
