@@ -74,8 +74,7 @@ public class MovingEntity {
 	public void placeEntityOnTerrain(MouseButtonReleasedEvent event){
 		if (event.getButton() == 0) { //place entity on terrain if left mouse button is pressed
 			//do some collision detection here -> only place entity if it does not overlap with another entity
-//			if (!colliding) { //not collides
-				if (1==1) {
+			if (!colliding) { //not collides
 				
 				PhysicsObjectFactory placedEntityFactory = null;
 				float dropHeight = 0;
