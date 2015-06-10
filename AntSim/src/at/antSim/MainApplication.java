@@ -258,7 +258,7 @@ public class MainApplication {
 			timeSinceLastUpdate *= speed;
 //			System.out.println("time since last updates: " + timeSinceLastUpdate);
 			statsCtrTest++;
-//			PhysicsManager.getInstance().printAllCollisionObjects();
+			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 		}
 		timeLastLogicUpdate = timeCurrentUpdate;

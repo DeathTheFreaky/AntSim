@@ -6,6 +6,7 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
+import com.bulletphysics.collision.broadphase.CollisionFilterGroups;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.broadphase.Dispatcher;
 import com.bulletphysics.collision.dispatch.CollisionConfiguration;
@@ -57,10 +58,9 @@ public class PhysicsManager {
 	public void registerPhysicsObject(PhysicsObject physicsObject) {
 		RigidBody rig = RigidBody.upcast(physicsObject.getCollisionBody());
 		if (rig != null) {
-			physicsWorld.addRigidBody(rig);
-		} else {
-			physicsWorld.addCollisionObject(physicsObject.getCollisionBody());
-		}
+			rig.setGravity(new javax.vecmath.Vector3f(0, Globals.gravity, 0));
+		} 
+		physicsWorld.addCollisionObject(physicsObject.getCollisionBody(), physicsObject.getCollisionFilterGroup(), physicsObject.getCollisionFilterMask());
 		physicsObjectMap.put(physicsObject.getCollisionBody(), physicsObject);
 	}
 

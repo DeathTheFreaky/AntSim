@@ -1,7 +1,10 @@
 package at.antSim.objectsPhysic.PhysicsFactorys;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import at.antSim.Globals;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+
 import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.linearmath.Transform;
 
@@ -14,9 +17,7 @@ public class StaticPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Sta
 
 	private static StaticPhysicsObjectFactory instance = new StaticPhysicsObjectFactory();
 
-	protected StaticPhysicsObjectFactory() {
-
-	}
+	protected StaticPhysicsObjectFactory() {}
 
 	@Override
 	public StaticPhysicsObject createSphere(String type, float mass, float radius) throws UnsupportedOperationException {
@@ -65,7 +66,7 @@ public class StaticPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Sta
 
 	@Override
 	public StaticPhysicsObject createExactObject(String type, float mass, IndexedMesh mesh, Transform position) {
-		return new StaticPhysicsObject(createExactRigid(mass, mesh, position), type);
+		throw new NotImplementedException();
 	}
 
 	public static StaticPhysicsObjectFactory getInstance() {

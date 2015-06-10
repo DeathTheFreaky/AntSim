@@ -1,5 +1,8 @@
 package at.antSim.objectsPhysic;
 
+import javax.swing.text.AbstractDocument.BranchElement;
+
+import at.antSim.Globals;
 import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.events.CollisionEvent;
@@ -18,45 +21,32 @@ import com.bulletphysics.collision.dispatch.CollisionObject;
 public class CollisionFilterCallback extends OverlapFilterCallback {
 	@Override
 	public boolean needBroadphaseCollision(BroadphaseProxy broadphaseProxy, BroadphaseProxy broadphaseProxy1) {
-
-		if (((CollisionObject) broadphaseProxy.clientObject).isStaticObject() && ((CollisionObject) broadphaseProxy1.clientObject).isStaticObject())
-			return false;
-		
-		CollisionObject colObj = (CollisionObject) broadphaseProxy.clientObject;
-		CollisionObject colObj1 = (CollisionObject) broadphaseProxy1.clientObject;
-				
-		if (colObj instanceof CollisionObject && colObj1 instanceof CollisionObject) {
-			
-			PhysicsObject phyObj = (PhysicsObject)((CollisionObject) colObj).getUserPointer(); //PhysicsManager.getInstance().getPhysicsObject((CollisionObject)colObj);
-			PhysicsObject phyObj1 = (PhysicsObject)((CollisionObject) colObj1).getUserPointer(); //PhysicsManager.getInstance().getPhysicsObject((CollisionObject)colObj1);
-			Entity movingEntity = MainApplication.getInstance().getMovingEntity().getEntity();
-			PhysicsObject phyMoving = (movingEntity == null) ? null : movingEntity.getPhysicsObject();
-			
-			if (phyObj != null && phyObj1 != null) {
-				
-				if (phyObj instanceof GhostPhysicsObject || phyObj1 instanceof GhostPhysicsObject) {
-					System.out.println("ghost collision: " + phyObj + "(" + phyObj.getType() + ") and " + phyObj1 + "(" + phyObj1.getType() + ")");
-					EventManager.getInstance().addEventToQueue(new CollisionEvent(phyObj, phyObj1));
-					return false;
-				}
-				
-				//
-					
-				//checks for movingEntity explicitly
-//				if (phyMoving != null && (phyObj.equals(phyMoving) || phyObj1.equals(phyMoving)) && 
-//						(!phyObj.getType().equals("terrain") && !phyObj1.getType().equals("terrain"))) {
-//					System.out.println("collision between " + phyObj.getType() + " and " + phyObj1.getType());
-//					EventManager.getInstance().addEventToQueue(new CollisionEvent(phyObj, phyObj1));
-//					return false;
-//				}
-			}
-		}
 		
 		boolean collides = (broadphaseProxy.collisionFilterGroup & broadphaseProxy1.collisionFilterMask) != 0;
 		collides = collides && (broadphaseProxy1.collisionFilterGroup & broadphaseProxy.collisionFilterMask) != 0;
 		
+		CollisionObject colObj = (CollisionObject) broadphaseProxy.clientObject;
+		CollisionObject colObj1 = (CollisionObject) broadphaseProxy1.clientObject;		
 		
-
+		//check if moving entity or ghost object collide, register event and return false to avoid a collision to bypass kinematic vs ghost collision no_contact_response not working bug
+		//moving entity has own collision group because it is able to collide with static, whereas a normal ghost object is not
+		if (collides && ((broadphaseProxy.collisionFilterGroup == Globals.COL_MOVING || broadphaseProxy1.collisionFilterGroup == Globals.COL_MOVING) 
+				|| (broadphaseProxy.collisionFilterGroup == Globals.COL_SENSOR || broadphaseProxy1.collisionFilterGroup == Globals.COL_SENSOR))) {
+			
+			//only use instanceof when there are collision triggered by ghost objects and moving entities
+			if (colObj instanceof CollisionObject && colObj1 instanceof CollisionObject) {
+				
+				PhysicsObject phyObj = (PhysicsObject)((CollisionObject) colObj).getUserPointer(); //PhysicsManager.getInstance().getPhysicsObject((CollisionObject)colObj);
+				PhysicsObject phyObj1 = (PhysicsObject)((CollisionObject) colObj1).getUserPointer(); //PhysicsManager.getInstance().getPhysicsObject((CollisionObject)colObj1);
+				
+//				System.out.println(phyObj + "(" + phyObj.getType() + ") and " + phyObj1 + "(" + phyObj1.getType() + ") -> " + collides);
+				
+				EventManager.getInstance().addEventToQueue(new CollisionEvent(phyObj, phyObj1));
+			}
+			
+			return false;
+		}
+		
 		return collides;
 	}
 }

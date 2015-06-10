@@ -1,9 +1,13 @@
 package at.antSim.objectsPhysic.PhysicsFactorys;
 
+import at.antSim.Globals;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+
+import com.bulletphysics.collision.broadphase.CollisionFilterGroups;
 import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.linearmath.Transform;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
@@ -15,9 +19,7 @@ public class DynamicPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Dy
 
 	private static DynamicPhysicsObjectFactory instance = new DynamicPhysicsObjectFactory();
 
-	protected DynamicPhysicsObjectFactory() {
-
-	}
+	protected DynamicPhysicsObjectFactory() {}
 
 	@Override
 	public DynamicPhysicsObject createSphere(String type, float mass, float radius) throws UnsupportedOperationException {
@@ -64,6 +66,7 @@ public class DynamicPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Dy
 		return createExactObject(type, mass, mesh, new Transform());
 	}
 
+	@SuppressWarnings("restriction")
 	@Override
 	public DynamicPhysicsObject createExactObject(String type, float mass, IndexedMesh mesh, Transform position) {
 		throw new NotImplementedException();

@@ -3,6 +3,8 @@ package at.antSim;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.bulletphysics.collision.broadphase.CollisionFilterGroups;
+
 /**Stores global variables, mainly config file entries and constants like resource folder, fps_cap...
  * 
  * @author Flo, Clemens
@@ -25,6 +27,17 @@ public final class Globals {
 	public static final int FPS_DURATION_NANONS = (int) ((1.0 / FPS_CAP) * 1000 * MILIS_TO_NANOS_RATIO);
 	public static final float WORLD_SIZE = 800; //square
 	public static final float TIMECYCLE_MULTIPLIER = 4.0f;
+	
+	//bit masks for collision filtering
+	public static final short COL_ALL = CollisionFilterGroups.ALL_FILTER;
+	public static final short COL_DEFAULT = CollisionFilterGroups.DEFAULT_FILTER;
+	public static final short COL_STATIC = CollisionFilterGroups.STATIC_FILTER;
+	public static final short COL_KINEMATIC = CollisionFilterGroups.KINEMATIC_FILTER;
+	public static final short COL_DEBRIS = CollisionFilterGroups.DEBRIS_FILTER;
+	public static final short COL_SENSOR = CollisionFilterGroups.SENSOR_TRIGGER;
+	public static final short COL_CHARACTER = CollisionFilterGroups.CHARACTER_FILTER;
+	public static final short COL_TERRAIN = 64;
+	public static final short COL_MOVING = 128;
 	
 	//config file entries set by config reader
 	public static int displayWidth; 

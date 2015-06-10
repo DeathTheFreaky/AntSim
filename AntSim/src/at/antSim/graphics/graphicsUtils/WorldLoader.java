@@ -102,13 +102,13 @@ public class WorldLoader {
 			.buildPhysicsObject()
 			.registerResult();
 		
-		Entity redSphere = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-		.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
-		.setRotation(90, 45, 90)
-		.buildGraphicsEntity("sphere", 1, 25)
-		.buildPhysicsObject()
-		.registerResult();
-		EventManager.getInstance().registerEventListener(redSphere);
+//		Entity redSphere = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//		.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
+//		.setRotation(90, 45, 90)
+//		.buildGraphicsEntity("sphere", 1, 25)
+//		.buildPhysicsObject()
+//		.registerResult();
+//		EventManager.getInstance().registerEventListener(redSphere);
 
 
 //		Entity lamp2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())

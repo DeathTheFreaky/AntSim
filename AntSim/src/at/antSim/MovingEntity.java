@@ -52,6 +52,10 @@ public class MovingEntity {
 		}
 		this.entity = entity;
 		if (entity != null) {
+			entity.getPhysicsObject().setCollisionFilterGroup(Globals.COL_MOVING);
+			short tempFilterMask = 0;
+			tempFilterMask = (short) (tempFilterMask | Globals.COL_KINEMATIC | Globals.COL_STATIC); //indicate there would be a collision, but still need to overwrite return value with false in CollisionFilterCallback
+			entity.getPhysicsObject().setCollisionFilterMask(tempFilterMask);
 			EventManager.getInstance().registerEventListener(this);
 		} 
 	}
@@ -70,7 +74,8 @@ public class MovingEntity {
 	public void placeEntityOnTerrain(MouseButtonReleasedEvent event){
 		if (event.getButton() == 0) { //place entity on terrain if left mouse button is pressed
 			//do some collision detection here -> only place entity if it does not overlap with another entity
-			if (!colliding) { //not collides
+//			if (!colliding) { //not collides
+				if (1==1) {
 				
 				PhysicsObjectFactory placedEntityFactory = null;
 				float dropHeight = 0;

@@ -1,11 +1,14 @@
 package at.antSim.objectsPhysic.PhysicsFactorys;
 
+import at.antSim.Globals;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+
 import com.bulletphysics.collision.dispatch.GhostObject;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.linearmath.Transform;
+
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
