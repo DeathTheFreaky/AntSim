@@ -1,15 +1,21 @@
 package at.antSim.objectsKI;
 
+import at.antSim.MainApplication;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.models.TexturedModel;
+import at.antSim.graphics.terrains.Terrain;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 import java.util.*;
+
+import javax.vecmath.Vector3f;
 
 /**
  * Created on 18.05.2015.
@@ -21,6 +27,7 @@ public abstract class Entity {
 	static final Map<PhysicsObject, ObjectType> physicsObjectTypeMap = new HashMap<PhysicsObject, ObjectType>();
 	static final Map<TexturedModel, List<Entity>> renderingMap = new HashMap<TexturedModel, List<Entity>>();
 	static final List<Entity> entities = new LinkedList<>(); //used to delete all entities
+	static final List<Entity> dynamicEntities = new LinkedList<>();
 
 	final GraphicsEntity graphicsEntity;
 	final PhysicsObject physicsObject;
@@ -28,7 +35,9 @@ public abstract class Entity {
 	public Entity(GraphicsEntity graphicsEntity, PhysicsObject physicsObject, ObjectType type) {
 		this.graphicsEntity = graphicsEntity;
 		this.physicsObject = physicsObject;
-
+		
+		entities.add(this);
+		
 		//add Entity to physics and rendering hashmaps
 		physicsObjectTypeMap.put(physicsObject, type);
 		addRenderingEntity();
@@ -63,6 +72,7 @@ public abstract class Entity {
 	 */
 	public void delete() {
 		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
+		entities.remove(this);
 		physicsObjectTypeMap.remove(this);
 		renderingMap.get(graphicsEntity.getModel()).remove(this);
 	}
@@ -91,5 +101,30 @@ public abstract class Entity {
 		}
 		physicsObjectTypeMap.clear();
 		renderingMap.clear();
+	}
+	
+	/**Strangely, sometimes dynamic objects seem to fall below the world. 
+	 * This method resets them a little above terrain height, preserving their original forces.
+	 * 
+	 */
+	public static void resetUndergroundEntities() {
+		for (Entity entity : dynamicEntities) {
+			DynamicPhysicsObject phyObj = (DynamicPhysicsObject) entity.getPhysicsObject();
+			float terrainHeight = MainApplication.getInstance().getTerrain().getHeightOfTerrain(phyObj.getPosition().x, phyObj.getPosition().z);
+			float modelHeight = entity.getGraphicsEntity().getModel().getRawModel().getyLength() / 2 * entity.getGraphicsEntity().getScale();
+			if ((phyObj.getPosition().y - modelHeight) < terrainHeight) {
+				float desiredHeight = terrainHeight + modelHeight  + 1;
+				Vector3f linVelocity = new javax.vecmath.Vector3f();
+				Vector3f angVelocity = new javax.vecmath.Vector3f();
+				phyObj.getCollisionBody().getLinearVelocity(linVelocity);
+				phyObj.getCollisionBody().getAngularVelocity(angVelocity);
+				PhysicsManager.getInstance().unregisterPhysicsObject(phyObj);
+				phyObj.getCollisionBody().clearForces();
+				phyObj.setPosition(new Vector3f(phyObj.getPosition().x, desiredHeight, phyObj.getPosition().z));
+				PhysicsManager.getInstance().registerPhysicsObject(phyObj);
+				phyObj.getCollisionBody().setLinearVelocity(linVelocity);
+				phyObj.getCollisionBody().setAngularVelocity(angVelocity);
+			}
+		}
 	}
 }

@@ -62,7 +62,7 @@ public class TerrainPhysicsObjectFactory extends AbstractPhysicsObjectFactory<Te
 
 	@Override
 	public TerrainPhysicsObject createExactObject(String type, float mass, IndexedMesh mesh, Transform position) {
-		return new TerrainPhysicsObject(createExactRigid(mass, mesh, position), type);
+		return new TerrainPhysicsObject(createExactRigid(0, mesh, position), type);
 	}
 
 	public static TerrainPhysicsObjectFactory getInstance() {

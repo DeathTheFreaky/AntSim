@@ -267,6 +267,7 @@ public class MainApplication {
 //			System.out.println("time since last updates: " + timeSinceLastUpdate);
 			statsCtrTest++;
 			Enemy.updatePositionLocators(); //ensure the PositionLocators follow their target's position
+			Entity.resetUndergroundEntities();
 //			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 		}
@@ -410,6 +411,10 @@ public class MainApplication {
 	
 	public EntityBuilder getDefaultEntityBuilder() {
 		return defaultEntityBuilder;
+	}
+	
+	public Terrain getTerrain() {
+		return terrain;
 	}
 	
 	/**

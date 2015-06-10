@@ -54,6 +54,7 @@ public class Ant extends Entity {
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
 		Vector3f v = new Vector3f(velocityX, 0, velocityZ);
 		this.physicsObject.setLinearVelocity(v);
+		dynamicEntities.add(this);
 		// ROTATE WITH THIS Math.toradiant();
 		//this.physicsObject.setRotation(0, 0, 0);
 		EventManager.getInstance().registerEventListener(this);
@@ -108,7 +109,7 @@ public class Ant extends Entity {
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
-		System.out.println("dynamisch");
+//		System.out.println("dynamisch");
 		ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
 		if (tp.equals(ObjectType.ANT)) {
 			// interacting with ghost, the ant must not stray from its path!
@@ -125,7 +126,7 @@ public class Ant extends Entity {
 	@Override
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
 		if (ghostPhysicsObject.getType().equals("positionLocator")) {
-			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + ghostPhysicsObject.getPosition());
+//			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + ghostPhysicsObject.getPosition());
 		}
 	}
 	
@@ -149,14 +150,16 @@ public class Ant extends Entity {
 
 	@EventListener(priority = EventPriority.NORMAL)
 	public void decideEvent(CollisionEvent ce) {
-		 System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
-		 "\nPhyObj1: " + ce.getPhyObj1() + "\nPhyObj2: " + ce.getPhyObj2());
-		if (ce.getPhyObj1().equals(physicsObject)) {
-			ce.getPhyObj2().receive(this);
-			ce.consume();
-		} else if (ce.getPhyObj2().equals(physicsObject)) {
-			ce.getPhyObj1().receive(this);
-			ce.consume();
+		if (!ce.getPhyObj1().getType().equals("terrain") && !ce.getPhyObj2().getType().equals("terrain")) {
+//			 System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
+//			 "\nPhyObj1: " + ce.getPhyObj1().getType() + "\nPhyObj2: " + ce.getPhyObj2().getType());
+			if (ce.getPhyObj1().equals(physicsObject)) {
+				ce.getPhyObj2().receive(this);
+				ce.consume();
+			} else if (ce.getPhyObj2().equals(physicsObject)) {
+				ce.getPhyObj1().receive(this);
+				ce.consume();
+			}
 		}
 	}
 
@@ -203,5 +206,14 @@ public class Ant extends Entity {
 
 	public void setJob(String job) {
 		this.job = job;
+	}
+	
+	@Override
+	public void delete() {
+		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
+		entities.remove(this);
+		dynamicEntities.remove(this);
+		physicsObjectTypeMap.remove(this);
+		renderingMap.get(graphicsEntity.getModel()).remove(this);
 	}
 }

@@ -28,7 +28,7 @@ public class Food extends Entity {
 	
 	public Food(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.FOOD);
-		
+				
 		//set initial position and size of PositionLocator ghost physics object
 		javax.vecmath.Vector3f vecMathPos = ((ReadOnlyPhysicsObject) physicsObject).getPosition();
 		Transform position = new Transform();
@@ -37,7 +37,8 @@ public class Food extends Entity {
 	
 		GhostPhysicsObject phyObj = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createSphere("positionLocator", 1, 
 				graphicsEntity.getScale()/2 + Globals.POSITION_LOCATOR_MARGIN, position);
-		positionLocator = new PositionLocator(phyObj, this);		
+		positionLocator = new PositionLocator(phyObj, this);	
+		PhysicsManager.getInstance().registerPhysicsObject(phyObj);
 	}
 
 	@Override
@@ -67,6 +68,7 @@ public class Food extends Entity {
 	public void delete() {
 		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
 		PhysicsManager.getInstance().unregisterPhysicsObject(positionLocator.getPhysicsObject());
+		entities.remove(this);
 		physicsObjectTypeMap.remove(this);
 		renderingMap.get(graphicsEntity.getModel()).remove(this);
 	}
