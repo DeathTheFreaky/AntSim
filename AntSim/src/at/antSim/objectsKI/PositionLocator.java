@@ -18,6 +18,7 @@ public class PositionLocator {
 	PositionLocator(GhostPhysicsObject physicsObject, Entity target) {
 		this.physicsObject = physicsObject;
 		this.target = target;
+		System.out.println("creating a positionLocator");
 	}
 	
 	/**Updates this PositionLocator's position to match its target.

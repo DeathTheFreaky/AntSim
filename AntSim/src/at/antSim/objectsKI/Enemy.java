@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.bulletphysics.linearmath.Transform;
 
 import at.antSim.Globals;
+import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
@@ -44,7 +45,7 @@ public class Enemy extends Entity {
 				graphicsEntity.getScale()/2 + Globals.POSITION_LOCATOR_MARGIN, position);
 		positionLocator = new PositionLocator(phyObj, this);
 		PhysicsManager.getInstance().registerPhysicsObject(phyObj);
-		
+				
 		dynamicEntities.add(this);
 		enemies.add(this);
 	}
@@ -77,8 +78,8 @@ public class Enemy extends Entity {
 		if ((ce.getPhyObj1().equals(physicsObject) && !ce.getPhyObj2().getCollisionBody().isStaticObject()) 
 				|| (ce.getPhyObj2().equals(physicsObject) && !ce.getPhyObj1().getCollisionBody().isStaticObject())) {
 		
-			System.out.println("      event in enemy: " + ce.getPhyObj1() + " collided with " + ce.getPhyObj2());
-			System.out.println("me: " + physicsObject);
+//			System.out.println("      event in enemy: " + ce.getPhyObj1() + " collided with " + ce.getPhyObj2());
+//			System.out.println("me: " + physicsObject);
 		}
 	}
 

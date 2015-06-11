@@ -100,6 +100,8 @@ public class MovingEntity {
 					break;
 				}
 				
+				System.out.println("creating: " + entity.getGraphicsEntity().getModel().getObjectType());
+				
 //				placedEntityFactory = NoResponsePhysicsObjectFactory.getInstance();
 				
 				//store data of currently moving entity which has to be dynamic to enable collision detection

@@ -40,7 +40,9 @@ public abstract class Entity {
 		
 		//add Entity to physics and rendering hashmaps
 		physicsObjectTypeMap.put(physicsObject, type);
-		addRenderingEntity();
+		if (graphicsEntity != null) {
+			addRenderingEntity();
+		}
 	}
 
 	public abstract void react(StaticPhysicsObject staticPhysicsObject);
@@ -113,7 +115,7 @@ public abstract class Entity {
 			float terrainHeight = MainApplication.getInstance().getTerrain().getHeightOfTerrain(phyObj.getPosition().x, phyObj.getPosition().z);
 			float modelHeight = entity.getGraphicsEntity().getModel().getRawModel().getyLength() / 2 * entity.getGraphicsEntity().getScale();
 			if ((phyObj.getPosition().y - modelHeight) < terrainHeight) {
-				float desiredHeight = terrainHeight + modelHeight  + 1;
+				float desiredHeight = terrainHeight + modelHeight  + 0.25f;
 				Vector3f linVelocity = new javax.vecmath.Vector3f();
 				Vector3f angVelocity = new javax.vecmath.Vector3f();
 				phyObj.getCollisionBody().getLinearVelocity(linVelocity);

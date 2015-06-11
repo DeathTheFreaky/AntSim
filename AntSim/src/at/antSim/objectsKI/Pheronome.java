@@ -15,9 +15,9 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
  */
 public class Pheronome extends Entity {
 
-	public Pheronome(GraphicsEntity graphicsEntity,
-			PhysicsObject physicsObject) {
+	public Pheronome(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.PHEROMONE);
+		System.out.println("creating a pheromone with ge " + graphicsEntity + " and po " + physicsObject);
 	}
 
 	@Override
@@ -28,8 +28,9 @@ public class Pheronome extends Entity {
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
-		// TODO Auto-generated method stub
-		
+		if (dynamicPhysicsObject.getType().equals("ant")) {
+			System.out.println("an ant ran into a pheromone");
+		}
 	}
 
 	@Override

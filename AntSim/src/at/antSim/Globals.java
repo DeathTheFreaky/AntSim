@@ -32,6 +32,9 @@ public final class Globals {
 	public static final float POSITION_LOCATOR_MARGIN = 10;
 	public static final float MASS_DUMMIE = 1;
 	
+	//pheromone size
+	public static final float PHERONOME_SIZE = 50;
+	
 	//bit masks for collision filtering
 	public static final short COL_ALL = CollisionFilterGroups.ALL_FILTER;
 	public static final short COL_DEFAULT = CollisionFilterGroups.DEFAULT_FILTER;
@@ -42,6 +45,7 @@ public final class Globals {
 	public static final short COL_CHARACTER = CollisionFilterGroups.CHARACTER_FILTER;
 	public static final short COL_TERRAIN = 64;
 	public static final short COL_MOVING = 128;
+	public static final short COL_BORDER = 256;
 	
 	//config file entries set by config reader
 	public static int displayWidth; 

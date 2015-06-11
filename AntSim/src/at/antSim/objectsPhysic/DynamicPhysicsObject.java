@@ -28,7 +28,7 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 		this.body.setUserPointer(this);
 		this.collisionFilterGroup = Globals.COL_KINEMATIC;
 		short tempFilterMask = 0;
-		tempFilterMask = (short) (tempFilterMask | Globals.COL_KINEMATIC | Globals.COL_STATIC | Globals.COL_SENSOR | Globals.COL_TERRAIN | Globals.COL_MOVING);
+		tempFilterMask = (short) (tempFilterMask | Globals.COL_KINEMATIC | Globals.COL_STATIC | Globals.COL_SENSOR | Globals.COL_TERRAIN | Globals.COL_MOVING | Globals.COL_BORDER);
 		this.collisionFilterMask = tempFilterMask;
 	}
 

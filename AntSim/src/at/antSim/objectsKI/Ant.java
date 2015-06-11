@@ -40,8 +40,8 @@ public class Ant extends Entity {
 	// saturate?
 	private int hunger;
 	private DynamicPhysicsObject physicsObject = null;
-	private int velocityX = 10;
-	private int velocityZ = 20;
+	private int velocityX = -20; //attention: positive velocity in x-axis moves entity to right side, although x decreases to the right side!
+	private int velocityZ = 0;
 	private float lastposition = 0;
 	private int velocityhelper = 0;
 
@@ -126,7 +126,9 @@ public class Ant extends Entity {
 	@Override
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
 		if (ghostPhysicsObject.getType().equals("positionLocator")) {
-//			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + ghostPhysicsObject.getPosition());
+			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + ghostPhysicsObject.getPosition());
+		} else {
+			System.out.println("an ant ran into " + ghostPhysicsObject.getType());
 		}
 	}
 	
@@ -206,6 +208,20 @@ public class Ant extends Entity {
 
 	public void setJob(String job) {
 		this.job = job;
+	}
+	
+	/**Called at the end of every update, after events have been processed, to identify if an ant left some pheromones.
+	 * 
+	 */
+	public void resetPheromones() {
+		
+	}
+	
+	/**Called at the end of every update, after events have been processed, to identify if an ant left some PositionLocators.
+	 * 
+	 */
+	public void resetPositionLocators() {
+		
 	}
 	
 	@Override
