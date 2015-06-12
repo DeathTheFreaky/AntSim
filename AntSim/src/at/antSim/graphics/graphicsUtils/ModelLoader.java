@@ -28,17 +28,19 @@ public class ModelLoader {
 	public static void loadTexturedModels(OpenGLLoader loader) {
 		
 		//first String in array is name of obj file, second is name of texture, third is desired name of TexturedModel in Hashmap
-		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("cube", "green", "greenCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "sphere", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.FOOD, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "ant", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cube", "green", "greenCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "sphere", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "pheromone", PrimitiveType.SPHERE, ObjectType.PHEROMONE, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "blue", "positionLocator", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "ant", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);
@@ -46,7 +48,7 @@ public class ModelLoader {
 			rawModel.setFurthestPoint(modelData.getFurthestPoint());
 			rawModel.setLenghts(modelData.getxLength(), modelData.getyLength(), modelData.getzLength());
 			ModelTexture modelTexture = new ModelTexture(loader.loadTexture(modelPreset.textureFileName));
-			texturedModels.put(modelPreset.key, new TexturedModel(rawModel, modelTexture, modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.key));
+			texturedModels.put(modelPreset.key, new TexturedModel(rawModel, modelTexture, modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.useTransparency, modelPreset.key));
 		}
 		
 		texturedModels.get("fern").getTexture().setNumberOfRows(2); //set number of rows inside texture atlas
@@ -76,14 +78,16 @@ public class ModelLoader {
 		PrimitiveType primitiveType;
 		ObjectType objectType;
 		float mass;
+		boolean useTransparency;
 		
-		public ModelNamesAndTypes(String objFileName, String textureFileName, String key, PrimitiveType sphereType, ObjectType objectType, float mass) {
+		public ModelNamesAndTypes(String objFileName, String textureFileName, String key, PrimitiveType sphereType, ObjectType objectType, float mass, boolean useTransparency) {
 			this.objFileName = objFileName;
 			this.textureFileName = textureFileName;
 			this.key = key;
 			this.primitiveType = sphereType;
 			this.objectType = objectType;
 			this.mass = mass;
+			this.useTransparency = useTransparency;
 		}
 	}
 }

@@ -86,6 +86,11 @@ public interface EntityBuilder {
 	 * @return
 	 */
 	public EntityBuilder setRotation(Quat4f quat);
+	
+	/**Set a target for position locators.
+	 * @param target
+	 */
+	public EntityBuilder setTarget(Entity target);
 		
 	public EntityBuilder createCone(GTPCone cone);
 	

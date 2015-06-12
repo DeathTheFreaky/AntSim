@@ -1,5 +1,6 @@
 package at.antSim.objectsKI;
 
+import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
@@ -44,5 +45,10 @@ public class Moving extends Entity {
 	public void react(TerrainPhysicsObject terrainPhysicsObject) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected void deleteSpecific() {
+//		MainApplication.getInstance().getMovingEntity().setEntity(null);
 	}
 }

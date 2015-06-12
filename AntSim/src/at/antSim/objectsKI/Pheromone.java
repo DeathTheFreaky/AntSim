@@ -13,11 +13,10 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
  * @author Flo
  *
  */
-public class Pheronome extends Entity {
+public class Pheromone extends Entity {
 
-	public Pheronome(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
+	public Pheromone(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.PHEROMONE);
-		System.out.println("creating a pheromone with ge " + graphicsEntity + " and po " + physicsObject);
 	}
 
 	@Override
@@ -41,6 +40,11 @@ public class Pheronome extends Entity {
 	@Override
 	public void react(TerrainPhysicsObject terrainPhysicsObject) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void deleteSpecific() {
 		
 	}
 }

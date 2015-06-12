@@ -37,7 +37,7 @@ public class Food extends Entity {
 	
 		GhostPhysicsObject phyObj = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createSphere("positionLocator", 1, 
 				graphicsEntity.getScale()/2 + Globals.POSITION_LOCATOR_MARGIN, position);
-		positionLocator = new PositionLocator(phyObj, this);	
+		positionLocator = new PositionLocator(null, phyObj, this);	
 		PhysicsManager.getInstance().registerPhysicsObject(phyObj);
 	}
 
@@ -63,13 +63,9 @@ public class Food extends Entity {
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 	@Override
-	public void delete() {
-		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
-		PhysicsManager.getInstance().unregisterPhysicsObject(positionLocator.getPhysicsObject());
-		entities.remove(this);
-		physicsObjectTypeMap.remove(this);
-		renderingMap.get(graphicsEntity.getModel()).remove(this);
+	protected void deleteSpecific() {
+		positionLocator.delete();
 	}
 }

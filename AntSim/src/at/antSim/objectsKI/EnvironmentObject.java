@@ -42,4 +42,9 @@ public class EnvironmentObject extends Entity {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected void deleteSpecific() {
+		
+	}
 }

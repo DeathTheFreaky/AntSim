@@ -1,8 +1,15 @@
 package at.antSim.objectsKI;
 
+import java.util.LinkedList;
+
 import org.lwjgl.util.vector.Vector3f;
 
+import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsManager;
+import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
@@ -10,25 +17,83 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
  * @author Flo
  *
  */
-public class PositionLocator {
+public class PositionLocator extends Entity {
 	
-	private GhostPhysicsObject physicsObject;
 	private Entity target;
 	
-	PositionLocator(GhostPhysicsObject physicsObject, Entity target) {
-		this.physicsObject = physicsObject;
+	private LinkedList<Ant> activeAnts = new LinkedList<>(); //used to indicate which ants are currently trying to get to this locator's target - to avoid "traffic jam"
+	
+	PositionLocator(GraphicsEntity graphicsEntity, PhysicsObject physicsObject, Entity target) {
+		super(graphicsEntity, physicsObject, ObjectType.LOCATOR);
 		this.target = target;
-		System.out.println("creating a positionLocator");
+	}
+	
+	public Entity getTarget() {
+		return target;
 	}
 	
 	/**Updates this PositionLocator's position to match its target.
 	 * 
 	 */
 	public void updatePosition() {
-		physicsObject.setPosition(((ReadOnlyPhysicsObject) target.getPhysicsObject()).getPosition());
+		((GhostPhysicsObject) physicsObject).setPosition(((ReadOnlyPhysicsObject)((Entity) target).getPhysicsObject()).getPosition());
 	}
 	
-	public PhysicsObject getPhysicsObject() {
-		return physicsObject;
+	public Vector3f getTargetPosition() {
+		javax.vecmath.Vector3f position = ((GhostPhysicsObject) physicsObject).getPosition();
+		return new Vector3f(position.x, position.y, position.z);
+	}
+	
+	/**Activate an ant to indicate that this ant is currently trying to get to the PositionLocator's target.
+	 * @param ant
+	 */
+	public void activateAnt(Ant ant) {
+		if (!activeAnts.contains(ant)) {
+			activeAnts.add(ant);
+		}
+	}
+	
+	public boolean containsAnt(Ant ant) {
+		return activeAnts.contains(ant);
+	}
+	
+	/**Deactivate an Ant which has left the locator or does not want to get to its target any more.
+	 * @param ant
+	 */
+	public void deactivateAnt(Ant ant) {
+		activeAnts.remove(ant);
+	}
+	
+	public int numberOfActiveAnts() {
+		return activeAnts.size();
+	}
+
+	@Override
+	public void react(StaticPhysicsObject staticPhysicsObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void react(GhostPhysicsObject ghostPhysicsObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void react(TerrainPhysicsObject terrainPhysicsObject) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void deleteSpecific() {
+		// TODO Auto-generated method stub
 	}
 }

@@ -1,5 +1,7 @@
 package at.antSim.objectsKI;
 
+import java.util.LinkedList;
+
 import javax.vecmath.Vector3f;
 
 import at.antSim.eventSystem.EventListener;
@@ -13,6 +15,7 @@ import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.utils.CountingLinkedList;
 
 /**
  * 
@@ -48,6 +51,10 @@ public class Ant extends Entity {
 	// wahrscheinlich eigene Jobklasse => fuer im Bautätige
 	// und Worker/Forager
 	private String job;
+	
+	//linked lists for storing which position Locators and Pheromones the ant is currently in
+	private CountingLinkedList<PositionLocator> positionLocators = new CountingLinkedList<>();
+	private CountingLinkedList<Pheromone> pheromones = new CountingLinkedList<>();
 
 	public Ant(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
@@ -55,6 +62,7 @@ public class Ant extends Entity {
 		Vector3f v = new Vector3f(velocityX, 0, velocityZ);
 		this.physicsObject.setLinearVelocity(v);
 		dynamicEntities.add(this);
+		ants.add(this);
 		// ROTATE WITH THIS Math.toradiant();
 		//this.physicsObject.setRotation(0, 0, 0);
 		EventManager.getInstance().registerEventListener(this);
@@ -126,8 +134,11 @@ public class Ant extends Entity {
 	@Override
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
 		if (ghostPhysicsObject.getType().equals("positionLocator")) {
-			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + ghostPhysicsObject.getPosition());
-		} else {
+			PositionLocator locator = (PositionLocator) parentingEntities.get(ghostPhysicsObject);
+			positionLocators.increaseCount((PositionLocator) parentingEntities.get(ghostPhysicsObject));
+//			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + locator.getTargetPosition());
+		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
+			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
 			System.out.println("an ant ran into " + ghostPhysicsObject.getType());
 		}
 	}
@@ -210,26 +221,40 @@ public class Ant extends Entity {
 		this.job = job;
 	}
 	
+	public static void printAllPositionLocators() {
+		for (Ant ant : ants) {
+			System.out.println("Ant " + ant);
+			for (PositionLocator loc : ant.positionLocators.getUnmodifiableList()) {
+				System.out.println(loc);
+			}
+			System.out.println();
+		}
+	}
+	
 	/**Called at the end of every update, after events have been processed, to identify if an ant left some pheromones.
 	 * 
 	 */
 	public void resetPheromones() {
-		
+		pheromones.update();
 	}
 	
 	/**Called at the end of every update, after events have been processed, to identify if an ant left some PositionLocators.
 	 * 
 	 */
 	public void resetPositionLocators() {
-		
+		positionLocators.update();
 	}
 	
+	public static void resetPheromonesAndPositionLocators() {
+		for (Ant ant : ants) {
+			ant.resetPheromones();
+			ant.resetPositionLocators();
+		}
+	}
+
 	@Override
-	public void delete() {
-		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
-		entities.remove(this);
+	protected void deleteSpecific() {
 		dynamicEntities.remove(this);
-		physicsObjectTypeMap.remove(this);
-		renderingMap.get(graphicsEntity.getModel()).remove(this);
+		ants.remove(this);
 	}
 }

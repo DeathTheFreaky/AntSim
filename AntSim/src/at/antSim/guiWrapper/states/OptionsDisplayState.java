@@ -162,9 +162,9 @@ public class OptionsDisplayState extends AbstractGuiState {
 		}
 		
 		resNoteText = new GuiText("resNote", textDrawer.createTextQuad("Application needs to be restarted"), 
-				resolutionsContainer, orResolutionCmd, 18, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 46);
+				resolutionsContainer, orResolutionCmd, 14, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 10);
 		resNoteText2 = new GuiText("resNote2", textDrawer.createTextQuad("in order for resolution changes to take effect!"), 
-				resolutionsContainer, orResolutionCmd, 18, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 4);
+				resolutionsContainer, orResolutionCmd, 14, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 4);
 		resNoteText.setTransparency(1f);
 		resNoteText2.setTransparency(1f);
 		

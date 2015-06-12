@@ -1,5 +1,6 @@
 package at.antSim.graphics.entities;
 
+import at.antSim.Globals;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
@@ -16,6 +17,7 @@ public class GraphicsEntity {
 	
 	private TexturedModel model;
 	private float scale;
+	private boolean useTransparency = false;
 	
 	private int textureIndex = 0; //indicates which texture in a texture atlas the entity uses
 	
@@ -29,6 +31,7 @@ public class GraphicsEntity {
 		this.textureIndex = textureIndex;
 		this.model = model;
 		this.scale = scale;
+		this.useTransparency = model.usesTransparency();
 	}
 	
 	/**
@@ -92,5 +95,18 @@ public class GraphicsEntity {
 	
 	public int getTextureIndex() {
 		return textureIndex;
+	}
+	
+	public void useTransparency(boolean useTransparency) {
+		this.useTransparency = useTransparency;
+	}
+
+	public float getTransparency() {
+		if (useTransparency) {
+			return Globals.ghostTransparency;
+		}
+		else {
+			return 0;
+		}
 	}
 }

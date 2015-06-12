@@ -41,10 +41,17 @@ public class Enemy extends Entity {
 		position.set(Maths.createTransformationMatrix(new Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z), 0, 0, 0));
 		position.setRotation(((ReadOnlyPhysicsObject) physicsObject).getRotationQuaternions());
 	
-		GhostPhysicsObject phyObj = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createSphere("positionLocator", 1, 
-				graphicsEntity.getScale()/2 + Globals.POSITION_LOCATOR_MARGIN, position);
-		positionLocator = new PositionLocator(phyObj, this);
-		PhysicsManager.getInstance().registerPhysicsObject(phyObj);
+		positionLocator = (PositionLocator) MainApplication.getInstance().getDefaultEntityBuilder().setFactory(GhostPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z))
+				.buildGraphicsEntity("positionLocator", 1, graphicsEntity.getScale() + Globals.POSITION_LOCATOR_MARGIN * 2) 
+				.setTarget(this)
+				.buildPhysicsObject()
+				.registerResult();
+		
+//		GhostPhysicsObject phyObj = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createSphere("positionLocator", 1, 
+//				graphicsEntity.getScale()/2 + Globals.POSITION_LOCATOR_MARGIN, position);
+//		positionLocator = new PositionLocator(null, phyObj, this);
+//		PhysicsManager.getInstance().registerPhysicsObject(phyObj);
 				
 		dynamicEntities.add(this);
 		enemies.add(this);
@@ -82,17 +89,6 @@ public class Enemy extends Entity {
 //			System.out.println("me: " + physicsObject);
 		}
 	}
-
-	@Override
-	public void delete() {
-		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
-		PhysicsManager.getInstance().unregisterPhysicsObject(positionLocator.getPhysicsObject());
-		entities.remove(this);
-		dynamicEntities.remove(this);
-		enemies.remove(this);
-		physicsObjectTypeMap.remove(this);
-		renderingMap.get(graphicsEntity.getModel()).remove(this);
-	}
 	
 	/**Update PositionLocators.
 	 * 
@@ -101,5 +97,12 @@ public class Enemy extends Entity {
 		for (Enemy enemy : enemies) {
 			enemy.positionLocator.updatePosition();
 		}
+	}
+
+	@Override
+	protected void deleteSpecific() {
+		positionLocator.delete();
+		dynamicEntities.remove(this);
+		enemies.remove(this);
 	}
 }

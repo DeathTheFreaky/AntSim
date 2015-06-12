@@ -47,6 +47,9 @@ public final class Globals {
 	public static final short COL_MOVING = 128;
 	public static final short COL_BORDER = 256;
 	
+	//transparency of pheromones and positionLocators
+	public static float ghostTransparency = 0.6f;
+	
 	//config file entries set by config reader
 	public static int displayWidth; 
 	public static int displayHeight;

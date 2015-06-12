@@ -67,64 +67,64 @@ public class WorldLoader {
 				
 		//create a random flora
 		Random random = new Random(676452);
-		for (int i = 0; i < 1200; i++) {
-			if (i % 20 == 0) {
-				float x = random.nextFloat() * Globals.WORLD_SIZE;
-				float z = random.nextFloat() * -Globals.WORLD_SIZE;
-				float y = terrain.getHeightOfTerrain(x, z);
-				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-					.setPosition(new Vector3f(x, y, z))
-					.setRotation(0, random.nextFloat() * 360, 0)
-					.buildGraphicsEntity("fern", random.nextInt(4), 20f)
-					.buildPhysicsObject()
-					.registerResult();
-			}
-			if (i % 5 == 0) {
-				float x = random.nextFloat() * Globals.WORLD_SIZE;
-				float z = random.nextFloat() * -Globals.WORLD_SIZE;
-				float y = terrain.getHeightOfTerrain(x, z);
-				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-					.setPosition(new Vector3f(x, y, z))
-					.setRotation(0, random.nextFloat() * 360, 0)
-					.buildGraphicsEntity("grass", 1, random.nextFloat() * 2f + 25f)
-					.buildPhysicsObject()
-					.registerResult();
-				x = random.nextFloat() * Globals.WORLD_SIZE;
-				z = random.nextFloat() * -Globals.WORLD_SIZE;
-				y = terrain.getHeightOfTerrain(x, z);
-				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-					.setPosition(new Vector3f(x, y, z))
-					.setRotation(0, random.nextFloat() * 360, 0)
-					.buildGraphicsEntity("tree", 1, random.nextFloat() * 5f + 20f)
-					.buildPhysicsObject()
-					.registerResult();
-			}
-		}
-		
-		//add some lamps
-		Entity lamp1 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-			.setPosition(new Vector3f(185, -4.7f, -293))
-			.setRotation(0, random.nextFloat() * 360, 0)
-			.buildGraphicsEntity("lamp", 1, 20)
-			.buildPhysicsObject()
-			.registerResult();
-		
-		Entity redSphere = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-		.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
-		.setRotation(90, 45, 90)
-		.buildGraphicsEntity("sphere", 1, 25)
-		.buildPhysicsObject()
-		.registerResult();
-		EventManager.getInstance().registerEventListener(redSphere);
-
-
-		Entity lamp2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(370, 4.2f, -300))
-				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity("lamp", 1, 20)
-				.buildPhysicsObject()
-				.registerResult();
-		
+//		for (int i = 0; i < 1200; i++) {
+//			if (i % 20 == 0) {
+//				float x = random.nextFloat() * Globals.WORLD_SIZE;
+//				float z = random.nextFloat() * -Globals.WORLD_SIZE;
+//				float y = terrain.getHeightOfTerrain(x, z);
+//				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//					.setPosition(new Vector3f(x, y, z))
+//					.setRotation(0, random.nextFloat() * 360, 0)
+//					.buildGraphicsEntity("fern", random.nextInt(4), 20f)
+//					.buildPhysicsObject()
+//					.registerResult();
+//			}
+//			if (i % 5 == 0) {
+//				float x = random.nextFloat() * Globals.WORLD_SIZE;
+//				float z = random.nextFloat() * -Globals.WORLD_SIZE;
+//				float y = terrain.getHeightOfTerrain(x, z);
+//				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//					.setPosition(new Vector3f(x, y, z))
+//					.setRotation(0, random.nextFloat() * 360, 0)
+//					.buildGraphicsEntity("grass", 1, random.nextFloat() * 2f + 25f)
+//					.buildPhysicsObject()
+//					.registerResult();
+//				x = random.nextFloat() * Globals.WORLD_SIZE;
+//				z = random.nextFloat() * -Globals.WORLD_SIZE;
+//				y = terrain.getHeightOfTerrain(x, z);
+//				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//					.setPosition(new Vector3f(x, y, z))
+//					.setRotation(0, random.nextFloat() * 360, 0)
+//					.buildGraphicsEntity("tree", 1, random.nextFloat() * 5f + 20f)
+//					.buildPhysicsObject()
+//					.registerResult();
+//			}
+//		}
+//		
+//		//add some lamps
+//		Entity lamp1 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//			.setPosition(new Vector3f(185, -4.7f, -293))
+//			.setRotation(0, random.nextFloat() * 360, 0)
+//			.buildGraphicsEntity("lamp", 1, 20)
+//			.buildPhysicsObject()
+//			.registerResult();
+//		
+//		Entity redSphere = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//		.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
+//		.setRotation(90, 45, 90)
+//		.buildGraphicsEntity("sphere", 1, 25)
+//		.buildPhysicsObject()
+//		.registerResult();
+//		EventManager.getInstance().registerEventListener(redSphere);
+//
+//
+//		Entity lamp2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(370, 4.2f, -300))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("lamp", 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+//		
 //		Entity sphereTest = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 //				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
 //				.setRotation(0, random.nextFloat() * 360, 0)
@@ -133,12 +133,12 @@ public class WorldLoader {
 //				.registerResult();
 //		
 //		//add cool stanford demo dragon for specular lighting demo
-//		Entity redCube = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
-//				.setRotation(90, 45, 90)
-//				.buildGraphicsEntity("sphere", 1, 25)
-//				.buildPhysicsObject()
-//				.registerResult();
+		Entity redCube = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
+				.setRotation(90, 45, 90)
+				.buildGraphicsEntity("sphere", 1, 25)
+				.buildPhysicsObject()
+				.registerResult();
 //		
 //		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 //				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
@@ -147,13 +147,19 @@ public class WorldLoader {
 //				.buildPhysicsObject()
 //				.registerResult();
 		
+//		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/4, -Globals.WORLD_SIZE/2))
+////				.buildGraphicsEntity("sphere", 1, Globals.PHERONOME_SIZE/2) //enable for debugging just to visualize the pheromones
+//				.setType("pheromone")
+//				.setMass(0)
+//				.setObjectType(ObjectType.PHEROMONE)
+//				.createSphere(Globals.PHERONOME_SIZE/2)
+//				.registerResult();
+		
 		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/4, -Globals.WORLD_SIZE/2))
-//				.buildGraphicsEntity("sphere", 1, Globals.PHERONOME_SIZE/2) //enable for debugging just to visualize the pheromones
-				.setType("pheromone")
-				.setMass(0)
-				.setObjectType(ObjectType.PHEROMONE)
-				.createSphere(Globals.PHERONOME_SIZE/2)
+				.buildGraphicsEntity("pheromone", 1, Globals.PHERONOME_SIZE/2) //enable for debugging just to visualize the pheromones
+				.buildPhysicsObject()
 				.registerResult();
 		
 		loadBorders(terrain);

@@ -39,5 +39,4 @@ public interface PhysicsObject {
 	 * @param collisionFilterMask
 	 */
 	void setCollisionFilterMask(short collisionFilterMask);
-
 }

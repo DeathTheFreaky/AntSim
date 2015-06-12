@@ -47,6 +47,8 @@ public class EntityBuilderImpl implements EntityBuilder {
 	float height;
 	float scale;
 	
+	Entity target; //for position locators
+	
 	public EntityBuilderImpl() {
 		reset();
 	}
@@ -65,6 +67,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 		objectType = null;
 		height = 0;
 		scale = 0;
+		target = null;
 	}
 	
 	@Override
@@ -227,6 +230,12 @@ public class EntityBuilderImpl implements EntityBuilder {
 		rotation = new Vector3f(rx, ry, rz);
 		return this;
 	}
+	
+	@Override
+	public EntityBuilder setTarget(Entity target) {
+		this.target = target;
+		return this;
+	}
 
 	@Override
 	public Entity registerResult() {
@@ -246,10 +255,15 @@ public class EntityBuilderImpl implements EntityBuilder {
 			retEntity = new Food(graphicsEntity, physicsObject);
 			break;
 		case PHEROMONE:
-			retEntity = new Pheronome(graphicsEntity, physicsObject);
+			retEntity = new Pheromone(graphicsEntity, physicsObject);
 			break;
 		case MOVING:
 			retEntity = new Moving(graphicsEntity, physicsObject);
+			break;
+		case LOCATOR:
+			retEntity = new PositionLocator(graphicsEntity, physicsObject, target);
+			break;
+		default:
 			break;
 		}
 		reset();

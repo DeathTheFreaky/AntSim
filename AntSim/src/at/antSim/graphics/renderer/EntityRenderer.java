@@ -1,5 +1,6 @@
 package at.antSim.graphics.renderer;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,41 +69,75 @@ public class EntityRenderer {
 		shader.loadViewMatrix(camera);
 		shader.loadBlendFactor(blendFactor);
 		
+		LinkedList<TexturedModel> opaques = new LinkedList<TexturedModel>();
+		LinkedList<TexturedModel> transparents = new LinkedList<TexturedModel>();
+		
 		for (TexturedModel model : Entity.getUnmodifiableRenderingMap().keySet()) {
-			
-			/*Once for each unique model: load model's texture (by binding it to texture bank) and positions, normals, texture coordinates (as VBOs inside VAO) into OpenGL 
-			* and load other model attributes as uniform variables into shader program */
-			prepareTexturedModel(model);
-			
-			/* For every instance of a unique model: prepare the instance by loading its transformation matrix and its texture atlas offset (if needed)
-			 * and draw the model.
-			 */
-			List<Entity> batch = Entity.getUnmodifiableRenderingMap().get(model);
-			for(Entity entity:batch) {
-				prepareInstance(entity); //load transformation matrix and texture atlas offset
-				
-				if (MainApplication.getInstance().getMovingEntity().getEntity() == entity) {
-					shader.loadMovingEntityBlend(0.75f);
-					if (MainApplication.getInstance().getMovingEntity().isColliding()) {
-						shader.loadMovingEntityColor(COLLIDING_COLOR);
-					} else {
-						shader.loadMovingEntityColor(NOT_COLLIDING_COLOR);
-					}
-				} else {
-					shader.loadMovingEntityBlend(0.0f);
-				}
-				
-				//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
-				GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 
+			if (model.usesTransparency()) {
+				transparents.add(model);
+			} else {
+				opaques.add(model);
 			}
-			
-			//"restore the defaults" -> enable culling, disable vertexAttributeArrays (VBOS holding position, normals, texture coords) and unbind VAO
-			unbindTexturedModel();
 		}
 		
+		//first render opaques, then render transparents
+		for (TexturedModel model : opaques) {
+			renderBatch(model, false);
+		}
+		for (TexturedModel model : transparents) {
+			renderBatch(model, true);
+		}
+				
 		shader.stop();
 	}
 	
+	/**Renders a batch of same models.
+	 * 
+	 * @param model
+	 * @param transparent
+	 */
+	private void renderBatch(TexturedModel model, boolean transparent) {
+		
+		/*Once for each unique model: load model's texture (by binding it to texture bank) and positions, normals, texture coordinates (as VBOs inside VAO) into OpenGL 
+		* and load other model attributes as uniform variables into shader program */
+		prepareTexturedModel(model);
+		
+		/* For every instance of a unique model: prepare the instance by loading its transformation matrix and its texture atlas offset (if needed)
+		 * and draw the model.
+		 */
+		List<Entity> batch = Entity.getUnmodifiableRenderingMap().get(model);		
+		
+		if (transparent) { //for using transparent pheromones and locators enable alpha blending
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		}
+		
+		for(Entity entity:batch) {
+			prepareInstance(entity); //load transformation matrix and texture atlas offset
+			
+			if (MainApplication.getInstance().getMovingEntity().getEntity() == entity) {
+				shader.loadMovingEntityBlend(0.75f);
+				if (MainApplication.getInstance().getMovingEntity().isColliding()) {
+					shader.loadMovingEntityColor(COLLIDING_COLOR);
+				} else {
+					shader.loadMovingEntityColor(NOT_COLLIDING_COLOR);
+				}
+			} else {
+				shader.loadMovingEntityBlend(0.0f);
+			}
+			
+			//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
+			GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 
+		}
+		
+		if (transparent) {
+			GL11.glDisable(GL11.GL_BLEND); //disable alpha blending after we're done with our (transparent) textures
+		}
+		
+		//"restore the defaults" -> enable culling, disable vertexAttributeArrays (VBOS holding position, normals, texture coords) and unbind VAO
+		unbindTexturedModel();
+	}
+
 	/**Prepares a {@link TexturedModel} for rendering ONCE for all entity instances of that model.
 	 * 
 	 * @param model - the {@link TexturedModel} to be rendered
@@ -158,5 +193,6 @@ public class EntityRenderer {
 				entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
 		shader.loadTransformationMatrix(transformationMatrix); //load transformation matrix into the shader program
 		shader.loadOffset(entity.getGraphicsEntity().getTextureXOffset(), entity.getGraphicsEntity().getTextureYOffset()); //offsets could be different for each entity
+		shader.loadTransparency(entity.getGraphicsEntity().getTransparency());
 	}
 }

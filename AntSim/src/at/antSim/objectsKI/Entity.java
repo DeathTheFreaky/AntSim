@@ -26,8 +26,10 @@ public abstract class Entity {
 
 	static final Map<PhysicsObject, ObjectType> physicsObjectTypeMap = new HashMap<PhysicsObject, ObjectType>();
 	static final Map<TexturedModel, List<Entity>> renderingMap = new HashMap<TexturedModel, List<Entity>>();
+	static final Map<PhysicsObject, Entity> parentingEntities = new HashMap<PhysicsObject, Entity>(); //allows us to get eg. the Food Entity in a react() method when an ant hit the Food Entitie's physicsObject
 	static final List<Entity> entities = new LinkedList<>(); //used to delete all entities
 	static final List<Entity> dynamicEntities = new LinkedList<>();
+	static final List<Ant> ants = new LinkedList<Ant>();
 
 	final GraphicsEntity graphicsEntity;
 	final PhysicsObject physicsObject;
@@ -37,6 +39,7 @@ public abstract class Entity {
 		this.physicsObject = physicsObject;
 		
 		entities.add(this);
+		parentingEntities.put(physicsObject, this);
 		
 		//add Entity to physics and rendering hashmaps
 		physicsObjectTypeMap.put(physicsObject, type);
@@ -73,11 +76,20 @@ public abstract class Entity {
 	 * Deletes this Entity, removing it from the physicsObjectTypeMap and the renderingMap.
 	 */
 	public void delete() {
+		deleteSpecific();
 		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
 		entities.remove(this);
+		parentingEntities.remove(physicsObject);
 		physicsObjectTypeMap.remove(this);
-		renderingMap.get(graphicsEntity.getModel()).remove(this);
+		if (graphicsEntity != null) { //null for Pheromones
+			renderingMap.get(graphicsEntity.getModel()).remove(this);
+		}
 	}
+	
+	/**Allows to execute deletion routines specific to a subclass of Entity.
+	 * 
+	 */
+	protected  abstract void deleteSpecific();
 
 	/**
 	 * @return - an unmodifiable version of renderingMap for preventing changes on renderingMap while allowing it to be retrieved for rendering
@@ -103,6 +115,10 @@ public abstract class Entity {
 		}
 		physicsObjectTypeMap.clear();
 		renderingMap.clear();
+		parentingEntities.clear();
+		entities.clear();
+		dynamicEntities.clear();
+		ants.clear();
 	}
 	
 	/**Strangely, sometimes dynamic objects seem to fall below the world. 

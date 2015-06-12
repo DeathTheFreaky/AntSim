@@ -115,7 +115,7 @@ public class OptionsControlState extends AbstractGuiState {
 		
 		//error message
 		errText = new GuiText("resNote", textDrawer.createTextQuad("Key is used by another binding!"), 
-				optionsContainer, null, 18, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 35);
+				optionsContainer, null, 14, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 10);
 		errText.setTransparency(1f);
 		
 		//back button

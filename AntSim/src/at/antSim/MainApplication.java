@@ -11,6 +11,7 @@ import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;
 import at.antSim.guiWrapper.states.*;
+import at.antSim.objectsKI.Ant;
 import at.antSim.objectsKI.Enemy;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
@@ -268,6 +269,8 @@ public class MainApplication {
 			statsCtrTest++;
 			Enemy.updatePositionLocators(); //ensure the PositionLocators follow their target's position
 			Entity.resetUndergroundEntities();
+			Ant.printAllPositionLocators();
+			Ant.resetPheromonesAndPositionLocators();
 //			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 		}

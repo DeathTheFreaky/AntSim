@@ -106,10 +106,9 @@ public class MasterRenderer {
 			prepare(); //enable depth test and clear screen and depth buffer
 				
 			//run all sub-renderers' render methods
-
-			entityRenderer.render(blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);		
-			terrainRenderer.render(terrains, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);
 			skyboxRenderer.render(camera, blendFactor, DAY_FOG, NIGHT_FOG);
+			terrainRenderer.render(terrains, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);
+			entityRenderer.render(blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);		
 			
 			//clear list of terrains and map of entities each frame so they do not build up and up
 			terrains.clear();
