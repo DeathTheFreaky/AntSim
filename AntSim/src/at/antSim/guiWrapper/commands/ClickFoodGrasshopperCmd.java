@@ -18,7 +18,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 public class ClickFoodGrasshopperCmd extends MovingEntityCmd {
 	
 	public ClickFoodGrasshopperCmd(EntityBuilder builder, Random random) {
-		super(builder, random, "greenCube");
+		super(builder, random, "deadGrasshopper");
 	}
 
 	@Override

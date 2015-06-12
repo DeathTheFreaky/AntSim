@@ -18,7 +18,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 public class ClickFoodSquirrelCmd extends MovingEntityCmd {
 	
 	public ClickFoodSquirrelCmd(EntityBuilder builder, Random random) {
-		super(builder, random, "blueCube");
+		super(builder, random, "squirrel");
 	}
 
 	@Override

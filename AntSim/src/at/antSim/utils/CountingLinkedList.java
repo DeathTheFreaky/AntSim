@@ -67,7 +67,7 @@ public class CountingLinkedList<E> {
 		LinkedList<Pair<E, Integer>> deleteAbles = new LinkedList<>();
 		LinkedList<E> deleteds = new LinkedList<>();
 		for (Pair<E, Integer> pair : list) {
-			if (pair.getValue() <= 1) {
+			if (pair.getValue() <= 0) {
 				deleteAbles.add(pair);
 				deleteds.add(pair.getKey());
 			} else {

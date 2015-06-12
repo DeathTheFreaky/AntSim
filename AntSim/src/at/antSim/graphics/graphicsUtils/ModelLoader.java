@@ -28,19 +28,39 @@ public class ModelLoader {
 	public static void loadTexturedModels(OpenGLLoader loader) {
 		
 		//first String in array is name of obj file, second is name of texture, third is desired name of TexturedModel in Hashmap
+		
+		//environment
 		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
+		
+		//ghosts
+		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "pheromone", PrimitiveType.SPHERE, ObjectType.PHEROMONE, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "blue", "positionLocator", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		
+		//test
 		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("cube", "green", "greenCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "sphere", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "pheromone", PrimitiveType.SPHERE, ObjectType.PHEROMONE, massDummie, true));
-		modelPresets.add(new ModelNamesAndTypes("sphere", "blue", "positionLocator", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
 		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.FOOD, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "ant", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		
+		//food
+		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "apple", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "deadAnt", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "deadGrasshopper", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "squirrel", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		
+		//ants
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "worker", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "forager", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "queen", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		
+		//enemies
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "enemyAnt", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "enemyGrasshopper", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);

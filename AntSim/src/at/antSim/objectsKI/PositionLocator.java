@@ -2,15 +2,20 @@ package at.antSim.objectsKI;
 
 import java.util.LinkedList;
 
-import org.lwjgl.util.vector.Vector3f;
+import javax.vecmath.Vector3f;
 
+import at.antSim.Globals;
+import at.antSim.eventSystem.EventManager;
+import at.antSim.eventSystem.events.LocatorLockEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 /**Used as a sphere around Food and Enemy entities to tell the ant where to go to once in a specified range around the Food or Enemy to actually find their target.
@@ -48,12 +53,30 @@ public class PositionLocator extends Entity {
 	 * @param ant
 	 */
 	public void activateAnt(Ant ant) {
-		if (!activeAnts.contains(ant)) {
-			activeAnts.add(ant);
+		if (activeAnts.contains(ant)) {
+			Vector3f antPosition = ((ReadOnlyPhysicsObject) ant.getPhysicsObject()).getPosition();
+			Vector3f targetPosition = getTargetPosition();
+			Vector3f linVelocity = new Vector3f((targetPosition.x - antPosition.x)  * Globals.LOCATOR_SPEED_MULT, 0, (targetPosition.z - antPosition.z) * Globals.LOCATOR_SPEED_MULT);
+			System.out.println("sending linVelocity " + linVelocity + " to " + ant);
+			EventManager.getInstance().addEventToQueue(new LocatorLockEvent(linVelocity, ant, this));
+		}
+		else if (activeAnts.size() < Globals.MAX_LOCATOR_ANTS) {
+			if (!activeAnts.contains(ant)) {
+				activeAnts.add(ant);
+				Vector3f antPosition = ((ReadOnlyPhysicsObject) ant.getPhysicsObject()).getPosition();
+				Vector3f targetPosition = getTargetPosition();
+				Vector3f linVelocity = new Vector3f((targetPosition.x - antPosition.x)  * Globals.LOCATOR_SPEED_MULT, 0, (targetPosition.z - antPosition.z) * Globals.LOCATOR_SPEED_MULT);
+				System.out.println("sending linVelocity " + linVelocity + " to " + ant);
+				EventManager.getInstance().addEventToQueue(new LocatorLockEvent(linVelocity, ant, this));
+			}
+		} 
+		else {
+			Vector3f linVelocity = new Vector3f(0,0,0); //causes ant to wait
+			EventManager.getInstance().addEventToQueue(new LocatorLockEvent(linVelocity, ant, this));
 		}
 	}
 	
-	public boolean containsAnt(Ant ant) {
+	public boolean containsActiveAnt(Ant ant) {
 		return activeAnts.contains(ant);
 	}
 	

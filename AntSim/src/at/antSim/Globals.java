@@ -12,6 +12,9 @@ import com.bulletphysics.collision.broadphase.CollisionFilterGroups;
  */
 public final class Globals {
 	
+	//default variables are set in ConfigReader
+	//delete config file to write defaults on next start!!!
+	
 	//global Constants
 	public static final String WORKING_DIR = System.getProperty("user.dir");
 	public static final String RESOURCES = WORKING_DIR + "\\res\\";
@@ -50,6 +53,31 @@ public final class Globals {
 	//transparency of pheromones and positionLocators
 	public static final float GHOST_TRANSPARENCY = 0.6f;
 	public static float currentGhostTransparency = 0.6f;
+	
+	//maximum nbr of ants waiting at a position locator
+	public static final int MAX_LOCATOR_ANTS = 1;
+	public static final float LOCATOR_SPEED_MULT = 1f;
+	
+	//maximum number of food an ant can carry
+	public static int maxFoodCarry;
+	
+	//default food resource sizes
+	public static int foodResAppleSize;
+	public static int foodResAntSize;
+	public static int foodResGrasshopperSize;
+	public static int foodResSquirrelSize;
+	
+	//attack and hp of enemies
+	public static int enemyAntHp;
+	public static int enemyAntAttack;
+	public static int enemyGrasshopperHp;
+	public static int enemyGrasshopperAttack;
+	
+	//attack and hp of ants
+	public static int antHp;
+	public static int antAttack;
+	public static int queenHp;
+	public static int queenAttack;
 	
 	//config file entries set by config reader
 	public static int displayWidth; 

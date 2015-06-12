@@ -18,7 +18,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 public class ClickFoodAppleCmd extends MovingEntityCmd {
 	
 	public ClickFoodAppleCmd(EntityBuilder builder, Random random) {
-		super(builder, random, "cylinder");
+		super(builder, random, "apple");
 	}
 
 	@Override

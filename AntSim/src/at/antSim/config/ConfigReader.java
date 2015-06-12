@@ -127,9 +127,27 @@ public class ConfigReader {
 			Globals.zoomInKey = Keyboard.KEY_Q;
 			Globals.zoomOutKey = Keyboard.KEY_E;
 			Globals.restoreCameraPosition = Keyboard.KEY_R;
+			Globals.showGhostSpheres = Keyboard.KEY_G;
 			
 			Globals.invertHorizontalAxis = -1;
 			Globals.invertVerticalAxis = -1;
+			
+			Globals.foodResAppleSize = 100;
+			Globals.foodResAntSize = 5;
+			Globals.foodResGrasshopperSize = 20;
+			Globals.foodResSquirrelSize = 100;
+			
+			Globals.enemyAntHp = 75;
+			Globals.enemyAntAttack = 1;
+			Globals.enemyGrasshopperHp = 100;
+			Globals.enemyGrasshopperAttack = 2;
+			
+			Globals.antAttack = 1;
+			Globals.antHp = 50;
+			Globals.queenAttack = 5;
+			Globals.queenHp = 1000;
+			
+			Globals.maxFoodCarry = 10;
 			
 			ConfigWriter.writeConfig();
 		}

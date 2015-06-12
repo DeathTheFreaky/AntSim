@@ -111,7 +111,7 @@ public class MovingEntity {
 //				placedEntityFactory = NoResponsePhysicsObjectFactory.getInstance();
 				
 				//store data of currently moving entity which has to be dynamic to enable collision detection
-				Vector3f placedPosition = Maths.convertVector3f(((ReadOnlyPhysicsObject) entity.getPhysicsObject()).getPosition());
+				Vector3f placedPosition = Maths.vec3fToSlickUtil(((ReadOnlyPhysicsObject) entity.getPhysicsObject()).getPosition());
 				placedPosition.y = placedPosition.y - entity.getGraphicsEntity().getModel().getRawModel().getyLength()/2 * entity.getGraphicsEntity().getScale() + dropHeight;
 				String type = entity.getPhysicsObject().getType();
 				ReadOnlyPhysicsObject rpo = (ReadOnlyPhysicsObject) entity.getPhysicsObject();

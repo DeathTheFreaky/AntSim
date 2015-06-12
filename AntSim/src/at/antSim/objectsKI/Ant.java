@@ -9,13 +9,16 @@ import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
+import at.antSim.eventSystem.events.LocatorLockEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.utils.CountingLinkedList;
 
 /**
@@ -36,26 +39,28 @@ import at.antSim.utils.CountingLinkedList;
  * @author Martin
  *
  */
-public class Ant extends Entity {
+public abstract class Ant extends Entity {
 	// search 1, food 2, war 3, nothing 0
-	private int odorStatus = 0;
-	private int hp;
-	private int attack;
+	protected int odorStatus = 0;
+	protected int hp;
+	protected int attack;
 	// saturate?
 	private int hunger;
-	private DynamicPhysicsObject physicsObject = null;
-	private int velocityX = -20; //attention: positive velocity in x-axis moves entity to right side, although x decreases to the right side!
-	private int velocityZ = 0;
-	private float lastposition = 0;
+	protected DynamicPhysicsObject physicsObject = null;
+	protected int velocityX = -20; //attention: positive velocity in x-axis moves entity to right side, although x decreases to the right side!
+	protected int velocityZ = 0;
+	protected float lastposition = 0;
 	private int velocityhelper = 0;
+	
+	protected PositionLocator lockedLocator;
 
 	// wahrscheinlich eigene Jobklasse => fuer im Bautätige
 	// und Worker/Forager
 	private String job;
 	
 	//linked lists for storing which position Locators and Pheromones the ant is currently in
-	private CountingLinkedList<PositionLocator> positionLocators = new CountingLinkedList<>();
-	private CountingLinkedList<Pheromone> pheromones = new CountingLinkedList<>();
+	protected CountingLinkedList<PositionLocator> positionLocators = new CountingLinkedList<>();
+	protected CountingLinkedList<Pheromone> pheromones = new CountingLinkedList<>();
 
 	public Ant(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
@@ -77,44 +82,50 @@ public class Ant extends Entity {
 		// example
 		// if(physicsObject.getPosition().y <
 		// staticPhysicsObject.getPosition().y){
-		if (staticPhysicsObject.getPosition().y == 0) {
-			if (physicsObject.getLinearVelocity().x < velocityX
-					|| physicsObject.getLinearVelocity().z < velocityZ) {
-				Vector3f v = new Vector3f(velocityX, 0, velocityZ);
-				physicsObject.setLinearVelocity(v);
-//				 System.out.println("Ant: " + physicsObject.getPosition() +
-//				 " Ground: " + staticPhysicsObject.getPosition());
-			}
-		} else {
-			// Not colliding with the ground but something else like a tree 
-			if (physicsObject.getPosition().x > staticPhysicsObject
-					.getPosition().x) {
-				Vector3f v;
-				v = new Vector3f(velocityX + 10, 0, velocityZ);
-				physicsObject.setLinearVelocity(v);
-//				System.out.println("velocity: "
-//						+ physicsObject.getLinearVelocity() + " helper "
-//						+ velocityhelper);
-			} else {
-				Vector3f v;
-				if (lastposition == physicsObject.getPosition().x) {
-					velocityhelper = velocityhelper + 10;
-					velocityZ = velocityhelper;
-					v = new Vector3f(velocityX, 0, velocityZ);
-				} else {
-					lastposition = physicsObject.getPosition().x;
-					v = new Vector3f(velocityX + 10, 0, velocityZ);
-					physicsObject.setLinearVelocity(v);
-					velocityhelper = 0;
-				}
-			}
+//		if (staticPhysicsObject.getPosition().y == 0) {
+//			if (physicsObject.getLinearVelocity().x < velocityX
+//					|| physicsObject.getLinearVelocity().z < velocityZ) {
+//				Vector3f v = new Vector3f(velocityX, 0, velocityZ);
+//				physicsObject.setLinearVelocity(v);
+////				 System.out.println("Ant: " + physicsObject.getPosition() +
+////				 " Ground: " + staticPhysicsObject.getPosition());
+//			}
+//		} else {
+//			// Not colliding with the ground but something else like a tree 
+//			if (physicsObject.getPosition().x > staticPhysicsObject
+//					.getPosition().x) {
+//				Vector3f v;
+//				v = new Vector3f(velocityX + 10, 0, velocityZ);
+//				physicsObject.setLinearVelocity(v);
+////				System.out.println("velocity: "
+////						+ physicsObject.getLinearVelocity() + " helper "
+////						+ velocityhelper);
+//			} else {
+//				Vector3f v;
+//				if (lastposition == physicsObject.getPosition().x) {
+//					velocityhelper = velocityhelper + 10;
+//					velocityZ = velocityhelper;
+//					v = new Vector3f(velocityX, 0, velocityZ);
+//				} else {
+//					lastposition = physicsObject.getPosition().x;
+//					v = new Vector3f(velocityX + 10, 0, velocityZ);
+//					physicsObject.setLinearVelocity(v);
+//					velocityhelper = 0;
+//				}
+//			}
 //			System.out.println("Ant: " + physicsObject.getPosition().x
 //					+ " lastposition: " + lastposition + " velocity: "
 //					+ physicsObject.getLinearVelocity() + " helper "
 //					+ velocityhelper);
 
-		}
+		
+		reactSpecific(staticPhysicsObject);
 	}
+	
+	/**Allows different ant types to react differently.
+	 * @param staticPhysicsObject
+	 */
+	public abstract void reactSpecific(StaticPhysicsObject staticPhysicsObject);
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
@@ -130,20 +141,24 @@ public class Ant extends Entity {
 		} else if (tp.equals(ObjectType.ENEMY)) {
 			attackEnemy(dynamicPhysicsObject);
 		}
+		reactSpecific(dynamicPhysicsObject);
 	}
+	
+	/**Allows different ant types to react differently.
+	 * @param dynamicPhysicsObject
+	 */
+	public abstract void reactSpecific(DynamicPhysicsObject dynamicPhysicsObject);
 
 	@Override
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
-		System.out.println("reacting to ghostObject in Ant: " + MainApplication.getInstance().getCycleCtr());
-		if (ghostPhysicsObject.getType().equals("positionLocator")) {
-			PositionLocator locator = (PositionLocator) parentingEntities.get(ghostPhysicsObject);
-			positionLocators.increaseCount((PositionLocator) parentingEntities.get(ghostPhysicsObject));
-			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + locator.getTargetPosition());
-		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
-			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
-			System.out.println("an ant ran into " + ghostPhysicsObject.getType());
-		}
+		//common reacting behaviour of all ant types
+		reactSpecific(ghostPhysicsObject);
 	}
+	
+	/**Allows different ant types to react differently.
+	 * @param ghostPhysicsObject
+	 */
+	public abstract void reactSpecific(GhostPhysicsObject ghostPhysicsObject); 
 	
 	@Override
 	public void react(TerrainPhysicsObject terrainPhysicsObject) {
@@ -223,6 +238,11 @@ public class Ant extends Entity {
 		this.job = job;
 	}
 	
+	public void unlockLocator() {
+		lockedLocator.deactivateAnt(this);
+		lockedLocator = null;
+	}
+	
 	public static void printAllPositionLocatorsAndPheromones() {
 		for (Ant ant : ants) {
 			System.out.println("Ant " + ant);
@@ -249,7 +269,9 @@ public class Ant extends Entity {
 	 * 
 	 */
 	public void resetPositionLocators() {
-		positionLocators.update();
+		for (PositionLocator loc : positionLocators.update()) {
+			loc.deactivateAnt(this);
+		};
 	}
 	
 	public static void resetPheromonesAndPositionLocators() {

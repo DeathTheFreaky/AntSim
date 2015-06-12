@@ -6,8 +6,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bulletphysics.linearmath.Transform;
 
-import at.antSim.MainApplication;
-import at.antSim.MovingEntity;
 import at.antSim.GTPMapper.GTPCone;
 import at.antSim.GTPMapper.GTPCuboid;
 import at.antSim.GTPMapper.GTPCylinder;
@@ -17,12 +15,10 @@ import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.graphicsUtils.ModelLoader;
-import at.antSim.graphics.models.TexturedModel;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
-import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 /**Implements {@link EntityBuilder}.
  * 
@@ -236,23 +232,41 @@ public class EntityBuilderImpl implements EntityBuilder {
 		this.target = target;
 		return this;
 	}
-
+	
 	@Override
 	public Entity registerResult() {
 		Entity retEntity = null;
 		PhysicsManager.getInstance().registerPhysicsObject(physicsObject);
 		switch (objectType) {
 		case ANT:
-			retEntity = new Ant(graphicsEntity, physicsObject);
+			if (type.equals("forager")) {
+				retEntity = new Forager(graphicsEntity, physicsObject);
+			} else if (type.equals("worker")) {
+				retEntity = new Worker(graphicsEntity, physicsObject);
+			} else if (type.equals("queen")) {
+				retEntity = new Queen(graphicsEntity, physicsObject);
+			}
 			break;
 		case ENEMY:
-			retEntity = new Enemy(graphicsEntity, physicsObject);
+			if (type.equals("enemyAnt")) {
+				retEntity = new EnemyAnt(graphicsEntity, physicsObject);
+			} else if (type.equals("enemyGrasshopper")) {
+				retEntity = new Worker(graphicsEntity, physicsObject);
+			} 
 			break;
 		case ENVIRONMENT:
 			retEntity = new EnvironmentObject(graphicsEntity, physicsObject);
 			break;
 		case FOOD:
-			retEntity = new Food(graphicsEntity, physicsObject);
+			if (type.equals("apple")) {
+				retEntity = new Apple(graphicsEntity, physicsObject);
+			} else if (type.equals("deadAnt")) {
+				retEntity = new DeadAnt(graphicsEntity, physicsObject);
+			} else if (type.equals("deadGrasshopper")) {
+				retEntity = new DeadGrasshopper(graphicsEntity, physicsObject);
+			} else if (type.equals("squirrel")) {
+				retEntity = new Squirrel(graphicsEntity, physicsObject);
+			}
 			break;
 		case PHEROMONE:
 			retEntity = new Pheromone(graphicsEntity, physicsObject);

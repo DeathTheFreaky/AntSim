@@ -22,9 +22,10 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
  * @author Flo
  *
  */
-public class Food extends Entity {
+public abstract class Food extends Entity implements Foodressource {
 
 	PositionLocator positionLocator;
+	int foodStacks;
 	
 	public Food(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.FOOD);
@@ -39,6 +40,7 @@ public class Food extends Entity {
 				.setTarget(this)
 				.buildPhysicsObject()
 				.registerResult();
+		
 	}
 
 	@Override
@@ -49,8 +51,14 @@ public class Food extends Entity {
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
-		// TODO Auto-generated method stub
-		
+		if (dynamicPhysicsObject.getType().equals("forager")) {
+			Forager forager = (Forager) parentingEntities.get(dynamicPhysicsObject);
+			foodStacks += forager.carryMoreFood(harvest()); //amount of food which cannot be carried by ant is put back into food resource
+			forager.unlockLocator();
+			if (foodStacks <= 0) {
+				this.delete();
+			}
+		}
 	}
 
 	@Override
@@ -62,6 +70,21 @@ public class Food extends Entity {
 	public void react(TerrainPhysicsObject terrainPhysicsObject) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public int harvest() {
+		if(foodStacks > 0){
+			foodStacks--;
+			return 1;
+		}
+		else
+			return 0;
+	}
+
+	@Override
+	public int getFoodStacks() {
+		return foodStacks;
 	}
 
 	@Override

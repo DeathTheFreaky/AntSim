@@ -27,10 +27,13 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
  * @author Flo
  *
  */
-public class Enemy extends Entity {
+public abstract class Enemy extends Entity {
 	
 	static final List<Enemy> enemies = new LinkedList<>(); //used to delete all entities
 	PositionLocator positionLocator;
+	
+	int hp;
+	int attack;
 
 	public Enemy(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.ENEMY);

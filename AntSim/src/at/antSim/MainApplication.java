@@ -148,7 +148,7 @@ public class MainApplication {
 
 	private long timeLastLogicUpdate = System.currentTimeMillis();
 	
-	private int cyclyCtr = 0;
+	private int cycleCtr = 0;
 
 	private HashMap<String, Integer> stats = new HashMap<>();
 	
@@ -274,7 +274,7 @@ public class MainApplication {
 //			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 			
-//			cyclyCtr++;
+			cycleCtr++;
 //			System.out.println();
 		}
 		
@@ -401,10 +401,10 @@ public class MainApplication {
 	}
 
 	public HashMap<String, Integer> getStats() {
-		stats.put("Population", 12035+cyclyCtr);
-		stats.put("Food", 5389+cyclyCtr);
-		stats.put("Eggs", 345+cyclyCtr);
-		stats.put("Larvae", 243+cyclyCtr);
+		stats.put("Population", 12035+cycleCtr);
+		stats.put("Food", 5389+cycleCtr);
+		stats.put("Eggs", 345+cycleCtr);
+		stats.put("Larvae", 243+cycleCtr);
 		return stats;
 	}
 	
@@ -425,7 +425,7 @@ public class MainApplication {
 	}
 	
 	public int getCycleCtr() {
-		return cyclyCtr;
+		return cycleCtr;
 	}
 	
 	/**

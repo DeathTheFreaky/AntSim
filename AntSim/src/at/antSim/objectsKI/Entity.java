@@ -33,10 +33,12 @@ public abstract class Entity {
 
 	final GraphicsEntity graphicsEntity;
 	final PhysicsObject physicsObject;
+	final ObjectType objectType;
 
 	public Entity(GraphicsEntity graphicsEntity, PhysicsObject physicsObject, ObjectType type) {
 		this.graphicsEntity = graphicsEntity;
 		this.physicsObject = physicsObject;
+		this.objectType = type;
 		
 		entities.add(this);
 		parentingEntities.put(physicsObject, this);
@@ -104,6 +106,10 @@ public abstract class Entity {
 
 	public PhysicsObject getPhysicsObject() {
 		return physicsObject;
+	}
+	
+	public ObjectType getObjectType() {
+		return objectType;
 	}
 	
 	/**Deletes all Entities from physicsObjects and GraphicsEntities maps when game session is quit (return to main menu).
