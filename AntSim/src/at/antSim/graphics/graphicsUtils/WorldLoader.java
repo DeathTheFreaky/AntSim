@@ -155,6 +155,52 @@ public class WorldLoader {
 //				.setObjectType(ObjectType.PHEROMONE)
 //				.createSphere(Globals.PHERONOME_SIZE/2)
 //				.registerResult();
+		//				//PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
+//
+//				Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//						.setPosition(new Vector3f(370, 4.2f, -300))
+//						.setRotation(0, random.nextFloat() * 360, 0)
+//						.buildGraphicsEntity("stomp", 1, 20)
+//						.buildPhysicsObject()
+//						.registerResult();
+//
+//				// new
+//				Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//						.setPosition(new Vector3f(300, 4.2f, -300))
+//						.setRotation(0, random.nextFloat() * 360, 0)
+//						.buildGraphicsEntity("rock", 1, 20)
+//						.buildPhysicsObject()
+//						.registerResult();
+//
+//				Entity squirrel = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//						.setPosition(new Vector3f(350, 4.2f, -350))
+//						.setRotation(0, random.nextFloat() * 360, 0)
+//						.buildGraphicsEntity("squirrel", 1, 20)
+//						.buildPhysicsObject()
+//						.registerResult();
+
+//				Entity antBlack = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//						.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 10, 10, -Globals.WORLD_SIZE/2))
+//						.setRotation(0, random.nextFloat() * 360, 0)
+//						.buildGraphicsEntity("antBlack", 1, 20)
+//						.buildPhysicsObject()
+//						.registerResult();
+		//
+//				Entity antRed = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//						.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 10, 10, -Globals.WORLD_SIZE/2))
+//						.setRotation(0, random.nextFloat() * 360, 0)
+//						.buildGraphicsEntity("antRed", 1, 20)
+//						.buildPhysicsObject()
+//						.registerResult();
+		//
+//				Entity antDark = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//						.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 10, -Globals.WORLD_SIZE/2))
+//						.setRotation(0, random.nextFloat() * 360, 0)
+//						.buildGraphicsEntity("antDark", 1, 10)
+//						.buildPhysicsObject()
+//						.registerResult();
+
+				// end of new
 		
 		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
@@ -200,6 +246,7 @@ public class WorldLoader {
 		westBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		westBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(westBorder);
+
 	}
 	
 	/**Loads the world's light sources.
@@ -212,7 +259,6 @@ public class WorldLoader {
 		
 		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); //sun
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
-		lights.add(new Light(new Vector3f(370, 17, -300), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		
 		return lights;
 	}

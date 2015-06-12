@@ -45,6 +45,7 @@ public class OBJFileLoader {
 		//initialize filereader, bufferedreader and arraylists holding the data
         FileReader isr = null;
         File objFile = new File(Globals.MODELS + objFileName + ".obj");
+		System.out.println(objFileName);
         try {
             isr = new FileReader(objFile);
         } catch (FileNotFoundException e) {

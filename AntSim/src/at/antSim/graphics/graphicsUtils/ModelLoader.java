@@ -34,6 +34,8 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("stomp", "stomp", "stomp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("rock", "rockTexture", "rock", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		
 		//ghosts
 		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "pheromone", PrimitiveType.SPHERE, ObjectType.PHEROMONE, massDummie, true));
@@ -51,15 +53,15 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "apple", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "deadAnt", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "deadGrasshopper", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "squirrel", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("squirrel", "squirrelTexture", "squirrel", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
 		
 		//ants
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "worker", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "forager", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "queen", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "worker", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "forager", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkRedTexture", "queen", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
 		
 		//enemies
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "enemyAnt", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antBlackTexture", "enemyAnt", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "enemyGrasshopper", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
