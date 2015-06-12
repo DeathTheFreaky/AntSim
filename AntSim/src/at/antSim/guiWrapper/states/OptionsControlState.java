@@ -80,6 +80,7 @@ public class OptionsControlState extends AbstractGuiState {
 		bindings.add(new KeyNameBindingWrapper("Zoom In", "zoomInKey"));
 		bindings.add(new KeyNameBindingWrapper("Zoom Out", "zoomOutKey"));
 		bindings.add(new KeyNameBindingWrapper("Restore Position", "restoreCameraPosition"));
+		bindings.add(new KeyNameBindingWrapper("Show Ghost Spheres", "showGhostSpheres"));
 		
 		int idx = 0;
 		for (KeyNameBindingWrapper keyWrapper : bindings) {
@@ -88,10 +89,10 @@ public class OptionsControlState extends AbstractGuiState {
 			
 			GuiContainer keyRowContainer;
 			if (idx == 0) {
-				keyRowContainer = new GuiContainer("keyRowContainer", loader, optionsContainer, null, null, 690, 35,
+				keyRowContainer = new GuiContainer("keyRowContainer", loader, optionsContainer, null, null, 690, 30,
 						HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.TOP, 0, 0f, new Vector3f(0, 0, 0), 0.5f);
 			} else {
-				keyRowContainer = new GuiContainer("keyRowContainer", loader, optionsContainer, null,  null, 690, 35,
+				keyRowContainer = new GuiContainer("keyRowContainer", loader, optionsContainer, null,  null, 690, 30,
 						HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BELOW, 0, 0f, new Vector3f(0, 0, 0), 0.5f);
 			}
 			GuiContainer keyLabelContainer = new GuiContainer("keyLabelContainer", loader, keyRowContainer, switchToDisplayCmd,  null, keyRowContainer.getWidth()/2,

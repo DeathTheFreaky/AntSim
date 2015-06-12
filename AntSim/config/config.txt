@@ -1,5 +1,6 @@
-displayWidth = 1024
-displayHeight = 768
+currentGhostTransparency = 0.6
+displayWidth = 1280
+displayHeight = 720
 displaySaveWidth = 1280
 displaySaveHeight = 720
 fullscreen = false
@@ -19,5 +20,6 @@ tiltUpKey = 208
 zoomInKey = 16
 zoomOutKey = 18
 restoreCameraPosition = 19
+showGhostSpheres = 34
 invertHorizontalAxis = -1
 invertVerticalAxis = -1

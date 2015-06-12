@@ -252,6 +252,17 @@ public class Camera {
 		//restore camera position
 		if (event.getKey() == Globals.restoreCameraPosition) {
 			triggerReset = true;
+			event.consume();
+		}
+		
+		//toggle ghost spheres
+		if (event.getKey() == Globals.showGhostSpheres) {
+			if (Globals.currentGhostTransparency == 1) {
+				Globals.currentGhostTransparency = Globals.GHOST_TRANSPARENCY;
+			} else {
+				Globals.currentGhostTransparency = 1;
+			}
+			event.consume();
 		}
 		
 		//pause menu
@@ -259,6 +270,7 @@ public class Camera {
 			MainApplication.getInstance().pause();
 			GuiWrapper.getInstance().setCurrentState(pauseMenuName);
 			EventManager.getInstance().unregisterEventListener(this);
+			event.consume();
 		}
 	}
 	

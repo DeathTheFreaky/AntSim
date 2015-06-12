@@ -48,7 +48,8 @@ public final class Globals {
 	public static final short COL_BORDER = 256;
 	
 	//transparency of pheromones and positionLocators
-	public static float ghostTransparency = 0.6f;
+	public static final float GHOST_TRANSPARENCY = 0.6f;
+	public static float currentGhostTransparency = 0.6f;
 	
 	//config file entries set by config reader
 	public static int displayWidth; 
@@ -73,6 +74,7 @@ public final class Globals {
 	public static int zoomInKey;
 	public static int zoomOutKey;
 	public static int restoreCameraPosition;
+	public static int showGhostSpheres;
 	
 	public static int invertHorizontalAxis; //-1 if inverted, 1 if not inverted
 	public static int invertVerticalAxis;
@@ -101,6 +103,7 @@ public final class Globals {
 		keyMappings.put("zoomInKey", zoomInKey);
 		keyMappings.put("zoomOutKey", zoomOutKey);
 		keyMappings.put("restoreCameraPosition", restoreCameraPosition);
+		keyMappings.put("showGhostSpheres", showGhostSpheres);
 		
 		boolean used = false;
 		

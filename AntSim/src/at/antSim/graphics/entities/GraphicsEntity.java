@@ -103,7 +103,7 @@ public class GraphicsEntity {
 
 	public float getTransparency() {
 		if (useTransparency) {
-			return Globals.ghostTransparency;
+			return Globals.currentGhostTransparency;
 		}
 		else {
 			return 0;
