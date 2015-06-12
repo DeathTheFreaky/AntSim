@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import javax.vecmath.Vector3f;
 
+import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.EventPriority;
@@ -133,10 +134,11 @@ public class Ant extends Entity {
 
 	@Override
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
+		System.out.println("reacting to ghostObject in Ant: " + MainApplication.getInstance().getCycleCtr());
 		if (ghostPhysicsObject.getType().equals("positionLocator")) {
 			PositionLocator locator = (PositionLocator) parentingEntities.get(ghostPhysicsObject);
 			positionLocators.increaseCount((PositionLocator) parentingEntities.get(ghostPhysicsObject));
-//			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + locator.getTargetPosition());
+			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + locator.getTargetPosition());
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
 			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
 			System.out.println("an ant ran into " + ghostPhysicsObject.getType());
@@ -165,7 +167,7 @@ public class Ant extends Entity {
 	public void decideEvent(CollisionEvent ce) {
 		if (!ce.getPhyObj1().getType().equals("terrain") && !ce.getPhyObj2().getType().equals("terrain")) {
 //			 System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
-//			 "\nPhyObj1: " + ce.getPhyObj1().getType() + "\nPhyObj2: " + ce.getPhyObj2().getType());
+//			 "\nPhyObj1: " + ce.getPhyObj1().getType() + "\nPhyObj2: " + ce.getPhyObj2().getType() + " with ctr " + MainApplication.getInstance().getCycleCtr());
 			if (ce.getPhyObj1().equals(physicsObject)) {
 				ce.getPhyObj2().receive(this);
 				ce.consume();
@@ -221,11 +223,16 @@ public class Ant extends Entity {
 		this.job = job;
 	}
 	
-	public static void printAllPositionLocators() {
+	public static void printAllPositionLocatorsAndPheromones() {
 		for (Ant ant : ants) {
 			System.out.println("Ant " + ant);
+			System.out.println("position locators: ");
 			for (PositionLocator loc : ant.positionLocators.getUnmodifiableList()) {
 				System.out.println(loc);
+			}
+			System.out.println("pheromones: ");
+			for (Pheromone pher : ant.pheromones.getUnmodifiableList()) {
+				System.out.println(pher);
 			}
 			System.out.println();
 		}

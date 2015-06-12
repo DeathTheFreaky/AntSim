@@ -133,13 +133,13 @@ public class WorldLoader {
 //				.registerResult();
 //		
 //		//add cool stanford demo dragon for specular lighting demo
-		Entity redCube = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
-				.setRotation(90, 45, 90)
-				.buildGraphicsEntity("sphere", 1, 25)
-				.buildPhysicsObject()
-				.registerResult();
-//		
+//		Entity redCube = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
+//				.setRotation(90, 45, 90)
+//				.buildGraphicsEntity("sphere", 1, 25)
+//				.buildPhysicsObject()
+//				.registerResult();
+////		
 //		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 //				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
 //				.setRotation(90, 45, 90)
@@ -157,8 +157,8 @@ public class WorldLoader {
 //				.registerResult();
 		
 		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/4, -Globals.WORLD_SIZE/2))
-				.buildGraphicsEntity("pheromone", 1, Globals.PHERONOME_SIZE/2) //enable for debugging just to visualize the pheromones
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
+				.buildGraphicsEntity("pheromone", 1, Globals.PHERONOME_SIZE) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
 		

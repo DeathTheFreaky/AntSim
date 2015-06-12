@@ -1,10 +1,12 @@
 package at.antSim.objectsPhysic;
 
 import at.antSim.Globals;
+import at.antSim.MainApplication;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 import com.bulletphysics.BulletGlobals;
+import com.bulletphysics.ContactProcessedCallback;
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.CollisionFilterGroups;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
@@ -34,6 +36,8 @@ import java.util.Map.Entry;
  */
 public class PhysicsManager {
 	private static PhysicsManager ourInstance = new PhysicsManager();
+	
+	ContactProcessedCallbackImpl contactProcessedCallback;
 
 	public static PhysicsManager getInstance() {
 		return ourInstance;
@@ -46,7 +50,8 @@ public class PhysicsManager {
 	public DynamicPhysicsObject observingPhysicsObject = null;
 
 	protected PhysicsManager() {
-		BulletGlobals.setContactProcessedCallback(new ContactProcessedCallbackImpl());
+		contactProcessedCallback = new ContactProcessedCallbackImpl();
+		BulletGlobals.setContactProcessedCallback(contactProcessedCallback);
 		CollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
 		CollisionDispatcher dispatcher = new CustomCollisionDispatcher(collisionConfiguration);
 //		dispatcher.setNearCallback(new CollisionNearCallback());
@@ -90,7 +95,8 @@ public class PhysicsManager {
 		}
 		if(timeStep < 0.01 || timeStep > 2.0)
 			return;
-		physicsWorld.performDiscreteCollisionDetection();
+		contactProcessedCallback.reset();
+//		physicsWorld.performDiscreteCollisionDetection(); //seems not to be necessary when doing stepSimulation - all collision will be thrown twice otherwise
 		physicsWorld.stepSimulation(timeStep, 7);
 	}
 

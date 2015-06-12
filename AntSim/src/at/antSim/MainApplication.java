@@ -148,7 +148,7 @@ public class MainApplication {
 
 	private long timeLastLogicUpdate = System.currentTimeMillis();
 	
-	private int statsCtrTest = 0;
+	private int cyclyCtr = 0;
 
 	private HashMap<String, Integer> stats = new HashMap<>();
 	
@@ -263,17 +263,21 @@ public class MainApplication {
 		
 		//game logic
 		if (!paused && worldLoaded) {
+//			System.out.println("update cycle: " + cyclyCtr);
 			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
 			timeSinceLastUpdate *= speed;
 //			System.out.println("time since last updates: " + timeSinceLastUpdate);
-			statsCtrTest++;
 			Enemy.updatePositionLocators(); //ensure the PositionLocators follow their target's position
 			Entity.resetUndergroundEntities();
-			Ant.printAllPositionLocators();
+//			Ant.printAllPositionLocatorsAndPheromones();
 			Ant.resetPheromonesAndPositionLocators();
 //			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
+			
+//			cyclyCtr++;
+//			System.out.println();
 		}
+		
 		timeLastLogicUpdate = timeCurrentUpdate;
 	}
 
@@ -397,10 +401,10 @@ public class MainApplication {
 	}
 
 	public HashMap<String, Integer> getStats() {
-		stats.put("Population", 12035+statsCtrTest);
-		stats.put("Food", 5389+statsCtrTest);
-		stats.put("Eggs", 345+statsCtrTest);
-		stats.put("Larvae", 243+statsCtrTest);
+		stats.put("Population", 12035+cyclyCtr);
+		stats.put("Food", 5389+cyclyCtr);
+		stats.put("Eggs", 345+cyclyCtr);
+		stats.put("Larvae", 243+cyclyCtr);
 		return stats;
 	}
 	
@@ -418,6 +422,10 @@ public class MainApplication {
 	
 	public Terrain getTerrain() {
 		return terrain;
+	}
+	
+	public int getCycleCtr() {
+		return cyclyCtr;
 	}
 	
 	/**

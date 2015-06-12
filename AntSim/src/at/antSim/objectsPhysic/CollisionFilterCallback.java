@@ -20,6 +20,8 @@ import com.bulletphysics.collision.dispatch.CollisionObject;
  */
 public class CollisionFilterCallback extends OverlapFilterCallback {
 	
+	//this callback is assured to be called one time per collision cycle! 
+	
 	@Override
 	public boolean needBroadphaseCollision(BroadphaseProxy broadphaseProxy, BroadphaseProxy broadphaseProxy1) {
 		
@@ -27,7 +29,11 @@ public class CollisionFilterCallback extends OverlapFilterCallback {
 		collides = collides && (broadphaseProxy1.collisionFilterGroup & broadphaseProxy.collisionFilterMask) != 0;
 		
 		CollisionObject colObj = (CollisionObject) broadphaseProxy.clientObject;
-		CollisionObject colObj1 = (CollisionObject) broadphaseProxy1.clientObject;		
+		CollisionObject colObj1 = (CollisionObject) broadphaseProxy1.clientObject;	
+		
+//		if (collides) {
+//			System.out.println(colObj + " collides with " + colObj1 + " with ctr " + MainApplication.getInstance().getCycleCtr());
+//		}
 		
 		//check if moving entity or ghost object collide, register event and return false to avoid a collision to bypass kinematic vs ghost collision no_contact_response not working bug
 		//moving entity has own collision group because it is able to collide with static, whereas a normal ghost object is not

@@ -16,6 +16,11 @@ import com.bulletphysics.collision.narrowphase.ManifoldPoint;
  * @author Clemens
  */
 public class ContactProcessedCallbackImpl extends ContactProcessedCallback {
+	
+	//Attention: this callback can be called not at all, or even multiple times per collision cycle; events shall only be fired once however!!!
+	PhysicsObject prevPhyObj;
+	PhysicsObject prevPhyObj1;
+	
 	@Override
 	public boolean contactProcessed(ManifoldPoint manifoldPoint, Object colObj, Object colObj1) {
 		
@@ -24,10 +29,23 @@ public class ContactProcessedCallbackImpl extends ContactProcessedCallback {
 			PhysicsObject phyObj1 = (PhysicsObject)((CollisionObject) colObj1).getUserPointer(); //PhysicsManager.getInstance().getPhysicsObject((CollisionObject)colObj1);
 			
 			if (phyObj != null && phyObj1 != null) {
-				EventManager.getInstance().addEventToQueue(new CollisionEvent(phyObj, phyObj1));
+				
+				if (!((phyObj == prevPhyObj && phyObj1 == prevPhyObj1) || (phyObj == prevPhyObj1 && phyObj1 == prevPhyObj))) { //ensure events get only triggered once per different collision pair
+//					System.out.println("adding collision between " + phyObj + ", " + phyObj1 + " with ctr " + MainApplication.getInstance().getCycleCtr());
+					EventManager.getInstance().addEventToQueue(new CollisionEvent(phyObj, phyObj1));
+				}
+				
+				prevPhyObj = phyObj;
+				prevPhyObj1 = phyObj1;
+				
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public void reset() {
+		prevPhyObj = null;
+		prevPhyObj1 = null;
 	}
 }

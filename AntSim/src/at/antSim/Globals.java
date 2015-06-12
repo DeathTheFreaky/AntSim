@@ -29,7 +29,7 @@ public final class Globals {
 	public static final float TIMECYCLE_MULTIPLIER = 4.0f;
 	
 	//default additional margin for a positionLocator
-	public static final float POSITION_LOCATOR_MARGIN = 10;
+	public static final float POSITION_LOCATOR_MARGIN = 20;
 	public static final float MASS_DUMMIE = 1;
 	
 	//pheromone size

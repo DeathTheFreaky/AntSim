@@ -37,9 +37,7 @@ public class Enemy extends Entity {
 		
 		//set initial position and size of PositionLocator ghost physics object
 		javax.vecmath.Vector3f vecMathPos = ((ReadOnlyPhysicsObject) physicsObject).getPosition();
-		Transform position = new Transform();
-		position.set(Maths.createTransformationMatrix(new Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z), 0, 0, 0));
-		position.setRotation(((ReadOnlyPhysicsObject) physicsObject).getRotationQuaternions());
+		vecMathPos.y = vecMathPos.y - Globals.POSITION_LOCATOR_MARGIN;
 	
 		positionLocator = (PositionLocator) MainApplication.getInstance().getDefaultEntityBuilder().setFactory(GhostPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z))
@@ -47,11 +45,6 @@ public class Enemy extends Entity {
 				.setTarget(this)
 				.buildPhysicsObject()
 				.registerResult();
-		
-//		GhostPhysicsObject phyObj = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createSphere("positionLocator", 1, 
-//				graphicsEntity.getScale()/2 + Globals.POSITION_LOCATOR_MARGIN, position);
-//		positionLocator = new PositionLocator(null, phyObj, this);
-//		PhysicsManager.getInstance().registerPhysicsObject(phyObj);
 				
 		dynamicEntities.add(this);
 		enemies.add(this);
