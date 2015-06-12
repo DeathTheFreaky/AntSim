@@ -39,10 +39,11 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("stomp", "stomp", "stomp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie));
-		//modelPresets.add(new ModelNamesAndTypes("rock", "rockTexture", "rock", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("ant", "antBlackTexture", "antBlack", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("rock", "rockTexture", "rock", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie));;
+		modelPresets.add(new ModelNamesAndTypes("ant", "antBlackTexture", "antBlack", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "antDark", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
-		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkRedTexture", "antRed", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkRedTexture", "antRed", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("squirrel", "squirrelTexture", "squirrel", PrimitiveType.CUBOID, ObjectType.FOOD, massDummie));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);

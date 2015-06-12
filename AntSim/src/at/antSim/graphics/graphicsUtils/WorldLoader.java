@@ -133,38 +133,45 @@ public class WorldLoader {
 		Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(370, 4.2f, -300))
 				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity(ModelLoader.texturedModels.get("stomp"), 1, 20)
+				.buildGraphicsEntity("stomp", 1, 20)
 				.buildPhysicsObject()
 				.registerResult();
 
 		// new
-//		Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(300, 4.2f, -300))
+		Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(300, 4.2f, -300))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity("rock", 1, 20)
+				.buildPhysicsObject()
+				.registerResult();
+
+		Entity squirrel = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(350, 4.2f, -350))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity("squirrel", 1, 20)
+				.buildPhysicsObject()
+				.registerResult();
+
+//		Entity antBlack = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 10, 10, -Globals.WORLD_SIZE/2))
 //				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity(ModelLoader.texturedModels.get("rock"), 1, 20)
+//				.buildGraphicsEntity("antBlack", 1, 20)
 //				.buildPhysicsObject()
 //				.registerResult();
-
-		Entity antBlack = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(360, 4.2f, -300))
-				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity(ModelLoader.texturedModels.get("antBlack"), 1, 20)
-				.buildPhysicsObject()
-				.registerResult();
-
-		Entity antRed = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(360, 4.2f, -300))
-				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity(ModelLoader.texturedModels.get("antRed"), 1, 20)
-				.buildPhysicsObject()
-				.registerResult();
-
-		Entity antDark = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
-				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity(ModelLoader.texturedModels.get("antDark"), 1, 100)
-				.buildPhysicsObject()
-				.registerResult();
+//
+//		Entity antRed = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 10, 10, -Globals.WORLD_SIZE/2))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("antRed", 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+//
+//		Entity antDark = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 10, -Globals.WORLD_SIZE/2))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("antDark", 1, 10)
+//				.buildPhysicsObject()
+//				.registerResult();
 
 		// end of new
 	}
