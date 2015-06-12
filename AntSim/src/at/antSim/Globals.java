@@ -32,8 +32,8 @@ public final class Globals {
 	public static final float TIMECYCLE_MULTIPLIER = 4.0f;
 	
 	//default additional margin for a positionLocator
-	public static final float POSITION_LOCATOR_MARGIN = 20;
-	public static final float MASS_DUMMIE = 1;
+	public static final float POSITION_LOCATOR_MARGIN = 25;
+	public static final float MASS_DUMMIE = 10;
 	
 	//pheromone size
 	public static final float PHERONOME_SIZE = 50;
@@ -56,7 +56,7 @@ public final class Globals {
 	
 	//maximum nbr of ants waiting at a position locator
 	public static final int MAX_LOCATOR_ANTS = 1;
-	public static final float LOCATOR_SPEED_MULT = 1f;
+	public static final float LOCATOR_SPEED = 20f;
 	
 	//maximum number of food an ant can carry
 	public static int maxFoodCarry;
@@ -87,7 +87,7 @@ public final class Globals {
 	public static boolean fullscreen;
 	public static int fontRows = 16;
 	public static int fontCols = 16;
-	public static float gravity = -9.81f;
+	public static float gravity = -98.1f; //just some extra gravity to avoid ants jumping like crazy
 	
 	public static int moveForwardKey;
 	public static int moveBackwardKey;

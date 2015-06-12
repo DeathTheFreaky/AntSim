@@ -28,15 +28,11 @@ public class Forager extends Ant implements Runnable {
 	}
 	
 	public int carryMoreFood(int newFoodAmout) {
-		System.out.println("called carry more food on " + this);
-		System.out.println("oldAmount: " + foodtransport);
 		if ((foodtransport + newFoodAmout) <= maxFoodTransport) {
 			foodtransport += newFoodAmout;
-			System.out.println("newAmount: " + foodtransport);
 			return 0;
 		} else {
 			foodtransport = maxFoodTransport;
-			System.out.println("newAmount: " + foodtransport);
 			return (foodtransport + newFoodAmout - maxFoodTransport);
 		}
 	}
@@ -64,9 +60,18 @@ public class Forager extends Ant implements Runnable {
 	
 	@Override
 	public void reactSpecific(StaticPhysicsObject staticPhysicsObject) {
-		if (staticPhysicsObject.equals(lockedLocator.getTarget().physicsObject)) {
-			if (lockedLocator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport >= maxFoodTransport) {
-				lockedLocator.deactivateAnt(this);
+		if (lockedLocator != null) {
+			if (staticPhysicsObject.equals(lockedLocator.getTarget().physicsObject)) {
+				if (lockedLocator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport >= maxFoodTransport) {
+					lockedLocator.deactivateAnt(this);
+				} else {
+					Food food = (Food) parentingEntities.get(staticPhysicsObject);
+					carryMoreFood(food.harvest()); //amount of food which cannot be carried by ant is put back into food resource
+					if (foodtransport >= maxFoodTransport) {
+						System.out.println("ant gathered " + foodtransport + " food");
+						unlockLocator();
+					}
+				}
 			}
 		}
 	}
@@ -80,10 +85,9 @@ public class Forager extends Ant implements Runnable {
 	@EventListener(priority = EventPriority.NORMAL)
 	public void locatorLockEvent(LocatorLockEvent le) {
 		if (le.getAnt() == this && le.getLocator().getTarget().getObjectType().equals(ObjectType.FOOD)) {
-			System.out.println("forager received LocatorLockEvent in " + this + " with velocity " + le.getVelocity());
-			physicsObject.setLinearVelocity(le.getVelocity());
+//			System.out.println("tells me to turn to " + le.getDirection() + " with speed " + le.getSpeed());
+			physicsObject.setAlignedMovement(le.getDirection(), le.getSpeed());
 			lockedLocator = le.getLocator();
-			physicsObject.setAngularVelocity(new Vector3f(0,0,0));
 			le.consume();
 		}
 	}

@@ -1,5 +1,7 @@
 package at.antSim.objectsPhysic;
 
+import javax.vecmath.Vector3f;
+
 import at.antSim.Globals;
 import at.antSim.objectsKI.Entity;
 
@@ -19,6 +21,8 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 	final String type;
 	short collisionFilterGroup;
 	short collisionFilterMask;
+	
+	Vector3f posXDirection = new Vector3f(1,0,0);
 
 	public DynamicPhysicsObject(RigidBody body, String type) {
 		this.body = body;
@@ -65,5 +69,37 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 	@Override
 	public void setCollisionFilterMask(short collisionFilterMask) {
 		this.collisionFilterMask = collisionFilterMask;
+	}
+
+	@Override
+	public void setAlignedMovement(Vector3f direction, float speed) {
+		if (direction.length() > 0) {
+			direction.normalize();
+			setLinearVelocity(new Vector3f(direction.x * speed, direction.y * speed, direction.z * speed));
+			//when angles are exactly aligned with axis rotation wont work
+			if (direction.x <= 0.000001f && direction.x >= 0) {
+				direction.x = 0.000001f;
+			} else if (direction.x >= -0.000001f && direction.x < 0) {
+				direction.x = -0.000001f;
+			}
+			if (direction.z <= 0.000001f && direction.z >= 0) {
+				direction.z = 0.000001f;
+			} else if (direction.z >= -0.000001f && direction.z < 0) {
+				direction.z = -0.000001f;
+			}
+
+			double alphaRad = direction.dot(posXDirection);
+			double alpha = Math.toDegrees(Math.acos(alphaRad));
+			//because acos only works between 0 and pi (180 degrees)
+			if (direction.z > 0) {
+				alpha = alpha * -1;
+			}
+			if (direction.x < 0) {
+				alpha = alpha * -1;
+			}
+			setRotation((float) alpha, 0, 0);
+		} else {
+			setLinearVelocity(new Vector3f(0,0,0));
+		}
 	}
 }

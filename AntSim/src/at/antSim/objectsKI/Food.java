@@ -51,14 +51,7 @@ public abstract class Food extends Entity implements Foodressource {
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
-		if (dynamicPhysicsObject.getType().equals("forager")) {
-			Forager forager = (Forager) parentingEntities.get(dynamicPhysicsObject);
-			foodStacks += forager.carryMoreFood(harvest()); //amount of food which cannot be carried by ant is put back into food resource
-			forager.unlockLocator();
-			if (foodStacks <= 0) {
-				this.delete();
-			}
-		}
+		
 	}
 
 	@Override
@@ -74,12 +67,14 @@ public abstract class Food extends Entity implements Foodressource {
 	
 	@Override
 	public int harvest() {
+		foodStacks--;
 		if(foodStacks > 0){
-			foodStacks--;
 			return 1;
 		}
-		else
+		else {
+			this.delete();
 			return 0;
+		}
 	}
 
 	@Override

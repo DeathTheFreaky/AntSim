@@ -9,17 +9,23 @@ import at.antSim.objectsKI.PositionLocator;
 public class LocatorLockEvent extends AbstractEvent {
 	
 	Vector3f velocity;
+	float speed;
 	Ant ant;
 	PositionLocator locator;
 	
-	public LocatorLockEvent(Vector3f velocity, Ant ant, PositionLocator locator) {
+	public LocatorLockEvent(Vector3f velocity, float speed, Ant ant, PositionLocator locator) {
 		this.velocity = velocity;
+		this.speed = speed;
 		this.ant = ant;
 		this.locator = locator;
 	}
 
-	public Vector3f getVelocity() {
+	public Vector3f getDirection() {
 		return velocity;
+	}
+	
+	public float getSpeed() {
+		return speed;
 	}
 
 	public Ant getAnt() {

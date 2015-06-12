@@ -50,15 +50,15 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.FOOD, massDummie, false));
 		
 		//food
-		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "apple", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "deadAnt", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("apple", "appleTexture", "apple", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkRedTexture", "deadAnt", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "deadGrasshopper", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("squirrel", "squirrelTexture", "squirrel", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
 		
 		//ants
 		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "worker", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "forager", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkRedTexture", "queen", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "queen", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
 		
 		//enemies
 		modelPresets.add(new ModelNamesAndTypes("ant", "antBlackTexture", "enemyAnt", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));

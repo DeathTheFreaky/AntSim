@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import javax.vecmath.Vector3f;
 
+import at.antSim.Globals;
 import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventManager;
@@ -66,7 +67,8 @@ public abstract class Ant extends Entity {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
 		Vector3f v = new Vector3f(velocityX, 0, velocityZ);
-		this.physicsObject.setLinearVelocity(v);
+//		this.physicsObject.setLinearVelocity(v);
+		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, 1), Globals.LOCATOR_SPEED);
 		dynamicEntities.add(this);
 		ants.add(this);
 		// ROTATE WITH THIS Math.toradiant();
@@ -76,7 +78,6 @@ public abstract class Ant extends Entity {
 
 	@Override
 	public void react(StaticPhysicsObject staticPhysicsObject) {
-		// System.out.println("static");
 		//Colliding with the ground/terrain
 		
 		// example
@@ -130,18 +131,18 @@ public abstract class Ant extends Entity {
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
 //		System.out.println("dynamisch");
-		ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
-		if (tp.equals(ObjectType.ANT)) {
-			// interacting with ghost, the ant must not stray from its path!
-			// think up smthg to handle it
-			Vector3f v = new Vector3f(velocityX, 0, 0);
-			physicsObject.setLinearVelocity(v);
-			v = new Vector3f(0, 0, velocityZ);
-			dynamicPhysicsObject.setLinearVelocity(v);
-		} else if (tp.equals(ObjectType.ENEMY)) {
-			attackEnemy(dynamicPhysicsObject);
-		}
-		reactSpecific(dynamicPhysicsObject);
+//		ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
+//		if (tp.equals(ObjectType.ANT)) {
+//			// interacting with ghost, the ant must not stray from its path!
+//			// think up smthg to handle it
+//			Vector3f v = new Vector3f(velocityX, 0, 0);
+//			physicsObject.setLinearVelocity(v);
+//			v = new Vector3f(0, 0, velocityZ);
+//			dynamicPhysicsObject.setLinearVelocity(v);
+//		} else if (tp.equals(ObjectType.ENEMY)) {
+//			attackEnemy(dynamicPhysicsObject);
+//		}
+//		reactSpecific(dynamicPhysicsObject);
 	}
 	
 	/**Allows different ant types to react differently.

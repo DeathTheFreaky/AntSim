@@ -8,6 +8,6 @@ public class Apple extends Food implements Foodressource {
 	
 	public Apple(GraphicsEntity graphicsEntity, PhysicsObject physicsObject){
 		super(graphicsEntity, physicsObject);
-		foodStacks = Globals.foodResAntSize;
+		foodStacks = Globals.foodResAppleSize;
 	}
 }

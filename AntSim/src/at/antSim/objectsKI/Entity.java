@@ -137,7 +137,7 @@ public abstract class Entity {
 			float terrainHeight = MainApplication.getInstance().getTerrain().getHeightOfTerrain(phyObj.getPosition().x, phyObj.getPosition().z);
 			float modelHeight = entity.getGraphicsEntity().getModel().getRawModel().getyLength() / 2 * entity.getGraphicsEntity().getScale();
 			if ((phyObj.getPosition().y - modelHeight) < terrainHeight) {
-				float desiredHeight = terrainHeight + modelHeight  + 0.25f;
+				float desiredHeight = terrainHeight + modelHeight  + 1f;
 				Vector3f linVelocity = new javax.vecmath.Vector3f();
 				Vector3f angVelocity = new javax.vecmath.Vector3f();
 				phyObj.getCollisionBody().getLinearVelocity(linVelocity);

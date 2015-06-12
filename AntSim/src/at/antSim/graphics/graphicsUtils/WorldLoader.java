@@ -33,6 +33,8 @@ import java.util.Random;
  */
 public class WorldLoader {
 	
+	//ATTENTION: bullet coordinate system is right-handed!!! -> X values increase to the left-hand side! world ranges from WorldSize on the left to 0 on the right
+	
 	private static EntityBuilder builder = new EntityBuilderImpl();
 	
 	/**Loads the world's terrain.
@@ -135,26 +137,18 @@ public class WorldLoader {
 //		//add cool stanford demo dragon for specular lighting demo
 //		Entity redCube = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 //				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
-//				.setRotation(90, 45, 90)
+//				.setRotation(0, 0, 0)
 //				.buildGraphicsEntity("sphere", 1, 25)
 //				.buildPhysicsObject()
 //				.registerResult();
-////		
+//	
 //		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 //				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
-//				.setRotation(90, 45, 90)
-//				.buildGraphicsEntity("dragon", 1, 25)
+//				.setRotation(0, 0, 0)
+//				.buildGraphicsEntity("enemyGrasshopper", 1, 25)
 //				.buildPhysicsObject()
 //				.registerResult();
 		
-//		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/4, -Globals.WORLD_SIZE/2))
-////				.buildGraphicsEntity("sphere", 1, Globals.PHERONOME_SIZE/2) //enable for debugging just to visualize the pheromones
-//				.setType("pheromone")
-//				.setMass(0)
-//				.setObjectType(ObjectType.PHEROMONE)
-//				.createSphere(Globals.PHERONOME_SIZE/2)
-//				.registerResult();
 		//				//PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
 //
 //				Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
@@ -234,14 +228,14 @@ public class WorldLoader {
 		PhysicsManager.getInstance().registerPhysicsObject(southBorder);
 		
 		Transform positionEast = new Transform();
-		positionEast.set(Maths.createTransformationMatrix(new Vector3f(0, terrain.getHeightOfTerrain(0, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
+		positionEast.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE, terrain.getHeightOfTerrain(Globals.WORLD_SIZE, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
 		GhostPhysicsObject eastBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionEast);
 		eastBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		eastBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(eastBorder);
 		
 		Transform positionWest = new Transform();
-		positionWest.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE, terrain.getHeightOfTerrain(Globals.WORLD_SIZE, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
+		positionWest.set(Maths.createTransformationMatrix(new Vector3f(0, terrain.getHeightOfTerrain(0, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
 		GhostPhysicsObject westBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionWest);
 		westBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		westBorder.setCollisionFilterMask(tempFilterMask);
