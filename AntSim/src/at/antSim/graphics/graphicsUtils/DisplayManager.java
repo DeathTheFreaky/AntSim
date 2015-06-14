@@ -39,6 +39,7 @@ public class DisplayManager {
 			.withForwardCompatible(true)
 			.withProfileCore(true);
 			Display.create(pixelFormat, attribs);
+//			Display.setDisplayConfiguration(1, 0.02f, 1); //changes gamma on whole screen :-(
 			
 		} catch (LWJGLException e) {
 			e.printStackTrace();

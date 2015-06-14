@@ -40,6 +40,7 @@ public class EntityShader extends ShaderProgram {
     private int location_blendFactor;
     private int location_movingEntityColor;
     private int location_movingEntityBlendFactor;
+    private int location_transparency;
 	
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
@@ -86,6 +87,8 @@ public class EntityShader extends ShaderProgram {
 			location_lightColor[i] = super.getUniformLocation("lightColor[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
+		
+		location_transparency = super.getUniformLocation("transparency");
 	}
 	
 	/**Loads number of rows of a texture atlas into shader uniform variable numberOfRows.
@@ -199,5 +202,13 @@ public class EntityShader extends ShaderProgram {
 	 */
 	public void loadMovingEntityBlend(float blend) {
 		super.loadFloat(location_movingEntityBlendFactor, blend);
+	}
+	
+	/**Loads a transparency factor for entities shader uniform variable.
+	 * 
+	 * @param transparency - the transparency factor to load into the shader uniform variable - 1 is fully transparent
+	 */
+	public void loadTransparency(float transparency) {
+		super.loadFloat(location_transparency, transparency);
 	}
 }

@@ -1,5 +1,6 @@
 package at.antSim.graphics.graphicsUtils;
 
+import at.antSim.Globals;
 import at.antSim.GTPMapper.PrimitiveType;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.models.ModelData;
@@ -14,7 +15,7 @@ import java.util.LinkedList;
 
 public class ModelLoader {
 	
-	public static float massDummie = 1f;
+	public static float massDummie = Globals.MASS_DUMMIE;
 	
 	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
 	private static LinkedList<ModelNamesAndTypes> modelPresets = new LinkedList<>(); //names of all obj files and associated textures to be loaded
@@ -47,13 +48,48 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("grasshopper", "grasshopperTexture", "grasshopperDead", PrimitiveType.CUBOID, ObjectType.FOOD, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("grasshopper", "grasshopperTexture", "grasshopperAlive", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie));
 		
+		//environment
+		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("stomp", "stomp", "stomp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("rock", "rockTexture", "rock", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		
+		//ghosts
+		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "pheromone", PrimitiveType.SPHERE, ObjectType.PHEROMONE, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "blue", "positionLocator", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		
+		//test
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cube", "green", "greenCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "sphere", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.FOOD, massDummie, false));
+		
+		//food
+		modelPresets.add(new ModelNamesAndTypes("apple", "appleTexture", "apple", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkRedTexture", "deadAnt", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "deadGrasshopper", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("squirrel", "squirrelTexture", "squirrel", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		
+		//ants
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "worker", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "forager", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "queen", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
+		
+		//enemies
+		modelPresets.add(new ModelNamesAndTypes("ant", "antBlackTexture", "enemyAnt", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "enemyGrasshopper", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);
 			RawModel rawModel = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
 			rawModel.setFurthestPoint(modelData.getFurthestPoint());
 			rawModel.setLenghts(modelData.getxLength(), modelData.getyLength(), modelData.getzLength());
 			ModelTexture modelTexture = new ModelTexture(loader.loadTexture(modelPreset.textureFileName));
-			texturedModels.put(modelPreset.key, new TexturedModel(rawModel, modelTexture, modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.key));
+			texturedModels.put(modelPreset.key, new TexturedModel(rawModel, modelTexture, modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.useTransparency, modelPreset.key));
 		}
 		
 		texturedModels.get("fern").getTexture().setNumberOfRows(2); //set number of rows inside texture atlas
@@ -83,14 +119,16 @@ public class ModelLoader {
 		PrimitiveType primitiveType;
 		ObjectType objectType;
 		float mass;
+		boolean useTransparency;
 		
-		public ModelNamesAndTypes(String objFileName, String textureFileName, String key, PrimitiveType sphereType, ObjectType objectType, float mass) {
+		public ModelNamesAndTypes(String objFileName, String textureFileName, String key, PrimitiveType sphereType, ObjectType objectType, float mass, boolean useTransparency) {
 			this.objFileName = objFileName;
 			this.textureFileName = textureFileName;
 			this.key = key;
 			this.primitiveType = sphereType;
 			this.objectType = objectType;
 			this.mass = mass;
+			this.useTransparency = useTransparency;
 		}
 	}
 }

@@ -12,21 +12,21 @@ import com.bulletphysics.dynamics.RigidBody;
  *
  * @author Clemens
  */
-public class StaticPhysicsObject extends PositionablePhysicsObjectImpl {
+public class TerrainPhysicsObject extends PositionablePhysicsObjectImpl {
 
 	final RigidBody body;
 	final String type;
 	short collisionFilterGroup;
 	short collisionFilterMask;
 
-	public StaticPhysicsObject(RigidBody body, String type) {
+	public TerrainPhysicsObject(RigidBody body, String type) {
 		this.body = body;
 		this.type = type;
 		this.body.setCollisionFlags(this.body.getCollisionFlags() & CollisionFlags.STATIC_OBJECT);
 		this.body.setUserPointer(this);
-		this.collisionFilterGroup = Globals.COL_STATIC;
+		this.collisionFilterGroup = Globals.COL_TERRAIN;
 		short tempFilterMask = 0;
-		tempFilterMask = (short) (tempFilterMask | Globals.COL_KINEMATIC | Globals.COL_MOVING);
+		tempFilterMask = (short) (tempFilterMask | Globals.COL_KINEMATIC);
 		this.collisionFilterMask = tempFilterMask;
 	}
 

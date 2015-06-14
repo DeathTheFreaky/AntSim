@@ -11,6 +11,7 @@ import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
 
 /**Provides methods for creating a new {@link Entity}.
  * 
@@ -36,6 +37,8 @@ public interface EntityBuilder {
 	 * @param rz
 	 */
 	public EntityBuilder buildPhysicsObject();
+	
+	public void reset();
 	
 	/**Sets the {@link PhysicsObjectFactory} to be used for building the {@link Entity}.
 	 * 
@@ -84,13 +87,52 @@ public interface EntityBuilder {
 	 */
 	public EntityBuilder setRotation(Quat4f quat);
 	
-	public void createCone(GTPCone cone);
+	/**Set a target for position locators.
+	 * @param target
+	 */
+	public EntityBuilder setTarget(Entity target);
+		
+	public EntityBuilder createCone(GTPCone cone);
 	
-	public void createCuboid(GTPCuboid cuboid);
+	public EntityBuilder createCuboid(GTPCuboid cuboid);
 	
-	public void createCylinder(GTPCylinder cylinder);
+	public EntityBuilder createCylinder(GTPCylinder cylinder);
 	
-	public void createSphere(GTPSphere sphere);
+	public EntityBuilder createSphere(GTPSphere sphere);
+	
+	/**
+	 * @param scale - determines size of the Cone / maximum extent will be size of scale
+	 * @param height - will be scaled according to scale
+	 * @param radius - will be scaled according to scale
+	 * @param orientation
+	 * @return
+	 */
+	public EntityBuilder createCone(float scale, float height, float radius, PhysicsObjectOrientation orientation);
+	
+	/**
+	 * @param scale - determines size of the Cone / maximum extent will be size of scale
+	 * @param xLength - will be scaled according to scale
+	 * @param yLength - will be scaled according to scale
+	 * @param zLength - will be scaled according to scale
+	 * @return
+	 */
+	public EntityBuilder createCuboid(float scale, float xLength, float yLength, float zLength);
+	
+	/**
+	 * @param scale - determines size of the Cone / maximum extent will be size of scale
+	 * @param height - will be scaled according to scale
+	 * @param radius - will be scaled according to scale
+	 * @param orientation
+	 * @return
+	 */
+	public EntityBuilder createCylinder(float scale, float height, float radius, PhysicsObjectOrientation orientation);
+	
+	/**Radius will be half of scale.
+	 * 
+	 * @param scale - determines size of the Cone / maximum extent will be size of scale
+	 * @return
+	 */
+	public EntityBuilder createSphere(float scale);
 	
 	/**
 	 * @return - the created {@link Entity}

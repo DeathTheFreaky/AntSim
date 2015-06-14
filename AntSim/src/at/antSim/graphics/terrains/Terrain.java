@@ -7,13 +7,18 @@ import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.textures.TerrainTexture;
 import at.antSim.graphics.textures.TerrainTexturePack;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsFactorys.TerrainPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.TerrainPhysicsObject;
+
 import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.linearmath.Transform;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.imageio.ImageIO;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -161,7 +166,7 @@ public class Terrain {
 		myMesh.vertexBase.asFloatBuffer().put(vertices);
 		myMesh.vertexStride = 3 * 4;
 
-		StaticPhysicsObject obj = StaticPhysicsObjectFactory.getInstance().createExactObject("terrain", 0, myMesh,
+		TerrainPhysicsObject obj = TerrainPhysicsObjectFactory.getInstance().createExactObject("terrain", 0, myMesh,
 				new Transform(Maths.createTransformationMatrix(new Vector3f(0, 0, -Globals.WORLD_SIZE), 0, 0, 0)));
 		PhysicsManager.getInstance().registerPhysicsObject(obj);
 		

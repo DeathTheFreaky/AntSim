@@ -4,10 +4,10 @@ import at.antSim.Globals;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
-public class Apple extends Food implements Foodressource {
+public class DeadGrasshopper extends Food {
 	
-	public Apple(GraphicsEntity graphicsEntity, PhysicsObject physicsObject){
+	public DeadGrasshopper(GraphicsEntity graphicsEntity, PhysicsObject physicsObject){
 		super(graphicsEntity, physicsObject);
-		foodStacks = Globals.foodResAppleSize;
+		foodStacks = Globals.foodResGrasshopperSize;
 	}
 }

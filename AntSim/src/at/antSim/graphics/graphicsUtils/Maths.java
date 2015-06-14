@@ -327,7 +327,7 @@ public class Maths {
 	 * @param vecmathVector3f
 	 * @return
 	 */
-	public static Vector3f convertVector3f(javax.vecmath.Vector3f vecmathVector3f) {
+	public static Vector3f vec3fToSlickUtil(javax.vecmath.Vector3f vecmathVector3f) {
 		
 		Vector3f lwjglVector3f = new Vector3f();
 		
@@ -336,5 +336,21 @@ public class Maths {
 		lwjglVector3f.z = vecmathVector3f.z;
 		
 		return lwjglVector3f;
+	}
+	
+	/**Converts a lwgjl vector3f to a vecmath vector3f.
+	 * 
+	 * @param vecmathVector3f
+	 * @return
+	 */
+	public static javax.vecmath.Vector3f vec3fToVecmath(Vector3f lwjglVector3f) {
+		
+		javax.vecmath.Vector3f vecmathVector3f = new javax.vecmath.Vector3f();
+		
+		vecmathVector3f.x = lwjglVector3f.x;
+		vecmathVector3f.y = lwjglVector3f.y;
+		vecmathVector3f.z = lwjglVector3f.z;
+		
+		return vecmathVector3f;
 	}
 }

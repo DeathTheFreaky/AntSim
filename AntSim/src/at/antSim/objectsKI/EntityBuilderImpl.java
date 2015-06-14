@@ -6,8 +6,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bulletphysics.linearmath.Transform;
 
-import at.antSim.MainApplication;
-import at.antSim.MovingEntity;
 import at.antSim.GTPMapper.GTPCone;
 import at.antSim.GTPMapper.GTPCuboid;
 import at.antSim.GTPMapper.GTPCylinder;
@@ -17,11 +15,10 @@ import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.graphicsUtils.ModelLoader;
-import at.antSim.graphics.models.TexturedModel;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
-import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
 
 /**Implements {@link EntityBuilder}.
  * 
@@ -39,12 +36,34 @@ public class EntityBuilderImpl implements EntityBuilder {
 	float mass;
 	Vector3f position = new Vector3f();
 	Vector3f rotation = null;
-	Quat4f quat = new Quat4f();
+	Quat4f quat;
 	Transform transform = new Transform();
 	String type = null;
 	
+	float height;
+	float scale;
+	
+	Entity target; //for position locators
+	
 	public EntityBuilderImpl() {
+		reset();
+	}
+	
+	@Override
+	public void reset() {
 		mass = 0;
+		position = new Vector3f();
+		rotation = null;
+		quat = null;
+		transform = new Transform();
+		type = null;
+		graphicsEntity = null;
+		gtpObject = null;
+		factory = null;
+		objectType = null;
+		height = 0;
+		scale = 0;
+		target = null;
 	}
 	
 	@Override
@@ -56,43 +75,138 @@ public class EntityBuilderImpl implements EntityBuilder {
 		gtpObject = GTPMapper.getObject(graphicsEntity, scale, graphicsEntity.getModel().getPrimitiveType());
 		mass = graphicsEntity.getModel().getMass(); //set default mass
 		this.type = type;
+		this.height = graphicsEntity.getModel().getRawModel().getyLength() * scale;
+		this.scale = scale;
 		objectType = graphicsEntity.getModel().getObjectType();
-		position.y = position.y + graphicsEntity.getModel().getRawModel().getyLength()/2 * scale;
+		return this;
+	}
+	
+	private void setTransform() {
+		position.y = position.y + height/2;
 		if (rotation != null) {
 			transform.set(Maths.createTransformationMatrix(position, rotation.x, rotation.y, rotation.z));
 		} else {
 			transform.set(Maths.createTransformationMatrix(position, 0, 0, 0));
-			transform.setRotation(quat);
+			if (quat != null) {
+				transform.setRotation(quat);
+			}
 		}
-		return this;
 	}
 
 	@Override
 	public EntityBuilder buildPhysicsObject() {
-		if (factory != null) {
+		if (factory != null && gtpObject != null) {
+			setTransform();
 			gtpObject.createPrimitive(this);
 		}
 		return this;
 	}
 
 	@Override
-	public void createCone(GTPCone cone) {
+	public EntityBuilder createCone(GTPCone cone) {
 		physicsObject = factory.createCone(type, mass, cone.getHeight(), cone.getRadius(), cone.getOrienation(), transform);
+		return this;
 	}
 
 	@Override
-	public void createCuboid(GTPCuboid cuboid) {
+	public EntityBuilder createCuboid(GTPCuboid cuboid) {
 		physicsObject = factory.createCuboid(type, mass, cuboid.getxLength(), cuboid.getyLength(), cuboid.getzLength(), transform);
+		return this;
 	}
 
 	@Override
-	public void createCylinder(GTPCylinder cylinder) {
+	public EntityBuilder createCylinder(GTPCylinder cylinder) {
 		physicsObject = factory.createCylinder(type, mass, cylinder.getHeight(), cylinder.getRadius(), cylinder.getOrientation(), transform);
+		return this;
 	}
 
 	@Override
-	public void createSphere(GTPSphere sphere) {
+	public EntityBuilder createSphere(GTPSphere sphere) {
 		physicsObject = factory.createSphere(type, mass, sphere.getRadious(), transform);
+		return this;
+	}
+	
+	@Override
+	public EntityBuilder createCone(float scale, float height, float radius, PhysicsObjectOrientation orientation) {
+		this.scale = scale;
+		if (radius * 2 > height) {
+			height = height/radius/2 * scale;
+			radius = scale/2;
+		} else {
+			height = scale;
+			radius = radius/height * scale;
+		}
+		if (orientation == PhysicsObjectOrientation.X) {
+			this.height = radius*2;
+		} else if (orientation == PhysicsObjectOrientation.Y) {
+			this.height = height;
+		} else if (orientation == PhysicsObjectOrientation.Z) {
+			this.height = radius*2;
+		}
+		System.out.println("creating cone with height of " + height + " and radius of " + radius + " for scale " + scale);
+		setTransform();
+		physicsObject = factory.createCone(type, mass, height, radius, orientation, transform);
+		return this;
+	}
+
+	@Override
+	public EntityBuilder createCuboid(float scale, float xLength, float yLength, float zLength) {
+		this.scale = scale;
+		if (xLength > yLength && xLength > zLength) {
+			xLength = scale;
+			yLength = yLength/xLength * scale;
+			zLength = zLength/xLength * scale;
+		} else if (yLength > xLength && yLength > zLength) {
+			yLength = scale;
+			xLength = xLength/yLength * scale;
+			zLength = zLength/yLength * scale;
+		} else if (zLength > yLength && zLength > xLength) {
+			zLength = scale;
+			yLength = yLength/zLength * scale;
+			xLength = xLength/zLength * scale;
+		} else {
+			xLength = scale;
+			yLength = scale;
+			zLength = scale;
+		}
+		this.height = yLength;
+		System.out.println("creating cuboid with height of " + height + " and x of " + xLength + ", y of " + yLength + ", z of " + zLength + " for scale " + scale);
+		setTransform();
+		physicsObject = factory.createCuboid(type, mass, xLength, yLength, zLength, transform);
+		return this;
+	}
+
+	@Override
+	public EntityBuilder createCylinder(float scale, float height, float radius, PhysicsObjectOrientation orientation) {
+		this.scale = scale;
+		if (radius * 2 > height) {
+			height = height/radius/2 * scale;
+			radius = scale/2;
+		} else {
+			height = scale;
+			radius = radius/height * scale;
+		}
+		if (orientation == PhysicsObjectOrientation.X) {
+			this.height = radius*2;
+		} else if (orientation == PhysicsObjectOrientation.Y) {
+			this.height = height;
+		} else if (orientation == PhysicsObjectOrientation.Z) {
+			this.height = radius*2;
+		}
+		System.out.println("creating cylinder with height of " + height + " and radius of " + radius + " for scale " + scale);
+		setTransform();
+		physicsObject = factory.createCone(type, mass, height, radius, orientation, transform);
+		return this;
+	}
+
+	@Override
+	public EntityBuilder createSphere(float scale) {
+		this.scale = scale;
+		this.height = scale;
+		System.out.println("creating sphere with radius of " + scale/2 + " for scale " + scale);
+		setTransform();
+		physicsObject = factory.createSphere(type, mass, scale/2, transform);
+		return this;
 	}
 
 	@Override
@@ -112,27 +226,62 @@ public class EntityBuilderImpl implements EntityBuilder {
 		rotation = new Vector3f(rx, ry, rz);
 		return this;
 	}
-
+	
+	@Override
+	public EntityBuilder setTarget(Entity target) {
+		this.target = target;
+		return this;
+	}
+	
 	@Override
 	public Entity registerResult() {
-		if (graphicsEntity != null) {
-			PhysicsManager.getInstance().registerPhysicsObject(physicsObject);
-			switch (objectType) {
-			case ANT:
-				return new Ant(graphicsEntity, physicsObject);
-			case ENEMY:
-				return new Enemy(graphicsEntity, physicsObject);
-			case ENVIRONMENT:
-				return new EnvironmentObject(graphicsEntity, physicsObject);
-			case FOOD:
-				return new Food(graphicsEntity, physicsObject);
-			case PHEROMONE:
-				return new Pheronome(graphicsEntity, physicsObject);
-			case MOVING:
-				return new Moving(graphicsEntity, physicsObject);
+		Entity retEntity = null;
+		PhysicsManager.getInstance().registerPhysicsObject(physicsObject);
+		switch (objectType) {
+		case ANT:
+			if (type.equals("forager")) {
+				retEntity = new Forager(graphicsEntity, physicsObject);
+			} else if (type.equals("worker")) {
+				retEntity = new Worker(graphicsEntity, physicsObject);
+			} else if (type.equals("queen")) {
+				retEntity = new Queen(graphicsEntity, physicsObject);
 			}
+			break;
+		case ENEMY:
+			if (type.equals("enemyAnt")) {
+				retEntity = new EnemyAnt(graphicsEntity, physicsObject);
+			} else if (type.equals("enemyGrasshopper")) {
+				retEntity = new Worker(graphicsEntity, physicsObject);
+			} 
+			break;
+		case ENVIRONMENT:
+			retEntity = new EnvironmentObject(graphicsEntity, physicsObject);
+			break;
+		case FOOD:
+			if (type.equals("apple")) {
+				retEntity = new Apple(graphicsEntity, physicsObject);
+			} else if (type.equals("deadAnt")) {
+				retEntity = new DeadAnt(graphicsEntity, physicsObject);
+			} else if (type.equals("deadGrasshopper")) {
+				retEntity = new DeadGrasshopper(graphicsEntity, physicsObject);
+			} else if (type.equals("squirrel")) {
+				retEntity = new Squirrel(graphicsEntity, physicsObject);
+			}
+			break;
+		case PHEROMONE:
+			retEntity = new Pheromone(graphicsEntity, physicsObject);
+			break;
+		case MOVING:
+			retEntity = new Moving(graphicsEntity, physicsObject);
+			break;
+		case LOCATOR:
+			retEntity = new PositionLocator(graphicsEntity, physicsObject, target);
+			break;
+		default:
+			break;
 		}
-		return null;
+		reset();
+		return retEntity;
 	}
 
 	@Override

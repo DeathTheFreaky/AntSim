@@ -1,6 +1,8 @@
 package at.antSim.objectsPhysic;
 
+import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
+
 import com.bulletphysics.linearmath.QuaternionUtil;
 import com.bulletphysics.linearmath.Transform;
 
@@ -31,11 +33,14 @@ public abstract class PositionablePhysicsObjectImpl extends ReadOnlyPhysicsObjec
 
 	@Override
 	public void setRotation(float yaw, float pitch, float roll) {
-		Quat4f rotation = new Quat4f();
-		QuaternionUtil.setEuler(rotation, yaw, pitch, roll);
-		Transform bodyTransform = new Transform();
-		getCollisionBody().getWorldTransform(bodyTransform);
-		bodyTransform.setRotation(rotation);
+//		Quat4f rotation = new Quat4f();
+//		QuaternionUtil.setEuler(rotation, yaw, pitch, roll);
+//		Transform bodyTransform = new Transform();
+//		getCollisionBody().getWorldTransform(bodyTransform);
+//		bodyTransform.setRotation(rotation);
+//		getCollisionBody().setWorldTransform(bodyTransform);
+		Vector3f position = getPosition();
+		Transform bodyTransform = new Transform(Maths.createTransformationMatrix(Maths.vec3fToSlickUtil(position), pitch, yaw, roll));
 		getCollisionBody().setWorldTransform(bodyTransform);
 	}
 }

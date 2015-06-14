@@ -10,6 +10,7 @@ import com.bulletphysics.dynamics.RigidBody;
  * @author Clemens
  */
 public interface PhysicsObject {
+	
 	/**
 	 * @return Returns the {@link RigidBody} represented in the PhysicsObject
 	 */
@@ -18,5 +19,24 @@ public interface PhysicsObject {
 	void receive(Entity entity);
 
 	String getType();
-
+	
+	/**
+	 * @return - the Physic Object's Collision Filter
+	 */
+	short getCollisionFilterGroup();
+	
+	/**
+	 * @return - the Physic Object's Filter Mask
+	 */
+	short getCollisionFilterMask();
+	
+	/**Sets the PhyiscsObject's collisionFilterGroup (to use non-default, like for MovingEntity).
+	 * @param collisionFilterGroup
+	 */
+	void setCollisionFilterGroup(short collisionFilterGroup);
+	
+	/**Sets the PhyiscsObject's collisionFilterMask (to use non-default, like for MovingEntity).
+	 * @param collisionFilterMask
+	 */
+	void setCollisionFilterMask(short collisionFilterMask);
 }

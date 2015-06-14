@@ -1,25 +1,13 @@
 package at.antSim.objectsKI;
 
-public class DeadAnt implements Foodressource{
-	private int foodStacks;
-	
-	public DeadAnt(){
-		foodStacks = 5;
-	}
-	
-	@Override
-	public int harvest() {
-		if(foodStacks > 0){
-			foodStacks--;
-			return 1;
-		}
-		else
-			return 0;
-	}
+import at.antSim.Globals;
+import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.objectsPhysic.basics.PhysicsObject;
 
-	@Override
-	public int getFoodStacks() {
-		return foodStacks;
+public class DeadAnt extends Food {
+	
+	public DeadAnt(GraphicsEntity graphicsEntity, PhysicsObject physicsObject){
+		super(graphicsEntity, physicsObject);
+		foodStacks = Globals.foodResAntSize;
 	}
-
 }

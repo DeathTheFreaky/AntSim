@@ -21,5 +21,12 @@ public interface MovablePhysicsObject {
 	 * @param angularVelocity
 	 */
 	void setAngularVelocity(Vector3f angularVelocity);
+	
+	/**Moves physicsObject into given direction at desired speed and aligns the object accordingly.
+	 * 
+	 * @param direction
+	 * @param speed
+	 */
+	void setAlignedMovement(Vector3f direction, float speed);
 
 }

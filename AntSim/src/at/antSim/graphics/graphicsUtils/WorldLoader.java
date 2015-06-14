@@ -1,6 +1,7 @@
 package at.antSim.graphics.graphicsUtils;
 
 import at.antSim.Globals;
+import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.terrains.Terrain;
@@ -9,9 +10,18 @@ import at.antSim.graphics.textures.TerrainTexturePack;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
+import at.antSim.objectsKI.ObjectType;
+import at.antSim.objectsKI.PositionLocator;
+import at.antSim.objectsPhysic.GhostPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+
 import org.lwjgl.util.vector.Vector3f;
+
+import com.bulletphysics.linearmath.Transform;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,6 +32,8 @@ import java.util.Random;
  *
  */
 public class WorldLoader {
+	
+	//ATTENTION: bullet coordinate system is right-handed!!! -> X values increase to the left-hand side! world ranges from WorldSize on the left to 0 on the right
 	
 	private static EntityBuilder builder = new EntityBuilderImpl();
 	
@@ -186,8 +198,54 @@ public class WorldLoader {
 //				.buildGraphicsEntity("antDark", 1, 10)
 //				.buildPhysicsObject()
 //				.registerResult();
+		
+				// end of new
+		
+		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
+				.buildGraphicsEntity("pheromone", 1, Globals.PHERONOME_SIZE) //enable for debugging just to visualize the pheromones
+				.buildPhysicsObject()
+				.registerResult();
+		
+		loadBorders(terrain);
+	}
+	
+	/**Loads borders at the edge of the world to trigger events telling ants/enemies they are leaving the world.
+	 * 
+	 */
+	private static void loadBorders(Terrain terrain) {
+		
+		short tempFilterMask = 0;
+		tempFilterMask = (short) (tempFilterMask | Globals.COL_KINEMATIC);
+			
+		Transform positionNorth = new Transform();
+		positionNorth.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, 0), 0), 0, 0, 0));
+		GhostPhysicsObject northBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionNorth);
+		northBorder.setCollisionFilterGroup(Globals.COL_BORDER);
+		northBorder.setCollisionFilterMask(tempFilterMask);
+		PhysicsManager.getInstance().registerPhysicsObject(northBorder);
+		
+		Transform positionSouth = new Transform();
+		positionSouth.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE), -Globals.WORLD_SIZE), 0, 0, 0));
+		GhostPhysicsObject southBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionSouth);
+		southBorder.setCollisionFilterGroup(Globals.COL_BORDER);
+		southBorder.setCollisionFilterMask(tempFilterMask);
+		PhysicsManager.getInstance().registerPhysicsObject(southBorder);
+		
+		Transform positionEast = new Transform();
+		positionEast.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE, terrain.getHeightOfTerrain(Globals.WORLD_SIZE, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
+		GhostPhysicsObject eastBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionEast);
+		eastBorder.setCollisionFilterGroup(Globals.COL_BORDER);
+		eastBorder.setCollisionFilterMask(tempFilterMask);
+		PhysicsManager.getInstance().registerPhysicsObject(eastBorder);
+		
+		Transform positionWest = new Transform();
+		positionWest.set(Maths.createTransformationMatrix(new Vector3f(0, terrain.getHeightOfTerrain(0, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
+		GhostPhysicsObject westBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionWest);
+		westBorder.setCollisionFilterGroup(Globals.COL_BORDER);
+		westBorder.setCollisionFilterMask(tempFilterMask);
+		PhysicsManager.getInstance().registerPhysicsObject(westBorder);
 
-		// end of new
 	}
 	
 	/**Loads the world's light sources.

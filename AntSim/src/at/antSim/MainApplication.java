@@ -11,9 +11,14 @@ import at.antSim.graphics.renderer.MasterRenderer;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;
 import at.antSim.guiWrapper.states.*;
+import at.antSim.objectsKI.Ant;
+import at.antSim.objectsKI.Enemy;
 import at.antSim.objectsKI.Entity;
+import at.antSim.objectsKI.EntityBuilder;
+import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 import org.lwjgl.opengl.Display;
@@ -23,6 +28,7 @@ import com.bulletphysics.linearmath.Transform;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**MainApplication holds the main game loop containing the main game logic.<br>
  * It handles the initialization and destruction of the game and holds main parameters (eg World Size).<br>
@@ -142,9 +148,12 @@ public class MainApplication {
 
 	private long timeLastLogicUpdate = System.currentTimeMillis();
 	
-	private int statsCtrTest = 0;
+	private int cycleCtr = 0;
 
 	private HashMap<String, Integer> stats = new HashMap<>();
+	
+	private EntityBuilder defaultEntityBuilder;
+	private Random defaultRandom;
 		
 	private MainApplication() {};
 	
@@ -162,6 +171,7 @@ public class MainApplication {
 	public void launch(OpenGLLoader loader, MasterRenderer renderer) {
 		
 		this.renderer = renderer;
+		defaultEntityBuilder = new EntityBuilderImpl();
 		
 		GuiWrapper.getInstance().setLoader(loader);
 		loadGui(loader);
@@ -218,9 +228,8 @@ public class MainApplication {
 					PhysicsObject phyObj = movingEntity.getEntity().getPhysicsObject();
 					GraphicsEntity graphicsEntity = movingEntity.getEntity().getGraphicsEntity();
 					Vector3f correctedTerrainPoint = new Vector3f(terrainPoint.x, terrainPoint.y + graphicsEntity.getModel().getRawModel().getyLength() / 2 * graphicsEntity.getScale(), terrainPoint.z);
-					ReadOnlyPhysicsObject readOnlyPhyObj = (ReadOnlyPhysicsObject) phyObj;
-					phyObj.getCollisionBody().setWorldTransform(new Transform(Maths.createTransformationMatrix(new Vector3f(correctedTerrainPoint), 
-							readOnlyPhyObj.getRotationAngles().x, readOnlyPhyObj.getRotationAngles().y, readOnlyPhyObj.getRotationAngles().z)));
+					PositionablePhysicsObject posPhyObj = (PositionablePhysicsObject) phyObj;
+					posPhyObj.setPosition(new javax.vecmath.Vector3f(correctedTerrainPoint.x, correctedTerrainPoint.y, correctedTerrainPoint.z));
 				}
 				
 				renderer.processTerrain(terrain);
@@ -254,14 +263,21 @@ public class MainApplication {
 		
 		//game logic
 		if (!paused && worldLoaded) {
+//			System.out.println("update cycle: " + cyclyCtr);
 			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
 			timeSinceLastUpdate *= speed;
-			System.out.println("time since last updates: " + timeSinceLastUpdate);
-			statsCtrTest++;
+//			System.out.println("time since last updates: " + timeSinceLastUpdate);
+			Enemy.updatePositionLocators(); //ensure the PositionLocators follow their target's position
+			Entity.resetUndergroundEntities();
+//			Ant.printAllPositionLocatorsAndPheromones();
+			Ant.resetPheromonesAndPositionLocators();
 //			PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
+			
+			cycleCtr++;
+//			System.out.println();
 		}
-		//EventManager.getInstance().workThroughQueue(); //work through events again after performing collision in order not to overwrite collision state of moving entity for rendering
+		
 		timeLastLogicUpdate = timeCurrentUpdate;
 	}
 
@@ -385,10 +401,10 @@ public class MainApplication {
 	}
 
 	public HashMap<String, Integer> getStats() {
-		stats.put("Population", 12035+statsCtrTest);
-		stats.put("Food", 5389+statsCtrTest);
-		stats.put("Eggs", 345+statsCtrTest);
-		stats.put("Larvae", 243+statsCtrTest);
+		stats.put("Population", 12035+cycleCtr);
+		stats.put("Food", 5389+cycleCtr);
+		stats.put("Eggs", 345+cycleCtr);
+		stats.put("Larvae", 243+cycleCtr);
 		return stats;
 	}
 	
@@ -399,7 +415,19 @@ public class MainApplication {
 	public Camera getCamera() {
 		return camera;
 	}
-		
+	
+	public EntityBuilder getDefaultEntityBuilder() {
+		return defaultEntityBuilder;
+	}
+	
+	public Terrain getTerrain() {
+		return terrain;
+	}
+	
+	public int getCycleCtr() {
+		return cycleCtr;
+	}
+	
 	/**
 	 * @return - the one and only instance of {@link MainApplication}
 	 */

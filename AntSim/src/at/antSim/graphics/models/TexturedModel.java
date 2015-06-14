@@ -18,14 +18,16 @@ public class TexturedModel {
 	private PrimitiveType sphereType;
 	private ObjectType objectType;
 	private float mass;
+	private boolean useTransparency;
 	
-	public TexturedModel(RawModel model, ModelTexture texture, PrimitiveType sphereType, ObjectType objectType, float mass, String type) {
+	public TexturedModel(RawModel model, ModelTexture texture, PrimitiveType sphereType, ObjectType objectType, float mass, boolean useTransparency, String type) {
 		this.type = type;
 		this.rawModel = model;
 		this.texture = texture;
 		this.sphereType = sphereType;
 		this.objectType = objectType;
 		this.mass = mass;
+		this.useTransparency = useTransparency;
 	}
 
 	public RawModel getRawModel() {
@@ -50,5 +52,9 @@ public class TexturedModel {
 	
 	public String getType() {
 		return type;
+	}
+	
+	public boolean usesTransparency() {
+		return useTransparency;
 	}
 }
