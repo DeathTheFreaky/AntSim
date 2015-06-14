@@ -1,7 +1,6 @@
 package at.antSim.graphics.graphicsUtils;
 
 import at.antSim.Globals;
-import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.terrains.Terrain;
@@ -10,18 +9,13 @@ import at.antSim.graphics.textures.TerrainTexturePack;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
-import at.antSim.objectsKI.ObjectType;
-import at.antSim.objectsKI.PositionLocator;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
-import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
-import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
-
-import org.lwjgl.util.vector.Vector3f;
-
+import at.antSim.objectsPhysic.PhysicsManager;
 import com.bulletphysics.linearmath.Transform;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -132,7 +126,7 @@ public class WorldLoader {
 				.buildGraphicsEntity("sphere", 1, 25)
 				.buildPhysicsObject()
 				.registerResult();
-		
+
 		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
 				.setRotation(90, 45, 90)
@@ -165,16 +159,16 @@ public class WorldLoader {
 				.registerResult();
 
 		Entity hopperDead = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(370, 4.2f, -370))
+				.setPosition(new Vector3f(390, 4.2f, -370))
 				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity("grasshopperDead", 1, 20)
+				.buildGraphicsEntity("deadGrasshopper", 1, 20)
 				.buildPhysicsObject()
 				.registerResult();
 
 		Entity hopperAlive = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(390, 4.2f, -350))
+				.setPosition(new Vector3f(370, 4.2f, -350))
 				.setRotation(0, random.nextFloat() * 360, 0)
-				.buildGraphicsEntity("grasshopperAlive", 1, 20)
+				.buildGraphicsEntity("enemyGrasshopper", 1, 20)
 				.buildPhysicsObject()
 				.registerResult();
 
@@ -206,7 +200,7 @@ public class WorldLoader {
 				.buildGraphicsEntity("pheromone", 1, Globals.PHERONOME_SIZE) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
-		
+
 		loadBorders(terrain);
 	}
 	
