@@ -44,6 +44,8 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "antDark", PrimitiveType.CUBOID, ObjectType.ANT, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkRedTexture", "antRed", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie));
 		modelPresets.add(new ModelNamesAndTypes("squirrel", "squirrelTexture", "squirrel", PrimitiveType.CUBOID, ObjectType.FOOD, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("grasshopper", "grasshopperTexture", "grasshopperDead", PrimitiveType.CUBOID, ObjectType.FOOD, massDummie));
+		modelPresets.add(new ModelNamesAndTypes("grasshopper", "grasshopperTexture", "grasshopperAlive", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);

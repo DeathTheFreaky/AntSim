@@ -152,6 +152,20 @@ public class WorldLoader {
 				.buildPhysicsObject()
 				.registerResult();
 
+		Entity hopperDead = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(370, 4.2f, -370))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity("grasshopperDead", 1, 20)
+				.buildPhysicsObject()
+				.registerResult();
+
+		Entity hopperAlive = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(390, 4.2f, -350))
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity("grasshopperAlive", 1, 20)
+				.buildPhysicsObject()
+				.registerResult();
+
 //		Entity antBlack = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 //				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 10, 10, -Globals.WORLD_SIZE/2))
 //				.setRotation(0, random.nextFloat() * 360, 0)
