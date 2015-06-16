@@ -28,7 +28,7 @@ import java.util.Random;
 
 /**Provides methods to load the world's content.
  * 
- * @author Flo
+ * @author Clemens, Flo
  *
  */
 public class WorldLoader {

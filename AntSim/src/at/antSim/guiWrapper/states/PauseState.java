@@ -17,6 +17,10 @@ import at.antSim.guiWrapper.commands.ContinueCmd;
 import at.antSim.guiWrapper.commands.QuitToMainMenuCmd;
 import at.antSim.guiWrapper.commands.SwitchStateCmd;
 
+/**
+ * @author Alexander
+ *
+ */
 public class PauseState extends AbstractGuiState {
 	
 	Command backToGameCmd;

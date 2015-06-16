@@ -4,6 +4,10 @@ import at.antSim.guiWrapper.GuiState;
 import at.antSim.guiWrapper.GuiText;
 import at.antSim.guiWrapper.GuiWrapper;
 
+/**
+ * @author Alexander
+ *
+ */
 public class BackCmd implements Command {
 
 	GuiState state;

@@ -6,6 +6,10 @@ import at.antSim.guiWrapper.GuiImage;
 import at.antSim.guiWrapper.GuiUtils;
 import at.antSim.guiWrapper.GuiWrapper;
 
+/**
+ * @author Alexander
+ *
+ */
 public class InvertVerCmd implements Command {
 	
 	GuiImage img;

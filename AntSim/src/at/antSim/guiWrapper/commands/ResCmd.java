@@ -5,6 +5,10 @@ import at.antSim.config.ConfigWriter;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.guiWrapper.GuiText;
 
+/**
+ * @author Alexander
+ *
+ */
 public class ResCmd implements Command {
 
 	int width;

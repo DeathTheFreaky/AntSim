@@ -6,7 +6,7 @@ import at.antSim.objectsKI.ObjectType;
 
 /**TexturedModel stores a model's {@link RawModel}, {@link ModelTexture}, {@link PrimitiveType} and {@link ObjectType}.
  * 
- * @author Flo
+ * @author Clemens
  * @see RawModel
  * @see ModelTexture
  */

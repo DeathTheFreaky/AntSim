@@ -2,7 +2,7 @@ package at.antSim.guiWrapper.commands;
 
 /**Used to execute certain functionalities from eg. a pressed Gui Element.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public interface Command {

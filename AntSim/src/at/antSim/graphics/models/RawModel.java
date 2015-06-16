@@ -12,7 +12,7 @@ package at.antSim.graphics.models;
  * <br>
  * Watch http://www.youtube.com/watch?v=WMiggUPst-Q for more information.
  * 
- * @author Flo
+ * @author Clemens
  *
  */
 public class RawModel {

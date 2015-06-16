@@ -28,7 +28,7 @@ import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 /**OpenGLLoader loads 3D Models and textures into OpenGL and memory (buffer) by storing data (positions, textureCoords, normals) about the model in a VAO.
  * 
- * @author Flo
+ * @author Clemens
  *
  */
 public class OpenGLLoader {

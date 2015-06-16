@@ -17,7 +17,7 @@ import at.antSim.guiWrapper.GuiText;
 
 /**GuiRenderer is used to render Gui Elements to the screen.
  * 
- * @author Flo
+ * @author Alex
  *
  */
 public class GuiRenderer {

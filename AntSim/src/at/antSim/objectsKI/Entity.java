@@ -20,7 +20,7 @@ import javax.vecmath.Vector3f;
 /**
  * Created on 18.05.2015.
  *
- * @author Clemens
+ * @author Flo, Clemens
  */
 public abstract class Entity {
 

@@ -1,5 +1,10 @@
 package at.antSim.guiWrapper;
 
+/**Useful functions for handling the gui.
+ * 
+ * @author Alexander
+ *
+ */
 public class GuiUtils {
 
 	/**Used to obtain a texture string for a current invert axis checkbox state.

@@ -5,7 +5,8 @@ import at.antSim.MainApplication;
 
 /**Quits the game.
  * 
- * Created by Alexander on 12.05.2015.
+ * @author Alexander
+ *
  */
 public class QuitGameCmd implements Command {
 	

@@ -13,6 +13,11 @@ import at.antSim.objectsKI.ObjectType;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+/**Loads models from obj Files and creates presets for higher abstraction TexturedModels, which can be used to build entities.
+ * 
+ * @author Clemens
+ *
+ */
 public class ModelLoader {
 	
 	public static float massDummie = Globals.MASS_DUMMIE;

@@ -22,7 +22,7 @@ import at.antSim.guiWrapper.states.OptionsControlState;
 
 /**Used for changing key bindings in options gui.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class KeyChangeCmd implements Command {

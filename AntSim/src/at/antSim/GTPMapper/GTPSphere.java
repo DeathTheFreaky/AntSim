@@ -6,7 +6,7 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
 
 /**Holds data needed to create a {@link PhysicsObject} sphere from the geometry data of a {@link GraphicsEntity}.
  * 
- * @author Flo
+ * @author Clemens
  *
  */
 public class GTPSphere extends GTPObject {

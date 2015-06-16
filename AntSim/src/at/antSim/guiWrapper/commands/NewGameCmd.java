@@ -11,7 +11,8 @@ import org.lwjgl.Sys;
 
 /**Starts a new game.
  * 
- * Created by Alexander on 12.05.2015.
+ * @author Alexander
+ *
  */
 public class NewGameCmd implements Command {
 

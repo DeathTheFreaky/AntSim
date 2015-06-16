@@ -4,7 +4,7 @@ import at.antSim.graphics.models.RawModel;
 
 /**Stores a GuiText's geometric model, maximum number of columns and number of rows, character Size in pixels and the associated font textured id.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class GuiTextData {

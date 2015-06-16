@@ -6,7 +6,8 @@ import at.antSim.guiWrapper.states.AbstractGuiState;
 
 /**Opens the option menu.
  * 
- * Created by Alexander on 12.05.2015.
+ * @author Alexander
+ *
  */
 public class SwitchStateCmd implements Command {
 	

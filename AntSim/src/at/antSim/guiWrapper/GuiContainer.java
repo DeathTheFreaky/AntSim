@@ -13,7 +13,7 @@ import at.antSim.guiWrapper.commands.Command;
 
 /**A {@link GuiContainer} is meant to group {@link GuiElement} in a list of children.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class GuiContainer extends GuiElement {

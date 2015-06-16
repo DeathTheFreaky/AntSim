@@ -8,7 +8,7 @@ package at.antSim.guiWrapper;
  * RIGHT_OF means this element's left border will be positioned alongside the right border of a referenced element.<br>
  * CENTER means that this element's horizontal center will be positioned at the horizontal center of a referenced element.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public enum HorPositions {

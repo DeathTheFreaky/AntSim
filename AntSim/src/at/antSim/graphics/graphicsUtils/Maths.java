@@ -8,7 +8,7 @@ import at.antSim.graphics.entities.Camera;
 
 /**Maths contains useful mathematical methods.
  * 
- * @author Flo
+ * @author Flo, Clemens
  *
  */
 public class Maths {
