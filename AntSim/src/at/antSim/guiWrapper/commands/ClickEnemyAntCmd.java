@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.MainApplication;
 import at.antSim.graphics.graphicsUtils.ModelLoader;
+import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.ObjectType;

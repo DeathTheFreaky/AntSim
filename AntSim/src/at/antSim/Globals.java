@@ -32,7 +32,7 @@ public final class Globals {
 	public static final float TIMECYCLE_MULTIPLIER = 4.0f;
 	
 	//default additional margin for a positionLocator
-	public static final float POSITION_LOCATOR_MARGIN = 25;
+	public static final float POSITION_LOCATOR_MARGIN = 50; //25
 	public static final float MASS_DUMMIE = 10;
 	
 	//pheromone size
@@ -56,7 +56,7 @@ public final class Globals {
 	
 	//maximum nbr of ants waiting at a position locator
 	public static final int MAX_LOCATOR_ANTS = 1;
-	public static final float LOCATOR_SPEED = 20f;
+	public static final float ANT_SPEED = 20f;
 	
 	//maximum number of food an ant can carry
 	public static int maxFoodCarry;

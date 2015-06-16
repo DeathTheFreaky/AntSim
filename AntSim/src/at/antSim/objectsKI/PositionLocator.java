@@ -64,7 +64,7 @@ public class PositionLocator extends Entity {
 			Vector3f direction = new Vector3f(targetPosition.x - antPosition.x, -5, targetPosition.z - antPosition.z);
 //			System.out.println(Math.toDegrees(QuaternionUtil.getAngle(((ReadOnlyPhysicsObject) ant.getPhysicsObject()).getRotationQuaternions())));
 //			System.out.println("sending linVelocity " + linVelocity + " to " + ant);
-			EventManager.getInstance().addEventToQueue(new LocatorLockEvent(direction, Globals.LOCATOR_SPEED, ant, this));
+			EventManager.getInstance().addEventToQueue(new LocatorLockEvent(direction, Globals.ANT_SPEED, ant, this));
 		}
 		else if (activeAnts.size() < Globals.MAX_LOCATOR_ANTS) {
 			if (!activeAnts.contains(ant)) {
@@ -73,12 +73,12 @@ public class PositionLocator extends Entity {
 				Vector3f targetPosition = getTargetPosition();
 				Vector3f direction = new Vector3f(targetPosition.x - antPosition.x, 0, targetPosition.z - antPosition.z);
 //				System.out.println("sending linVelocity " + linVelocity + " to " + ant);
-				EventManager.getInstance().addEventToQueue(new LocatorLockEvent(direction, Globals.LOCATOR_SPEED, ant, this));
+				EventManager.getInstance().addEventToQueue(new LocatorLockEvent(direction, Globals.ANT_SPEED, ant, this));
 			}
 		} 
 		else {
 			Vector3f direction = new Vector3f(0,0,0); //causes ant to wait
-			EventManager.getInstance().addEventToQueue(new LocatorLockEvent(direction, Globals.LOCATOR_SPEED, ant, this));
+			EventManager.getInstance().addEventToQueue(new LocatorLockEvent(direction, Globals.ANT_SPEED, ant, this));
 		}
 	}
 	

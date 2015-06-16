@@ -18,6 +18,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.utils.CountingLinkedList;
@@ -59,21 +60,27 @@ public abstract class Ant extends Entity {
 	// und Worker/Forager
 	private String job;
 	
+	Hive hive;
+	
+	MovementManager movementManager;
+	
 	//linked lists for storing which position Locators and Pheromones the ant is currently in
 	protected CountingLinkedList<PositionLocator> positionLocators = new CountingLinkedList<>();
 	protected CountingLinkedList<Pheromone> pheromones = new CountingLinkedList<>();
 
-	public Ant(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
+	public Ant(GraphicsEntity graphicsEntity, PhysicsObject physicsObject, Hive hive) {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
+		this.hive = hive;
 		Vector3f v = new Vector3f(velocityX, 0, velocityZ);
 //		this.physicsObject.setLinearVelocity(v);
-		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, 1), Globals.LOCATOR_SPEED);
+		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, 1), Globals.ANT_SPEED);
 		dynamicEntities.add(this);
 		ants.add(this);
 		// ROTATE WITH THIS Math.toradiant();
 		//this.physicsObject.setRotation(0, 0, 0);
 		EventManager.getInstance().registerEventListener(this);
+		movementManager = MovementManager.getInstance();
 	}
 
 	@Override

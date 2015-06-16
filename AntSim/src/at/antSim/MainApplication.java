@@ -17,6 +17,7 @@ import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsPhysic.PhysicsManager;
+import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
@@ -268,6 +269,7 @@ public class MainApplication {
 			timeSinceLastUpdate *= speed;
 //			System.out.println("time since last updates: " + timeSinceLastUpdate);
 			Enemy.updatePositionLocators(); //ensure the PositionLocators follow their target's position
+			MovementManager.getInstance().moveAllEntries();
 			Entity.resetUndergroundEntities();
 //			Ant.printAllPositionLocatorsAndPheromones();
 			Ant.resetPheromonesAndPositionLocators();

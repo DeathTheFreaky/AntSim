@@ -99,6 +99,10 @@ public abstract class Entity {
 	public static Map<TexturedModel, List<Entity>> getUnmodifiableRenderingMap() {
 		return Collections.unmodifiableMap(renderingMap);
 	}
+	
+	public static Entity getParentEntity(PhysicsObject physicsObject) {
+		return parentingEntities.get(physicsObject);
+	}
 
 	public GraphicsEntity getGraphicsEntity() {
 		return graphicsEntity;

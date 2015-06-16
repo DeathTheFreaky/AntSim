@@ -10,15 +10,18 @@ import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.Movement.MoveToTarget;
+import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 public class Forager extends Ant implements Runnable {
 	private int threshold;
 	private int foodtransport;
 	private int maxFoodTransport;
 	
-	public Forager(GraphicsEntity graphicsEntity,PhysicsObject physicsObject) {
-		super(graphicsEntity, physicsObject);
+	public Forager(GraphicsEntity graphicsEntity,PhysicsObject physicsObject, Hive hive) {
+		super(graphicsEntity, physicsObject, hive);
 		hp = Globals.antHp;
 		attack = Globals.antAttack;
 		threshold = 2;
@@ -64,12 +67,15 @@ public class Forager extends Ant implements Runnable {
 			if (staticPhysicsObject.equals(lockedLocator.getTarget().physicsObject)) {
 				if (lockedLocator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport >= maxFoodTransport) {
 					lockedLocator.deactivateAnt(this);
+					movementManager.removeMovementEntry(physicsObject);
 				} else {
 					Food food = (Food) parentingEntities.get(staticPhysicsObject);
 					carryMoreFood(food.harvest()); //amount of food which cannot be carried by ant is put back into food resource
 					if (foodtransport >= maxFoodTransport) {
 						System.out.println("ant gathered " + foodtransport + " food");
 						unlockLocator();
+						System.out.println("movementManager: " + movementManager + ", hive: " + hive);
+						movementManager.setMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject));
 					}
 				}
 			}
@@ -86,7 +92,8 @@ public class Forager extends Ant implements Runnable {
 	public void locatorLockEvent(LocatorLockEvent le) {
 		if (le.getAnt() == this && le.getLocator().getTarget().getObjectType().equals(ObjectType.FOOD)) {
 //			System.out.println("tells me to turn to " + le.getDirection() + " with speed " + le.getSpeed());
-			physicsObject.setAlignedMovement(le.getDirection(), le.getSpeed());
+			MovementManager.getInstance().setMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) le.getLocator().getPhysicsObject()));
+//			physicsObject.setAlignedMovement(le.getDirection(), le.getSpeed());
 			lockedLocator = le.getLocator();
 			le.consume();
 		}

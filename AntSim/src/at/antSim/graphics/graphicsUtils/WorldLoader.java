@@ -10,6 +10,7 @@ import at.antSim.graphics.textures.TerrainTexturePack;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
+import at.antSim.objectsKI.Hive;
 import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsKI.PositionLocator;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
@@ -36,6 +37,7 @@ public class WorldLoader {
 	//ATTENTION: bullet coordinate system is right-handed!!! -> X values increase to the left-hand side! world ranges from WorldSize on the left to 0 on the right
 	
 	private static EntityBuilder builder = new EntityBuilderImpl();
+	public static Hive hive;
 	
 	/**Loads the world's terrain.
 	 * 
@@ -197,10 +199,19 @@ public class WorldLoader {
 				// end of new
 		
 		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 200, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 200, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
 				.buildGraphicsEntity("pheromone", 1, Globals.PHERONOME_SIZE) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
+		
+		Entity hiveEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
+				.setHiveParameters(20)
+				.buildGraphicsEntity("hive", 1, 50) //enable for debugging just to visualize the pheromones
+				.buildPhysicsObject()
+				.registerResult();
+		
+		hive = (Hive) hiveEntity;
 		
 		loadBorders(terrain);
 	}

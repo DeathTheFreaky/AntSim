@@ -4,7 +4,7 @@ import at.antSim.graphics.terrains.Terrain;
 
 /**Represents a TerrainTexture that can be used to texture {@link Terrain}s.
  * 
- * @author Clemens
+ * @author Flo
  *
  */
 public class TerrainTexture {

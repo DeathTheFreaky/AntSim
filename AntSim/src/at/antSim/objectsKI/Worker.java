@@ -11,8 +11,8 @@ public class Worker extends Ant implements Runnable {
 
 	private int threshold;
 	
-	public Worker(GraphicsEntity graphicsEntity,PhysicsObject physicsObject) {
-		super(graphicsEntity, physicsObject);
+	public Worker(GraphicsEntity graphicsEntity,PhysicsObject physicsObject, Hive hive) {
+		super(graphicsEntity, physicsObject, hive);
 		hp = Globals.antHp;
 		attack = Globals.antAttack;
 		threshold = 2;
