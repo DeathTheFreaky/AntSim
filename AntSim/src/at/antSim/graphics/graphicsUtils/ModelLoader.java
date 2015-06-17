@@ -70,7 +70,7 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("grasshopper", "grasshopperTexture", "enemyGrasshopper", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		
 		//hive
-		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "hive", PrimitiveType.SPHERE, ObjectType.HIVE, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "hive", PrimitiveType.CYLINDER, ObjectType.HIVE, massDummie, false));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);
