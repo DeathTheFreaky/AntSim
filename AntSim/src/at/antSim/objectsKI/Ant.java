@@ -247,7 +247,7 @@ public abstract class Ant extends Entity {
 	}
 	
 	public void unlockLocator() {
-		lockedLocator.deactivateAnt(this);
+		lockedLocator.unregisterAnt(this);
 		lockedLocator = null;
 	}
 	
@@ -278,7 +278,7 @@ public abstract class Ant extends Entity {
 	 */
 	public void resetPositionLocators() {
 		for (PositionLocator loc : positionLocators.update()) {
-			loc.deactivateAnt(this);
+			loc.unregisterAnt(this);
 		};
 	}
 	

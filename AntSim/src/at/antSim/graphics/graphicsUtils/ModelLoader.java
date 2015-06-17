@@ -57,9 +57,9 @@ public class ModelLoader {
 		//food
 		modelPresets.add(new ModelNamesAndTypes("apple", "appleTexture", "apple", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkRedTexture", "deadAnt", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "deadGrasshopper", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("grasshopper", "grasshopperDeadTexture", "deadGrasshopper", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("squirrel", "squirrelTexture", "squirrel", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
-		
+
 		//ants
 		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "worker", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "forager", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
@@ -67,7 +67,7 @@ public class ModelLoader {
 		
 		//enemies
 		modelPresets.add(new ModelNamesAndTypes("ant", "antBlackTexture", "enemyAnt", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "enemyGrasshopper", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("grasshopper", "grasshopperTexture", "enemyGrasshopper", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		
 		//hive
 		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "hive", PrimitiveType.SPHERE, ObjectType.HIVE, massDummie, false));

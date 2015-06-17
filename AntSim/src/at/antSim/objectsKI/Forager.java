@@ -52,7 +52,7 @@ public class Forager extends Ant implements Runnable {
 			PositionLocator locator = (PositionLocator) parentingEntities.get(ghostPhysicsObject);
 			positionLocators.increaseCount(locator);
 			if (locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport < maxFoodTransport) {
-				locator.activateAnt(this); //only activate foodLocator if ant can still carry food
+				locator.registerAnt(this); //only activate foodLocator if ant can still carry food
 			}
 //			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + locator.getTargetPosition());
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
@@ -66,8 +66,8 @@ public class Forager extends Ant implements Runnable {
 		if (lockedLocator != null) {
 			if (staticPhysicsObject.equals(lockedLocator.getTarget().physicsObject)) {
 				if (lockedLocator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport >= maxFoodTransport) {
-					lockedLocator.deactivateAnt(this);
-					movementManager.removeMovementEntry(physicsObject);
+					lockedLocator.unregisterAnt(this);
+					movementManager.removeLastMovementEntry(physicsObject);
 				} else {
 					Food food = (Food) parentingEntities.get(staticPhysicsObject);
 					carryMoreFood(food.harvest()); //amount of food which cannot be carried by ant is put back into food resource
@@ -75,7 +75,8 @@ public class Forager extends Ant implements Runnable {
 						System.out.println("ant gathered " + foodtransport + " food");
 						unlockLocator();
 						System.out.println("movementManager: " + movementManager + ", hive: " + hive);
-						movementManager.setMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject));
+						movementManager.removeAllMovementEntries(physicsObject);
+//						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject));
 					}
 				}
 			}
@@ -92,7 +93,7 @@ public class Forager extends Ant implements Runnable {
 	public void locatorLockEvent(LocatorLockEvent le) {
 		if (le.getAnt() == this && le.getLocator().getTarget().getObjectType().equals(ObjectType.FOOD)) {
 //			System.out.println("tells me to turn to " + le.getDirection() + " with speed " + le.getSpeed());
-			MovementManager.getInstance().setMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) le.getLocator().getPhysicsObject()));
+			MovementManager.getInstance().addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) le.getLocator().getPhysicsObject()));
 //			physicsObject.setAlignedMovement(le.getDirection(), le.getSpeed());
 			lockedLocator = le.getLocator();
 			le.consume();

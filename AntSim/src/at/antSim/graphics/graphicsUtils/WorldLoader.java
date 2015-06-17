@@ -1,7 +1,6 @@
 package at.antSim.graphics.graphicsUtils;
 
 import at.antSim.Globals;
-import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.terrains.Terrain;
@@ -14,15 +13,12 @@ import at.antSim.objectsKI.Hive;
 import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsKI.PositionLocator;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
-import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
-import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
-
-import org.lwjgl.util.vector.Vector3f;
-
+import at.antSim.objectsPhysic.PhysicsManager;
 import com.bulletphysics.linearmath.Transform;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -112,15 +108,6 @@ public class WorldLoader {
 //			.buildGraphicsEntity("lamp", 1, 20)
 //			.buildPhysicsObject()
 //			.registerResult();
-//		
-//		Entity redSphere = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//		.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
-//		.setRotation(90, 45, 90)
-//		.buildGraphicsEntity("sphere", 1, 25)
-//		.buildPhysicsObject()
-//		.registerResult();
-//		EventManager.getInstance().registerEventListener(redSphere);
-//
 //
 //		Entity lamp2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 //				.setPosition(new Vector3f(370, 4.2f, -300))
@@ -139,63 +126,77 @@ public class WorldLoader {
 //		//add cool stanford demo dragon for specular lighting demo
 //		Entity redCube = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 //				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
-//				.setRotation(0, 0, 0)
+//				.setRotation(90, 45, 90)
 //				.buildGraphicsEntity("sphere", 1, 25)
 //				.buildPhysicsObject()
 //				.registerResult();
-//	
+//
 //		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
 //				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
-//				.setRotation(0, 0, 0)
-//				.buildGraphicsEntity("enemyGrasshopper", 1, 25)
+//				.setRotation(90, 45, 90)
+//				.buildGraphicsEntity("dragon", 1, 25)
+//				.buildPhysicsObject()
+//				.registerResult();
+//		
+//		//PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
+//
+//		Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(370, 4.2f, -300))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("stomp", 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+//
+//		// new
+//		Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(300, 4.2f, -300))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("rock", 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+//
+//		Entity squirrel = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(350, 4.2f, -350))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("squirrel", 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+//
+//		Entity hopperDead = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(390, 4.2f, -370))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("deadGrasshopper", 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+//
+//		Entity hopperAlive = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(370, 4.2f, -350))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("enemyGrasshopper", 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+
+//		Entity antBlack = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 10, 10, -Globals.WORLD_SIZE/2))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("antBlack", 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+//
+//		Entity antRed = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 10, 10, -Globals.WORLD_SIZE/2))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("antRed", 1, 20)
+//				.buildPhysicsObject()
+//				.registerResult();
+//
+//		Entity antDark = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 10, -Globals.WORLD_SIZE/2))
+//				.setRotation(0, random.nextFloat() * 360, 0)
+//				.buildGraphicsEntity("antDark", 1, 10)
 //				.buildPhysicsObject()
 //				.registerResult();
 		
-		//				//PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
-//
-//				Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//						.setPosition(new Vector3f(370, 4.2f, -300))
-//						.setRotation(0, random.nextFloat() * 360, 0)
-//						.buildGraphicsEntity("stomp", 1, 20)
-//						.buildPhysicsObject()
-//						.registerResult();
-//
-//				// new
-//				Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//						.setPosition(new Vector3f(300, 4.2f, -300))
-//						.setRotation(0, random.nextFloat() * 360, 0)
-//						.buildGraphicsEntity("rock", 1, 20)
-//						.buildPhysicsObject()
-//						.registerResult();
-//
-//				Entity squirrel = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//						.setPosition(new Vector3f(350, 4.2f, -350))
-//						.setRotation(0, random.nextFloat() * 360, 0)
-//						.buildGraphicsEntity("squirrel", 1, 20)
-//						.buildPhysicsObject()
-//						.registerResult();
-
-//				Entity antBlack = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//						.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 10, 10, -Globals.WORLD_SIZE/2))
-//						.setRotation(0, random.nextFloat() * 360, 0)
-//						.buildGraphicsEntity("antBlack", 1, 20)
-//						.buildPhysicsObject()
-//						.registerResult();
-		//
-//				Entity antRed = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//						.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 10, 10, -Globals.WORLD_SIZE/2))
-//						.setRotation(0, random.nextFloat() * 360, 0)
-//						.buildGraphicsEntity("antRed", 1, 20)
-//						.buildPhysicsObject()
-//						.registerResult();
-		//
-//				Entity antDark = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//						.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 10, -Globals.WORLD_SIZE/2))
-//						.setRotation(0, random.nextFloat() * 360, 0)
-//						.buildGraphicsEntity("antDark", 1, 10)
-//						.buildPhysicsObject()
-//						.registerResult();
-
 				// end of new
 		
 		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
@@ -212,7 +213,7 @@ public class WorldLoader {
 				.registerResult();
 		
 		hive = (Hive) hiveEntity;
-		
+
 		loadBorders(terrain);
 	}
 	
