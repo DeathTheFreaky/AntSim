@@ -54,7 +54,7 @@ public abstract class Ant extends Entity {
 	protected float lastposition = 0;
 	private int velocityhelper = 0;
 	
-	protected PositionLocator lockedLocator;
+	protected PositionLocator lockedLocator; //target's positionLocator where ant is currently heading to, all targets must have positionLocators
 
 	// wahrscheinlich eigene Jobklasse => fuer im Bautätige
 	// und Worker/Forager
@@ -247,6 +247,7 @@ public abstract class Ant extends Entity {
 	}
 	
 	public void unlockLocator() {
+		//return to default movement behavior - this is just a dummy
 		lockedLocator.unregisterAnt(this);
 		lockedLocator = null;
 	}

@@ -55,17 +55,27 @@ public class Forager extends Ant implements Runnable {
 			positionLocators.increaseCount(locator); //make sure positionLocator remains/is being added to list of all PositionLocators ant is currently in
 			
 			if (lockedLocator == null) { //only register ant for one locator at a time
-				lockedLocator = locator;
 				if (locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport < maxFoodTransport) {
-					if (locator.registerAnt(this)) {
+					if (locator.entryPossible(this)) {
+						lockedLocator = locator;
+						locator.registerAnt(this); //ant will be added to active ants in locator
 						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
-					} //only activate foodLocator if ant can still carry food
-					else {
-						//wait where you are -> movementMode
+					} else { //entry not possible -> either add to waiting list by calling locator.registerAnt or do something else
+						lockedLocator = locator;
+						locator.registerAnt(this); //ant will be added to waiting ants in locator
+						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, physicsObject, Globals.ANT_SPEED));
 					}
+					
 				} else if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
 					if (locator.registerAnt(this)) {
 						
+					};
+				}
+			} else {
+				if (!locator.containsActiveAnt(this)) {
+					if(locator.registerAnt(this)) { //try to get access -> if allowed, ant will be added to actives, so method will not be called again
+						movementManager.removeLastMovementEntry(physicsObject); //remove lockin entry (which forces ant to stay where it is, even when hit by other ants)
+						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
 					};
 				}
 			}
@@ -89,18 +99,16 @@ public class Forager extends Ant implements Runnable {
 					
 					Food food = (Food) parentingEntities.get(staticPhysicsObject);
 					carryMoreFood(food.harvest()); //amount of food which cannot be carried by ant is put back into food resource
-					
-					System.out.println("locking in on locator");
-					//lock in on lockedLocator
-					movementManager.removeLastMovementEntry(physicsObject);
-					movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) lockedLocator.physicsObject, Globals.LOCKIN_SPEED));
-					
+										
+					if (lockedLocator != null) {
+						//lock in on lockedLocator
+						movementManager.removeLastMovementEntry(physicsObject);
+						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) lockedLocator.physicsObject, Globals.LOCKIN_SPEED));
+					} else { //lockedLocator has been deleted in the meantime cause it ran out of food
+						movementManager.removeLastMovementEntry(physicsObject);
+					}
 				} else {
-					
-					System.out.println("ant gathered " + foodtransport + " food");
-//					unlockLocator();
-					System.out.println("movementManager: " + movementManager + ", hive: " + hive);
-					movementManager.removeAllMovementEntries(physicsObject);
+					movementManager.removeLastMovementEntry(physicsObject);
 					movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
 				}
 			}

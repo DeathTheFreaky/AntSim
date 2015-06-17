@@ -2,12 +2,18 @@ package at.antSim.objectsKI;
 
 import java.util.ArrayList;
 
+import org.lwjgl.util.vector.Vector3f;
+
+import at.antSim.Globals;
+import at.antSim.MainApplication;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 public class Hive extends Entity {
 
@@ -17,18 +23,30 @@ public class Hive extends Entity {
 	public static int foodStacks;
 	public static Queen queen;
 	
+	PositionLocator positionLocator;
+	
 	public Hive(GraphicsEntity graphicsEntity, PhysicsObject physicsObject){
-		super(graphicsEntity, physicsObject, ObjectType.HIVE);
-		foodStacks = 20;
-		//queen = new Queen();
-		fa.add(queen);
+		this(20, graphicsEntity, physicsObject);
 	}
 	
 	//Startbedingungen aendern
 	public Hive(int food, GraphicsEntity graphicsEntity, PhysicsObject physicsObject){
 		super(graphicsEntity, physicsObject, ObjectType.HIVE);
+		
 		foodStacks = food;
 		//queen = new Queen();
+//		fa.add(queen);
+		
+		//set initial position and size of PositionLocator ghost physics object
+		javax.vecmath.Vector3f vecMathPos = ((ReadOnlyPhysicsObject) physicsObject).getPosition();
+		vecMathPos.y = vecMathPos.y - Globals.POSITION_LOCATOR_MARGIN;
+		
+		positionLocator = (PositionLocator) MainApplication.getInstance().getDefaultEntityBuilder().setFactory(GhostPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z))
+				.buildGraphicsEntity("positionLocator", 1, graphicsEntity.getScale() + Globals.POSITION_LOCATOR_MARGIN * 2) 
+				.setTarget(this)
+				.buildPhysicsObject()
+				.registerResult();
 	}
 	
 	public void addEgg(Egg e){

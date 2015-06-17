@@ -82,7 +82,7 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 		if (direction.length() > 0) {
 			direction.normalize();
 			Vector3f linearVelocity = new Vector3f(direction.x * speed, currentVelocity.y, direction.z * speed);
-			System.out.println("set velocity to  " + linearVelocity);
+//			System.out.println("set velocity to  " + linearVelocity);
 			setLinearVelocity(linearVelocity);
 			//when angles are exactly aligned with axis rotation wont work
 			if (direction.x <= 0.000001f && direction.x >= 0) {

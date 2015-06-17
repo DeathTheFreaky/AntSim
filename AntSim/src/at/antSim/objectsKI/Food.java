@@ -40,7 +40,6 @@ public abstract class Food extends Entity implements Foodressource {
 				.setTarget(this)
 				.buildPhysicsObject()
 				.registerResult();
-		
 	}
 
 	@Override
@@ -68,13 +67,11 @@ public abstract class Food extends Entity implements Foodressource {
 	@Override
 	public int harvest() {
 		foodStacks--;
-		if(foodStacks > 0){
-			return 1;
-		}
-		else {
+		if (foodStacks <= 0) {
+			positionLocator.cancelAnts();
 			this.delete();
-			return 0;
 		}
+		return 1;
 	}
 
 	@Override

@@ -19,6 +19,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
@@ -60,9 +61,7 @@ public class PositionLocator extends Entity {
 	 * @return - true if the PositionLocator still has enough "room" for this ant to approach it and false if not
 	 */
 	public boolean registerAnt(Ant ant) {
-		
-		
-		
+
 		if (activeAnts.contains(ant)) { //ant is already active in positionLocator
 			return true;
 		} 
@@ -70,22 +69,24 @@ public class PositionLocator extends Entity {
 			waitingAnts.add(ant);
 		}
 		if (activeAnts.size() < Globals.MAX_LOCATOR_ANTS){ //some waiting ants may be allowed into positionLocator
-			
+						
 			int newAllowedAnts = Globals.MAX_LOCATOR_ANTS - activeAnts.size(); //how many new ants are allowed into positionLocator?
+			
+			System.out.println("newAllowedAnts: " + newAllowedAnts);
 							
 			int i = 0;
 			for (Ant waitingAnt : waitingAnts) {
+				if (i >= newAllowedAnts) {
+					break;
+				}
 				if (waitingAnt.equals(ant)) {
 					activeAnts.add(ant);
 					waitingAnts.remove(waitingAnt);
 					return true; //waiting ant was on top of waiting list - is now allowed entry into positionLocator
 				}
-				if (i >= newAllowedAnts) {
-					break;
-				}
 				i++;
 			}
-			return false; //waiting ant was ranked to far behind in waiting list - is not allowed  into positionLocator
+			return false; //waiting ant was ranked too far behind in waiting list - is not allowed  into positionLocator
 
 		} else { //no more room in position locator for waiting ants
 			return false;
@@ -94,6 +95,19 @@ public class PositionLocator extends Entity {
 	
 	public boolean containsActiveAnt(Ant ant) {
 		return activeAnts.contains(ant);
+	}
+	
+	/**Used to indicate to an ant if it would be allowed entry to the locator.<br>
+	 * If not, and ant is inside another locator too, it could choose the other locator as a target...
+	 * 
+	 * @param ant
+	 * @return
+	 */
+	public boolean entryPossible(Ant ant) {
+		if (activeAnts.size() < Globals.MAX_LOCATOR_ANTS) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**Deactivate an Ant which has left the locator or does not want to get to its target any more.
@@ -135,5 +149,12 @@ public class PositionLocator extends Entity {
 	@Override
 	protected void deleteSpecific() {
 		// TODO Auto-generated method stub
+	}
+
+	public void cancelAnts() {
+		for (Ant ant : activeAnts) {
+			ant.unlockLocator();
+		}
+		
 	}
 }
