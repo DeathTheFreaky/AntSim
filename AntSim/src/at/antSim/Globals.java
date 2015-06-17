@@ -56,7 +56,10 @@ public final class Globals {
 	
 	//maximum nbr of ants waiting at a position locator
 	public static final int MAX_LOCATOR_ANTS = 1;
+	
+	//speeds in various movement situations
 	public static final float ANT_SPEED = 20f;
+	public static final float LOCKIN_SPEED = 5f;
 	
 	//maximum number of food an ant can carry
 	public static int maxFoodCarry;

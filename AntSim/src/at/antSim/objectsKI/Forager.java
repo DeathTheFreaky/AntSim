@@ -48,12 +48,28 @@ public class Forager extends Ant implements Runnable {
 	
 	@Override
 	public void reactSpecific(GhostPhysicsObject ghostPhysicsObject) {
-		if (ghostPhysicsObject.getType().equals("positionLocator")) {
+		
+		if (ghostPhysicsObject.getType().equals("positionLocator")) { //ant is inside a positionLocator
+			
 			PositionLocator locator = (PositionLocator) parentingEntities.get(ghostPhysicsObject);
-			positionLocators.increaseCount(locator);
-			if (locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport < maxFoodTransport) {
-				locator.registerAnt(this); //only activate foodLocator if ant can still carry food
+			positionLocators.increaseCount(locator); //make sure positionLocator remains/is being added to list of all PositionLocators ant is currently in
+			
+			if (lockedLocator == null) { //only register ant for one locator at a time
+				lockedLocator = locator;
+				if (locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport < maxFoodTransport) {
+					if (locator.registerAnt(this)) {
+						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
+					} //only activate foodLocator if ant can still carry food
+					else {
+						//wait where you are -> movementMode
+					}
+				} else if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
+					if (locator.registerAnt(this)) {
+						
+					};
+				}
 			}
+			
 //			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + locator.getTargetPosition());
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
 			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
@@ -61,23 +77,31 @@ public class Forager extends Ant implements Runnable {
 		}
 	}
 	
+	
+	
 	@Override
 	public void reactSpecific(StaticPhysicsObject staticPhysicsObject) {
+		
 		if (lockedLocator != null) {
-			if (staticPhysicsObject.equals(lockedLocator.getTarget().physicsObject)) {
-				if (lockedLocator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport >= maxFoodTransport) {
-					lockedLocator.unregisterAnt(this);
-					movementManager.removeLastMovementEntry(physicsObject);
-				} else {
+			if (staticPhysicsObject.equals(lockedLocator.getTarget().physicsObject)) { //ant ran into lockedLocator
+				
+				if (foodtransport < maxFoodTransport) {
+					
 					Food food = (Food) parentingEntities.get(staticPhysicsObject);
 					carryMoreFood(food.harvest()); //amount of food which cannot be carried by ant is put back into food resource
-					if (foodtransport >= maxFoodTransport) {
-						System.out.println("ant gathered " + foodtransport + " food");
-						unlockLocator();
-						System.out.println("movementManager: " + movementManager + ", hive: " + hive);
-						movementManager.removeAllMovementEntries(physicsObject);
-//						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject));
-					}
+					
+					System.out.println("locking in on locator");
+					//lock in on lockedLocator
+					movementManager.removeLastMovementEntry(physicsObject);
+					movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) lockedLocator.physicsObject, Globals.LOCKIN_SPEED));
+					
+				} else {
+					
+					System.out.println("ant gathered " + foodtransport + " food");
+//					unlockLocator();
+					System.out.println("movementManager: " + movementManager + ", hive: " + hive);
+					movementManager.removeAllMovementEntries(physicsObject);
+					movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
 				}
 			}
 		}
@@ -89,16 +113,16 @@ public class Forager extends Ant implements Runnable {
 		
 	}
 	
-	@EventListener(priority = EventPriority.NORMAL)
-	public void locatorLockEvent(LocatorLockEvent le) {
-		if (le.getAnt() == this && le.getLocator().getTarget().getObjectType().equals(ObjectType.FOOD)) {
-//			System.out.println("tells me to turn to " + le.getDirection() + " with speed " + le.getSpeed());
-			MovementManager.getInstance().addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) le.getLocator().getPhysicsObject()));
-//			physicsObject.setAlignedMovement(le.getDirection(), le.getSpeed());
-			lockedLocator = le.getLocator();
-			le.consume();
-		}
-	}
+//	@EventListener(priority = EventPriority.NORMAL)
+//	public void locatorLockEvent(LocatorLockEvent le) {
+//		if (le.getAnt() == this && le.getLocator().getTarget().getObjectType().equals(ObjectType.FOOD)) {
+////			System.out.println("tells me to turn to " + le.getDirection() + " with speed " + le.getSpeed());
+//			MovementManager.getInstance().addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) le.getLocator().getPhysicsObject()));
+////			physicsObject.setAlignedMovement(le.getDirection(), le.getSpeed());
+//			lockedLocator = le.getLocator();
+//			le.consume();
+//		}
+//	}
 	
 	@Override
 	public void run() {

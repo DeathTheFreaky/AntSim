@@ -17,15 +17,16 @@ public class MoveToTarget implements MovementMode {
 	DynamicPhysicsObject physicsObject;
 	ReadOnlyPhysicsObject target;
 	MovementMode mode;
+	float speed;
 	
-	public MoveToTarget(DynamicPhysicsObject physicsObject, ReadOnlyPhysicsObject target) {
+	public MoveToTarget(DynamicPhysicsObject physicsObject, ReadOnlyPhysicsObject target, float speed) {
 		this.physicsObject = physicsObject;
 		this.target = target;
+		this.speed = speed;
 	}
 	
 	public void move() {
 		Vector3f direction = new Vector3f(target.getPosition().x - physicsObject.getPosition().x, 0, target.getPosition().z - physicsObject.getPosition().z);
-		float speed = Globals.ANT_SPEED;
 		physicsObject.setAlignedMovement(direction, speed);
 	}
 }
