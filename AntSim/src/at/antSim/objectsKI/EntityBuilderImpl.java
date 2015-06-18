@@ -82,6 +82,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 		this.type = type;
 		this.height = graphicsEntity.getModel().getRawModel().getyLength() * scale;
 		this.scale = scale;
+		System.out.println("built graphics entity with scale " + scale);
 		objectType = graphicsEntity.getModel().getObjectType();
 		return this;
 	}

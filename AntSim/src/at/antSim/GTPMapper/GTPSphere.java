@@ -11,16 +11,16 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
  */
 public class GTPSphere extends GTPObject {
 	
-	private float radious;
+	private float radius;
 
 	public GTPSphere(GraphicsEntity graphicsEntity, float scale) {
-		this.radious = graphicsEntity.getModel().getRawModel().getFurthestPoint() * scale; 
+		this.radius = graphicsEntity.getModel().getRawModel().getFurthestPoint() * scale; 
 //		System.out.println(graphicsEntity + " - furthest point: " + graphicsEntity.getModel().getRawModel().getFurthestPoint());
 //		System.out.println(graphicsEntity + " - radious: " + radious);
 	}
 
 	public float getRadious() {
-		return radious;
+		return radius;
 	}
 
 	@Override

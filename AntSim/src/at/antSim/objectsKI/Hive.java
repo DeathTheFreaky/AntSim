@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bulletphysics.collision.dispatch.CollisionFlags;
+
 import at.antSim.Globals;
 import at.antSim.MainApplication;
 import at.antSim.graphics.entities.GraphicsEntity;
@@ -12,6 +14,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
@@ -47,6 +50,8 @@ public class Hive extends Entity {
 				.setTarget(this)
 				.buildPhysicsObject()
 				.registerResult();
+		
+//		positionLocator.physicsObject.getCollisionBody().setCollisionFlags(positionLocator.physicsObject.getCollisionBody().getCollisionFlags() | CollisionFlags.NO_CONTACT_RESPONSE);
 	}
 	
 	public void addEgg(Egg e){

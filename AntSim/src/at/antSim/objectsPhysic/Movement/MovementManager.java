@@ -44,7 +44,6 @@ public class MovementManager {
 	 */
 	public void removeLastMovementEntry(DynamicPhysicsObject physicsObject) {
 		if (entries.containsKey(physicsObject)) {
-			System.out.println(entries.get(physicsObject).lastElement());
 			entries.get(physicsObject).pop();
 			if (entries.get(physicsObject).size() == 0) {
 				entries.remove(physicsObject);

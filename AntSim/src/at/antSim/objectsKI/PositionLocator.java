@@ -72,7 +72,7 @@ public class PositionLocator extends Entity {
 						
 			int newAllowedAnts = Globals.MAX_LOCATOR_ANTS - activeAnts.size(); //how many new ants are allowed into positionLocator?
 			
-			System.out.println("newAllowedAnts: " + newAllowedAnts);
+//			System.out.println("newAllowedAnts: " + newAllowedAnts);
 							
 			int i = 0;
 			for (Ant waitingAnt : waitingAnts) {
