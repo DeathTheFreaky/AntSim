@@ -18,6 +18,8 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.Dodge;
+import at.antSim.objectsPhysic.Movement.MoveInDirection;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
@@ -74,13 +76,14 @@ public abstract class Ant extends Entity {
 		this.hive = hive;
 		Vector3f v = new Vector3f(velocityX, 0, velocityZ);
 //		this.physicsObject.setLinearVelocity(v);
-		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, -1), Globals.ANT_SPEED*3);
+//		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, -1), Globals.ANT_SPEED*3);
 		dynamicEntities.add(this);
 		ants.add(this);
 		// ROTATE WITH THIS Math.toradiant();
 		//this.physicsObject.setRotation(0, 0, 0);
 		EventManager.getInstance().registerEventListener(this);
 		movementManager = MovementManager.getInstance();
+		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveInDirection((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
 	}
 
 	@Override
@@ -137,6 +140,16 @@ public abstract class Ant extends Entity {
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
+		
+		ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
+		if (tp.equals(ObjectType.ANT)) { //ant hit another ant: start dodging procedure
+			movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, dynamicPhysicsObject, Globals.ANT_SPEED));
+		} else if (tp.equals(ObjectType.ENEMY)) {
+//			attackEnemy(dynamicPhysicsObject);
+		}
+		reactSpecific(dynamicPhysicsObject);
+		
+		
 //		System.out.println("dynamisch");
 //		ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
 //		if (tp.equals(ObjectType.ANT)) {

@@ -16,7 +16,6 @@ public class MoveToTarget implements MovementMode {
 
 	DynamicPhysicsObject physicsObject;
 	ReadOnlyPhysicsObject target;
-	MovementMode mode;
 	float speed;
 	
 	public MoveToTarget(DynamicPhysicsObject physicsObject, ReadOnlyPhysicsObject target, float speed) {
