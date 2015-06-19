@@ -90,6 +90,17 @@ public abstract class Ant extends Entity {
 	public void react(StaticPhysicsObject staticPhysicsObject) {
 		//Colliding with the ground/terrain
 		
+		if (staticPhysicsObject.getType().equals("border")) {
+			
+		} else {
+			ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
+			if (tp.equals(ObjectType.ENVIRONMENT)) { //ant hit another ant: start dodging procedure
+				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
+			}
+		}
+		
+		
+		
 		// example
 		// if(physicsObject.getPosition().y <
 		// staticPhysicsObject.getPosition().y){

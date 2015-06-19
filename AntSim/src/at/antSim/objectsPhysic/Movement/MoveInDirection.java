@@ -10,19 +10,21 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
  * @author Flo
  *
  */
-public class MoveInDirection implements MovementMode {
+public class MoveInDirection extends MovementMode {
 
-	DynamicPhysicsObject physicsObject;
 	Vector3f direction;
-	float speed;
 	
 	public MoveInDirection(DynamicPhysicsObject physicsObject, Vector3f direction, float speed) {
-		this.physicsObject = physicsObject;
+		super(MovementModeType.DIRECTION, physicsObject, speed);
 		this.direction = direction;
-		this.speed = speed;
 	}
 	
 	public void move() {
 		physicsObject.setAlignedMovement(direction, speed);
+	}
+
+	@Override
+	public Vector3f getDirection() {
+		return direction;
 	}
 }

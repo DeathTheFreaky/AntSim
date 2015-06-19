@@ -12,20 +12,24 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
  * @author Flo
  *
  */
-public class MoveToTarget implements MovementMode {
+public class MoveToTarget extends MovementMode {
 
-	DynamicPhysicsObject physicsObject;
 	ReadOnlyPhysicsObject target;
-	float speed;
+	Vector3f direction;
 	
 	public MoveToTarget(DynamicPhysicsObject physicsObject, ReadOnlyPhysicsObject target, float speed) {
-		this.physicsObject = physicsObject;
+		super(MovementModeType.TARGET, physicsObject, speed);
 		this.target = target;
-		this.speed = speed;
+		direction = new Vector3f(target.getPosition().x - physicsObject.getPosition().x, 0, target.getPosition().z - physicsObject.getPosition().z);
 	}
 	
 	public void move() {
-		Vector3f direction = new Vector3f(target.getPosition().x - physicsObject.getPosition().x, 0, target.getPosition().z - physicsObject.getPosition().z);
+		direction = new Vector3f(target.getPosition().x - physicsObject.getPosition().x, 0, target.getPosition().z - physicsObject.getPosition().z);
 		physicsObject.setAlignedMovement(direction, speed);
+	}
+
+	@Override
+	public Vector3f getDirection() {
+		return direction;
 	}
 }

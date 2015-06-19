@@ -1,11 +1,27 @@
 package at.antSim.objectsPhysic.Movement;
 
-/**An interface for different movement behavior of Entities.
+import javax.vecmath.Vector3f;
+
+import at.antSim.objectsPhysic.DynamicPhysicsObject;
+
+/**An abstract class for different movement behavior of Entities.
  * 
  * @author Flo
  *
  */
-public interface MovementMode {
+public abstract class MovementMode {
+	
+	MovementModeType type;
+	DynamicPhysicsObject physicsObject;
+	float speed;
+	
+	public MovementMode(MovementModeType type, DynamicPhysicsObject physicsObject, float speed) {
+		this.type = type;
+		this.physicsObject = physicsObject;
+		this.speed = speed;
+	}
 
-	public void move();	
+	public abstract void move();	
+	
+	public abstract Vector3f getDirection();
 }

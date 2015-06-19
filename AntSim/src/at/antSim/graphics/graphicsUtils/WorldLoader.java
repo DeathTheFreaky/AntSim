@@ -193,29 +193,29 @@ public class WorldLoader {
 //				.buildPhysicsObject()
 //				.registerResult();
 //
-//		Entity antDark = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 10, -Globals.WORLD_SIZE/2))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("antDark", 1, 10)
-//				.buildPhysicsObject()
-//				.registerResult();
+		Entity dummyObstacle = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
+				.setRotation(0, 0, 0)
+				.buildGraphicsEntity("greenCube", 1, 25)
+				.buildPhysicsObject()
+				.registerResult();
 		
 				// end of new
 		
-		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 200, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 200, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
-				.buildGraphicsEntity("pheromone", 1, Globals.PHERONOME_SIZE) //enable for debugging just to visualize the pheromones
-				.buildPhysicsObject()
-				.registerResult();
-		
-		Entity hiveEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
-				.setHiveParameters(20)
-				.buildGraphicsEntity("hive", 1, 50) //enable for debugging just to visualize the pheromones
-				.buildPhysicsObject()
-				.registerResult();
-		
-		hive = (Hive) hiveEntity;
+//		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 200, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 200, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
+//				.buildGraphicsEntity("pheromone", 1, Globals.PHERONOME_SIZE) //enable for debugging just to visualize the pheromones
+//				.buildPhysicsObject()
+//				.registerResult();
+//		
+//		Entity hiveEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
+//				.setHiveParameters(20)
+//				.buildGraphicsEntity("hive", 1, 50) //enable for debugging just to visualize the pheromones
+//				.buildPhysicsObject()
+//				.registerResult();
+//		
+//		hive = (Hive) hiveEntity;
 
 		loadBorders(terrain);
 	}
