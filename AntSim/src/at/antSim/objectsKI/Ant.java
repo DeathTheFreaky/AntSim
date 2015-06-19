@@ -248,7 +248,7 @@ public abstract class Ant extends Entity {
 	
 	public void unlockLocator() {
 		//return to default movement behavior - this is just a dummy
-		System.out.println("unlocked locator " + lockedLocator + " for " + this);
+//		System.out.println("unlocked locator " + lockedLocator + " for " + this);
 		lockedLocator.unregisterAnt(this);
 		lockedLocator = null;
 	}
@@ -284,7 +284,7 @@ public abstract class Ant extends Entity {
 				unlockLocator();
 			} else {
 				loc.unregisterAnt(this);
-				System.out.println("unregisterd " + this + " in " + loc);
+//				System.out.println("unregisterd " + this + " in " + loc);
 			}
 		};
 	}

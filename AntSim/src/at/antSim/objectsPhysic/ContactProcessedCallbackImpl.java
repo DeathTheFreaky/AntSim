@@ -31,7 +31,6 @@ public class ContactProcessedCallbackImpl extends ContactProcessedCallback {
 			if (phyObj != null && phyObj1 != null) {
 				
 				if (!((phyObj == prevPhyObj && phyObj1 == prevPhyObj1) || (phyObj == prevPhyObj1 && phyObj1 == prevPhyObj))) { //ensure events get only triggered once per different collision pair
-//					System.out.println("adding collision between " + phyObj + ", " + phyObj1 + " with ctr " + MainApplication.getInstance().getCycleCtr());
 					EventManager.getInstance().addEventToQueue(new CollisionEvent(phyObj, phyObj1));
 				}
 				

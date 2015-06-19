@@ -62,20 +62,20 @@ public class Forager extends Ant implements Runnable {
 						|| (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0)) {
 					
 					if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
-						System.out.println(this + " is trying to enter hive locator");
+//						System.out.println(this + " is trying to enter hive locator");
 					}
 					
 					
 					if (locator.entryPossible(this)) {
 						if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
-							System.out.println(this + " was allowed entry into hive locator");
+//							System.out.println(this + " was allowed entry into hive locator");
 						}
 						lockedLocator = locator;
 						locator.registerAnt(this); //ant will be added to active ants in locator
 						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
 					} else { //entry not possible -> either add to waiting list by calling locator.registerAnt or do something else
 						if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
-							System.out.println(this + " was told to wait for entry into hive locator");
+//							System.out.println(this + " was told to wait for entry into hive locator");
 						}
 						lockedLocator = locator;
 						locator.registerAnt(this); //ant will be added to waiting ants in locator
