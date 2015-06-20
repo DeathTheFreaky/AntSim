@@ -2,7 +2,7 @@ package at.antSim.graphics.textures;
 
 /**Represents a texture that can be used to texture RawModels. 
  * 
- * @author Flo
+ * @author Clemens
  * @see RawModel
  *
  */

@@ -7,7 +7,6 @@ import com.bulletphysics.linearmath.Transform;
 import at.antSim.Globals;
 import at.antSim.MainApplication;
 import at.antSim.graphics.entities.GraphicsEntity;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
@@ -16,6 +15,7 @@ import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
 
 /**For food...
  * 
@@ -40,7 +40,6 @@ public abstract class Food extends Entity implements Foodressource {
 				.setTarget(this)
 				.buildPhysicsObject()
 				.registerResult();
-		
 	}
 
 	@Override
@@ -68,13 +67,11 @@ public abstract class Food extends Entity implements Foodressource {
 	@Override
 	public int harvest() {
 		foodStacks--;
-		if(foodStacks > 0){
-			return 1;
-		}
-		else {
+		if (foodStacks <= 0) {
+			positionLocator.cancelAnts();
 			this.delete();
-			return 0;
 		}
+		return 1;
 	}
 
 	@Override

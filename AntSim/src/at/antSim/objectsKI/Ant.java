@@ -12,15 +12,18 @@ import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.eventSystem.events.LocatorLockEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.Dodge;
+import at.antSim.objectsPhysic.Movement.MoveInDirection;
+import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.utils.CountingLinkedList;
+import at.antSim.utils.Maths;
 
 /**
  * 
@@ -53,32 +56,50 @@ public abstract class Ant extends Entity {
 	protected float lastposition = 0;
 	private int velocityhelper = 0;
 	
-	protected PositionLocator lockedLocator;
+	protected PositionLocator lockedLocator; //target's positionLocator where ant is currently heading to, all targets must have positionLocators
 
 	// wahrscheinlich eigene Jobklasse => fuer im Bautätige
 	// und Worker/Forager
 	private String job;
 	
+	Hive hive;
+	
+	MovementManager movementManager;
+	
 	//linked lists for storing which position Locators and Pheromones the ant is currently in
 	protected CountingLinkedList<PositionLocator> positionLocators = new CountingLinkedList<>();
 	protected CountingLinkedList<Pheromone> pheromones = new CountingLinkedList<>();
 
-	public Ant(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
+	public Ant(GraphicsEntity graphicsEntity, PhysicsObject physicsObject, Hive hive) {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
+		this.hive = hive;
 		Vector3f v = new Vector3f(velocityX, 0, velocityZ);
 //		this.physicsObject.setLinearVelocity(v);
-		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, 1), Globals.LOCATOR_SPEED);
+//		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, -1), Globals.ANT_SPEED*3);
 		dynamicEntities.add(this);
 		ants.add(this);
 		// ROTATE WITH THIS Math.toradiant();
 		//this.physicsObject.setRotation(0, 0, 0);
 		EventManager.getInstance().registerEventListener(this);
+		movementManager = MovementManager.getInstance();
+		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveInDirection((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
 	}
 
 	@Override
 	public void react(StaticPhysicsObject staticPhysicsObject) {
 		//Colliding with the ground/terrain
+		
+		if (staticPhysicsObject.getType().equals("border")) {
+			
+		} else {
+			ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
+			if (tp.equals(ObjectType.ENVIRONMENT)) { //ant hit another ant: start dodging procedure
+				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
+			}
+		}
+		
+		
 		
 		// example
 		// if(physicsObject.getPosition().y <
@@ -130,6 +151,16 @@ public abstract class Ant extends Entity {
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
+		
+		ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
+		if (tp.equals(ObjectType.ANT)) { //ant hit another ant: start dodging procedure
+			movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, dynamicPhysicsObject, Globals.ANT_SPEED));
+		} else if (tp.equals(ObjectType.ENEMY)) {
+//			attackEnemy(dynamicPhysicsObject);
+		}
+		reactSpecific(dynamicPhysicsObject);
+		
+		
 //		System.out.println("dynamisch");
 //		ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
 //		if (tp.equals(ObjectType.ANT)) {
@@ -240,7 +271,9 @@ public abstract class Ant extends Entity {
 	}
 	
 	public void unlockLocator() {
-		lockedLocator.deactivateAnt(this);
+		//return to default movement behavior - this is just a dummy
+//		System.out.println("unlocked locator " + lockedLocator + " for " + this);
+		lockedLocator.unregisterAnt(this);
 		lockedLocator = null;
 	}
 	
@@ -271,7 +304,12 @@ public abstract class Ant extends Entity {
 	 */
 	public void resetPositionLocators() {
 		for (PositionLocator loc : positionLocators.update()) {
-			loc.deactivateAnt(this);
+			if (loc.equals(lockedLocator)) {
+				unlockLocator();
+			} else {
+				loc.unregisterAnt(this);
+//				System.out.println("unregisterd " + this + " in " + loc);
+			}
 		};
 	}
 	

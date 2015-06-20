@@ -19,8 +19,8 @@ public class Queen extends Ant implements Feedable {
 	private int eggLayingCost = 1;
 	private int eggLayingSpeed = 1;
 	
-	public Queen(GraphicsEntity graphicsEntity,PhysicsObject physicsObject) {
-		super(graphicsEntity, physicsObject);
+	public Queen(GraphicsEntity graphicsEntity,PhysicsObject physicsObject, Hive hive) {
+		super(graphicsEntity, physicsObject, hive);
 		hp = Globals.queenHp;
 		attack = Globals.queenAttack;
 	}

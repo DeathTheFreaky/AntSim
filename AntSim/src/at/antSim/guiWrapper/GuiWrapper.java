@@ -11,7 +11,7 @@ import at.antSim.graphics.graphicsUtils.OpenGLLoader;
  * <br>
  * It manages all states known to the GUI and can set and get the currently activated state of the GUI.
  * 
- * @author Flo
+ * @author Alexander, Flo
  *
  */
 public class GuiWrapper {

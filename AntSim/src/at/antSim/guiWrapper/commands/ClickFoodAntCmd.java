@@ -13,7 +13,8 @@ import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 
 /**
- * Created by Alexander on 19.05.2015.
+ * @author Alexander
+ *
  */
 public class ClickFoodAntCmd extends MovingEntityCmd {
 

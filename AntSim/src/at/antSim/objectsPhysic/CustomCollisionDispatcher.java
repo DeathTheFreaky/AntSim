@@ -215,7 +215,7 @@ public class CustomCollisionDispatcher extends CollisionDispatcher {
 		boolean hasResponse = (body0.hasContactResponse() && body1.hasContactResponse());
 		//no response between two static/kinematic bodies:
 		hasResponse = hasResponse && ((!body0.isStaticOrKinematicObject()) || (!body1.isStaticOrKinematicObject()));
-		System.out.println("i need a response");
+//		System.out.println("my response: " + hasResponse);
 		return hasResponse;
 	}
 

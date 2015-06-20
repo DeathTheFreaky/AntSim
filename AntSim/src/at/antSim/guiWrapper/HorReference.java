@@ -4,7 +4,7 @@ package at.antSim.guiWrapper;
  * <br>
  * PARENT usually indicates a parenting container element, and SIBLING the previous element in a list of elements.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public enum HorReference {

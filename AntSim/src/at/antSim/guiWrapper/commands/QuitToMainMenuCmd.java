@@ -3,6 +3,10 @@ package at.antSim.guiWrapper.commands;
 import at.antSim.MainApplication;
 import at.antSim.guiWrapper.GuiWrapper;
 
+/**
+ * @author Alexander
+ *
+ */
 public class QuitToMainMenuCmd implements Command {
 
 	String targetName;

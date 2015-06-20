@@ -4,7 +4,8 @@ import at.antSim.MainApplication;
 import at.antSim.guiWrapper.states.MainGameState;
 
 /**
- * Created by Alexander on 18.05.2015.
+ * @author Alexander
+ *
  */
 public class ToggleSpeedCmd implements Command {
 	private float speed;

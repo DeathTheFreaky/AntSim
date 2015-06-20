@@ -1,7 +1,6 @@
 package at.antSim.graphics.terrains;
 
 import at.antSim.Globals;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.textures.TerrainTexture;
@@ -11,6 +10,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.TerrainPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.utils.Maths;
 
 import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.linearmath.Transform;

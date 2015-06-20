@@ -8,7 +8,7 @@ package at.antSim.guiWrapper;
  * BELOW means this element's top border will be positioned alongside the bottom border of a referenced element.<br>
  * MIDDLE means that this element's vertical center will be positioned at the vertical center of a referenced element.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public enum VerPositions {

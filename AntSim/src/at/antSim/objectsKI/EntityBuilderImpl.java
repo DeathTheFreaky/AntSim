@@ -13,12 +13,12 @@ import at.antSim.GTPMapper.GTPMapper;
 import at.antSim.GTPMapper.GTPObject;
 import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.graphics.entities.GraphicsEntity;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.graphicsUtils.ModelLoader;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+import at.antSim.utils.Maths;
 
 /**Implements {@link EntityBuilder}.
  * 
@@ -45,6 +45,9 @@ public class EntityBuilderImpl implements EntityBuilder {
 	
 	Entity target; //for position locators
 	
+	Hive hive;
+	int hiveFoodstackSize;
+	
 	public EntityBuilderImpl() {
 		reset();
 	}
@@ -64,6 +67,8 @@ public class EntityBuilderImpl implements EntityBuilder {
 		height = 0;
 		scale = 0;
 		target = null;
+		hive = null;
+		hiveFoodstackSize = 0;
 	}
 	
 	@Override
@@ -240,18 +245,18 @@ public class EntityBuilderImpl implements EntityBuilder {
 		switch (objectType) {
 		case ANT:
 			if (type.equals("forager")) {
-				retEntity = new Forager(graphicsEntity, physicsObject);
+				retEntity = new Forager(graphicsEntity, physicsObject, hive);
 			} else if (type.equals("worker")) {
-				retEntity = new Worker(graphicsEntity, physicsObject);
+				retEntity = new Worker(graphicsEntity, physicsObject, hive);
 			} else if (type.equals("queen")) {
-				retEntity = new Queen(graphicsEntity, physicsObject);
+				retEntity = new Queen(graphicsEntity, physicsObject, hive);
 			}
 			break;
 		case ENEMY:
 			if (type.equals("enemyAnt")) {
 				retEntity = new EnemyAnt(graphicsEntity, physicsObject);
 			} else if (type.equals("enemyGrasshopper")) {
-				retEntity = new Worker(graphicsEntity, physicsObject);
+				retEntity = new Worker(graphicsEntity, physicsObject, hive);
 			} 
 			break;
 		case ENVIRONMENT:
@@ -277,6 +282,8 @@ public class EntityBuilderImpl implements EntityBuilder {
 		case LOCATOR:
 			retEntity = new PositionLocator(graphicsEntity, physicsObject, target);
 			break;
+		case HIVE:
+			retEntity = new Hive(hiveFoodstackSize, graphicsEntity, physicsObject);
 		default:
 			break;
 		}
@@ -306,6 +313,18 @@ public class EntityBuilderImpl implements EntityBuilder {
 	public EntityBuilder setRotation(Quat4f quat) {
 		this.quat = quat;
 		rotation = null;
+		return this;
+	}
+
+	@Override
+	public EntityBuilder setHiveParameters(int foodStacks) {
+		this.hiveFoodstackSize = foodStacks;
+		return this;
+	}
+
+	@Override
+	public EntityBuilder setAntParameters(Hive hive) {
+		this.hive = hive;
 		return this;
 	}
 }

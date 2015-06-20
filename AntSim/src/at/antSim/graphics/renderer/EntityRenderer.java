@@ -18,13 +18,13 @@ import at.antSim.MainApplication;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.shaders.EntityShader;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
 
 /**EntityRenderer renders static models.
  * 

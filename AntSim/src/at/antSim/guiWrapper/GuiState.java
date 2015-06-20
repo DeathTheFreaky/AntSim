@@ -9,7 +9,7 @@ import java.util.List;
  * so the order of insertion is significant -> elements should be added in the order they should be rendered.<br>
  * If two Gui elements have the same position, the later added one will be drawn above the earlier added one.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class GuiState {

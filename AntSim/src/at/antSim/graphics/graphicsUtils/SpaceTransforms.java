@@ -6,6 +6,11 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+/**Methods for conversion between the different spaces used in OpenGL.
+ * 
+ * @author Flo
+ *
+ */
 public class SpaceTransforms {
 
 	/**Converts mouse coordinates from screen coordinates to OpenGL coordinate system (-1 to 1).

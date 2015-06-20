@@ -20,7 +20,7 @@ import javax.vecmath.Vector3f;
 /**
  * Created on 18.05.2015.
  *
- * @author Clemens
+ * @author Flo, Clemens
  */
 public abstract class Entity {
 
@@ -98,6 +98,10 @@ public abstract class Entity {
 	 */
 	public static Map<TexturedModel, List<Entity>> getUnmodifiableRenderingMap() {
 		return Collections.unmodifiableMap(renderingMap);
+	}
+	
+	public static Entity getParentEntity(PhysicsObject physicsObject) {
+		return parentingEntities.get(physicsObject);
 	}
 
 	public GraphicsEntity getGraphicsEntity() {

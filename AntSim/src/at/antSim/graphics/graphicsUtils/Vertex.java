@@ -17,7 +17,7 @@ import org.lwjgl.util.vector.Vector3f;
  * THIS CLASS HAS BEEN COPIED FROM "3D GAME DEVELOPMENT TUTORIAL": https://www.dropbox.com/sh/x1fyet1otejxk3z/AAB8dmZDoXt1XZZ1T0jGvx8Qa/Vertex.java?dl=0
  * TO ENSURE COMPREHENSION, EXTENSIVE COMMENTS HAVE BEEN ADDED.
  * 
- * @author Flo
+ * @author Clemens
  *
  */
 public class Vertex {

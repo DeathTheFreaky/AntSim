@@ -12,7 +12,7 @@ import at.antSim.graphics.graphicsUtils.OBJLoaderGeometryData;
  * </ul>
  * The positional coordinates, texture coordinates and normals are stored in the order defined by indices.
  * 
- * @author Flo
+ * @author Clemens
  *
  */
 public class ModelData {

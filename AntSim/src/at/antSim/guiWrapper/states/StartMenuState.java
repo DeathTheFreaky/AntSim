@@ -13,7 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 /**Start Menu.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class StartMenuState extends AbstractGuiState {

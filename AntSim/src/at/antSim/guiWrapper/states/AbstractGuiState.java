@@ -8,7 +8,8 @@ import at.antSim.guiWrapper.GuiState;
 import at.antSim.guiWrapper.GuiWrapper;
 
 /**An abstract class for encapsulating manipulations of a specific {@link GuiState}.
- * @author Flo
+ * 
+ * @author Alexander, Flo
  *
  */
 public abstract class AbstractGuiState {

@@ -3,7 +3,8 @@ package at.antSim.graphics.shaders;
 import at.antSim.Globals;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Light;
-import at.antSim.graphics.graphicsUtils.Maths;
+import at.antSim.utils.Maths;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;

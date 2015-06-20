@@ -4,6 +4,10 @@ import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.guiWrapper.GuiWrapper;
 
+/**
+ * @author Alexander
+ *
+ */
 public class ContinueCmd implements Command {
 
 	String targetName;

@@ -7,6 +7,10 @@ import at.antSim.guiWrapper.GuiImage;
 import at.antSim.guiWrapper.GuiUtils;
 import at.antSim.guiWrapper.GuiWrapper;
 
+/**
+ * @author Alexander
+ *
+ */
 public class FullScreenCmd implements Command {
 
 	GuiImage img;

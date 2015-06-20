@@ -4,7 +4,7 @@ import at.antSim.graphics.entities.GraphicsEntity;
 
 /**Converts geometry data from a graphics object to the geometry data of a physics object.
  * 
- * @author Flo
+ * @author Clemens
  *
  */
 public class GTPMapper {

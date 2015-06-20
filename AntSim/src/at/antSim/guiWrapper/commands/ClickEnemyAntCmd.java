@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.MainApplication;
 import at.antSim.graphics.graphicsUtils.ModelLoader;
+import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.ObjectType;
@@ -13,7 +14,8 @@ import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 
 /**
- * Created by Alexander on 19.05.2015.
+ * @author Alexander
+ *
  */
 public class ClickEnemyAntCmd extends MovingEntityCmd {
 	

@@ -13,6 +13,10 @@ import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 
+/**
+ * @author Alexander
+ *
+ */
 public abstract class MovingEntityCmd implements Command {
 	
 	EntityBuilder builder;

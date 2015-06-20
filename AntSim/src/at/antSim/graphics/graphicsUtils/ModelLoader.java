@@ -71,7 +71,6 @@ public class ModelLoader {
 		
 		//hive
 		modelPresets.add(new ModelNamesAndTypes("anthill", "anthillTexture", "hive", PrimitiveType.CYLINDER, ObjectType.HIVE, massDummie, false));
-
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);

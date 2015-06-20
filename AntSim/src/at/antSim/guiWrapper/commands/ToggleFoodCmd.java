@@ -3,7 +3,8 @@ package at.antSim.guiWrapper.commands;
 import at.antSim.guiWrapper.states.MainGameState;
 
 /**
- * Created by Alexander on 19.05.2015.
+ * @author Alexander
+ *
  */
 public class ToggleFoodCmd implements Command {
 	

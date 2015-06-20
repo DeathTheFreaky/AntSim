@@ -2,7 +2,7 @@ package at.antSim.graphics.graphicsUtils;
 
 /**Used by {@link OBJFileLoader} to return geometrical data.
  * 
- * @author Flo
+ * @author Clemens
  *
  */
 public class OBJLoaderGeometryData {

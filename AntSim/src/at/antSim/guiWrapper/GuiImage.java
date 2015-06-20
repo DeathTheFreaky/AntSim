@@ -9,7 +9,7 @@ import at.antSim.guiWrapper.commands.Command;
 
 /**Represents an image to be drawn in the GUI.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class GuiImage extends GuiElement {

@@ -73,9 +73,17 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 
 	@Override
 	public void setAlignedMovement(Vector3f direction, float speed) {
+		
+		//ensure gravity is still applied when setting alignedMovement
+		Vector3f currentVelocity = new Vector3f();
+		this.getCollisionBody().getLinearVelocity(currentVelocity);
+		currentVelocity.y = currentVelocity.y - Globals.gravity/Globals.FPS_CAP; 
+		
 		if (direction.length() > 0) {
 			direction.normalize();
-			setLinearVelocity(new Vector3f(direction.x * speed, direction.y * speed, direction.z * speed));
+			Vector3f linearVelocity = new Vector3f(direction.x * speed, currentVelocity.y, direction.z * speed);
+//			System.out.println("set velocity to  " + linearVelocity);
+			setLinearVelocity(linearVelocity);
 			//when angles are exactly aligned with axis rotation wont work
 			if (direction.x <= 0.000001f && direction.x >= 0) {
 				direction.x = 0.000001f;

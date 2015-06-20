@@ -12,7 +12,7 @@ import at.antSim.guiWrapper.GuiTextData;
 
 /**Used to draw bitmap font text on a 3d screen with gui Renderer.
  * 
- * @author Flo
+ * @author Alex
  *
  */
 public class OpenGLTextDrawer {

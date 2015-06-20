@@ -1,4 +1,4 @@
-package at.antSim.graphics.graphicsUtils;
+package at.antSim.utils;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
@@ -8,7 +8,7 @@ import at.antSim.graphics.entities.Camera;
 
 /**Maths contains useful mathematical methods.
  * 
- * @author Flo
+ * @author Flo, Clemens
  *
  */
 public class Maths {
@@ -352,5 +352,19 @@ public class Maths {
 		vecmathVector3f.z = lwjglVector3f.z;
 		
 		return vecmathVector3f;
+	}
+	
+	/**Turns a direction vector by turnAngle degrees. 
+	 * 
+	 * @param currentDirection
+	 * @param turnAngle
+	 * @return
+	 */
+	public static javax.vecmath.Vector3f turnDirectionVector(javax.vecmath.Vector3f currentDirection, double turnAngle) {
+		
+		float x = (float) (currentDirection.x * Math.cos(-turnAngle) - currentDirection.z * Math.sin(-turnAngle));
+	    float z = (float) (currentDirection.x * Math.sin(-turnAngle) + currentDirection.z * Math.cos(-turnAngle));
+	    
+	    return new javax.vecmath.Vector3f(x, currentDirection.y, z);
 	}
 }

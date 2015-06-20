@@ -15,12 +15,13 @@ import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.eventSystem.events.KeyReleasedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
-import at.antSim.graphics.graphicsUtils.Maths;
+import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
+import at.antSim.objectsKI.Hive;
 import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
@@ -28,6 +29,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
 
 /**An Entity moving on the terrain. Will not be rendered if Entity is null.
  * 
@@ -81,12 +83,14 @@ public class MovingEntity {
 				PhysicsObjectFactory placedEntityFactory = null;
 				float dropHeight = 0;
 				ObjectType objectType = entity.getGraphicsEntity().getModel().getObjectType();
+				Hive hive = null;
 				
 				//detect if new entity is static, dynamic or ghost
 				switch (objectType) {
 				case ANT:
 					placedEntityFactory = DynamicPhysicsObjectFactory.getInstance();
 					dropHeight = Terrain.MAX_HEIGHT/4;
+					hive = WorldLoader.hive;
 					break;
 				case ENEMY:
 					placedEntityFactory = DynamicPhysicsObjectFactory.getInstance();
@@ -130,6 +134,7 @@ public class MovingEntity {
 				Entity placedEntity = builder.setFactory(placedEntityFactory)
 					.setPosition(placedPosition) //position will be set later anyway in main loop according to mouse position
 					.setRotation(placedQuats)
+					.setAntParameters(hive)
 					.buildGraphicsEntity(placedTextureModel.getType(), placedTextureIndex, placedScale)
 					.buildPhysicsObject()
 					.registerResult();

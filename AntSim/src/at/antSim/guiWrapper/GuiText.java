@@ -7,7 +7,7 @@ import at.antSim.guiWrapper.commands.Command;
 
 /**Represents a text drawn as 2d quad in the GUI.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class GuiText extends GuiElement {

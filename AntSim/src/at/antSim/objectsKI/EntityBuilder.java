@@ -134,6 +134,10 @@ public interface EntityBuilder {
 	 */
 	public EntityBuilder createSphere(float scale);
 	
+	public EntityBuilder setHiveParameters(int foodStacks);
+	
+	public EntityBuilder setAntParameters(Hive hive);
+	
 	/**
 	 * @return - the created {@link Entity}
 	 */

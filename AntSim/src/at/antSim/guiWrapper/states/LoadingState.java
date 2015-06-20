@@ -15,7 +15,7 @@ import at.antSim.guiWrapper.VerReference;
 
 /**Loading State displayed when world is loading.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class LoadingState extends AbstractGuiState {

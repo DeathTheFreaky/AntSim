@@ -8,16 +8,16 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 
 import at.antSim.graphics.graphicsUtils.OpenGLLoader;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.shaders.GuiShader;
 import at.antSim.guiWrapper.GuiContainer;
 import at.antSim.guiWrapper.GuiElement;
 import at.antSim.guiWrapper.GuiState;
 import at.antSim.guiWrapper.GuiText;
+import at.antSim.utils.Maths;
 
 /**GuiRenderer is used to render Gui Elements to the screen.
  * 
- * @author Flo
+ * @author Alex
  *
  */
 public class GuiRenderer {

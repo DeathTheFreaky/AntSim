@@ -14,6 +14,10 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author Alexander
+ *
+ */
 public class OptionsControlState extends AbstractGuiState {
 	
 	Command backCmd;

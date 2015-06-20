@@ -9,7 +9,7 @@ import at.antSim.guiWrapper.GuiText;
 
 /**Storage class for key binding changes in options menu.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class KeyNameBindingWrapper {

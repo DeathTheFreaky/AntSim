@@ -7,7 +7,7 @@ import at.antSim.Globals;
 
 /**GuiShader is used to start up a Gui Shader Program and load uniform variables into this shader program.
  * 
- * @author Flo
+ * @author Alex
  *
  */
 public class GuiShader extends ShaderProgram {

@@ -18,7 +18,7 @@ import at.antSim.guiWrapper.commands.Command;
 
 /**Represents an abstract class for Element's which shall be drawn in the GUI.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public abstract class GuiElement {

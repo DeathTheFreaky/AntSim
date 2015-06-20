@@ -7,7 +7,7 @@ import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
 
 /**Holds data needed to create a {@link PhysicsObject} cylinder from the geometry data of a {@link GraphicsEntity}.
  * 
- * @author Flo
+ * @author Clemens
  *
  */
 public class GTPCylinder extends GTPObject {

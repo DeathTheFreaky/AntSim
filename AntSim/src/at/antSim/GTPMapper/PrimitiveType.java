@@ -1,7 +1,7 @@
 package at.antSim.GTPMapper;
 
 /**Determines which primitive the physics object's form will have.
- * @author Flo
+ * @author Clemens
  *
  */
 public enum PrimitiveType {

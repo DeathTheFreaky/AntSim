@@ -14,7 +14,7 @@ import java.util.LinkedList;
 
 /**Display SubMenu of Options Menu.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class OptionsDisplayState extends AbstractGuiState {

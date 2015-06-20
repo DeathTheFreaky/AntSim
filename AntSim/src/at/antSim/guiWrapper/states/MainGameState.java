@@ -20,7 +20,7 @@ import java.util.Random;
 
 /**Gui for the main application.
  * 
- * @author Flo
+ * @author Alexander
  *
  */
 public class MainGameState extends AbstractGuiState {
