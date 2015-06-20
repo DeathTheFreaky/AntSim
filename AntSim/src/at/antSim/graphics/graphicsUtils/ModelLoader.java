@@ -13,6 +13,11 @@ import at.antSim.objectsKI.ObjectType;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+/**Loads models from obj Files and creates presets for higher abstraction TexturedModels, which can be used to build entities.
+ * 
+ * @author Clemens
+ *
+ */
 public class ModelLoader {
 	
 	public static float massDummie = Globals.MASS_DUMMIE;
@@ -44,10 +49,10 @@ public class ModelLoader {
 		//test
 		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("cube", "green", "greenCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "sphere", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.FOOD, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("cylinder", "orange", "cylinder", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
 		
 		//food
 		modelPresets.add(new ModelNamesAndTypes("apple", "appleTexture", "apple", PrimitiveType.SPHERE, ObjectType.FOOD, massDummie, false));
@@ -63,6 +68,10 @@ public class ModelLoader {
 		//enemies
 		modelPresets.add(new ModelNamesAndTypes("ant", "antBlackTexture", "enemyAnt", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("grasshopper", "grasshopperTexture", "enemyGrasshopper", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		
+		//hive
+		modelPresets.add(new ModelNamesAndTypes("anthill", "anthillTexture", "hive", PrimitiveType.CYLINDER, ObjectType.HIVE, massDummie, false));
+
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);
