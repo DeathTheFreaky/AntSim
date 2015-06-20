@@ -17,8 +17,6 @@ public class Dodge extends MovementMode {
 	Vector3f originalDirection;
 	Vector3f currentDirection;
 	Vector3f dodgeDirection;
-	int tickCtr; //every tickCtr%x, try if Ant still collides with other ant
-	int x = 20; //influences how far ant turns in a circle
 	
 	float movementLimit = 1;
 	
@@ -33,6 +31,7 @@ public class Dodge extends MovementMode {
 	
 	boolean movesAlongTangent = false;
 	boolean movedPassTarget = false;
+	boolean justCollided = false;
 			
 	double orTurnAngle = Math.toRadians(turnAngleDegree);
 	double turnAngle;
@@ -50,27 +49,21 @@ public class Dodge extends MovementMode {
 	    
 	    stillColliding = collidingResetter;
 	    turnAngle = orTurnAngle;
-		
-//		dodgeDirection = new Vector3f(-originalDirection.z, originalDirection.y, originalDirection.x);
-//		tickCtr = 0;
-		
 	}
 	
 	public void move() {
-		
-		previousPosition = physicsObject.getPosition();
-		
+				
 		stillColliding--;
 		
 		if (stillColliding > 0) {
-						
-			if (tickCtr == 0) {
+			
+			boolean movement = checkMovementLength();
+										
+			if (justCollided && !movesAlongTangent) {
 				
 				if (currentDirection.length() > 0) {
 					currentDirection.normalize();
-					
-					System.out.println(" turning with currentDirection " + currentDirection);
-					
+										
 					dodgeDirection = Maths.turnDirectionVector(currentDirection, turnAngle);
 					currentDirection = dodgeDirection;
 					if (turnAngle > 0) {
@@ -83,51 +76,56 @@ public class Dodge extends MovementMode {
 						turnAngle = -turnAngle;
 					}
 					
-					
-//					if (turnAngleDegree * turnCtr < 90) {
-//						
-//						
-//					    
-//					    turnCtr++;
-//					    
-//					} else {
-//						
-////						dodgeDirection = Maths.turnDirectionVector(currentDirection, turnAngle);
-////						currentDirection = dodgeDirection;
-//					}
-				    
-//				    System.out.println(" new dodgeDirection " + currentDirection);
-					
 					physicsObject.setAlignedMovement(dodgeDirection, speed);
 					
 				}
 				
-//			} else if (tickCtr < x) {
-				
-			} else if (checkMovementLength()) {
-				
-//				System.out.println(tickCtr + " returning with dodgeDirection " + dodgeDirection);
+			} else if (!justCollided && !movesAlongTangent) {
 				
 				physicsObject.setAlignedMovement(dodgeDirection, speed);
 				
+			} else if (movesAlongTangent && !movement) {
+								
+				physicsObject.setAlignedMovement(dodgeDirection, speed);
+				
 				//let object move, do not reset to get hitback on collision?
-			} else {
-				tickCtr = -1;
-			}
-			
-			tickCtr++;
-		
+			} else if (movesAlongTangent && movement) {
+							
+				if (currentDirection.length() > 0) {
+					currentDirection.normalize();
+										
+					dodgeDirection = Maths.turnDirectionVector(currentDirection, turnAngle);
+					currentDirection = dodgeDirection;
+										
+					currentDirection = dodgeDirection;
+					if (turnAngle > 0) {
+						turnAngleSum++;
+					} else {
+						turnAngleSum--;
+					}
+					
+					if (movesAlongTangent && !movedPassTarget) {
+						System.out.println("not moved passtarget");
+						turnAngle = -turnAngle;
+					} else {
+						turnAngle = -orTurnAngle;
+					
+						if (turnAngleSum == 0) {
+							MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+						}
+					}
+					
+					physicsObject.setAlignedMovement(dodgeDirection, speed);
+				}
+			} 
 		} else {
 			
 			if (movesAlongTangent) {
 				
 				movedPassTarget = true;
-				
-				System.out.println("turnAngleSum: " + turnAngleSum);
-				
+								
 				if (turnAngleSum == 0) {
 					MovementManager.getInstance().removeLastMovementEntry(physicsObject);
-					System.out.println("i am no more colliding");
 				} else {
 					setStillColliding();
 				}
@@ -135,36 +133,12 @@ public class Dodge extends MovementMode {
 				return;
 			}
 			
-			System.out.println("i am now moving along the tangent");
 			movesAlongTangent = true;
 			turnAngle = -turnAngle;
 			setStillColliding();
-			
-			
-			
-//			if (tickCtr < x) {
-//				
-//			}
-			
-			
 		}
 		
-				
-//		if (tickCtr < 1) {
-////			System.out.println("waiting");
-//			physicsObject.setAlignedMovement(dodgeDirection, speed);
-////		} else if (tickCtr >= 10 && tickCtr < 50){
-////			physicsObject.setAlignedMovement(dodgeDirection, speed);
-//////			System.out.println("moving in dodge direction");
-////		} else if (tickCtr >= 50 && tickCtr < 100) {
-//////			physicsObject.setAlignedMovement(dodgeDirection, speed);
-//		} else {
-//			System.out.println("deleting");
-//			MovementManager.getInstance().removeLastMovementEntry(physicsObject); //remove dodging movement 
-//		}
-//		
-//		tickCtr++;
-				
+		justCollided = false;
 	}
 	
 	private boolean checkMovementLength() {
@@ -174,8 +148,9 @@ public class Dodge extends MovementMode {
 		Vector3f change = new Vector3f();
 		change.sub(previousPosition, currentPosition);
 		change.y = 0;
+		System.out.println("length: " + change.length() + " at currentPosition: " + currentPosition + " and previousPosition " + previousPosition + " movesAlongTangent: " + movesAlongTangent);
 		if (change.length() > movementLimit) {
-			currentPosition = previousPosition;
+			previousPosition = currentPosition;
 			return true;
 		}
 		return false;
@@ -193,6 +168,7 @@ public class Dodge extends MovementMode {
 	
 	public void setStillColliding() {
 		stillColliding = collidingResetter;
+		justCollided = true;
 	}
 
 	@Override
