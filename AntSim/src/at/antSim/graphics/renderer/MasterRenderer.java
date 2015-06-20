@@ -61,11 +61,16 @@ public class MasterRenderer {
 	private GuiShader guiShader = new GuiShader();
 	
 	//light of sun/moon
-	private float nightLightIntensity = 0.4f;
+	private float basicLightIntensity = 0.35f;
 	private float additionalDaylightIntensity = 0.4f;
 	private float nightAmbientLightIntensity = 0.2f;
-	private float additionalAmbientDaylightIntensity = 0.1f;
+	private float additionalAmbientDaylightIntensity = 0.15f;
 	private float ambientLightIntensity;
+	
+	private float maxVert = 14000;
+	private float maxHor = 14000;
+	private float baseVert = -5000;
+	private float baseHor = -7000;
 	
 	private float timeFactor = Globals.TIMECYCLE_MULTIPLIER / MainApplication.getInstance().getSpeed();
 	
@@ -297,28 +302,75 @@ public class MasterRenderer {
 		}
 		
 		time %= 24000;
-		float timeFactor;
+		float sunTimeFactor = 0;
+		float moonTimeFactor = 0;
+		float basicSunLight = basicLightIntensity;
+		float basicMoonLight = basicLightIntensity;
+		float sunIntensity;
+		float moonIntensity;
+		float moonVert;
+		float moonHor = 0;
+		float sunVert;
+		float sunHor = 0;
 					
 		if(time >= 0 && time < 5000) {
-			timeFactor = 0;
+			sunIntensity = 0;
+			moonIntensity = basicMoonLight;
 			blendFactor = 1f;
 		}else if(time >= 5000 && time < 8000) {
-			timeFactor = (time-5000)/3000;
+			sunTimeFactor = (time-5000)/3000;
+			moonTimeFactor = 1 - sunTimeFactor;
+			moonIntensity = moonTimeFactor * basicMoonLight;
+			sunIntensity = sunTimeFactor * (basicSunLight + additionalDaylightIntensity);
 			blendFactor = 1 - (time - 5000 )/(8000 - 5000);
 		}else if(time >= 8000 && time < 19000) {
-			timeFactor = 1;
+			sunTimeFactor = 1;
+			basicSunLight = basicLightIntensity;
+			sunIntensity = basicSunLight + additionalDaylightIntensity;
+			moonIntensity = 0;
 			blendFactor = 0f;
 		}else if (time >= 19000 && time < 22000) {
-			timeFactor = 1 - (time-19000)/3000;
+			sunTimeFactor = 1 - (time-19000)/3000;
+			moonTimeFactor = 1 - sunTimeFactor;
+			moonIntensity = moonTimeFactor * basicMoonLight;
+			sunIntensity = sunTimeFactor * (basicSunLight + additionalDaylightIntensity);
 			blendFactor = (time - 19000)/(22000 - 19000);
 		} else {
-			timeFactor = 0;
+			sunIntensity = 0;
+			moonIntensity = basicMoonLight;
 			blendFactor = 1f;
 		}
 		
-		float intensity = 0.4f + timeFactor * 0.3f;
-		ambientLightIntensity = nightAmbientLightIntensity + timeFactor * additionalAmbientDaylightIntensity;
-		MainApplication.getInstance().setSunLight(new Vector3f(intensity, intensity, intensity));
+		if (time < 12000) {
+			moonVert = baseVert + (12000-time)/12000 * (maxVert);
+			sunVert = baseVert + maxVert - (12000-time)/12000 * (maxVert);
+		} else {
+			sunVert = baseVert + (24000-time)/12000 * (maxVert);
+			moonVert = baseVert + maxVert - (24000-time)/12000 * (maxVert);
+		}
+		
+		if (time < 6000 || time > 18000) {
+			float helpTime = (time + 12000) % 24000;
+			System.out.println("helpTime: " + helpTime);
+			moonHor = baseHor + (helpTime - 6000)/12000 * (maxHor);
+			sunHor = baseHor + maxHor - (helpTime - 6000)/12000 * (maxHor);
+		} else {
+			sunHor = baseHor + (time - 6000)/12000 * (maxHor);
+			moonHor = baseHor + maxHor - (time - 6000)/12000 * (maxHor);
+		}
+		
+//		System.out.println("moonTimeFactor: " + moonTimeFactor);
+//		System.out.println("sunTimeFactor: " + sunTimeFactor);
+//		System.out.println("sunintensity: " + sunIntensity);
+//		System.out.println("moonintensity: " + moonIntensity);
+//		System.out.println("time: " + time);
+//		System.out.println("Sunpos hor: " + sunHor + ", vert: " + sunVert);
+//		System.out.println("Moonpos hor: " + moonHor + ", vert: " + moonVert);
+		ambientLightIntensity = nightAmbientLightIntensity + sunTimeFactor * additionalAmbientDaylightIntensity;
+		MainApplication.getInstance().setSunLight(new Vector3f(sunIntensity, sunIntensity, sunIntensity));
+		MainApplication.getInstance().setMoonLight(new Vector3f(moonIntensity, moonIntensity, moonIntensity));
+		MainApplication.getInstance().setSunPosition(new Vector3f(sunHor, sunVert, 0));
+		MainApplication.getInstance().setMoonPosition(new Vector3f(moonHor, moonVert, 0));
 	}
 	
 	public Matrix4f getProjectionMatrix() {

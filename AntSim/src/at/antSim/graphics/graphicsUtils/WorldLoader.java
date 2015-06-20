@@ -176,6 +176,7 @@ public class WorldLoader {
 		ArrayList<Light> lights = new ArrayList<Light>();
 		
 		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); //sun
+		lights.add(new Light(new Vector3f(0, 1000, 7000), new Vector3f(0.4f, 0.4f, 0.4f))); //moon
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		
 		return lights;

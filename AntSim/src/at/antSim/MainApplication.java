@@ -434,6 +434,18 @@ public class MainApplication {
 		lights.get(0).setColor(sunLight);
 	}
 	
+	public void setMoonLight(Vector3f moonLight) {
+		lights.get(1).setColor(moonLight);
+	}
+	
+	public void setSunPosition(Vector3f sunPosition) {
+		lights.get(0).setPosition(sunPosition);
+	}
+	
+	public void setMoonPosition(Vector3f moonPosition) {
+		lights.get(1).setPosition(moonPosition);
+	}
+	
 	/**
 	 * @return - the one and only instance of {@link MainApplication}
 	 */
