@@ -101,19 +101,19 @@ public class WorldLoader {
 		
 		Entity greenCube = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
-				.buildGraphicsEntity("greenCube", 1, 50) //enable for debugging just to visualize the pheromones
+				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
 		
 		Entity greenCube2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 40, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 40, -Globals.WORLD_SIZE/2 - 60), -Globals.WORLD_SIZE/2 - 60))
-				.buildGraphicsEntity("greenCube", 1, 50) //enable for debugging just to visualize the pheromones
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 20, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 20, -Globals.WORLD_SIZE/2 - 30), -Globals.WORLD_SIZE/2 - 30))
+				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
 		
 		Entity greenCube3 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 90, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 90, -Globals.WORLD_SIZE/2) - 10, -Globals.WORLD_SIZE/2 - 30))
-				.buildGraphicsEntity("greenCube", 1, 50) //enable for debugging just to visualize the pheromones
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 50, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 50, -Globals.WORLD_SIZE/2 - 10), -Globals.WORLD_SIZE/2 - 10))
+				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
 
