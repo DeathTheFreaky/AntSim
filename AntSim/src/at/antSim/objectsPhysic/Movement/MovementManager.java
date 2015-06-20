@@ -46,6 +46,8 @@ public class MovementManager {
 	 */
 	public void tryAdding(DynamicPhysicsObject physicsObject, MovementMode mode) {
 		
+		//check if collides with same obstacle
+		
 		if (entries.get(physicsObject).lastElement().type.equals(MovementModeType.DODGE)) {
 			
 			((Dodge) entries.get(physicsObject).lastElement()).setStillColliding();

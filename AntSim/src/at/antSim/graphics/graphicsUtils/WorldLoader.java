@@ -197,7 +197,7 @@ public class WorldLoader {
 		Entity dummyObstacle = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
 				.setRotation(0, 0, 0)
-				.buildGraphicsEntity("greenCube", 1, 25)
+				.buildGraphicsEntity("greenCube", 1, 50)
 				.buildPhysicsObject()
 				.registerResult();
 		
