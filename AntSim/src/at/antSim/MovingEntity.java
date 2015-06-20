@@ -15,7 +15,6 @@ import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.eventSystem.events.KeyReleasedEvent;
 import at.antSim.eventSystem.events.MouseButtonReleasedEvent;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.terrains.Terrain;
@@ -30,6 +29,7 @@ import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
 
 /**An Entity moving on the terrain. Will not be rendered if Entity is null.
  * 

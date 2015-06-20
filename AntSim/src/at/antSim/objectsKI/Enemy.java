@@ -12,7 +12,6 @@ import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
@@ -21,6 +20,7 @@ import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
 
 /**For enemies...
  * 

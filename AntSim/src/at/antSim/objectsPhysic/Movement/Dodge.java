@@ -4,6 +4,7 @@ import javax.vecmath.Vector3f;
 
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
 
 /**Lets an ant move around an obstacle in 90 degrees.
  * @author Flo
@@ -30,11 +31,8 @@ public class Dodge extends MovementMode {
 		this.originalDirection = physicsObject.getLinearVelocity();
 		this.currentDirection = originalDirection;
 		
-		float x = - (float) (currentDirection.x * Math.cos(turnAngle) - currentDirection.z * Math.sin(turnAngle));
-	    float z = (float) (currentDirection.x * Math.sin(turnAngle) + currentDirection.z * Math.cos(turnAngle));
-	    
-	    dodgeDirection = new Vector3f(x, currentDirection.y, z);
-	    currentDirection = dodgeDirection;
+		dodgeDirection = Maths.turnDirectionVector(currentDirection, turnAngle);
+		currentDirection = dodgeDirection;
 	    
 	    stillColliding = collidingResetter;
 		
@@ -58,22 +56,15 @@ public class Dodge extends MovementMode {
 					
 					if (turnAngleDegree * turnCtr < 90) {
 						
-						float x = (float) (currentDirection.x * Math.cos(turnAngle) - currentDirection.z * Math.sin(turnAngle));
-					    float z = (float) (currentDirection.x * Math.sin(turnAngle) + currentDirection.z * Math.cos(turnAngle));
-					    
-					    dodgeDirection = new Vector3f(x, currentDirection.y, z);
-					    currentDirection = dodgeDirection;
+						dodgeDirection = Maths.turnDirectionVector(currentDirection, turnAngle);
+						currentDirection = dodgeDirection;
 					    
 					    turnCtr++;
 					    
 					} else {
 						
-//						float x = (float) (currentDirection.x * Math.cos(-turnAngle) - currentDirection.z * Math.sin(-turnAngle));
-//					    float z = (float) (currentDirection.x * Math.sin(-turnAngle) + currentDirection.z * Math.cos(-turnAngle));
-//					    
-//					    dodgeDirection = new Vector3f(x, currentDirection.y, z);
-//					    currentDirection = dodgeDirection;
-						
+						dodgeDirection = Maths.turnDirectionVector(currentDirection, turnAngle);
+						currentDirection = dodgeDirection;
 					}
 				    
 				    System.out.println(" new dodgeDirection " + currentDirection);

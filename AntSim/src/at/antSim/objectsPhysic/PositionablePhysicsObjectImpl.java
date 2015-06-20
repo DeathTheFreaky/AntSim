@@ -1,7 +1,7 @@
 package at.antSim.objectsPhysic;
 
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
+import at.antSim.utils.Maths;
 
 import com.bulletphysics.linearmath.QuaternionUtil;
 import com.bulletphysics.linearmath.Transform;

@@ -13,12 +13,12 @@ import at.antSim.GTPMapper.GTPMapper;
 import at.antSim.GTPMapper.GTPObject;
 import at.antSim.GTPMapper.GTPSphere;
 import at.antSim.graphics.entities.GraphicsEntity;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.graphicsUtils.ModelLoader;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+import at.antSim.utils.Maths;
 
 /**Implements {@link EntityBuilder}.
  * 

@@ -8,8 +8,8 @@ import org.lwjgl.util.vector.Vector3f;
 import at.antSim.Globals;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.Light;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.graphics.terrains.Terrain;
+import at.antSim.utils.Maths;
 
 /**TerrainShader is used for the rendering of {@link Terrain}s.
  * 

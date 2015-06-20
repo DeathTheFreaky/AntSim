@@ -12,7 +12,6 @@ import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.eventSystem.events.LocatorLockEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
-import at.antSim.graphics.graphicsUtils.Maths;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
@@ -24,6 +23,7 @@ import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.utils.CountingLinkedList;
+import at.antSim.utils.Maths;
 
 /**
  * 

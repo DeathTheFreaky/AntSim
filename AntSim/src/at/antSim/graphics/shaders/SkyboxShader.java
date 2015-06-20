@@ -8,7 +8,7 @@ import at.antSim.Globals;
 import at.antSim.MainApplication;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
-import at.antSim.graphics.graphicsUtils.Maths;
+import at.antSim.utils.Maths;
  
 /**SkyboxShader is used as a shader program when rendering the skybox.
  * 
