@@ -360,10 +360,12 @@ public class Maths {
 	 * @param turnAngle
 	 * @return
 	 */
-	public static javax.vecmath.Vector3f turnDirectionVector(javax.vecmath.Vector3f currentDirection, double turnAngle) {
+	public static javax.vecmath.Vector3f turnDirectionVector(javax.vecmath.Vector3f currentDirection, int turnAngle) {
 		
-		float x = (float) (currentDirection.x * Math.cos(-turnAngle) - currentDirection.z * Math.sin(-turnAngle));
-	    float z = (float) (currentDirection.x * Math.sin(-turnAngle) + currentDirection.z * Math.cos(-turnAngle));
+		double radTurnAngle = Math.toRadians(turnAngle);
+		
+		float x = (float) (currentDirection.x * Math.cos(-radTurnAngle) - currentDirection.z * Math.sin(-radTurnAngle));
+	    float z = (float) (currentDirection.x * Math.sin(-radTurnAngle) + currentDirection.z * Math.cos(-radTurnAngle));
 	    
 	    return new javax.vecmath.Vector3f(x, currentDirection.y, z);
 	}

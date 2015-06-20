@@ -101,6 +101,7 @@ public class MovementManager {
 			System.out.println(" with direction " + originalDirection);
 			entries.get(physicsObject).add(mode);
 			((Dodge) mode).setOriginalDirection(originalDirection);
+			((Dodge) mode).setCurrentDirection(originalDirection);
 		} else {
 			System.out.println("no dodge mode");
 			entries.get(physicsObject).add(mode);
