@@ -39,7 +39,7 @@ public class Dodge extends MovementMode {
 	double turnAngle;
 	
 	int maxNotMovedCtr = 0;
-	int maxNotMovedLimit = 100;
+	int maxNotMovedLimit = 50;
 	
 	LinkedList<ReadOnlyPhysicsObject> previousObstacles = new LinkedList<>();
 	

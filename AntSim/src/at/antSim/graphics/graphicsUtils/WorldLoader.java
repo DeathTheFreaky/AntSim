@@ -106,7 +106,7 @@ public class WorldLoader {
 				.registerResult();
 		
 		Entity greenCube2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 10, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 10, -Globals.WORLD_SIZE/2 - 60), -Globals.WORLD_SIZE/2 - 60))
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 40, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 40, -Globals.WORLD_SIZE/2 - 60), -Globals.WORLD_SIZE/2 - 60))
 				.buildGraphicsEntity("greenCube", 1, 50) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
