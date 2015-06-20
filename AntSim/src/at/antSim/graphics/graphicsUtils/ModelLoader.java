@@ -86,6 +86,12 @@ public class ModelLoader {
 		//set parameters for specular lighting for demo dragon
 		texturedModels.get("dragon").getTexture().setShineDamper(10); //set shine damper for specular lighting
 		texturedModels.get("dragon").getTexture().setReflectivity(1); //set reflectivity for specular lighting
+		texturedModels.get("forager").getTexture().setShineDamper(10); //set shine damper for specular lighting
+		texturedModels.get("forager").getTexture().setReflectivity(1); //set reflectivity for specular lighting
+		texturedModels.get("enemyAnt").getTexture().setShineDamper(10); //set shine damper for specular lighting
+		texturedModels.get("enemyAnt").getTexture().setReflectivity(1); //set reflectivity for specular lighting
+		texturedModels.get("enemyGrasshopper").getTexture().setShineDamper(10); //set shine damper for specular lighting
+		texturedModels.get("enemyGrasshopper").getTexture().setReflectivity(1); //set reflectivity for specular lighting
 		
 		//set transparency and fake lighting for grass and fern (to avoid weird shadow look)
 		texturedModels.get("grass").getTexture().setHasTransparency(true);

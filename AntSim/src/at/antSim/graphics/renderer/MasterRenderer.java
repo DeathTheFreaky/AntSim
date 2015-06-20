@@ -17,6 +17,7 @@ import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.graphicsUtils.OpenGLLoader;
+import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.shaders.EntityShader;
 import at.antSim.graphics.shaders.GuiShader;
@@ -58,6 +59,13 @@ public class MasterRenderer {
 	private SkyboxRenderer skyboxRenderer;
 	private GuiRenderer guiRenderer;
 	private GuiShader guiShader = new GuiShader();
+	
+	//light of sun/moon
+	private float nightLightIntensity = 0.4f;
+	private float additionalDaylightIntensity = 0.4f;
+	private float nightAmbientLightIntensity = 0.2f;
+	private float additionalAmbientDaylightIntensity = 0.1f;
+	private float ambientLightIntensity;
 	
 	private float timeFactor = Globals.TIMECYCLE_MULTIPLIER / MainApplication.getInstance().getSpeed();
 	
@@ -107,8 +115,8 @@ public class MasterRenderer {
 				
 			//run all sub-renderers' render methods
 			skyboxRenderer.render(camera, blendFactor, DAY_FOG, NIGHT_FOG);
-			terrainRenderer.render(terrains, blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);
-			entityRenderer.render(blendFactor, DAY_FOG, NIGHT_FOG, lights, camera);		
+			terrainRenderer.render(terrains, blendFactor, ambientLightIntensity, DAY_FOG, NIGHT_FOG, lights, camera);
+			entityRenderer.render(blendFactor, ambientLightIntensity, DAY_FOG, NIGHT_FOG, lights, camera);		
 			
 			//clear list of terrains and map of entities each frame so they do not build up and up
 			terrains.clear();
@@ -287,19 +295,30 @@ public class MasterRenderer {
 		} else {
 			time += DisplayManager.getFrameTimeSeconds() * 1000 / timeFactor;
 		}
+		
 		time %= 24000;
+		float timeFactor;
 					
 		if(time >= 0 && time < 5000) {
+			timeFactor = 0;
 			blendFactor = 1f;
 		}else if(time >= 5000 && time < 8000) {
+			timeFactor = (time-5000)/3000;
 			blendFactor = 1 - (time - 5000 )/(8000 - 5000);
 		}else if(time >= 8000 && time < 19000) {
+			timeFactor = 1;
 			blendFactor = 0f;
 		}else if (time >= 19000 && time < 22000) {
+			timeFactor = 1 - (time-19000)/3000;
 			blendFactor = (time - 19000)/(22000 - 19000);
 		} else {
+			timeFactor = 0;
 			blendFactor = 1f;
 		}
+		
+		float intensity = 0.4f + timeFactor * 0.3f;
+		ambientLightIntensity = nightAmbientLightIntensity + timeFactor * additionalAmbientDaylightIntensity;
+		MainApplication.getInstance().setSunLight(new Vector3f(intensity, intensity, intensity));
 	}
 	
 	public Matrix4f getProjectionMatrix() {

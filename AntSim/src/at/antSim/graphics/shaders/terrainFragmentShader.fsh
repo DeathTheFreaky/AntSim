@@ -32,6 +32,7 @@ uniform vec3 lightColor[4]; //r,g,b values for lights
 uniform vec3 attenuation[4]; //attunations to be used for the light sources -> pointed lighting - light gets weaker if distance increases
 uniform float shineDamper; //how strong specular lighting appears when camera is not directly facing the reflected light
 uniform float reflectivity; //how much light a surface reflects (roughness of terrain)
+uniform float ambientLightIntensity; 
 
 void main(void) {
 
@@ -80,7 +81,7 @@ void main(void) {
 	}
 	
 	//ambient lighting
-	totalDiffuse = max(totalDiffuse, 0.2); //diffuse never below 0.2 -> apply Ambient lighting to ensure that every part of a model gets a little bit of light
+	totalDiffuse = max(totalDiffuse, ambientLightIntensity); //diffuse never below ambientLightIntensity -> apply Ambient lighting to ensure that every part of a model gets a little bit of light
 
 	vec3 finalFogColor = mix(fogColor1, fogColor2, blendFactor); //adjust fogColor to match daytime/nightime cycle   
 	

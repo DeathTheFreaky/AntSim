@@ -40,6 +40,7 @@ public class TerrainShader extends ShaderProgram {
 	private int location_fogColor1;
     private int location_fogColor2;
     private int location_blendFactor;
+    private int location_ambientLightIntensity;
 	
 	/**Creates a new shader program using the shader source files configured in the StaticShader class.
 	 * 
@@ -85,6 +86,8 @@ public class TerrainShader extends ShaderProgram {
 			location_lightColor[i] = super.getUniformLocation("lightColor[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
+		
+		location_ambientLightIntensity = super.getUniformLocation("ambientLightIntensity");
 	}
 	
 	/**Loads up an int to each of the sample2Ds to indicate which texture units they should be referencing.
@@ -168,5 +171,13 @@ public class TerrainShader extends ShaderProgram {
 	 */
 	public void loadBlendFactor(float blend) {
 		super.loadFloat(location_blendFactor, blend);
+	}
+	
+	/**Loads ambientLightIntensity for entities shader uniform variable.
+	 * 
+	 * @param ambientLightIntensity - the ambientLightIntensity factor to load into the shader uniform variable - 1 is fully bright
+	 */
+	public void loadAmbientLightIntensity(float ambientLightIntensity) {
+		super.loadFloat(location_ambientLightIntensity, ambientLightIntensity);
 	}
 }

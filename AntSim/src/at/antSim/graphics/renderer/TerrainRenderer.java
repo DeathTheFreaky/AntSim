@@ -50,7 +50,7 @@ public class TerrainRenderer {
 	 * @param lights - a list of lightsources
 	 * @param camera - for creating a viewMatrix
 	 */
-	public void render(List<Terrain> terrains, float blendFactor, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
+	public void render(List<Terrain> terrains, float blendFactor,  float ambientLightIntensity, Vector3f dayFog, Vector3f nightFog, List<Light> lights, Camera camera) {
 		
 		shader.start();
 		
@@ -59,6 +59,7 @@ public class TerrainRenderer {
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		shader.loadBlendFactor(blendFactor);
+		shader.loadAmbientLightIntensity(ambientLightIntensity);
 		
 		for(Terrain terrain : terrains) {
 			

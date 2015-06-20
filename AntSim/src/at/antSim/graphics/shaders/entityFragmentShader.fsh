@@ -25,6 +25,7 @@ uniform float blendFactor; //0: just the first texture, 1: just the second textu
 uniform vec3 movingEntityColor; //used to blend movingEntity model to indicate if it collides with another entity
 uniform float movingEntityBlendFactor; //regulates how strong the movingEntity shall be blended
 uniform float transparency;
+uniform float ambientLightIntensity;
 
 //Textures are not passed to a shader. They need to be bound (one or multiple textures) to the GL state, and they stay bound until a different texture is bound.
 //Then the fragment shader samples (i.e. "texture fetch") the texture. The fragment shader uses sampler2D uniforms to determine which texture unit to sample from.
@@ -66,7 +67,7 @@ void main(void) {
 	}
 	
 	//ambient lighting
-	totalDiffuse = max(totalDiffuse, 0.2); //diffuse never below 0.2 -> apply Ambient lighting to ensure that every part of a model gets a little bit of light
+	totalDiffuse = max(totalDiffuse, ambientLightIntensity); //diffuse never below ambientLightIntensity -> apply Ambient lighting to ensure that every part of a model gets a little bit of light
 
 	//samples the texture given by sampler (modelTexture), at the location texCoord (pass_textureCoords)
 	//see: https://www.opengl.org/wiki/Sampler_%28GLSL%29

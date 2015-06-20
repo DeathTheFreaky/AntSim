@@ -430,6 +430,10 @@ public class MainApplication {
 		return cycleCtr;
 	}
 	
+	public void setSunLight(Vector3f sunLight) {
+		lights.get(0).setColor(sunLight);
+	}
+	
 	/**
 	 * @return - the one and only instance of {@link MainApplication}
 	 */
