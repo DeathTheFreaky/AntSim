@@ -146,7 +146,8 @@ public class Dodge extends MovementMode {
 					MovementManager.getInstance().removeLastMovementEntry(physicsObject);
 				} else {
 					System.out.println("still colliding");
-					setStillColliding();
+					stillColliding = collidingResetter;
+//					setStillColliding();
 				}
 				
 				return;
