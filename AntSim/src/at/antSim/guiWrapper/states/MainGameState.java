@@ -166,29 +166,47 @@ public class MainGameState extends AbstractGuiState {
 		//food containers
 		foodButton = new GuiContainer("foodButton", loader, controlsBar, toggleFoodCmd, wrapper.getGuiTexture("controlsBar/foodButton"), 70, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, -1, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(1, 0, 0), 0f);
+		GuiImage foodTextImg = new GuiImage("foodTextImg", loader, foodButton, null, wrapper.getGuiTexture("controlsBar/foodText"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		foodContainer = new GuiContainer("foodContainer", loader, foodButton, null, wrapper.getGuiTexture("controlsBar/foodContainer"), 70, 105,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.ABOVE, -1, 0f, new Vector3f(0, 1, 0), 0f);
 		GuiContainer foodApple = new GuiContainer("foodApple", loader, foodContainer, clickFoodAppleCmd, null, 70, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.BOTTOM, 0, 0f, new Vector3f(0.2f, 0, 0), 0f);
+		GuiImage appleImg = new GuiImage("appleImg", loader, foodApple, null, wrapper.getGuiTexture("controlsBar/appleButton"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		GuiContainer foodSquirrel = new GuiContainer("foodSquirrel", loader, foodContainer, clickFoodSquirrelCmd, null, 70, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0.4f, 0, 0), 0f);
+		GuiImage squirrelImg = new GuiImage("squirrelImg", loader, foodSquirrel, null, wrapper.getGuiTexture("controlsBar/squirrelButton"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		GuiContainer foodInsect = new GuiContainer("foodInsect", loader, foodContainer, toggleFoodSubCmd, null, 70, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0.6f, 0, 0), 0f);
+		GuiImage insectTextImg = new GuiImage("insectTextImg", loader, foodInsect, null, wrapper.getGuiTexture("controlsBar/insectText"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		
 		foodInsectSubContainer = new GuiContainer("foodSubContainer", loader, foodInsect, null, wrapper.getGuiTexture("controlsBar/foodSub"), 140, 35,
 				HorReference.PARENT, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0.8f, 0, 0), 0f);
 		GuiContainer foodAnt = new GuiContainer("foodAnt", loader, foodInsectSubContainer, clickFoodAntCmd, null, 70, 35,
 				HorReference.PARENT, HorPositions.LEFT, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0.2f, 0), 0f);
+		GuiImage antImg = new GuiImage("antImg", loader, foodAnt, null, wrapper.getGuiTexture("controlsBar/antButton"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		GuiContainer foodGrasshopper = new GuiContainer("foodGrasshopper", loader, foodInsectSubContainer, clickFoodGrasshopperCmd, null, 70, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0.4f, 0), 0f);
+		GuiImage grasshopperImg = new GuiImage("grasshopperImg", loader, foodGrasshopper, null, wrapper.getGuiTexture("controlsBar/grasshopperButton"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		enemyButton = new GuiContainer("enemyButton", loader, controlsBar, toggleEnemyCmd, wrapper.getGuiTexture("controlsBar/foodButton"), 70, 35,
 				HorReference.SIBLING, HorPositions.RIGHT_OF, -1, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0.2f), 0f);
+		GuiImage enemyTextImg = new GuiImage("enemyTextImg", loader, enemyButton, null, wrapper.getGuiTexture("controlsBar/enemyText"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		enemyContainer = new GuiContainer("enemyContainer", loader, enemyButton, null, wrapper.getGuiTexture("controlsBar/enemyContainer"), 70, 70,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0.4f), 0f);
 		GuiContainer enemyAnt = new GuiContainer("enemyAnt", loader, enemyContainer, clickEnemyAntCmd, null, 70, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(0, 0, 0.6f), 0f);
+		GuiImage enemyAntImg = new GuiImage("enemyAntImg", loader, enemyAnt, null, wrapper.getGuiTexture("controlsBar/antButton"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		GuiContainer enemyGrasshopper = new GuiContainer("enemyGrasshopper", loader, enemyContainer, clickEnemyGrasshopperCmd, null, 70, 35,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.SIBLING, VerPositions.ABOVE, 0, 0f, new Vector3f(0, 0, 0.8f), 0f);
+		GuiImage enemyGrasshopperImg = new GuiImage("enemyGrasshopperImg", loader, enemyGrasshopper, null, wrapper.getGuiTexture("controlsBar/grasshopperButton"), 70, 35,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		
 		// default hidings
 		foodContainer.setDisabled(true);
