@@ -110,6 +110,12 @@ public class WorldLoader {
 				.buildGraphicsEntity("greenCube", 1, 50) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
+		
+		Entity greenCube3 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 90, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 90, -Globals.WORLD_SIZE/2) - 10, -Globals.WORLD_SIZE/2 - 30))
+				.buildGraphicsEntity("greenCube", 1, 50) //enable for debugging just to visualize the pheromones
+				.buildPhysicsObject()
+				.registerResult();
 
 		Entity hiveEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 200, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 200, -Globals.WORLD_SIZE/2) -5, -Globals.WORLD_SIZE/2))

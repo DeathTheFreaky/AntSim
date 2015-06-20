@@ -51,7 +51,7 @@ public abstract class Ant extends Entity {
 	// saturate?
 	private int hunger;
 	protected DynamicPhysicsObject physicsObject = null;
-	protected int velocityX = -20; //attention: positive velocity in x-axis moves entity to right side, although x decreases to the right side!
+	protected int velocityX = -5; //attention: positive velocity in x-axis moves entity to right side, although x decreases to the right side!
 	protected int velocityZ = 0;
 	protected float lastposition = 0;
 	private int velocityhelper = 0;

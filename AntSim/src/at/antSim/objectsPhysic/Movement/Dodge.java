@@ -28,8 +28,10 @@ public class Dodge extends MovementMode {
 	boolean justCollided = false;
 	boolean checkStillCollides = false;		
 	
-	int orTurnAngle = -20;
+	int orTurnAngle = -10;
 	int turnAngle;
+	
+	int debugCtr = 0;
 		
 	LinkedList<ReadOnlyPhysicsObject> previousObstacles = new LinkedList<>();
 	
@@ -48,9 +50,7 @@ public class Dodge extends MovementMode {
 		if (stillColliding > 0) {
 													
 			if (justCollided) { //turn if just collided
-				
-				System.out.println("justCollided");
-				
+								
 				if (currentDirection.length() > 0) {
 					currentDirection.normalize();
 					
@@ -58,10 +58,8 @@ public class Dodge extends MovementMode {
 					
 					if (!checkStillCollides) { //normal turn
 						currentTurnAngle = orTurnAngle;
-						System.out.println("normal turn by " + currentTurnAngle);
 					} else { //assurance turn to see if object still collides -> 2 "steps" forward, 1 step back
-						currentTurnAngle = -orTurnAngle/2;
-						System.out.println("checkStillCollides turn by " + currentTurnAngle);
+						currentTurnAngle = -orTurnAngle/4*3;
 					}
 										
 					dodgeDirection = Maths.turnDirectionVector(currentDirection, currentTurnAngle);
@@ -89,7 +87,7 @@ public class Dodge extends MovementMode {
 				dodgeDirection = Maths.turnDirectionVector(currentDirection, currentTurnAngle);
 				currentDirection = dodgeDirection;
 				
-				physicsObject.setAlignedMovement(dodgeDirection, speed);
+				physicsObject.setAlignedMovement(dodgeDirection, speed/2);
 			}
 		}
 		
@@ -103,7 +101,7 @@ public class Dodge extends MovementMode {
 		change.sub(currentDirection, originalDirection);
 		change.y = 0;
 				
-		if (change.length() < 0.001f) {
+		if (change.length() < 0.1f) {
 			return true;
 		}
 		
