@@ -58,39 +58,40 @@ public class MovementManager {
 //				System.out.println("equals last dodge object");
 				((Dodge) entries.get(physicsObject).lastElement()).setStillColliding();
 			} else {
-				System.out.println("is a now dodge object");
-				System.out.println("Stack size" + entries.get(physicsObject).size());
 				
-				System.out.println();
-				System.out.println("stack content: ");
-				Stack<MovementMode> stacky = entries.get(physicsObject);
-				Iterator<MovementMode> iter = stacky.iterator();
-				boolean contains = false;
-				while (iter.hasNext()) {				
-					MovementMode m = iter.next();
-					if (m.type == MovementModeType.DODGE) {
-						Dodge dodge = (Dodge) m;
-						if (dodge.obstacle == newDodge.obstacle) {
-							contains = true;
-						}
-					}
-					System.out.println(m.toString());
-				}
-//				((Dodge) entries.get(physicsObject).lastElement()).
+				((Dodge) entries.get(physicsObject).lastElement()).reset(newDodge.obstacle);
 				
-				
-				
-				if (contains) {
-					System.out.println("already contains dodge " + mode);
-				} else {
-					Vector3f originalDirection = entries.get(physicsObject).lastElement().getDirection();
-					System.out.println(" with direction " + originalDirection);
-//					entries.get(physicsObject).pop();
-					entries.get(physicsObject).add(mode);
-					((Dodge) mode).setOriginalDirection(originalDirection);
-				}
-				
-				
+//				System.out.println("is a now dodge object");
+//				System.out.println("Stack size" + entries.get(physicsObject).size());
+//				
+//				System.out.println();
+//				System.out.println("stack content: ");
+//				Stack<MovementMode> stacky = entries.get(physicsObject);
+//				Iterator<MovementMode> iter = stacky.iterator();
+//				boolean contains = false;
+//				while (iter.hasNext()) {				
+//					MovementMode m = iter.next();
+//					if (m.type == MovementModeType.DODGE) {
+//						Dodge dodge = (Dodge) m;
+//						if (dodge.obstacle == newDodge.obstacle) {
+//							contains = true;
+//						}
+//					}
+//					System.out.println(m.toString());
+//				}
+////				((Dodge) entries.get(physicsObject).lastElement()).
+//				
+//				
+//				
+//				if (contains) {
+//					System.out.println("already contains dodge " + mode);
+//				} else {
+//					Vector3f originalDirection = entries.get(physicsObject).lastElement().getDirection();
+//					System.out.println(" with direction " + originalDirection);
+////					entries.get(physicsObject).pop();
+//					entries.get(physicsObject).add(mode);
+//					((Dodge) mode).setOriginalDirection(originalDirection);
+//				}
 			}
 //			System.out.println("already dodging");
 		} else if (mode.type.equals(MovementModeType.DODGE)){

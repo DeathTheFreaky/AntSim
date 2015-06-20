@@ -1,5 +1,7 @@
 package at.antSim.objectsPhysic.Movement;
 
+import java.util.LinkedList;
+
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
@@ -36,6 +38,8 @@ public class Dodge extends MovementMode {
 	double orTurnAngle = Math.toRadians(turnAngleDegree);
 	double turnAngle;
 	
+	LinkedList<ReadOnlyPhysicsObject> previousObstacles = new LinkedList<>();
+	
 	public Dodge(DynamicPhysicsObject physicsObject, ReadOnlyPhysicsObject obstacle, float speed) {
 		super(MovementModeType.DODGE, physicsObject, speed);
 		this.obstacle = obstacle;
@@ -61,6 +65,8 @@ public class Dodge extends MovementMode {
 										
 			if (justCollided && !movesAlongTangent) {
 				
+				System.out.println("justCollided && !movesAlongTangent");
+				
 				if (currentDirection.length() > 0) {
 					currentDirection.normalize();
 										
@@ -83,14 +89,23 @@ public class Dodge extends MovementMode {
 				
 			} else if (!justCollided && !movesAlongTangent) {
 				
+				System.out.println("!justCollided && !movesAlongTangent");
+				
 				physicsObject.setAlignedMovement(dodgeDirection, speed);
 				
 			} else if (movesAlongTangent && !movement) {
-								
+				
+				System.out.println("movesAlongTangent && !movement, colliding: " + stillColliding);
+//				if(!movement){
+//					movedPassTarget = false;
+//					movesAlongTangent = false;
+//				}
 				physicsObject.setAlignedMovement(dodgeDirection, speed);
 				
 				//let object move, do not reset to get hitback on collision?
 			} else if (movesAlongTangent && movement) {
+				
+				System.out.println("movement && movesAlongTangent");
 							
 				if (currentDirection.length() > 0) {
 					currentDirection.normalize();
@@ -107,7 +122,7 @@ public class Dodge extends MovementMode {
 					}
 					
 					if (movesAlongTangent && !movedPassTarget) {
-//						System.out.println("not moved passtarget");
+						System.out.println("not moved passtarget");
 						turnAngle = -turnAngle;
 					} else {
 						turnAngle = -orTurnAngle;
@@ -121,14 +136,16 @@ public class Dodge extends MovementMode {
 				}
 			} 
 		} else {
-			
+			System.out.println("big else");
 			if (movesAlongTangent) {
-				
+				System.out.println("movesAlongTangent");
 				movedPassTarget = true;
 								
 				if (turnAngleSum == 0) {
+					System.out.println("removed");
 					MovementManager.getInstance().removeLastMovementEntry(physicsObject);
 				} else {
+					System.out.println("still colliding");
 					setStillColliding();
 				}
 				
@@ -171,6 +188,21 @@ public class Dodge extends MovementMode {
 	public void setStillColliding() {
 		stillColliding = collidingResetter;
 		justCollided = true;
+		if (movedPassTarget) {
+			movesAlongTangent = false;
+			movedPassTarget = false;
+		}
+	}
+	
+	public void reset(ReadOnlyPhysicsObject newObstacle) {
+		
+		if (!previousObstacles.contains(newObstacle)) {
+			previousObstacles.add(obstacle);
+			obstacle = newObstacle;
+			System.out.println("   RESETTED");
+			movesAlongTangent = false;
+			movedPassTarget = false;
+		}
 	}
 
 	@Override
