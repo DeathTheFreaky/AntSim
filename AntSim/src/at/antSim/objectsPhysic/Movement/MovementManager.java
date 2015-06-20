@@ -55,55 +55,17 @@ public class MovementManager {
 			Dodge newDodge = (Dodge) mode;
 			
 			if (lastDodge.obstacle == newDodge.obstacle) {
-//				System.out.println("equals last dodge object");
 				((Dodge) entries.get(physicsObject).lastElement()).setStillColliding();
 			} else {
-				
 				((Dodge) entries.get(physicsObject).lastElement()).reset(newDodge.obstacle);
-				
-//				System.out.println("is a now dodge object");
-//				System.out.println("Stack size" + entries.get(physicsObject).size());
-//				
-//				System.out.println();
-//				System.out.println("stack content: ");
-//				Stack<MovementMode> stacky = entries.get(physicsObject);
-//				Iterator<MovementMode> iter = stacky.iterator();
-//				boolean contains = false;
-//				while (iter.hasNext()) {				
-//					MovementMode m = iter.next();
-//					if (m.type == MovementModeType.DODGE) {
-//						Dodge dodge = (Dodge) m;
-//						if (dodge.obstacle == newDodge.obstacle) {
-//							contains = true;
-//						}
-//					}
-//					System.out.println(m.toString());
-//				}
-////				((Dodge) entries.get(physicsObject).lastElement()).
-//				
-//				
-//				
-//				if (contains) {
-//					System.out.println("already contains dodge " + mode);
-//				} else {
-//					Vector3f originalDirection = entries.get(physicsObject).lastElement().getDirection();
-//					System.out.println(" with direction " + originalDirection);
-////					entries.get(physicsObject).pop();
-//					entries.get(physicsObject).add(mode);
-//					((Dodge) mode).setOriginalDirection(originalDirection);
-//				}
 			}
-//			System.out.println("already dodging");
+			
 		} else if (mode.type.equals(MovementModeType.DODGE)){
-			System.out.println("new dodge mode");
-//			System.out.println("ant hit environmentObject and tries to dodge it");
 			Vector3f originalDirection = entries.get(physicsObject).lastElement().getDirection();
-			System.out.println(" with direction " + originalDirection);
 			entries.get(physicsObject).add(mode);
 			((Dodge) mode).setOriginalDirection(originalDirection);
 			((Dodge) mode).setCurrentDirection(originalDirection);
 		} else {
-			System.out.println("no dodge mode");
 			entries.get(physicsObject).add(mode);
 		}
 	}
