@@ -10,18 +10,12 @@ import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsKI.Hive;
-import at.antSim.objectsKI.ObjectType;
-import at.antSim.objectsKI.PositionLocator;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
-import at.antSim.objectsPhysic.StaticPhysicsObject;
-import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.utils.Maths;
-
 import com.bulletphysics.linearmath.Transform;
-
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -104,126 +98,15 @@ public class WorldLoader {
 //					.registerResult();
 //			}
 //		}
-//		
-//		//add some lamps
-//		Entity lamp1 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//			.setPosition(new Vector3f(185, -4.7f, -293))
-//			.setRotation(0, random.nextFloat() * 360, 0)
-//			.buildGraphicsEntity("lamp", 1, 20)
-//			.buildPhysicsObject()
-//			.registerResult();
-//
-//		Entity lamp2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(370, 4.2f, -300))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("lamp", 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
-//		
-//		Entity sphereTest = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("greenCube", 1, 10)
-//				.buildPhysicsObject()
-//				.registerResult();
-//		
-//		//add cool stanford demo dragon for specular lighting demo
-//		Entity redCube = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 100, -Globals.WORLD_SIZE/2))
-//				.setRotation(90, 45, 90)
-//				.buildGraphicsEntity("sphere", 1, 25)
-//				.buildPhysicsObject()
-//				.registerResult();
-//
-//		Entity dragon = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 50, -Globals.WORLD_SIZE/2))
-//				.setRotation(90, 45, 90)
-//				.buildGraphicsEntity("dragon", 1, 25)
-//				.buildPhysicsObject()
-//				.registerResult();
-//		
-//		//PhysicsManager.getInstance().observingPhysicsObject = (DynamicPhysicsObject) dragon.getPhysicsObject();
-//
-//		Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(370, 4.2f, -300))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("stomp", 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
-//
-//		// new
-//		Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(300, 4.2f, -300))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("rock", 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
-//
-//		Entity squirrel = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(350, 4.2f, -350))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("squirrel", 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
-//
-//		Entity hopperDead = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(390, 4.2f, -370))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("deadGrasshopper", 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
-//
-//		Entity hopperAlive = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(370, 4.2f, -350))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("enemyGrasshopper", 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
 
-//		Entity antBlack = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 10, 10, -Globals.WORLD_SIZE/2))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("antBlack", 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
-//
-//		Entity antRed = builder.setFactory(DynamicPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 10, 10, -Globals.WORLD_SIZE/2))
-//				.setRotation(0, random.nextFloat() * 360, 0)
-//				.buildGraphicsEntity("antRed", 1, 20)
-//				.buildPhysicsObject()
-//				.registerResult();
-//
-		Entity dummyObstacle = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
-				.setRotation(0, 0, 0)
-				.buildGraphicsEntity("greenCube", 1, 50)
+		Entity hiveEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) -5, -Globals.WORLD_SIZE/2))
+				.setHiveParameters(20)
+				.buildGraphicsEntity("hive", 1, 80) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
-		
-		Entity dummyObstacle2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 10, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 10, -Globals.WORLD_SIZE/2 - 60) - 10, -Globals.WORLD_SIZE/2 - 60))
-				.setRotation(0, 0, 0)
-				.buildGraphicsEntity("greenCube", 1, 50)
-				.buildPhysicsObject()
-				.registerResult();
-		
-				// end of new
-		
-//		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 200, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 200, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
-//				.buildGraphicsEntity("pheromone", 1, Globals.PHERONOME_SIZE) //enable for debugging just to visualize the pheromones
-//				.buildPhysicsObject()
-//				.registerResult();
-//		
-//		Entity hiveEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2) - Globals.PHERONOME_SIZE/2, -Globals.WORLD_SIZE/2))
-//				.setHiveParameters(20)
-//				.buildGraphicsEntity("hive", 1, 50) //enable for debugging just to visualize the pheromones
-//				.buildPhysicsObject()
-//				.registerResult();
-//		
-//		hive = (Hive) hiveEntity;
+
+		hive = (Hive) hiveEntity;
 
 		loadBorders(terrain);
 	}
@@ -238,28 +121,28 @@ public class WorldLoader {
 			
 		Transform positionNorth = new Transform();
 		positionNorth.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, 0), 0), 0, 0, 0));
-		StaticPhysicsObject northBorder = (StaticPhysicsObject) StaticPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionNorth);
+		GhostPhysicsObject northBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionNorth);
 		northBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		northBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(northBorder);
 		
 		Transform positionSouth = new Transform();
 		positionSouth.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE), -Globals.WORLD_SIZE), 0, 0, 0));
-		StaticPhysicsObject southBorder = (StaticPhysicsObject) StaticPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionSouth);
+		GhostPhysicsObject southBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionSouth);
 		southBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		southBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(southBorder);
 		
 		Transform positionEast = new Transform();
 		positionEast.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE, terrain.getHeightOfTerrain(Globals.WORLD_SIZE, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
-		StaticPhysicsObject eastBorder = (StaticPhysicsObject) StaticPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionEast);
+		GhostPhysicsObject eastBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionEast);
 		eastBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		eastBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(eastBorder);
 		
 		Transform positionWest = new Transform();
 		positionWest.set(Maths.createTransformationMatrix(new Vector3f(0, terrain.getHeightOfTerrain(0, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
-		StaticPhysicsObject westBorder = (StaticPhysicsObject) StaticPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionWest);
+		GhostPhysicsObject westBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionWest);
 		westBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		westBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(westBorder);
