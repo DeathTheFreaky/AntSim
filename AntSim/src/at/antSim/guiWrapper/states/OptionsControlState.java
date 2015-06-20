@@ -137,6 +137,10 @@ public class OptionsControlState extends AbstractGuiState {
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		waitingForKeyContainer.setTransparency(1f);
 		waitingForKeyText.setTransparency(1f);
+
+		// Foreground-Ant
+		GuiImage antForeground = new GuiImage("antForeground", loader, mainContainer, null, wrapper.getGuiTexture("ant_foreground"), 440, 360,
+				HorReference.PARENT, HorPositions.RIGHT, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		
 		state.addContainer(mainContainer);
 		

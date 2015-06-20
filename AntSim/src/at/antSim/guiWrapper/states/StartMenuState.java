@@ -33,16 +33,14 @@ public class StartMenuState extends AbstractGuiState {
 		optionsCmd = new SwitchStateCmd(args[0], state, this);
 		quitGameCmd = new QuitGameCmd();
 
-		// TODO hintergrundbild!!
 		GuiContainer mainContainer = new GuiContainer("mainContainer", loader, null, null, wrapper.getGuiTexture("white"),
-				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(1,1,1), 1f);
+				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(1,1,1), 1f);
 
 
-		// TODO change to Logo!
+
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, wrapper.getGuiTexture("font"));
-		GuiText antSim1 = new GuiText("antSim1", textDrawer.createTextQuad("Ant"), mainContainer, null, 52, HorReference.PARENT, HorPositions.LEFT, Globals.displayWidth/2 - 150, 
-				VerReference.SIBLING, VerPositions.TOP, 20,  0.5f, new Vector3f(1f, 0f, 0f), 0.0f);
-		GuiText antSim2 = new GuiText("antSim2", textDrawer.createTextQuad("Sim"), mainContainer, null, 36, HorReference.PARENT, HorPositions.RIGHT, Globals.displayWidth/2 - 100, VerReference.SIBLING, VerPositions.BELOW, -15);
+		GuiImage logo = new GuiImage("logo", loader, mainContainer, null, wrapper.getGuiTexture("logo"), 580, 130,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.TOP, 30, 0f, new Vector3f(0, 0, 0), 0f);
 
 		// container for menu elements
 		GuiContainer startMenuContainer = new GuiContainer("startMenuContainer", loader, mainContainer, null, wrapper.getGuiTexture("startMenu/startMenuContainer"), 600, 300,
@@ -68,6 +66,10 @@ public class StartMenuState extends AbstractGuiState {
 		GuiText quitText = new GuiText("optionsGame", textDrawer.createTextQuad("Quit"), quitContainer, null, 32,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.BOTTOM, 1);
 		EventManager.getInstance().registerEventListener(quitContainer);
+
+		// Foreground-Ant
+		GuiImage antForeground = new GuiImage("antForeground", loader, mainContainer, null, wrapper.getGuiTexture("ant_foreground"), 440, 360,
+				HorReference.PARENT, HorPositions.RIGHT, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(0, 0, 0), 0f);
 				
 		state.addContainer(mainContainer);
 		
