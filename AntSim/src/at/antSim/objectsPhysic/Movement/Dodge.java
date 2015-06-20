@@ -25,7 +25,7 @@ public class Dodge extends MovementMode {
 	int collidingResetter = 10;
 	int stillColliding;
 	int turnCtr = 0;
-	double turnAngleDegree = -10;
+	double turnAngleDegree = -5;
 	
 	int turnAngleSum = 0;
 	
@@ -65,6 +65,7 @@ public class Dodge extends MovementMode {
 					currentDirection.normalize();
 										
 					dodgeDirection = Maths.turnDirectionVector(currentDirection, turnAngle);
+					System.out.println(" DIR " + dodgeDirection);
 					currentDirection = dodgeDirection;
 					if (turnAngle > 0) {
 						turnAngleSum++;
@@ -95,6 +96,7 @@ public class Dodge extends MovementMode {
 					currentDirection.normalize();
 										
 					dodgeDirection = Maths.turnDirectionVector(currentDirection, turnAngle);
+					System.out.println(" DIR " + dodgeDirection);
 					currentDirection = dodgeDirection;
 										
 					currentDirection = dodgeDirection;
@@ -105,7 +107,7 @@ public class Dodge extends MovementMode {
 					}
 					
 					if (movesAlongTangent && !movedPassTarget) {
-						System.out.println("not moved passtarget");
+//						System.out.println("not moved passtarget");
 						turnAngle = -turnAngle;
 					} else {
 						turnAngle = -orTurnAngle;
@@ -148,7 +150,7 @@ public class Dodge extends MovementMode {
 		Vector3f change = new Vector3f();
 		change.sub(previousPosition, currentPosition);
 		change.y = 0;
-		System.out.println("length: " + change.length() + " at currentPosition: " + currentPosition + " and previousPosition " + previousPosition + " movesAlongTangent: " + movesAlongTangent);
+//		System.out.println("length: " + change.length() + " at currentPosition: " + currentPosition + " and previousPosition " + previousPosition + " movesAlongTangent: " + movesAlongTangent);
 		if (change.length() > movementLimit) {
 			previousPosition = currentPosition;
 			return true;

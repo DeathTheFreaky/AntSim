@@ -201,6 +201,13 @@ public class WorldLoader {
 				.buildPhysicsObject()
 				.registerResult();
 		
+		Entity dummyObstacle2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 10, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 10, -Globals.WORLD_SIZE/2 - 60) - 10, -Globals.WORLD_SIZE/2 - 60))
+				.setRotation(0, 0, 0)
+				.buildGraphicsEntity("greenCube", 1, 50)
+				.buildPhysicsObject()
+				.registerResult();
+		
 				// end of new
 		
 //		Entity pheromone = builder.setFactory(GhostPhysicsObjectFactory.getInstance())
@@ -267,7 +274,7 @@ public class WorldLoader {
 		
 		ArrayList<Light> lights = new ArrayList<Light>();
 		
-		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.4f, 0.4f, 0.4f))); //sun
+		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.7f, 0.7f, 0.7f))); //sun
 		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
 		
 		return lights;
