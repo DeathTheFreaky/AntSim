@@ -23,8 +23,8 @@ public class OptionsControlState extends AbstractGuiState {
 	Command backCmd;
 	Command switchToDisplayCmd;
 	
-	GuiContainer waitingForKeyContainer;		
-	GuiText waitingForKeyText;
+	GuiContainer waitingForKeyContainer;
+	GuiImage waitingForKeyText;
 	GuiText errText;
 
 	public OptionsControlState(OpenGLLoader loader, String name) {
@@ -131,10 +131,10 @@ public class OptionsControlState extends AbstractGuiState {
 		EventManager.getInstance().registerEventListener(backContainer);
 		
 		//listening for keybinding overlay
-		waitingForKeyContainer = new GuiContainer("waitingForKeyContainer", loader, optionsContainer, null,  wrapper.getGuiTexture("white"), 630, 200,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(1, 0, 0), 0.5f);		
-		waitingForKeyText = new GuiText("waitingForKeyText", textDrawer.createTextQuad("Waiting for key input..."), waitingForKeyContainer, null, 25,
-				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0);
+		waitingForKeyContainer = new GuiContainer("waitingForKeyContainer", loader, optionsContainer, null,  wrapper.getGuiTexture("optionsMenu/waitingForKeyContainer"), 400, 160,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(1, 0, 0), 0f);
+		waitingForKeyText = new GuiImage("waitingForKeyInputText", loader, waitingForKeyContainer, null, wrapper.getGuiTexture("optionsMenu/waitingForKeyInput"), 220, 50,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		waitingForKeyContainer.setTransparency(1f);
 		waitingForKeyText.setTransparency(1f);
 		
