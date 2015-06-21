@@ -9,6 +9,7 @@ import javax.vecmath.Vector3f;
 
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
+import at.antSim.objectsPhysic.basics.PhysicsObject;
 
 /**Handles movement of Entities - either to specific locations or randomly.
  * 
@@ -49,7 +50,7 @@ public class MovementManager {
 		
 		//check if collides with same obstacle
 		
-		if (entries.get(physicsObject).lastElement().type == MovementModeType.DODGE) {
+		if (entries.get(physicsObject).lastElement().type == MovementModeType.DODGE && mode.type == MovementModeType.DODGE) {
 			
 			Dodge lastDodge = (Dodge) entries.get(physicsObject).lastElement();
 			Dodge newDodge = (Dodge) mode;
@@ -60,7 +61,13 @@ public class MovementManager {
 				((Dodge) entries.get(physicsObject).lastElement()).reset(newDodge.obstacle);
 			}
 			
-		} else if (mode.type.equals(MovementModeType.DODGE)){
+		} else if (entries.get(physicsObject).lastElement().type == MovementModeType.BORDER && mode.type == MovementModeType.BORDER) {
+			//ignore new border movement, wait for previous one to finish
+		} else if (mode.type  == MovementModeType.BORDER) {
+			MovementMode previousMode = entries.get(physicsObject).lastElement();
+			((BorderCollisionMovement) mode).setOriginalDirection(previousMode.getDirection());
+			entries.get(physicsObject).add(mode);
+		} else if (mode.type  == MovementModeType.DODGE) {
 			MovementMode previousMode = entries.get(physicsObject).lastElement();
 			entries.get(physicsObject).add(mode);
 			((Dodge) mode).setCurrentDirection(previousMode.getDirection());
@@ -102,6 +109,14 @@ public class MovementManager {
 		for (Stack<MovementMode> stack : entries.values()) {
 			stack.lastElement().move();
 		}
+	}
+	
+	public MovementMode getTopMovementMode(PhysicsObject physicsObject) {
+		MovementMode retMode = null;
+		if (entries.containsKey(physicsObject)) {
+			retMode = entries.get(physicsObject).lastElement();
+		}
+		return retMode;
 	}
 	
 	public static MovementManager getInstance() {

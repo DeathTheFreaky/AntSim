@@ -24,4 +24,8 @@ public abstract class MovementMode {
 	public abstract void move();	
 	
 	public abstract Vector3f getDirection();
+	
+	public MovementModeType getType() {
+		return type;
+	}
 }

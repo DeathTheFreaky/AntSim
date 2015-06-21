@@ -18,10 +18,13 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.BorderCollisionMovement;
 import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MoveInDirection;
 import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
+import at.antSim.objectsPhysic.Movement.MovementMode;
+import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
@@ -86,8 +89,8 @@ public abstract class Ant extends Entity {
 		//this.physicsObject.setRotation(0, 0, 0);
 		EventManager.getInstance().registerEventListener(this);
 		movementManager = MovementManager.getInstance();
-//		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveInDirection((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
-		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveToTarget((DynamicPhysicsObject) physicsObject, (ReadOnlyPhysicsObject) WorldLoader.hive.physicsObject, Globals.ANT_SPEED));
+		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveInDirection((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
+//		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveToTarget((DynamicPhysicsObject) physicsObject, (ReadOnlyPhysicsObject) WorldLoader.hive.physicsObject, Globals.ANT_SPEED));
 	}
 
 	@Override
@@ -95,7 +98,15 @@ public abstract class Ant extends Entity {
 		//Colliding with the ground/terrain
 		
 		if (staticPhysicsObject.getType().equals("border")) {
-			
+			if (MovementManager.getInstance().getTopMovementMode(physicsObject).getType() == MovementModeType.DIRECTION) {
+				BorderCollisionMovement borderCollisionMovement = new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED);
+				MoveInDirection moveInDirection = new MoveInDirection(physicsObject, borderCollisionMovement.getDirection(), Globals.ANT_SPEED);
+				movementManager.removeLastMovementEntry(physicsObject); //makes no sense to keep moving into same direction when hitting a wall
+				movementManager.addMovementEntry(physicsObject, moveInDirection);
+				movementManager.addMovementEntry(physicsObject, borderCollisionMovement);
+			} else {
+				movementManager.addMovementEntry(physicsObject, new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED));
+			}
 		} else {
 			ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
 			if (tp.equals(ObjectType.ENVIRONMENT)) { //ant hit another ant: start dodging procedure
