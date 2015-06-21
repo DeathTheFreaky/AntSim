@@ -76,11 +76,15 @@ public abstract class Entity {
 
 	/**
 	 * Deletes this Entity, removing it from the physicsObjectTypeMap and the renderingMap.
+	 * 
+	 * @param removeFromEntities - set to false if iterating through Entity.entities list to avoid concurrentModification exception
 	 */
-	public void delete() {
+	public void delete(boolean removeFromEntities) {
 		deleteSpecific();
 		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
-		entities.remove(this);
+		if (removeFromEntities) {
+			entities.remove(this);
+		}
 		parentingEntities.remove(physicsObject);
 		physicsObjectTypeMap.remove(this);
 		if (graphicsEntity != null) { //null for Pheromones
@@ -121,7 +125,7 @@ public abstract class Entity {
 	 */
 	public static void deleteAllEntities() {
 		for (Entity entity : entities) {
-			entity.delete();
+			entity.delete(false);
 		}
 		physicsObjectTypeMap.clear();
 		renderingMap.clear();

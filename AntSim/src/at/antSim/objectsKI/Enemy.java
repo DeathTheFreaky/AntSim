@@ -97,7 +97,7 @@ public abstract class Enemy extends Entity {
 
 	@Override
 	protected void deleteSpecific() {
-		positionLocator.delete();
+		positionLocator.delete(true);
 		dynamicEntities.remove(this);
 		enemies.remove(this);
 	}

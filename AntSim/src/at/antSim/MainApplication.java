@@ -370,6 +370,7 @@ public class MainApplication {
 	 * 
 	 */
 	public void quitCurrentGame() {
+		EventManager.getInstance().reset();
 		worldLoaded = false;
 		paused = false;
 		hive.reset();

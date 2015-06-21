@@ -51,7 +51,7 @@ public class MovingEntity {
 	
 	public void setEntity(Entity entity) {
 		if (entity == null && this.entity != null) {
-			this.entity.delete();
+			this.entity.delete(true);
 			EventManager.getInstance().unregisterEventListener(this);
 		}
 		this.entity = entity;
@@ -125,7 +125,7 @@ public class MovingEntity {
 				float placedScale = entity.getGraphicsEntity().getScale() * 2;
 				
 				//delete moving entity and...
-				entity.delete();
+				entity.delete(true);
 				entity = null;
 				event.consume();
 				EventManager.getInstance().unregisterEventListener(this);
@@ -148,7 +148,7 @@ public class MovingEntity {
 	@EventListener (priority = EventPriority.HIGH) //high guarantees that gui controls will be handled afterwards
 	public void cancel(KeyReleasedEvent event) {
 		if (event.getKey() == Keyboard.KEY_ESCAPE) {
-			entity.delete();
+			entity.delete(true);
 			entity = null;
 			event.consume();
 			EventManager.getInstance().unregisterEventListener(this);

@@ -214,4 +214,8 @@ public class EventManager {
 		}
 	}
 
+	public void reset() {
+		eventQueue.clear();
+	}
+
 }

@@ -69,7 +69,7 @@ public abstract class Food extends Entity implements Foodressource {
 		foodStacks--;
 		if (foodStacks <= 0) {
 			positionLocator.cancelAnts();
-			this.delete();
+			this.delete(true);
 		}
 		return 1;
 	}
@@ -81,6 +81,6 @@ public abstract class Food extends Entity implements Foodressource {
 
 	@Override
 	protected void deleteSpecific() {
-		positionLocator.delete();
+		positionLocator.delete(true);
 	}
 }
