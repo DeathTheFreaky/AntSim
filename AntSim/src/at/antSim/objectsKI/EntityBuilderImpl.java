@@ -45,7 +45,6 @@ public class EntityBuilderImpl implements EntityBuilder {
 	
 	Entity target; //for position locators
 	
-	Hive hive;
 	int hiveFoodstackSize;
 	
 	public EntityBuilderImpl() {
@@ -67,7 +66,6 @@ public class EntityBuilderImpl implements EntityBuilder {
 		height = 0;
 		scale = 0;
 		target = null;
-		hive = null;
 		hiveFoodstackSize = 0;
 	}
 	
@@ -245,18 +243,18 @@ public class EntityBuilderImpl implements EntityBuilder {
 		switch (objectType) {
 		case ANT:
 			if (type.equals("forager")) {
-				retEntity = new Forager(graphicsEntity, physicsObject, hive);
+				retEntity = new Forager(graphicsEntity, physicsObject);
 			} else if (type.equals("worker")) {
-				retEntity = new Worker(graphicsEntity, physicsObject, hive);
+				retEntity = new Worker(graphicsEntity, physicsObject);
 			} else if (type.equals("queen")) {
-				retEntity = new Queen(graphicsEntity, physicsObject, hive);
+				retEntity = new Queen(graphicsEntity, physicsObject);
 			}
 			break;
 		case ENEMY:
 			if (type.equals("enemyAnt")) {
 				retEntity = new EnemyAnt(graphicsEntity, physicsObject);
 			} else if (type.equals("enemyGrasshopper")) {
-				retEntity = new Worker(graphicsEntity, physicsObject, hive);
+				retEntity = new Worker(graphicsEntity, physicsObject);
 			} 
 			break;
 		case ENVIRONMENT:
@@ -283,7 +281,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 			retEntity = new PositionLocator(graphicsEntity, physicsObject, target);
 			break;
 		case HIVE:
-			retEntity = new Hive(hiveFoodstackSize, graphicsEntity, physicsObject);
+			retEntity = Hive.getInstance(hiveFoodstackSize, graphicsEntity, physicsObject);
 		default:
 			break;
 		}
@@ -319,12 +317,6 @@ public class EntityBuilderImpl implements EntityBuilder {
 	@Override
 	public EntityBuilder setHiveParameters(int foodStacks) {
 		this.hiveFoodstackSize = foodStacks;
-		return this;
-	}
-
-	@Override
-	public EntityBuilder setAntParameters(Hive hive) {
-		this.hive = hive;
 		return this;
 	}
 }

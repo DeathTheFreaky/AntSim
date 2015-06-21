@@ -76,10 +76,11 @@ public abstract class Ant extends Entity {
 	protected CountingLinkedList<PositionLocator> positionLocators = new CountingLinkedList<>();
 	protected CountingLinkedList<Pheromone> pheromones = new CountingLinkedList<>();
 
-	public Ant(GraphicsEntity graphicsEntity, PhysicsObject physicsObject, Hive hive) {
+	public Ant(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
-		this.hive = hive;
+		hive = Hive.getInstance();
+		hive.addAnt(this);
 		Vector3f v = new Vector3f(velocityX, 0, velocityZ);
 //		this.physicsObject.setLinearVelocity(v);
 //		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, -1), Globals.ANT_SPEED*3);
@@ -242,7 +243,7 @@ public abstract class Ant extends Entity {
 
 	public void eat() {
 		hunger = hunger + 40;
-		Hive.foodStacks = Hive.foodStacks - 1;
+		hive.takeFood();
 	}
 
 	public int getOdorStatus() {

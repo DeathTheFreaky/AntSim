@@ -134,7 +134,6 @@ public class MovingEntity {
 				Entity placedEntity = builder.setFactory(placedEntityFactory)
 					.setPosition(placedPosition) //position will be set later anyway in main loop according to mouse position
 					.setRotation(placedQuats)
-					.setAntParameters(hive)
 					.buildGraphicsEntity(placedTextureModel.getType(), placedTextureIndex, placedScale)
 					.buildPhysicsObject()
 					.registerResult();

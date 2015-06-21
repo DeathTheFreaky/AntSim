@@ -16,6 +16,7 @@ import at.antSim.objectsKI.Enemy;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
+import at.antSim.objectsKI.Hive;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
@@ -133,6 +134,8 @@ public class MainApplication {
 	private MovingEntity movingEntity;
 	private GraphicsEntity movingLamp;
 	private Light movingLight;
+	
+	private Hive hive;
 	
 	private boolean glLoaded = false;
 	private boolean worldLoaded = false;
@@ -327,6 +330,7 @@ public class MainApplication {
 			
 			terrain = WorldLoader.loadTerrain(loader); // loads the world's terrain
 			WorldLoader.loadWorldEntities(loader, terrain); //loads the world's "material" contents
+			hive = Hive.getInstance();
 			lights = WorldLoader.loadLights();
 			
 			// a lamp freely positionable on the map
@@ -368,6 +372,7 @@ public class MainApplication {
 	public void quitCurrentGame() {
 		worldLoaded = false;
 		paused = false;
+		hive.reset();
 		Entity.deleteAllEntities();
 	}
 	
@@ -403,10 +408,10 @@ public class MainApplication {
 	}
 
 	public HashMap<String, Integer> getStats() {
-		stats.put("Population", 12035+cycleCtr);
-		stats.put("Food", 5389+cycleCtr);
-		stats.put("Eggs", 345+cycleCtr);
-		stats.put("Larvae", 243+cycleCtr);
+		stats.put("Population", hive.getAntsNum());
+		stats.put("Food", hive.getFoodNum());
+		stats.put("Eggs", hive.getEggsNum());
+		stats.put("Larvae", hive.getLarvaeNum());
 		return stats;
 	}
 	

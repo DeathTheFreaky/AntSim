@@ -19,15 +19,15 @@ public class Queen extends Ant implements Feedable {
 	private int eggLayingCost = 1;
 	private int eggLayingSpeed = 1;
 	
-	public Queen(GraphicsEntity graphicsEntity,PhysicsObject physicsObject, Hive hive) {
-		super(graphicsEntity, physicsObject, hive);
+	public Queen(GraphicsEntity graphicsEntity,PhysicsObject physicsObject) {
+		super(graphicsEntity, physicsObject);
 		hp = Globals.queenHp;
 		attack = Globals.queenAttack;
 	}
 
 	public void layEgg(){
 		Egg e = new Egg();
-		Hive.fa.add(e);
+		Hive.getInstance().addEgg(e);
 	}
 	
 	public void feed(){

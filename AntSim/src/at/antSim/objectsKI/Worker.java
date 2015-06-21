@@ -11,8 +11,8 @@ public class Worker extends Ant implements Runnable {
 
 	private int threshold;
 	
-	public Worker(GraphicsEntity graphicsEntity,PhysicsObject physicsObject, Hive hive) {
-		super(graphicsEntity, physicsObject, hive);
+	public Worker(GraphicsEntity graphicsEntity,PhysicsObject physicsObject) {
+		super(graphicsEntity, physicsObject);
 		hp = Globals.antHp;
 		attack = Globals.antAttack;
 		threshold = 2;
@@ -33,7 +33,7 @@ public class Worker extends Ant implements Runnable {
 			}
 			
 			//Always get the first one which is not served from Hive.fa list
-			Hive.fa.get(0).feed();
+			Hive.getInstance().getFeedables().get(0).feed();
 		}		
 	}
 

@@ -121,7 +121,7 @@ public class WorldLoader {
 				.registerResult();
 
 		Entity hiveEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 200, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 200, -Globals.WORLD_SIZE/2) -5, -Globals.WORLD_SIZE/2))
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) -5, -Globals.WORLD_SIZE/2 - 150))
 				.setHiveParameters(20)
 				.buildGraphicsEntity("hive", 1, 80) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()

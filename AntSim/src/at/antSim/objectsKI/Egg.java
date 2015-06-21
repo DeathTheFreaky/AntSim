@@ -6,9 +6,8 @@ public class Egg implements Feedable{
 	public void feed(){
 		growth++;
 		if(growth > 10){
-			Hive.fa.remove(this);
-			Hive.fa.add(new Larva());
+			Hive.getInstance().removeEgg(this);
+			Hive.getInstance().addLarva(new Larva());
 		}
 	}
-	
 }

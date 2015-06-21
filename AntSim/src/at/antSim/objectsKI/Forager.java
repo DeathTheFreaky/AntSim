@@ -20,8 +20,8 @@ public class Forager extends Ant implements Runnable {
 	private int foodtransport;
 	private int maxFoodTransport;
 	
-	public Forager(GraphicsEntity graphicsEntity,PhysicsObject physicsObject, Hive hive) {
-		super(graphicsEntity, physicsObject, hive);
+	public Forager(GraphicsEntity graphicsEntity,PhysicsObject physicsObject) {
+		super(graphicsEntity, physicsObject);
 		hp = Globals.antHp;
 		attack = Globals.antAttack;
 		threshold = 2;
