@@ -28,5 +28,12 @@ public interface MovablePhysicsObject {
 	 * @param speed
 	 */
 	void setAlignedMovement(Vector3f direction, float speed);
+	
+	/**Moves physicsObject into given direction at desired speed.
+	 * 
+	 * @param direction
+	 * @param speed
+	 */
+	void setMovement(Vector3f direction, float speed);
 
 }

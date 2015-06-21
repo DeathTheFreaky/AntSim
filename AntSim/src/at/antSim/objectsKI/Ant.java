@@ -110,7 +110,7 @@ public abstract class Ant extends Entity {
 			}
 		} else {
 			ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
-			if (tp.equals(ObjectType.ENVIRONMENT)) { //ant hit another ant: start dodging procedure
+			if (tp.equals(ObjectType.ENVIRONMENT)) { 
 				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
 			}
 		}
@@ -243,7 +243,7 @@ public abstract class Ant extends Entity {
 
 	public void eat() {
 		hunger = hunger + 40;
-		hive.takeFood();
+		hive.takeFood(1);
 	}
 
 	public int getOdorStatus() {

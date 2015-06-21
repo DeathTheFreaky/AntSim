@@ -110,4 +110,21 @@ public class DynamicPhysicsObject extends MovablePhysicsObjectImpl {
 			setLinearVelocity(new Vector3f(0,0,0));
 		}
 	}
+
+	@Override
+	public void setMovement(Vector3f direction, float speed) {
+		
+		//ensure gravity is still applied when setting alignedMovement
+		Vector3f currentVelocity = new Vector3f();
+		this.getCollisionBody().getLinearVelocity(currentVelocity);
+		currentVelocity.y = currentVelocity.y - Globals.gravity/Globals.FPS_CAP; 
+		
+		if (direction.length() > 0) {
+			direction.normalize();
+			Vector3f linearVelocity = new Vector3f(direction.x * speed, currentVelocity.y, direction.z * speed);
+			setLinearVelocity(linearVelocity);
+		} else {
+			setLinearVelocity(new Vector3f(0,0,0));
+		}
+	}
 }

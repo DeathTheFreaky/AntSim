@@ -10,8 +10,10 @@ import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
+import at.antSim.objectsPhysic.Movement.Wait;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
@@ -79,7 +81,8 @@ public class Forager extends Ant implements Runnable {
 						}
 						lockedLocator = locator;
 						locator.registerAnt(this); //ant will be added to waiting ants in locator
-						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, physicsObject, Globals.ANT_SPEED));
+						movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, Globals.ANT_SPEED));
+//						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, physicsObject, Globals.ANT_SPEED));
 					}
 					
 				} else if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
@@ -87,6 +90,8 @@ public class Forager extends Ant implements Runnable {
 						
 					};
 				}
+			} else if (locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport == maxFoodTransport) { //dodge food if already collected the food!
+//				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
 			} else if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport == 0) {
 				
 			} else {
@@ -130,6 +135,11 @@ public class Forager extends Ant implements Runnable {
 					} else {
 						movementManager.removeLastMovementEntry(physicsObject);
 						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
+					}
+				} else if (lockedLocator.getTarget().objectType == ObjectType.HIVE) {
+					if (foodtransport > 0) {
+						hive.storeFood(foodtransport);
+						foodtransport = 0;
 					}
 				}
 			}

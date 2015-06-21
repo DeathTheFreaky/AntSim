@@ -105,12 +105,14 @@ public class Hive extends Entity {
 		return foodStacks;
 	}
 	
-	public void takeFood(){
-		foodStacks--;
+	public int takeFood(int amount){
+		int takenAmount = Math.min(foodStacks - amount, amount);
+		foodStacks -= takenAmount;
+		return takenAmount;
 	}
 	
-	public void storeFood(){
-		foodStacks++;
+	public void storeFood(int amount){
+		foodStacks += amount;
 	}
 
 	@Override
