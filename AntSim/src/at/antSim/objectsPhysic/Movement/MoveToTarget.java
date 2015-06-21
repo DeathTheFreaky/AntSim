@@ -30,6 +30,7 @@ public class MoveToTarget extends MovementMode {
 
 	@Override
 	public Vector3f getDirection() {
+		direction = new Vector3f(target.getPosition().x - physicsObject.getPosition().x, 0, target.getPosition().z - physicsObject.getPosition().z);
 		return direction;
 	}
 }

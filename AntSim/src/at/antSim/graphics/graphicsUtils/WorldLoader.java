@@ -11,11 +11,14 @@ import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsKI.Hive;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
+import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.utils.Maths;
+
 import com.bulletphysics.linearmath.Transform;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -139,28 +142,28 @@ public class WorldLoader {
 			
 		Transform positionNorth = new Transform();
 		positionNorth.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, 0), 0), 0, 0, 0));
-		GhostPhysicsObject northBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionNorth);
+		StaticPhysicsObject northBorder = (StaticPhysicsObject) StaticPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionNorth);
 		northBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		northBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(northBorder);
 		
 		Transform positionSouth = new Transform();
 		positionSouth.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE), -Globals.WORLD_SIZE), 0, 0, 0));
-		GhostPhysicsObject southBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionSouth);
+		StaticPhysicsObject southBorder = (StaticPhysicsObject) StaticPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, Globals.WORLD_SIZE, Globals.WORLD_SIZE, 5f, positionSouth);
 		southBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		southBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(southBorder);
 		
 		Transform positionEast = new Transform();
 		positionEast.set(Maths.createTransformationMatrix(new Vector3f(Globals.WORLD_SIZE, terrain.getHeightOfTerrain(Globals.WORLD_SIZE, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
-		GhostPhysicsObject eastBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionEast);
+		StaticPhysicsObject eastBorder = (StaticPhysicsObject) StaticPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionEast);
 		eastBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		eastBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(eastBorder);
 		
 		Transform positionWest = new Transform();
 		positionWest.set(Maths.createTransformationMatrix(new Vector3f(0, terrain.getHeightOfTerrain(0, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2), 0, 0, 0));
-		GhostPhysicsObject westBorder = (GhostPhysicsObject) GhostPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionWest);
+		StaticPhysicsObject westBorder = (StaticPhysicsObject) StaticPhysicsObjectFactory.getInstance().createCuboid("border", Globals.MASS_DUMMIE, 5f, Globals.WORLD_SIZE, Globals.WORLD_SIZE, positionWest);
 		westBorder.setCollisionFilterGroup(Globals.COL_BORDER);
 		westBorder.setCollisionFilterMask(tempFilterMask);
 		PhysicsManager.getInstance().registerPhysicsObject(westBorder);

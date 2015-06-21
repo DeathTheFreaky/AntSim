@@ -19,6 +19,7 @@ public class Dodge extends MovementMode {
 	Vector3f originalDirection;
 	Vector3f currentDirection;
 	Vector3f dodgeDirection;
+	MovementMode previousMode;
 	
 	float movementLimit = 1;
 		
@@ -44,6 +45,8 @@ public class Dodge extends MovementMode {
 	}
 	
 	public void move() {
+		
+		updateOriginalDirection();
 				
 		stillColliding--;
 				
@@ -94,13 +97,17 @@ public class Dodge extends MovementMode {
 		justCollided = false;
 	}
 	
+	private void updateOriginalDirection() {
+		originalDirection = previousMode.getDirection();
+		originalDirection.normalize();
+	}
+
 	private boolean reachedOriginalDirection() {
 		
-		System.out.println();
 		Vector3f change = new Vector3f();
 		change.sub(currentDirection, originalDirection);
 		change.y = 0;
-				
+						
 		if (change.length() < 0.1f) {
 			return true;
 		}
@@ -114,6 +121,7 @@ public class Dodge extends MovementMode {
 	
 	public void setOriginalDirection(Vector3f originalDirection) {
 		this.originalDirection = originalDirection;
+		originalDirection.normalize();
 	}
 	
 	public void setCurrentDirection(Vector3f currentDirection) {
@@ -132,6 +140,10 @@ public class Dodge extends MovementMode {
 			previousObstacles.add(obstacle);
 			obstacle = newObstacle;
 		}
+	}
+	
+	public void setPreviousMovementMode(MovementMode previousMode) {
+		this.previousMode = previousMode;
 	}
 
 	@Override

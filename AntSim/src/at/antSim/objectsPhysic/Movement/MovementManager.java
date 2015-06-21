@@ -61,10 +61,10 @@ public class MovementManager {
 			}
 			
 		} else if (mode.type.equals(MovementModeType.DODGE)){
-			Vector3f originalDirection = entries.get(physicsObject).lastElement().getDirection();
+			MovementMode previousMode = entries.get(physicsObject).lastElement();
 			entries.get(physicsObject).add(mode);
-			((Dodge) mode).setOriginalDirection(originalDirection);
-			((Dodge) mode).setCurrentDirection(originalDirection);
+			((Dodge) mode).setCurrentDirection(previousMode.getDirection());
+			((Dodge) mode).setPreviousMovementMode(previousMode);
 		} else {
 			entries.get(physicsObject).add(mode);
 		}

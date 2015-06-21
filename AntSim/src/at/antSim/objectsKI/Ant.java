@@ -12,6 +12,7 @@ import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
 import at.antSim.eventSystem.events.LocatorLockEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
@@ -19,9 +20,11 @@ import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MoveInDirection;
+import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 import at.antSim.utils.CountingLinkedList;
 import at.antSim.utils.Maths;
 
@@ -83,7 +86,8 @@ public abstract class Ant extends Entity {
 		//this.physicsObject.setRotation(0, 0, 0);
 		EventManager.getInstance().registerEventListener(this);
 		movementManager = MovementManager.getInstance();
-		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveInDirection((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
+//		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveInDirection((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
+		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveToTarget((DynamicPhysicsObject) physicsObject, (ReadOnlyPhysicsObject) WorldLoader.hive.physicsObject, Globals.ANT_SPEED));
 	}
 
 	@Override

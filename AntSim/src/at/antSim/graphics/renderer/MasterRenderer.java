@@ -351,7 +351,6 @@ public class MasterRenderer {
 		
 		if (time < 6000 || time > 18000) {
 			float helpTime = (time + 12000) % 24000;
-			System.out.println("helpTime: " + helpTime);
 			moonHor = baseHor + (helpTime - 6000)/12000 * (maxHor);
 			sunHor = baseHor + maxHor - (helpTime - 6000)/12000 * (maxHor);
 		} else {
