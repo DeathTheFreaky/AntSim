@@ -136,6 +136,8 @@ public class MainApplication {
 	private Light movingLight;
 	
 	private Hive hive;
+	private int antFoodCtr;
+	private int antFoodThreshold = 100;
 	
 	private boolean glLoaded = false;
 	private boolean worldLoaded = false;
@@ -280,6 +282,11 @@ public class MainApplication {
 			PhysicsManager.getInstance().performCollisionDetection(timeSinceLastUpdate); //... will be triggered here and registered by the movingEntity's Collision event listener
 			
 			cycleCtr++;
+			antFoodCtr++;
+			if(antFoodCtr > antFoodThreshold){
+				antFoodCtr = 0;
+				hive.foodChain();
+			}
 //			System.out.println();
 		}
 		

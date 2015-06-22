@@ -148,6 +148,8 @@ public class Forager extends Ant implements Runnable {
 					if (foodtransport > 0) {
 						hive.storeFood(foodtransport);
 						foodtransport = 0;
+						this.setHp(Globals.antHp);
+						movementManager.removeLastMovementEntry(physicsObject); // So he doesnt stand at the hive
 					}
 				}
 			}

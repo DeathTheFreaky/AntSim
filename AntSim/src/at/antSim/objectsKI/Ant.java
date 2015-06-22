@@ -2,6 +2,7 @@ package at.antSim.objectsKI;
 
 import java.util.LinkedList;
 
+import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import at.antSim.Globals;
@@ -25,6 +26,8 @@ import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.Movement.MovementMode;
 import at.antSim.objectsPhysic.Movement.MovementModeType;
+import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
@@ -260,6 +263,9 @@ public abstract class Ant extends Entity {
 
 	public void setHp(int hp) {
 		this.hp = hp;
+		if(hp == 1){
+			spawnDeadAnt();
+		}
 	}
 
 	public int getAttack() {
@@ -344,7 +350,23 @@ public abstract class Ant extends Entity {
 
 	@Override
 	protected void deleteSpecific() {
+		unlockLocator();
 		dynamicEntities.remove(this);
 		ants.remove(this);
+	}
+	
+	private void spawnDeadAnt() {
+		org.lwjgl.util.vector.Vector3f pos = Maths.vec3fToSlickUtil(physicsObject.getPosition());
+		Quat4f rot = physicsObject.getRotationQuaternions();
+		delete(true);
+		Hive.getInstance().addDeleteAnt(this);
+		
+		Entity movingEntity = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(pos) //position will be set later anyway in main loop according to mouse position
+				.setRotation(rot)
+				.buildGraphicsEntity("deadAnt", 1, 10)
+				.setObjectType(ObjectType.FOOD)
+				.buildPhysicsObject()
+				.registerResult();
 	}
 }
