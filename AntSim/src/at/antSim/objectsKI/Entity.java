@@ -31,6 +31,7 @@ public abstract class Entity {
 	static final List<Entity> entities = new LinkedList<>(); //used to delete all entities
 	static final List<Entity> dynamicEntities = new LinkedList<>();
 	static final List<Ant> ants = new LinkedList<Ant>();
+	static final List<Entity> pheromones = new LinkedList<>();
 
 	final GraphicsEntity graphicsEntity;
 	final PhysicsObject physicsObject;
@@ -165,6 +166,7 @@ public abstract class Entity {
 		entities.clear();
 		dynamicEntities.clear();
 		ants.clear();
+		pheromones.clear();
 	}
 	
 	/**Strangely, sometimes dynamic objects seem to fall below the world. 

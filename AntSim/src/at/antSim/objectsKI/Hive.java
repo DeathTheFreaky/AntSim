@@ -1,6 +1,8 @@
 package at.antSim.objectsKI;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -26,6 +28,7 @@ public class Hive extends Entity {
 	private ArrayList<Feedable> fa = new ArrayList<Feedable>();
 	private ArrayList<Ant> ants = new ArrayList<Ant>();
 	private ArrayList<Ant> deleteAnts = new ArrayList<Ant>();
+	private List<Entity> pheromones = new LinkedList<>();
 	private ArrayList<Egg> eggs = new ArrayList<Egg>();
 	private ArrayList<Larva> larvae = new ArrayList<Larva>();
 	private int foodStacks;
@@ -74,7 +77,6 @@ public class Hive extends Entity {
 	public void foodChain() {
 		for (Ant a : ants) {
 			a.setHp(a.getHp() - 1);
-			System.out.println("HP: " + a.getHp());
 		}
 		ants.removeAll(deleteAnts);
 	}
@@ -95,6 +97,10 @@ public class Hive extends Entity {
 
 	public void addDeleteAnt(Ant a) {
 		deleteAnts.add(a);
+	}
+	
+	public void addPheromone(Entity e) {
+		pheromones.add(e);
 	}
 
 	public void removeEgg(Egg e) {
@@ -196,5 +202,31 @@ public class Hive extends Entity {
 
 	public static Hive getInstance() {
 		return INSTANCE;
+	}
+
+	public void layPheromones() {
+		for (Ant a : ants) {
+			if(a.getOdorStatus() == 2){
+				Pheromone p = (Pheromone)a.layPheromones();
+				javax.vecmath.Vector3f dir = a.physicsObject.getPosition();
+				dir.x = dir.x * -1;
+				dir.z = dir.z * -1;
+				p.setDirection(dir);
+				Entity.pheromones.add(p);
+			}
+		}
+		
+		//remove pheromones over time
+		for( Entity e : Entity.pheromones){
+			Pheromone p = (Pheromone) e;
+			p.setLifetime(p.getLifetime()-1);
+		}
+		
+		//Destroy pheromones
+		for( Entity e : pheromones){
+			Pheromone p = (Pheromone) e;
+			Entity.pheromones.remove(p);
+			p.delete(true);
+		}
 	}
 }

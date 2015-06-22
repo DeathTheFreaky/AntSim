@@ -1,5 +1,7 @@
 package at.antSim.objectsKI;
 
+import javax.vecmath.Vector3f;
+
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
@@ -14,9 +16,13 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
  *
  */
 public class Pheromone extends Entity {
+	
+	private Vector3f direction;
+	private int lifetime = 35;
 
 	public Pheromone(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.PHEROMONE);
+		Entity.pheromones.add(this);
 	}
 
 	@Override
@@ -45,6 +51,25 @@ public class Pheromone extends Entity {
 
 	@Override
 	protected void deleteSpecific() {
-		
+		Entity.pheromones.remove(this);
+	}
+
+	public int getLifetime() {
+		return lifetime;
+	}
+
+	public void setLifetime(int lifetime) {
+		this.lifetime = lifetime;
+		if(lifetime == 1){
+			Hive.getInstance().addPheromone(this);
+		}
+	}
+
+	public Vector3f getDirection() {
+		return direction;
+	}
+
+	public void setDirection(Vector3f direction) {
+		this.direction = direction;
 	}
 }

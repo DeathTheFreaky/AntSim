@@ -369,4 +369,15 @@ public abstract class Ant extends Entity {
 				.buildPhysicsObject()
 				.registerResult();
 	}
+
+	public Entity layPheromones() {
+		org.lwjgl.util.vector.Vector3f pos = Maths.vec3fToSlickUtil(physicsObject.getPosition());
+		Quat4f rot = physicsObject.getRotationQuaternions();
+		Entity pheromone = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(GhostPhysicsObjectFactory.getInstance())
+				.setPosition(pos)
+				.buildGraphicsEntity("pheromone", 1, 50) //enable for debugging just to visualize the pheromones
+				.buildPhysicsObject()
+				.registerResult();
+		return pheromone;
+	}
 }
