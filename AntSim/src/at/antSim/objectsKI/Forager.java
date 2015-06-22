@@ -83,7 +83,7 @@ public class Forager extends Ant implements Runnable {
 							}
 							lockedLocator = locator;
 							locator.registerAnt(this); //ant will be added to waiting ants in locator
-							movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, Globals.ANT_SPEED));
+							movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
 	//						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, physicsObject, Globals.ANT_SPEED));
 						}
 						
@@ -125,6 +125,10 @@ public class Forager extends Ant implements Runnable {
 						
 						Food food = (Food) parentingEntities.get(staticPhysicsObject);
 						carryMoreFood(food.harvest()); //amount of food which cannot be carried by ant is put back into food resource
+						
+						if (!Entity.entities.contains(food)) { //food has been deleted cause its foodstacks reached 0
+							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
+						}
 											
 						if (lockedLocator != null) {
 							//lock in on lockedLocator

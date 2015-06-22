@@ -20,7 +20,7 @@ public class BorderCollisionMovement extends MovementMode {
 		this.limit = 10;
 		MovementMode topMode = MovementManager.getInstance().getTopMovementMode(physicsObject);
 		if (topMode != null) {
-			direction = Maths.turnDirectionVector(topMode.getDirection(), 135);
+			direction = Maths.turnDirectionVector(topMode.getDirection(), 125); //dont use 135 -> if hitting two walls will always move along walls
 			direction.y = 0;
 		} else {
 			direction = new Vector3f(1, 0, 1);

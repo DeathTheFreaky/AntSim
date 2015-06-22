@@ -2,7 +2,10 @@ package at.antSim.objectsPhysic.Movement;
 
 import javax.vecmath.Vector3f;
 
+import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
+import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 
 /**Wait at your current position.
  * 
@@ -11,18 +14,20 @@ import at.antSim.objectsPhysic.DynamicPhysicsObject;
  */
 public class Wait extends MovementMode {
 	
+	ReadOnlyPhysicsObject target;
 	Vector3f direction;
 	Vector3f position;
 	
 	int limit;
 	
-	public Wait(DynamicPhysicsObject physicsObject, float speed) {
-		this(physicsObject, speed, -1);
+	public Wait(DynamicPhysicsObject physicsObject, ReadOnlyPhysicsObject target, float speed) {
+		this(physicsObject, target, speed, -1);
 	}
 
-	public Wait(DynamicPhysicsObject physicsObject, float speed, int limit) {
+	public Wait(DynamicPhysicsObject physicsObject, ReadOnlyPhysicsObject target, float speed, int limit) {
 		super(MovementModeType.WAIT, physicsObject, speed);
 		
+		this.target = target;
 		this.limit = limit;
 		position = physicsObject.getPosition();
 		direction = new Vector3f(position.x - physicsObject.getPosition().x, 0, position.z - physicsObject.getPosition().z);
@@ -30,8 +35,10 @@ public class Wait extends MovementMode {
 
 	@Override
 	public void move() {
-		
-		System.out.println("waiting");
+				
+		if (target != null && !targetExists()) {
+			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+		};
 		
 		direction = new Vector3f(position.x - physicsObject.getPosition().x, 0, position.z - physicsObject.getPosition().z);
 		physicsObject.setMovement(direction, speed);
@@ -41,6 +48,14 @@ public class Wait extends MovementMode {
 		} else if (limit == 0){
 			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
 		}
+	}
+	
+	private boolean targetExists() {
+		if (Entity.getParentEntity((PhysicsObject) target) == null) {
+			System.out.println("target ceased to exist in wait");
+			return false;
+		}
+		return true;
 	}
 
 	@Override

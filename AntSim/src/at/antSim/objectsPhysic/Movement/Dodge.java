@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
+import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
+import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 import at.antSim.utils.Maths;
 
@@ -49,6 +51,12 @@ public class Dodge extends MovementMode {
 		updateOriginalDirection();
 				
 		stillColliding--;
+		
+		if (!targetExists()) {	
+			physicsObject.setAlignedMovement(originalDirection, speed);
+			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+			return;
+		}
 				
 		if (stillColliding > 0) {
 													
@@ -144,6 +152,14 @@ public class Dodge extends MovementMode {
 	
 	public void setPreviousMovementMode(MovementMode previousMode) {
 		this.previousMode = previousMode;
+	}
+	
+	private boolean targetExists() {
+		if (Entity.getParentEntity((PhysicsObject) obstacle) == null) {
+			System.out.println("target ceased to exist in dodge");
+			return false;
+		}
+		return true;
 	}
 
 	@Override
