@@ -286,6 +286,7 @@ public class MainApplication {
 			if(antFoodCtr > antFoodThreshold){
 				antFoodCtr = 0;
 				hive.foodChain();
+				hive.layPheromones();
 			}
 //			System.out.println();
 		}

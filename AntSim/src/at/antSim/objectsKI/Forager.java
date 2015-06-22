@@ -1,8 +1,10 @@
 package at.antSim.objectsKI;
 
+import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import at.antSim.Globals;
+import at.antSim.MainApplication;
 import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.LocatorLockEvent;
@@ -15,8 +17,11 @@ import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.Movement.Wait;
+import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
+import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
 
 public class Forager extends Ant implements Runnable {
 	private int threshold;
@@ -106,6 +111,7 @@ public class Forager extends Ant implements Runnable {
 			
 //			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + locator.getTargetPosition());
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
+//			System.out.println(parentingEntities.get(ghostPhysicsObject));
 			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
 //			System.out.println("an ant ran into " + ghostPhysicsObject.getType());
 		}
@@ -128,18 +134,20 @@ public class Forager extends Ant implements Runnable {
 						
 						if (!Entity.entities.contains(food)) { //food has been deleted cause its foodstacks reached 0
 							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
+							this.setOdorStatus(2);
 						}
 											
 						if (lockedLocator != null) {
 							//lock in on lockedLocator
 							movementManager.removeLastMovementEntry(physicsObject); //whatfor?
-							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) lockedLocator.physicsObject, Globals.LOCKIN_SPEED));
+							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) lockedLocator.physicsObject, Globals.LOCKIN_SPEED));							
 						}
 					} else {
 						if (movementManager.getTopMovementMode(physicsObject).getType() != MovementModeType.DODGE) {
 							movementManager.removeLastMovementEntry(physicsObject); //whatfor?
 							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
 							movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
+							this.setOdorStatus(2);
 						} else {
 							movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
 						}
@@ -149,12 +157,14 @@ public class Forager extends Ant implements Runnable {
 						hive.storeFood(foodtransport);
 						foodtransport = 0;
 						this.setHp(Globals.antHp);
+						this.setOdorStatus(1);
 						movementManager.removeLastMovementEntry(physicsObject); // So he doesnt stand at the hive
 					}
 				}
 			}
 		}
 	}
+	
 
 	@Override
 	public void reactSpecific(DynamicPhysicsObject dynamicPhysicsObject) {
