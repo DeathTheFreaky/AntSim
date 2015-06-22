@@ -76,6 +76,7 @@ public class Forager extends Ant implements Runnable {
 						
 						if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
 							movementManager.addMovementEntry((DynamicPhysicsObject) locator.getTarget().physicsObject, new Wait((DynamicPhysicsObject) locator.getTarget().physicsObject, physicsObject, Globals.ANT_SPEED));
+							System.out.println("ant hit an ememy");
 						}
 						
 						if (locator.entryPossible(this)) {

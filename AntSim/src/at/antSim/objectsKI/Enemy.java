@@ -102,11 +102,11 @@ public abstract class Enemy extends Entity {
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
 		
-		if (Entity.parentingEntities.get(dynamicPhysicsObject).objectType == ObjectType.ANT) {
-			Ant ant = (Ant) Entity.parentingEntities.get(dynamicPhysicsObject);
-			ant.fight(attack);
-			fight(ant.attack);
-		}
+//		if (Entity.parentingEntities.get(dynamicPhysicsObject).objectType == ObjectType.ANT) {
+//			Ant ant = (Ant) Entity.parentingEntities.get(dynamicPhysicsObject);
+//			ant.fight(attack);
+//			fight(ant.attack);
+//		}
 	}
 
 	@Override
@@ -125,6 +125,13 @@ public abstract class Enemy extends Entity {
 		if (!ce.getPhyObj1().getType().equals("terrain") && !ce.getPhyObj2().getType().equals("terrain")) {
 //			 System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
 //			 "\nPhyObj1: " + ce.getPhyObj1().getType() + "\nPhyObj2: " + ce.getPhyObj2().getType() + " with ctr " + MainApplication.getInstance().getCycleCtr());
+			
+			boolean hitAnt = false;
+			
+			if (Entity.parentingEntities.containsKey(ce.getPhyObj1())) {
+				
+			}
+			
 			if (ce.getPhyObj1().equals(physicsObject)) {
 				ce.getPhyObj2().receive(this);
 				ce.consume();

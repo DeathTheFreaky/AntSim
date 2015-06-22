@@ -52,7 +52,7 @@ public class Wait extends MovementMode {
 	
 	private boolean targetExists() {
 		if (Entity.getParentEntity((PhysicsObject) target) == null) {
-			System.out.println("target ceased to exist in wait");
+//			System.out.println("target ceased to exist in wait");
 			return false;
 		}
 		return true;

@@ -116,8 +116,10 @@ public class PositionLocator extends Entity {
 	 * @param ant
 	 */
 	public void unregisterAnt(Ant ant) {
+		System.out.println("unregistering ant " + ant);
 		activeAnts.remove(ant);
 		waitingAnts.remove(ant);
+		System.out.println("locator now contains " + activeAnts.size() + " active ants and " + waitingAnts.size() + " waiting ants");
 	}
 	
 	public int numberOfActiveAnts() {
