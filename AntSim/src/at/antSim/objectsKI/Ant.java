@@ -81,7 +81,7 @@ public abstract class Ant extends Entity {
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
 		hive = Hive.getInstance();
 		hive.addAnt(this);
-		Vector3f v = new Vector3f(velocityX, 0, velocityZ);
+		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
 //		this.physicsObject.setLinearVelocity(v);
 //		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, -1), Globals.ANT_SPEED*3);
 		dynamicEntities.add(this);

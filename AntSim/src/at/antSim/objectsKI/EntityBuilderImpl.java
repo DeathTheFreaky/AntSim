@@ -146,7 +146,6 @@ public class EntityBuilderImpl implements EntityBuilder {
 		} else if (orientation == PhysicsObjectOrientation.Z) {
 			this.height = radius*2;
 		}
-		System.out.println("creating cone with height of " + height + " and radius of " + radius + " for scale " + scale);
 		setTransform();
 		physicsObject = factory.createCone(type, mass, height, radius, orientation, transform);
 		return this;
@@ -173,7 +172,6 @@ public class EntityBuilderImpl implements EntityBuilder {
 			zLength = scale;
 		}
 		this.height = yLength;
-		System.out.println("creating cuboid with height of " + height + " and x of " + xLength + ", y of " + yLength + ", z of " + zLength + " for scale " + scale);
 		setTransform();
 		physicsObject = factory.createCuboid(type, mass, xLength, yLength, zLength, transform);
 		return this;
@@ -196,7 +194,6 @@ public class EntityBuilderImpl implements EntityBuilder {
 		} else if (orientation == PhysicsObjectOrientation.Z) {
 			this.height = radius*2;
 		}
-		System.out.println("creating cylinder with height of " + height + " and radius of " + radius + " for scale " + scale);
 		setTransform();
 		physicsObject = factory.createCone(type, mass, height, radius, orientation, transform);
 		return this;
@@ -206,7 +203,6 @@ public class EntityBuilderImpl implements EntityBuilder {
 	public EntityBuilder createSphere(float scale) {
 		this.scale = scale;
 		this.height = scale;
-		System.out.println("creating sphere with radius of " + scale/2 + " for scale " + scale);
 		setTransform();
 		physicsObject = factory.createSphere(type, mass, scale/2, transform);
 		return this;
@@ -254,7 +250,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 			if (type.equals("enemyAnt")) {
 				retEntity = new EnemyAnt(graphicsEntity, physicsObject);
 			} else if (type.equals("enemyGrasshopper")) {
-				retEntity = new Worker(graphicsEntity, physicsObject);
+				retEntity = new EnemyGrasshopper(graphicsEntity, physicsObject);
 			} 
 			break;
 		case ENVIRONMENT:
