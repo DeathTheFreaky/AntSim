@@ -74,6 +74,9 @@ public class Forager extends Ant implements Runnable {
 	//						System.out.println(this + " is trying to enter hive locator");
 						}
 						
+						if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
+							movementManager.addMovementEntry((DynamicPhysicsObject) locator.getTarget().physicsObject, new Wait((DynamicPhysicsObject) locator.getTarget().physicsObject, physicsObject, Globals.ANT_SPEED));
+						}
 						
 						if (locator.entryPossible(this)) {
 							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
@@ -169,8 +172,12 @@ public class Forager extends Ant implements Runnable {
 
 	@Override
 	public void reactSpecific(DynamicPhysicsObject dynamicPhysicsObject) {
-		// TODO Auto-generated method stub
 		
+		if (Entity.parentingEntities.get(dynamicPhysicsObject).objectType == ObjectType.ENEMY) {
+			Enemy enemy = (Enemy) Entity.parentingEntities.get(dynamicPhysicsObject);
+			enemy.fight(attack);
+			fight(enemy.attack);
+		}
 	}
 	
 //	@EventListener(priority = EventPriority.NORMAL)

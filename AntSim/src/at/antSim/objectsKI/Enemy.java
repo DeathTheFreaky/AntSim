@@ -41,8 +41,8 @@ public abstract class Enemy extends Entity {
 	
 	DynamicPhysicsObject physicsObject;
 	
-	int hp;
-	int attack;
+	float hp;
+	float attack;
 	
 	MovementManager movementManager;
 
@@ -66,8 +66,13 @@ public abstract class Enemy extends Entity {
 		enemies.add(this);
 		
 		movementManager = MovementManager.getInstance();
-		
-		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
+				
+		Vector3f dir = new Vector3f(1,0,0);
+		Vector3f rotation = this.physicsObject.getRotationDegrees();
+		if (rotation.x == 180) {
+			dir.x = -1;
+		}
+		Vector3f v = Maths.turnDirectionVector(dir, (int) this.physicsObject.getRotationDegrees().y);
 		EventManager.getInstance().registerEventListener(this);
 		movementManager = MovementManager.getInstance();
 		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveInDirection((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
@@ -97,6 +102,11 @@ public abstract class Enemy extends Entity {
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
 		
+		if (Entity.parentingEntities.get(dynamicPhysicsObject).objectType == ObjectType.ANT) {
+			Ant ant = (Ant) Entity.parentingEntities.get(dynamicPhysicsObject);
+			ant.fight(attack);
+			fight(ant.attack);
+		}
 	}
 
 	@Override
@@ -139,5 +149,13 @@ public abstract class Enemy extends Entity {
 		positionLocator.delete(true);
 		dynamicEntities.remove(this);
 		enemies.remove(this);
+	}
+
+	public void fight(float damage) {
+		hp -= damage;
+		System.out.println(this + " has " + hp + " health left");
+		if (hp <= 0) {
+			delete(true);
+		}
 	}
 }

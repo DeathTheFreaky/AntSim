@@ -55,8 +55,8 @@ import at.antSim.utils.Maths;
 public abstract class Ant extends Entity {
 	// search 1, food 2, war 3, nothing 0
 	protected int odorStatus = 0;
-	protected int hp;
-	protected int attack;
+	protected float hp;
+	protected float attack;
 	// saturate?
 	private int hunger;
 	protected DynamicPhysicsObject physicsObject = null;
@@ -257,18 +257,18 @@ public abstract class Ant extends Entity {
 		this.odorStatus = odorStatus;
 	}
 
-	public int getHp() {
+	public float getHp() {
 		return hp;
 	}
 
-	public void setHp(int hp) {
+	public void setHp(float hp) {
 		this.hp = hp;
 		if(hp == 1){
 			spawnDeadAnt();
 		}
 	}
 
-	public int getAttack() {
+	public float getAttack() {
 		return attack;
 	}
 
@@ -353,6 +353,14 @@ public abstract class Ant extends Entity {
 		unlockLocator();
 		dynamicEntities.remove(this);
 		ants.remove(this);
+	}
+	
+	public void fight(float damage) {
+		hp -= damage;
+		System.out.println(this + " has " + hp + " health left");
+		if (hp <= 0) {
+			delete(true);
+		}
 	}
 	
 	private void spawnDeadAnt() {
