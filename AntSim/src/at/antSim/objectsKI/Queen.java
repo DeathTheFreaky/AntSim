@@ -14,46 +14,64 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
  * @author Martin
  *
  */
-public class Queen extends Ant implements Feedable {
-	
+public class Queen  implements Feedable {
+	private int hp;
+	private int hunger;
 	private int eggLayingCost = 1;
 	private int eggLayingSpeed = 1;
 	
-	public Queen(GraphicsEntity graphicsEntity,PhysicsObject physicsObject) {
-		super(graphicsEntity, physicsObject);
+	public Queen() {
 		hp = Globals.queenHp;
-		attack = Globals.queenAttack;
 	}
 
 	public void layEgg(){
 		Egg e = new Egg();
+		Hive.getInstance().addAddableFeed(e);
 		Hive.getInstance().addEgg(e);
 	}
 	
 	public void feed(){
-		setHunger(getHunger()+1);
-		if(getHunger() > eggLayingSpeed){
+		hunger++;
+		if(hunger > eggLayingSpeed){
 			layEgg();
-			setHunger(getHunger()-eggLayingCost);
+			hunger = hunger-eggLayingCost;
 		}
 	}
 
-	@Override
-	public void reactSpecific(StaticPhysicsObject staticPhysicsObject) {
-		// TODO Auto-generated method stub
-		
+	public int getHp() {
+		return hp;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	public int getHunger() {
+		return hunger;
+	}
+
+	public void setHunger(int hunger) {
+		this.hunger = hunger;
+	}
+
+	public int getEggLayingCost() {
+		return eggLayingCost;
+	}
+
+	public void setEggLayingCost(int eggLayingCost) {
+		this.eggLayingCost = eggLayingCost;
+	}
+
+	public int getEggLayingSpeed() {
+		return eggLayingSpeed;
+	}
+
+	public void setEggLayingSpeed(int eggLayingSpeed) {
+		this.eggLayingSpeed = eggLayingSpeed;
 	}
 
 	@Override
-	public void reactSpecific(DynamicPhysicsObject dynamicPhysicsObject) {
-		// TODO Auto-generated method stub
-		
+	public String getFeedableType() {
+		return "Queen";
 	}
-
-	@Override
-	public void reactSpecific(GhostPhysicsObject ghostPhysicsObject) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

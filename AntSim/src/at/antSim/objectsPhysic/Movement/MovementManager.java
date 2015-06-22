@@ -103,14 +103,12 @@ public class MovementManager {
 	 * @param physicsObject
 	 */
 	public void removeLastMovementEntry(DynamicPhysicsObject physicsObject) {
-		System.out.println("size " + entries.get(physicsObject).size());
 		if (entries.containsKey(physicsObject)) {
 			entries.get(physicsObject).pop();
 			if (entries.get(physicsObject).size() == 0) {
 				entries.remove(physicsObject);
 			}
 		}
-		System.out.println("size2 " + entries.get(physicsObject).size());
 	}
 
 	/**

@@ -78,7 +78,7 @@ public abstract class Ant extends Entity {
 	//linked lists for storing which position Locators and Pheromones the ant is currently in
 	protected CountingLinkedList<PositionLocator> positionLocators = new CountingLinkedList<>();
 	protected CountingLinkedList<Pheromone> pheromones = new CountingLinkedList<>();
-
+	
 	public Ant(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.ANT);
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
