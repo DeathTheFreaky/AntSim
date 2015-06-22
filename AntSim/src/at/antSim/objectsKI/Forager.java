@@ -111,7 +111,6 @@ public class Forager extends Ant implements Runnable {
 			
 //			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + locator.getTargetPosition());
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
-//			System.out.println(parentingEntities.get(ghostPhysicsObject));
 			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
 //			System.out.println("an ant ran into " + ghostPhysicsObject.getType());
 		}
@@ -159,6 +158,8 @@ public class Forager extends Ant implements Runnable {
 						this.setHp(Globals.antHp);
 						this.setOdorStatus(1);
 						movementManager.removeLastMovementEntry(physicsObject); // So he doesnt stand at the hive
+						
+						System.out.println("movement: " + movementManager.getTopMovementMode(physicsObject));
 					}
 				}
 			}
