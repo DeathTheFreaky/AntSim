@@ -49,6 +49,11 @@ public class GTPCylinder extends GTPObject {
 			if (yLength > xLength) radius = yLength/2;
 			else radius = xLength/2;
 			orientation = PhysicsObjectOrientation.Z;
+		} else {
+			height = yLength;
+			if (xLength > zLength) radius = xLength/2;
+			else radius = zLength/2;
+			orientation = PhysicsObjectOrientation.Y;
 		}
 	}
 

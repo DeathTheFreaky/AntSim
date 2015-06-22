@@ -320,11 +320,15 @@ public abstract class Ant extends Entity {
 	 */
 	public void resetPositionLocators() {
 		for (PositionLocator loc : positionLocators.update()) {
-			if (loc.equals(lockedLocator)) {
-				unlockLocator();
+			if (loc != null) {
+				if (loc.equals(lockedLocator)) {
+					unlockLocator();
+				} else {
+					loc.unregisterAnt(this);
+//					System.out.println("unregisterd " + this + " in " + loc);
+				}
 			} else {
-				loc.unregisterAnt(this);
-//				System.out.println("unregisterd " + this + " in " + loc);
+				unlockLocator();
 			}
 		};
 	}

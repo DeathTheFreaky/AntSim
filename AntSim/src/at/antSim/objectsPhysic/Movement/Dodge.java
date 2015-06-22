@@ -45,7 +45,7 @@ public class Dodge extends MovementMode {
 	}
 	
 	public void move() {
-		
+				
 		updateOriginalDirection();
 				
 		stillColliding--;
@@ -150,4 +150,8 @@ public class Dodge extends MovementMode {
 	public Vector3f getDirection() {
 		return currentDirection;
 	}	
+	
+	public ReadOnlyPhysicsObject getTarget() {
+		return obstacle;
+	}
 }

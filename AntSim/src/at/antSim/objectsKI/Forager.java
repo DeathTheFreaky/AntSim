@@ -13,6 +13,7 @@ import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
+import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.Movement.Wait;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
@@ -58,48 +59,48 @@ public class Forager extends Ant implements Runnable {
 			PositionLocator locator = (PositionLocator) parentingEntities.get(ghostPhysicsObject);
 			positionLocators.increaseCount(locator); //make sure positionLocator remains/is being added to list of all PositionLocators ant is currently in
 			
-			if (lockedLocator == null) { //only register ant for one locator at a time
-				if ((locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport < maxFoodTransport)
-						|| (locator.getTarget().getObjectType().equals(ObjectType.ENEMY) && foodtransport == 0)
-						|| (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0)) {
-					
-					if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
-//						System.out.println(this + " is trying to enter hive locator");
-					}
-					
-					
-					if (locator.entryPossible(this)) {
-						if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
-//							System.out.println(this + " was allowed entry into hive locator");
-						}
-						lockedLocator = locator;
-						locator.registerAnt(this); //ant will be added to active ants in locator
-						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
-					} else { //entry not possible -> either add to waiting list by calling locator.registerAnt or do something else
-						if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
-//							System.out.println(this + " was told to wait for entry into hive locator");
-						}
-						lockedLocator = locator;
-						locator.registerAnt(this); //ant will be added to waiting ants in locator
-						movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, Globals.ANT_SPEED));
-//						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, physicsObject, Globals.ANT_SPEED));
-					}
-					
-				} else if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
-					if (locator.registerAnt(this)) {
+			if (locator != null) {
+				if (lockedLocator == null) { //only register ant for one locator at a time
+					if ((locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport < maxFoodTransport)
+							|| (locator.getTarget().getObjectType().equals(ObjectType.ENEMY) && foodtransport == 0)
+							|| (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0)) {
 						
-					};
-				}
-			} else if (locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport == maxFoodTransport) { //dodge food if already collected the food!
-//				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
-			} else if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport == 0) {
-				
-			} else {
-				if (!locator.containsActiveAnt(this)) {
-					if(locator.registerAnt(this)) { //try to get access -> if allowed, ant will be added to actives, so method will not be called again
-						movementManager.removeLastMovementEntry(physicsObject); //remove lockin entry (which forces ant to stay where it is, even when hit by other ants)
-						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
-					};
+						if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
+	//						System.out.println(this + " is trying to enter hive locator");
+						}
+						
+						
+						if (locator.entryPossible(this)) {
+							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
+	//							System.out.println(this + " was allowed entry into hive locator");
+							}
+							lockedLocator = locator;
+							locator.registerAnt(this); //ant will be added to active ants in locator
+							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
+						} else { //entry not possible -> either add to waiting list by calling locator.registerAnt or do something else
+							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
+	//							System.out.println(this + " was told to wait for entry into hive locator");
+							}
+							lockedLocator = locator;
+							locator.registerAnt(this); //ant will be added to waiting ants in locator
+							movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, Globals.ANT_SPEED));
+	//						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, physicsObject, Globals.ANT_SPEED));
+						}
+						
+					} else if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
+						if (locator.registerAnt(this)) {
+							
+						};
+					}
+				} else if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport == 0) {
+					
+				} else {
+					if (!locator.containsActiveAnt(this)) {
+						if(locator.registerAnt(this)) { //try to get access -> if allowed, ant will be added to actives, so method will not be called again
+							movementManager.removeLastMovementEntry(physicsObject); //remove wait entry (which forces ant to stay where it is, even when hit by other ants)
+							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
+						};
+					}
 				}
 			}
 			
@@ -127,14 +128,17 @@ public class Forager extends Ant implements Runnable {
 											
 						if (lockedLocator != null) {
 							//lock in on lockedLocator
-							movementManager.removeLastMovementEntry(physicsObject);
+							movementManager.removeLastMovementEntry(physicsObject); //whatfor?
 							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) lockedLocator.physicsObject, Globals.LOCKIN_SPEED));
-						} else { //lockedLocator has been deleted in the meantime cause it ran out of food
-							movementManager.removeLastMovementEntry(physicsObject);
 						}
 					} else {
-						movementManager.removeLastMovementEntry(physicsObject);
-						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
+						if (movementManager.getTopMovementMode(physicsObject).getType() != MovementModeType.DODGE) {
+							movementManager.removeLastMovementEntry(physicsObject); //whatfor?
+							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
+							movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
+						} else {
+							movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
+						}
 					}
 				} else if (lockedLocator.getTarget().objectType == ObjectType.HIVE) {
 					if (foodtransport > 0) {

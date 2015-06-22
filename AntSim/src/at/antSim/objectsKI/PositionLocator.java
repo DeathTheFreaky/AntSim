@@ -18,7 +18,9 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MovementManager;
+import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
@@ -155,6 +157,5 @@ public class PositionLocator extends Entity {
 		for (Ant ant : activeAnts) {
 			ant.unlockLocator();
 		}
-		
 	}
 }
