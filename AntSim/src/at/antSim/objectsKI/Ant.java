@@ -73,18 +73,13 @@ public abstract class Ant extends Entity {
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
 		hive = Hive.getInstance();
 		hive.addAnt(this);
-//		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
-		Vector3f v = new Vector3f(1,0,0);
-//		this.physicsObject.setLinearVelocity(v);
-//		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, -1), Globals.ANT_SPEED*3);
+		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
+//		Vector3f v = new Vector3f(1,0,0);
 		dynamicEntities.add(this);
 		ants.add(this);
-		// ROTATE WITH THIS Math.toradiant();
-		//this.physicsObject.setRotation(0, 0, 0);
 		EventManager.getInstance().registerEventListener(this);
 		movementManager = MovementManager.getInstance();
 		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveInDirection((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
-//		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveToTarget((DynamicPhysicsObject) physicsObject, (ReadOnlyPhysicsObject) WorldLoader.hive.physicsObject, Globals.ANT_SPEED));
 	}
 
 	@Override
