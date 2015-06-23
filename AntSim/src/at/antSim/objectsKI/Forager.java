@@ -87,11 +87,7 @@ public class Forager extends Ant{
 	//						movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, physicsObject, Globals.ANT_SPEED));
 						}
 						
-					} else if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
-						if (locator.registerAnt(this)) {
-							
-						};
-					}
+					} 
 				} else if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport == 0) {
 					
 				} else {
