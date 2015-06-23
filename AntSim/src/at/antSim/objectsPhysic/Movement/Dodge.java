@@ -56,7 +56,7 @@ public class Dodge extends MovementMode {
 		updateOriginalDirection();
 		
 		if (!detectBeingStuck()) { //avoid ants from getting stuck if they are for whatever reason unable to move
-				
+			
 			stillColliding--;
 			
 			if (!targetExists()) {	
@@ -118,6 +118,9 @@ public class Dodge extends MovementMode {
 			if (stuckCtr >= stuckInterval) {
 				Vector3f diffDirection = new Vector3f(dodgeDirection.x - previousDirection.x, 0, dodgeDirection.z - previousDirection.z);
 				Vector3f diffPosition = new Vector3f(physicsObject.getPosition().x - previousPosition.x, 0, physicsObject.getPosition().z - previousPosition.z);
+				System.out.println("STUCK");
+				System.out.println("diffDirection: " + diffDirection.length());
+				System.out.println("diffPosition: " + diffPosition.length());
 				if (diffDirection.length() < 0.001f && diffPosition.length() < 0.1f) {
 					System.out.println("diffDirection: " + diffDirection);
 					System.out.println("diffPosition: " + diffPosition);

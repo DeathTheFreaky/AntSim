@@ -53,12 +53,13 @@ public class MovementManager {
 	 * the movement stack.
 	 * 
 	 * @param physicsObject
-	 * @param mode
+	 * @param modesw
 	 */
 	public void tryAdding(DynamicPhysicsObject physicsObject, MovementMode mode) {
 
 		// check if collides with same obstacle
-
+//		System.out.println("size " + entries.get(physicsObject).size());
+//		System.out.println(" last " + entries.get(physicsObject).lastElement());
 		if (entries.get(physicsObject).lastElement().type == MovementModeType.DODGE
 				&& mode.type == MovementModeType.DODGE) {
 
@@ -91,16 +92,29 @@ public class MovementManager {
 		} else if (mode.type == MovementModeType.TARGET) {
 			if (entries.get(physicsObject).lastElement().type != MovementModeType.TARGET) {
 				entries.get(physicsObject).add(mode);
-				System.out.println(" NEW TARGET ");
+//				System.out.println(" NEW TARGET ");
 			}
 		} else if (mode.type == MovementModeType.DIRECTION ) {
-			if (entries.get(physicsObject).lastElement().type != MovementModeType.TARGET) {
-				if(moveToDir == 2){
-					removeLastMovementEntry(physicsObject);
-				}
+			Iterator it = entries.get(physicsObject).iterator();
+			System.out.println(" ------------list-------------- ");
+			while(it.hasNext()){
+				System.out.println(it.next());
+			}
+			if (entries.get(physicsObject).lastElement().type != MovementModeType.TARGET && entries.get(physicsObject).lastElement().type != MovementModeType.DODGE) {
 				moveToDir++;
-				if(entries.get(physicsObject) != null)
-					entries.get(physicsObject).add(mode);
+//				System.out.println("moveToDir " + moveToDir + " size " + entries.get(physicsObject).size());
+//				System.out.println(" last " + entries.get(physicsObject).lastElement());
+				if(moveToDir > 2){
+					System.out.println("add + remove ");
+					removeLastMovementEntry(physicsObject);
+					if(entries.get(physicsObject) != null)
+						entries.get(physicsObject).add(mode);
+				}
+				if(moveToDir < 2){
+					System.out.println("add ");
+					if(entries.get(physicsObject) != null)
+						entries.get(physicsObject).add(mode);
+				}	
 			}
 		} 
 //		else {
@@ -117,8 +131,11 @@ public class MovementManager {
 	 */
 	public void removeLastMovementEntry(DynamicPhysicsObject physicsObject) {
 		if (entries.containsKey(physicsObject)) {
+			System.out.println( " size " + entries.get(physicsObject).size());
 			MovementMode m = entries.get(physicsObject).pop();
+			System.out.println(" size " + entries.get(physicsObject).size());
 			if(m.type == MovementModeType.DIRECTION){
+				System.out.println("--");
 				moveToDir--;
 			}
 			if (entries.get(physicsObject).size() == 0) {

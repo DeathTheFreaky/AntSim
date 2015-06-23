@@ -119,12 +119,12 @@ public class Forager extends Ant{
 	
 	@Override
 	public void reactSpecific(StaticPhysicsObject staticPhysicsObject) {
-		
+//		System.out.println("lockedlocator " + lockedLocator);
 		if (lockedLocator != null) {
 			if (staticPhysicsObject.equals(lockedLocator.getTarget().physicsObject)) { //ant ran into lockedLocator
 				
 				if (lockedLocator.getTarget().objectType == ObjectType.FOOD) {
-					
+					System.out.println("FOOD");
 					if (foodtransport < maxFoodTransport) {
 						
 						Food food = (Food) parentingEntities.get(staticPhysicsObject);
@@ -156,7 +156,8 @@ public class Forager extends Ant{
 						foodtransport = 0;
 						this.setHp(Globals.antHp);
 						this.setOdorStatus(1);
-						movementManager.removeLastMovementEntry(physicsObject); // So he doesnt stand at the hive						
+						movementManager.removeLastMovementEntry(physicsObject); // So he doesnt stand at the hive	
+						System.out.println("removed last entry at hive - top entry: " + movementManager.getInstance().getTopMovementMode(physicsObject));
 					}
 				}
 			}
