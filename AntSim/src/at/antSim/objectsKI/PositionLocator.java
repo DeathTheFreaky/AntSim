@@ -106,7 +106,12 @@ public class PositionLocator extends Entity {
 	 * @return
 	 */
 	public boolean entryPossible(Ant ant) {
-		if (activeAnts.size() < Globals.MAX_LOCATOR_ANTS) {
+		for (Ant a : activeAnts) {
+			System.out.println("ant: " + a);
+		}
+		System.out.println("entryPossible: " + activeAnts.size());
+		System.out.println("entryPossible - contains ant?: " + activeAnts.contains(ant));
+		if (activeAnts.size() < Globals.MAX_LOCATOR_ANTS || activeAnts.contains(ant)) {
 			return true;
 		}
 		return false;

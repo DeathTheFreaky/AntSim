@@ -129,7 +129,18 @@ public abstract class Enemy extends Entity {
 			boolean hitAnt = false;
 			
 			if (Entity.parentingEntities.containsKey(ce.getPhyObj1())) {
-				
+				if (Entity.parentingEntities.get(ce.getPhyObj1()).objectType == ObjectType.ANT) {
+					hitAnt = true;
+				}
+			}
+			if (Entity.parentingEntities.containsKey(ce.getPhyObj2())) {
+				if (Entity.parentingEntities.get(ce.getPhyObj2()).objectType == ObjectType.ANT) {
+					hitAnt = true;
+				}
+			}
+			
+			if (hitAnt) { //let ants handle the fighting
+				return;
 			}
 			
 			if (ce.getPhyObj1().equals(physicsObject)) {
