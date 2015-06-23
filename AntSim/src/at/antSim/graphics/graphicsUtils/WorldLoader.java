@@ -10,8 +10,10 @@ import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.EntityBuilder;
 import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsKI.Hive;
+import at.antSim.objectsKI.ObjectType;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsManager;
@@ -129,6 +131,16 @@ public class WorldLoader {
 				.registerResult();
 
 		hive = (Hive) hiveEntity;
+		
+		
+		Entity appleEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -700), -700)) //position will be set later anyway in main loop according to mouse position
+				.setRotation(0, random.nextFloat() * 360, 0)
+				.buildGraphicsEntity("apple", 1, 25)
+				.setObjectType(ObjectType.FOOD)
+				.buildPhysicsObject()
+				.registerResult();
+		
 
 		loadBorders(terrain);
 	}

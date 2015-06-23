@@ -15,7 +15,7 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
  */
 public class MoveToTarget extends MovementMode {
 
-	ReadOnlyPhysicsObject target;
+	public ReadOnlyPhysicsObject target;
 	Vector3f direction;
 	
 	public MoveToTarget(DynamicPhysicsObject physicsObject, ReadOnlyPhysicsObject target, float speed) {

@@ -94,7 +94,7 @@ public class MovementManager {
 			((Dodge) mode).setCurrentDirection(previousMode.getDirection());
 			((Dodge) mode).setPreviousMovementMode(previousMode);
 		} else if (mode.type == MovementModeType.TARGET) {
-			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.TARGET) {
+			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.TARGET && entries.get(physicsObject).stack.lastElement().type != MovementModeType.DODGE) {
 				entries.get(physicsObject).stack.add(mode);
 			}
 		} else if (mode.type == MovementModeType.DIRECTION ) {
