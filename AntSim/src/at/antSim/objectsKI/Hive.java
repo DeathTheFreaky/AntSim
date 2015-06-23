@@ -224,8 +224,10 @@ public class Hive extends Entity {
 			if (a.getOdorStatus() == 2) {
 				Pheromone p = (Pheromone) a.layPheromones();
 				javax.vecmath.Vector3f dir = a.physicsObject.getPosition();
+				System.out.println("Before " + dir);
 				dir.x = dir.x * -1;
 				dir.z = dir.z * -1;
+				System.out.println("after " + dir);
 				p.setDirection(dir);
 				Entity.pheromones.add(p);
 			}
@@ -259,17 +261,10 @@ public class Hive extends Entity {
 
 	}
 	
-	public void hiveDebug(){
-		System.out.println(" FA " + fa.size());
-		System.out.println(" removeFeed " + removeFeed.size());
-		System.out.println(" addFeed " + addFeed.size());
-		System.out.println(" eggs " + eggs.size());
-		System.out.println(" larvae " + larvae.size());
-	}
-	
 	public void newAnt(){
 		Entity ant = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(DynamicPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, MainApplication.getInstance().getTerrain().getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) -5, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, MainApplication.getInstance().getTerrain().getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) +35, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 40, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
 				.setRotation(0, 0, 0)
 				.buildGraphicsEntity("forager", 1, 20)
 				.setObjectType(ObjectType.ANT)

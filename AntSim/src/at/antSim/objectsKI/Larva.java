@@ -9,7 +9,6 @@ public class Larva implements Feedable{
 		if(growth > 2){
 			Hive.getInstance().addRemoveableFeed(this);
 			Hive.getInstance().removeLarva(this);
-			Hive.getInstance().hiveDebug();
 			Hive.getInstance().newAnt();
 		}
 	}

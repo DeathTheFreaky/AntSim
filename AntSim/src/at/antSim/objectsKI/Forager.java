@@ -13,6 +13,7 @@ import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.Movement.Dodge;
+import at.antSim.objectsPhysic.Movement.MoveInDirection;
 import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.Movement.MovementModeType;
@@ -112,7 +113,9 @@ public class Forager extends Ant implements Runnable {
 //			System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at " + locator.getTargetPosition());
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
 			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
+			Pheromone p = (Pheromone) parentingEntities.get(ghostPhysicsObject);
 //			System.out.println("an ant ran into " + ghostPhysicsObject.getType());
+			movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(), Globals.ANT_SPEED));		
 		}
 	}
 	
