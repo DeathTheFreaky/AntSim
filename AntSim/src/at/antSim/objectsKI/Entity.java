@@ -32,6 +32,7 @@ public abstract class Entity {
 	static final List<Entity> dynamicEntities = new LinkedList<>();
 	static final List<Ant> ants = new LinkedList<Ant>();
 	static final List<Entity> pheromones = new LinkedList<>();
+	static final List<Entity> removeableEntities = new LinkedList<Entity>();
 
 	final GraphicsEntity graphicsEntity;
 	final PhysicsObject physicsObject;
