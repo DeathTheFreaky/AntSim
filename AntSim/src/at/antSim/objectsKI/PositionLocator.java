@@ -95,7 +95,6 @@ public class PositionLocator extends Entity {
 	 * @return
 	 */
 	public boolean entryPossible(Ant ant) {
-		// 
 		if (activeAnts.size() < maxAnts || activeAnts.contains(ant)) {
 			return true;
 		}

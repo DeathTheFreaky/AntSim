@@ -29,14 +29,12 @@ public class MoveToTarget extends MovementMode {
 		if (!targetExists()) {
 			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
 		};
-		
 		direction = new Vector3f(target.getPosition().x - physicsObject.getPosition().x, 0, target.getPosition().z - physicsObject.getPosition().z);
 		physicsObject.setAlignedMovement(direction, speed);
 	}
 
 	private boolean targetExists() {
 		if (Entity.getParentEntity((PhysicsObject) target) == null) {
-			System.out.println("target ceased to exist in moveToTarget");
 			return false;
 		}
 		return true;

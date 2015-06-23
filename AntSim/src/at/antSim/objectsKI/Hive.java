@@ -67,6 +67,7 @@ public class Hive extends Entity {
 				.getInstance()
 				.getDefaultEntityBuilder()
 				.setFactory(GhostPhysicsObjectFactory.getInstance())
+				.setLocatorMaxAnts(5)
 				.setPosition(
 						new Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z))
 				.buildGraphicsEntity(

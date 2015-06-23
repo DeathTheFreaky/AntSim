@@ -69,7 +69,6 @@ public class Forager extends Ant{
 						}
 						
 						if (locator.entryPossible(this)) {
-							System.out.println("allowed entry into locator");
 							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
 	//							System.out.println(this + " was allowed entry into hive locator");
 							}
@@ -157,7 +156,11 @@ public class Forager extends Ant{
 						foodtransport = 0;
 						this.setHp(Globals.antHp);
 						this.setOdorStatus(1);
-						movementManager.removeLastMovementEntry(physicsObject); // So he doesnt stand at the hive						
+						if (movementManager.getTopMovementMode(physicsObject) != null) {
+							if (movementManager.getTopMovementMode(physicsObject).getType() != MovementModeType.BASIC) {
+								movementManager.removeLastMovementEntry(physicsObject); // So he doesnt stand at the hive	
+							}	
+						} 			
 					}
 				}
 			}

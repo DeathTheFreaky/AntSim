@@ -114,33 +114,35 @@ public class Dodge extends MovementMode {
 	}
 	
 	private boolean detectBeingStuck() {
-		if (previousDirection != null && previousPosition != null) {
-			if (stuckCtr >= stuckInterval) {
-				Vector3f diffDirection = new Vector3f(dodgeDirection.x - previousDirection.x, 0, dodgeDirection.z - previousDirection.z);
-				Vector3f diffPosition = new Vector3f(physicsObject.getPosition().x - previousPosition.x, 0, physicsObject.getPosition().z - previousPosition.z);
-				if (diffDirection.length() < 0.001f && diffPosition.length() < 0.1f) {
-					System.out.println("diffDirection: " + diffDirection);
-					System.out.println("diffPosition: " + diffPosition);
-					dodgeDirection = Maths.turnDirectionVector(currentDirection, -135);
-					currentDirection = dodgeDirection;
-					
-					physicsObject.setAlignedMovement(dodgeDirection, speed);
-				}
-				previousDirection = dodgeDirection;
-				previousPosition = physicsObject.getPosition();
-			}
-		} else {
-			previousDirection = dodgeDirection;
-			previousPosition = physicsObject.getPosition();
-		}	
-		stuckCtr++;
+//		if (previousDirection != null && previousPosition != null) {
+//			if (stuckCtr >= stuckInterval) {
+//				Vector3f diffDirection = new Vector3f(dodgeDirection.x - previousDirection.x, 0, dodgeDirection.z - previousDirection.z);
+//				Vector3f diffPosition = new Vector3f(physicsObject.getPosition().x - previousPosition.x, 0, physicsObject.getPosition().z - previousPosition.z);
+//				if (diffDirection.length() < 0.001f && diffPosition.length() < 0.1f) {
+//					System.out.println("diffDirection: " + diffDirection);
+//					System.out.println("diffPosition: " + diffPosition);
+//					dodgeDirection = Maths.turnDirectionVector(currentDirection, -135);
+//					currentDirection = dodgeDirection;
+//					
+//					physicsObject.setAlignedMovement(dodgeDirection, speed);
+//				}
+//				previousDirection = dodgeDirection;
+//				previousPosition = physicsObject.getPosition();
+//			}
+//		} else {
+//			previousDirection = dodgeDirection;
+//			previousPosition = physicsObject.getPosition();
+//		}	
+//		stuckCtr++;
 		return false;
 	}
 
 	private void updateOriginalDirection() {
 //		System.out.println("previousMode: " + previousMode);
+//		if (previousMode != null) {
 		originalDirection = previousMode.getDirection();
 		originalDirection.normalize();
+//		}
 	}
 
 	private boolean reachedOriginalDirection() {

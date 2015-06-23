@@ -101,11 +101,11 @@ public class MovementManager {
 				if(entries.get(physicsObject) != null)
 					entries.get(physicsObject).add(mode);
 			}
-		} 
-//		else {
-//			System.out.println(" ich soll hier nicht rein");
-//			entries.get(physicsObject).add(mode);
-//		}
+		} else if (mode.type == MovementModeType.WAIT) {
+			entries.get(physicsObject).add(mode);
+		} else if (mode.type == MovementModeType.BASIC) {
+			entries.get(physicsObject).add(mode);
+		}
 	}
 
 	/**
