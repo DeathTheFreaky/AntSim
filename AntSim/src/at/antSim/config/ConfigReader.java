@@ -138,13 +138,13 @@ public class ConfigReader {
 			Globals.foodResSquirrelSize = 100;
 			
 			Globals.enemyAntHp = 75;
-			Globals.enemyAntAttack = 1;
+			Globals.enemyAntAttack = 0.2f;
 			Globals.enemyGrasshopperHp = 100;
-			Globals.enemyGrasshopperAttack = 2;
+			Globals.enemyGrasshopperAttack = 0.5f;
 			
-			Globals.antAttack = 1;
+			Globals.antAttack = 0.15f;
 			Globals.antHp = 50;
-			Globals.queenAttack = 5;
+			Globals.queenAttack = 1f;
 			Globals.queenHp = 1000;
 			
 			Globals.maxFoodCarry = 10;

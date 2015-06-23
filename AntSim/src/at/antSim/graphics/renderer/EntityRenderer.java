@@ -83,21 +83,58 @@ public class EntityRenderer {
 		
 		//first render opaques, then render transparents
 		for (TexturedModel model : opaques) {
-			renderBatch(model, false);
+			renderBatch(model);
 		}
-		for (TexturedModel model : transparents) {
-			renderBatch(model, true);
-		}
-				
+		
+		LinkedList<Entity> transparentEntities = Entity.getTransparentsList();
+		
+		renderTransparents(transparentEntities); //does not work quite as intended, but is not that important and no time to change left
+		
 		shader.stop();
 	}
 	
+	/**Renders all transparent Entities, sorted by WorldPosition z value of their center, starting from 0 to increasing negative values.
+	 * @param transparentEntities
+	 */
+	private void renderTransparents(LinkedList<Entity> transparentEntities) {
+				
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		
+		for(Entity entity:transparentEntities) {
+			
+			prepareTexturedModel(entity.getGraphicsEntity().getModel()); //lots of state changes, but unavoidable...
+			
+			prepareInstance(entity); //load transformation matrix and texture atlas offset
+			
+			if (MainApplication.getInstance().getMovingEntity().getEntity() == entity) {
+				shader.loadMovingEntityBlend(0.75f);
+				if (MainApplication.getInstance().getMovingEntity().isColliding()) {
+					shader.loadMovingEntityColor(COLLIDING_COLOR);
+				} else {
+					shader.loadMovingEntityColor(NOT_COLLIDING_COLOR);
+				}
+			} else {
+				shader.loadMovingEntityBlend(0.0f);
+			}
+			
+			//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
+			GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getGraphicsEntity().getModel().getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+			
+			//"restore the defaults" -> enable culling, disable vertexAttributeArrays (VBOS holding position, normals, texture coords) and unbind VAO
+			unbindTexturedModel();
+		}
+		
+		GL11.glDisable(GL11.GL_BLEND); //disable alpha blending after we're done with our (transparent) textures
+		
+	}
+
 	/**Renders a batch of same models.
 	 * 
 	 * @param model
 	 * @param transparent
 	 */
-	private void renderBatch(TexturedModel model, boolean transparent) {
+	private void renderBatch(TexturedModel model) {
 		
 		/*Once for each unique model: load model's texture (by binding it to texture bank) and positions, normals, texture coordinates (as VBOs inside VAO) into OpenGL 
 		* and load other model attributes as uniform variables into shader program */
@@ -107,11 +144,6 @@ public class EntityRenderer {
 		 * and draw the model.
 		 */
 		List<Entity> batch = Entity.getUnmodifiableRenderingMap().get(model);		
-		
-		if (transparent) { //for using transparent pheromones and locators enable alpha blending
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		}
 		
 		for(Entity entity:batch) {
 			prepareInstance(entity); //load transformation matrix and texture atlas offset
@@ -129,10 +161,6 @@ public class EntityRenderer {
 			
 			//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
 			GL11.glDrawElements(GL11.GL_TRIANGLES, model.getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0); 
-		}
-		
-		if (transparent) {
-			GL11.glDisable(GL11.GL_BLEND); //disable alpha blending after we're done with our (transparent) textures
 		}
 		
 		//"restore the defaults" -> enable culling, disable vertexAttributeArrays (VBOS holding position, normals, texture coords) and unbind VAO

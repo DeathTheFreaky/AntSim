@@ -156,7 +156,6 @@ public class Dodge extends MovementMode {
 	
 	private boolean targetExists() {
 		if (Entity.getParentEntity((PhysicsObject) obstacle) == null) {
-			System.out.println("target ceased to exist in dodge");
 			return false;
 		}
 		return true;

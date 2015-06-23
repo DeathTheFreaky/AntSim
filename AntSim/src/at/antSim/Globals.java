@@ -71,16 +71,16 @@ public final class Globals {
 	public static int foodResSquirrelSize;
 	
 	//attack and hp of enemies
-	public static int enemyAntHp;
-	public static int enemyAntAttack;
-	public static int enemyGrasshopperHp;
-	public static int enemyGrasshopperAttack;
+	public static float enemyAntHp;
+	public static float enemyAntAttack;
+	public static float enemyGrasshopperHp;
+	public static float enemyGrasshopperAttack;
 	
 	//attack and hp of ants
-	public static int antHp;
-	public static int antAttack;
-	public static int queenHp;
-	public static int queenAttack;
+	public static float antHp;
+	public static float antAttack;
+	public static float queenHp;
+	public static float queenAttack;
 	
 	//config file entries set by config reader
 	public static int displayWidth; 

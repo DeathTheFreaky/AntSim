@@ -75,11 +75,16 @@ public class Forager extends Ant implements Runnable {
 	//						System.out.println(this + " is trying to enter hive locator");
 						}
 						
+						if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
+							movementManager.addMovementEntry((DynamicPhysicsObject) locator.getTarget().physicsObject, new Wait((DynamicPhysicsObject) locator.getTarget().physicsObject, physicsObject, Globals.ANT_SPEED));
+							System.out.println("ant hit an ememy");
+						}
 						
 						if (locator.entryPossible(this)) {
 							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
 	//							System.out.println(this + " was allowed entry into hive locator");
 							}
+							System.out.println(this + " was allowed entry into locator");
 							lockedLocator = locator;
 							locator.registerAnt(this); //ant will be added to active ants in locator
 							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
@@ -87,6 +92,7 @@ public class Forager extends Ant implements Runnable {
 							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
 	//							System.out.println(this + " was told to wait for entry into hive locator");
 							}
+							System.out.println(this + " was told to wait for entry into locator");
 							lockedLocator = locator;
 							locator.registerAnt(this); //ant will be added to waiting ants in locator
 							movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
@@ -172,8 +178,12 @@ public class Forager extends Ant implements Runnable {
 
 	@Override
 	public void reactSpecific(DynamicPhysicsObject dynamicPhysicsObject) {
-		// TODO Auto-generated method stub
 		
+		if (Entity.parentingEntities.get(dynamicPhysicsObject).objectType == ObjectType.ENEMY) {
+			Enemy enemy = (Enemy) Entity.parentingEntities.get(dynamicPhysicsObject);
+			enemy.fight(attack);
+			fight(enemy.attack);
+		}
 	}
 	
 //	@EventListener(priority = EventPriority.NORMAL)
