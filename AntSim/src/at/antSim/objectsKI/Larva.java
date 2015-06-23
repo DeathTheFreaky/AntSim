@@ -6,19 +6,16 @@ public class Larva implements Feedable{
 	
 	public void feed(){
 		growth++;
-		if(growth > 10){
+		if(growth > 2){
+			Hive.getInstance().addRemoveableFeed(this);
 			Hive.getInstance().removeLarva(this);
-			decideTask();
+			Hive.getInstance().newAnt();
 		}
+	}
+
+	@Override
+	public String getFeedableType() {
+		return "Larva";
 	}
 	
-	// wahrscheinlich kein return sondern gleich thread starten
-	public void decideTask(){
-		double rndFactor = Math.random();
-		if(rndFactor > 0.25){
-			//Hive.ant.add(new Forager());
-		}else{
-			//Hive.ant.add(new Worker());
-		}
-	}
 }

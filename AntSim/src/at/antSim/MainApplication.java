@@ -287,6 +287,7 @@ public class MainApplication {
 				antFoodCtr = 0;
 				hive.foodChain();
 				hive.layPheromones();
+				hive.feedAll();
 			}
 //			System.out.println();
 		}

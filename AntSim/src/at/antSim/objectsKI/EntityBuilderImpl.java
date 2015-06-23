@@ -245,9 +245,10 @@ public class EntityBuilderImpl implements EntityBuilder {
 				retEntity = new Forager(graphicsEntity, physicsObject);
 			} else if (type.equals("worker")) {
 				retEntity = new Worker(graphicsEntity, physicsObject);
-			} else if (type.equals("queen")) {
-				retEntity = new Queen(graphicsEntity, physicsObject);
-			}
+			} 
+//			else if (type.equals("queen")) {
+//				retEntity = new Queen(graphicsEntity, physicsObject);
+//			}
 			break;
 		case ENEMY:
 			if (type.equals("enemyAnt")) {

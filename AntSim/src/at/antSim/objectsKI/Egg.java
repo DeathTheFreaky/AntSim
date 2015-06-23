@@ -5,9 +5,18 @@ public class Egg implements Feedable{
 	
 	public void feed(){
 		growth++;
-		if(growth > 10){
+		if(growth > 2){
+			Hive.getInstance().addRemoveableFeed(this);
 			Hive.getInstance().removeEgg(this);
-			Hive.getInstance().addLarva(new Larva());
+			Larva l = new Larva();
+			Hive.getInstance().addAddableFeed(l);
+			Hive.getInstance().addLarva(l);
+			
 		}
+	}
+
+	@Override
+	public String getFeedableType() {
+		return "Egg";
 	}
 }

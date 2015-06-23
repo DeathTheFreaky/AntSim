@@ -15,6 +15,7 @@ import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
@@ -26,11 +27,16 @@ public class Hive extends Entity {
 
 	// Gibts was besseres als static wenn mehrere Threads drauf zugreifen
 	private ArrayList<Feedable> fa = new ArrayList<Feedable>();
+	private ArrayList<Feedable> removeFeed = new ArrayList<Feedable>();
+	private ArrayList<Feedable> addFeed = new ArrayList<Feedable>();
 	private ArrayList<Ant> ants = new ArrayList<Ant>();
 	private ArrayList<Ant> deleteAnts = new ArrayList<Ant>();
-	private List<Entity> pheromones = new LinkedList<>();
+
 	private ArrayList<Egg> eggs = new ArrayList<Egg>();
 	private ArrayList<Larva> larvae = new ArrayList<Larva>();
+	
+	private List<Entity> pheromones = new LinkedList<>();
+
 	private int foodStacks;
 	private Queen queen;
 
@@ -39,7 +45,7 @@ public class Hive extends Entity {
 	PositionLocator positionLocator;
 
 	protected Hive(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
-		this(20, graphicsEntity, physicsObject);
+		this(100, graphicsEntity, physicsObject);
 	}
 
 	// Startbedingungen aendern
@@ -49,8 +55,8 @@ public class Hive extends Entity {
 
 		startFood = food;
 		foodStacks = food;
-		// queen = new Queen();
-		// fa.add(queen);
+		queen = new Queen();
+		fa.add(queen);
 
 		// set initial position and size of PositionLocator ghost physics object
 		javax.vecmath.Vector3f vecMathPos = ((ReadOnlyPhysicsObject) physicsObject)
@@ -80,15 +86,34 @@ public class Hive extends Entity {
 		}
 		ants.removeAll(deleteAnts);
 	}
-
 	public void addEgg(Egg e) {
-		fa.add(e);
 		eggs.add(e);
 	}
-
 	public void addLarva(Larva l) {
-		fa.add(l);
 		larvae.add(l);
+	}
+
+	public void removeEgg(Egg e) {
+		eggs.remove(e);
+	}
+	public void removeLarva(Larva l) {
+		larvae.remove(l);
+	}
+	
+	public void addFeedable(Feedable feed) {
+		fa.add(feed);
+	}
+
+	public void removeFeedable(Feedable feed) {
+		fa.remove(feed);
+	}
+
+	public void addRemoveableFeed(Feedable feed) {
+		removeFeed.add(feed);
+	}
+
+	public void addAddableFeed(Feedable feed) {
+		addFeed.add(feed);
 	}
 
 	public void addAnt(Ant a) {
@@ -98,19 +123,9 @@ public class Hive extends Entity {
 	public void addDeleteAnt(Ant a) {
 		deleteAnts.add(a);
 	}
-	
+
 	public void addPheromone(Entity e) {
 		pheromones.add(e);
-	}
-
-	public void removeEgg(Egg e) {
-		fa.remove(e);
-		eggs.remove(e);
-	}
-
-	public void removeLarva(Larva l) {
-		fa.remove(l);
-		larvae.remove(l);
 	}
 
 	public void removeAnt(Ant a) {
@@ -175,9 +190,9 @@ public class Hive extends Entity {
 	public void reset() {
 		foodStacks = startFood;
 		ants.clear();
-		eggs.clear();
+		deleteAnts.clear();
 		fa.clear();
-		larvae.clear();
+		removeFeed.clear();
 	}
 
 	public ArrayList<Feedable> getFeedables() {
@@ -206,27 +221,55 @@ public class Hive extends Entity {
 
 	public void layPheromones() {
 		for (Ant a : ants) {
-			if(a.getOdorStatus() == 2){
-				Pheromone p = (Pheromone)a.layPheromones();
+			if (a.getOdorStatus() == 2) {
+				Pheromone p = (Pheromone) a.layPheromones();
 				javax.vecmath.Vector3f dir = a.physicsObject.getPosition();
+				System.out.println("Before " + dir);
 				dir.x = dir.x * -1;
 				dir.z = dir.z * -1;
+				System.out.println("after " + dir);
 				p.setDirection(dir);
 				Entity.pheromones.add(p);
 			}
 		}
-		
-		//remove pheromones over time
-		for( Entity e : Entity.pheromones){
+
+		// remove pheromones over time
+		for (Entity e : Entity.pheromones) {
 			Pheromone p = (Pheromone) e;
-			p.setLifetime(p.getLifetime()-1);
+			p.setLifetime(p.getLifetime() - 1);
 		}
-		
-		//Destroy pheromones
-		for( Entity e : pheromones){
+
+		// Destroy pheromones
+		for (Entity e : pheromones) {
 			Pheromone p = (Pheromone) e;
 			Entity.pheromones.remove(p);
 			p.delete(true);
 		}
 	}
+
+	public void feedAll() {
+		for (Feedable feed : fa) {
+			if(foodStacks > 0){
+				feed.feed();
+				foodStacks--;
+			}		
+		}
+		fa.removeAll(removeFeed);
+		fa.addAll(addFeed);
+		removeFeed.clear();
+		addFeed.clear();
+
+	}
+	
+	public void newAnt(){
+		Entity ant = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, MainApplication.getInstance().getTerrain().getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) +35, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 40, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
+				.setRotation(0, 0, 0)
+				.buildGraphicsEntity("forager", 1, 20)
+				.setObjectType(ObjectType.ANT)
+				.buildPhysicsObject()
+				.registerResult();
+	}
+
 }
