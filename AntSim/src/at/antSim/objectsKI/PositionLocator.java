@@ -4,27 +4,14 @@ import java.util.LinkedList;
 
 import javax.vecmath.Vector3f;
 
-import org.lwjgl.util.vector.Quaternion;
-import org.lwjgl.util.vector.Vector2f;
-
-import com.bulletphysics.linearmath.QuaternionUtil;
-
 import at.antSim.Globals;
-import at.antSim.eventSystem.EventManager;
-import at.antSim.eventSystem.events.LocatorLockEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
-import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
-import at.antSim.objectsPhysic.Movement.Dodge;
-import at.antSim.objectsPhysic.Movement.MovementManager;
-import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
-import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
-import at.antSim.utils.Maths;
 
 /**Used as a sphere around Food and Enemy entities to tell the ant where to go to once in a specified range around the Food or Enemy to actually find their target.
  * @author Flo
@@ -33,13 +20,15 @@ import at.antSim.utils.Maths;
 public class PositionLocator extends Entity {
 	
 	private Entity target;
+	private int maxAnts;
 	
 	private LinkedList<Ant> activeAnts = new LinkedList<>(); //used to indicate which ants are currently trying to get to this locator's target - to avoid "traffic jam"
 	private LinkedList<Ant> waitingAnts = new LinkedList<>();
 	
-	PositionLocator(GraphicsEntity graphicsEntity, PhysicsObject physicsObject, Entity target) {
+	PositionLocator(GraphicsEntity graphicsEntity, PhysicsObject physicsObject, Entity target, int maxAnts) {
 		super(graphicsEntity, physicsObject, ObjectType.LOCATOR);
 		this.target = target;
+		this.maxAnts = maxAnts;
 	}
 	
 	public Entity getTarget() {
@@ -70,9 +59,9 @@ public class PositionLocator extends Entity {
 		if (!waitingAnts.contains(ant)) { //register ant as waiting for being allowed to enter the positionLocator
 			waitingAnts.add(ant);
 		}
-		if (activeAnts.size() < Globals.MAX_LOCATOR_ANTS){ //some waiting ants may be allowed into positionLocator
+		if (activeAnts.size() < maxAnts){ //some waiting ants may be allowed into positionLocator
 						
-			int newAllowedAnts = Globals.MAX_LOCATOR_ANTS - activeAnts.size(); //how many new ants are allowed into positionLocator?
+			int newAllowedAnts = maxAnts - activeAnts.size(); //how many new ants are allowed into positionLocator?
 			
 //			System.out.println("newAllowedAnts: " + newAllowedAnts);
 							
@@ -106,12 +95,7 @@ public class PositionLocator extends Entity {
 	 * @return
 	 */
 	public boolean entryPossible(Ant ant) {
-//		for (Ant a : activeAnts) {
-//			System.out.println("ant: " + a);
-//		}
-//		System.out.println("entryPossible: " + activeAnts.size());
-//		System.out.println("entryPossible - contains ant?: " + activeAnts.contains(ant));
-		if (activeAnts.size() < Globals.MAX_LOCATOR_ANTS || activeAnts.contains(ant)) {
+		if (activeAnts.size() < maxAnts || activeAnts.contains(ant)) {
 			return true;
 		}
 		return false;
@@ -121,10 +105,8 @@ public class PositionLocator extends Entity {
 	 * @param ant
 	 */
 	public void unregisterAnt(Ant ant) {
-		//System.out.println("unregistering ant " + ant);
 		activeAnts.remove(ant);
 		waitingAnts.remove(ant);
-		//System.out.println("locator now contains " + activeAnts.size() + " active ants and " + waitingAnts.size() + " waiting ants");
 	}
 	
 	public int numberOfActiveAnts() {

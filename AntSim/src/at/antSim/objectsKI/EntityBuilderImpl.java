@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bulletphysics.linearmath.Transform;
 
+import at.antSim.Globals;
 import at.antSim.GTPMapper.GTPCone;
 import at.antSim.GTPMapper.GTPCuboid;
 import at.antSim.GTPMapper.GTPCylinder;
@@ -46,6 +47,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 	Entity target; //for position locators
 	
 	int hiveFoodstackSize;
+	int maxAnts; //posiiton locator
 	
 	public EntityBuilderImpl() {
 		reset();
@@ -67,6 +69,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 		scale = 0;
 		target = null;
 		hiveFoodstackSize = 0;
+		maxAnts = Globals.MAX_LOCATOR_ANTS; //default
 	}
 	
 	@Override
@@ -275,7 +278,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 			retEntity = new Moving(graphicsEntity, physicsObject);
 			break;
 		case LOCATOR:
-			retEntity = new PositionLocator(graphicsEntity, physicsObject, target);
+			retEntity = new PositionLocator(graphicsEntity, physicsObject, target, maxAnts);
 			break;
 		case HIVE:
 			retEntity = Hive.getInstance(hiveFoodstackSize, graphicsEntity, physicsObject);
@@ -314,6 +317,12 @@ public class EntityBuilderImpl implements EntityBuilder {
 	@Override
 	public EntityBuilder setHiveParameters(int foodStacks) {
 		this.hiveFoodstackSize = foodStacks;
+		return this;
+	}
+
+	@Override
+	public EntityBuilder setLocatorMaxAnts(int maxAnts) {
+		this.maxAnts = maxAnts;
 		return this;
 	}
 }

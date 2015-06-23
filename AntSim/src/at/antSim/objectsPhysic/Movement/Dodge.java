@@ -23,6 +23,11 @@ public class Dodge extends MovementMode {
 	Vector3f dodgeDirection;
 	MovementMode previousMode;
 	
+	Vector3f previousDirection;
+	Vector3f previousPosition;
+	float stuckCtr = 0;
+	float stuckInterval = 100;
+	
 	float movementLimit = 1;
 		
 	int collidingResetter = 20;
@@ -49,62 +54,89 @@ public class Dodge extends MovementMode {
 	public void move() {
 				
 		updateOriginalDirection();
-				
-		stillColliding--;
 		
-		if (!targetExists()) {	
-			physicsObject.setAlignedMovement(originalDirection, speed);
-			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
-			return;
-		}
+		if (!detectBeingStuck()) { //avoid ants from getting stuck if they are for whatever reason unable to move
 				
-		if (stillColliding > 0) {
-													
-			if (justCollided) { //turn if just collided
-								
-				if (currentDirection.length() > 0) {
-					currentDirection.normalize();
+			stillColliding--;
+			
+			if (!targetExists()) {	
+				physicsObject.setAlignedMovement(originalDirection, speed);
+				MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+				return;
+			}
 					
-					int currentTurnAngle;
-					
-					if (!checkStillCollides) { //normal turn
-						currentTurnAngle = orTurnAngle;
-					} else { //assurance turn to see if object still collides -> 2 "steps" forward, 1 step back
-						currentTurnAngle = -orTurnAngle/4*3;
+			if (stillColliding > 0) {
+														
+				if (justCollided) { //turn if just collided
+									
+					if (currentDirection.length() > 0) {
+						currentDirection.normalize();
+						
+						int currentTurnAngle;
+						
+						if (!checkStillCollides) { //normal turn
+							currentTurnAngle = orTurnAngle;
+						} else { //assurance turn to see if object still collides -> 2 "steps" forward, 1 step back
+							currentTurnAngle = -orTurnAngle/4*3;
+						}
+											
+						dodgeDirection = Maths.turnDirectionVector(currentDirection, currentTurnAngle);
+						currentDirection = dodgeDirection;
+						
+						physicsObject.setAlignedMovement(dodgeDirection, speed);
+											
+						if (checkStillCollides) {
+							checkStillCollides = false;
+						} else {
+							checkStillCollides = true;
+						}
 					}
+				} else {
+					physicsObject.setAlignedMovement(dodgeDirection, speed);
+				} 
+			} else {
+							
+				if (reachedOriginalDirection()) {
+					MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+				} else {
+					
+					int currentTurnAngle = -orTurnAngle/2;
 										
 					dodgeDirection = Maths.turnDirectionVector(currentDirection, currentTurnAngle);
 					currentDirection = dodgeDirection;
 					
-					physicsObject.setAlignedMovement(dodgeDirection, speed);
-										
-					if (checkStillCollides) {
-						checkStillCollides = false;
-					} else {
-						checkStillCollides = true;
-					}
+					physicsObject.setAlignedMovement(dodgeDirection, speed/2);
 				}
-			} else {
-				physicsObject.setAlignedMovement(dodgeDirection, speed);
-			} 
-		} else {
-						
-			if (reachedOriginalDirection()) {
-				MovementManager.getInstance().removeLastMovementEntry(physicsObject);
-			} else {
-				
-				int currentTurnAngle = -orTurnAngle/2;
-									
-				dodgeDirection = Maths.turnDirectionVector(currentDirection, currentTurnAngle);
-				currentDirection = dodgeDirection;
-				
-				physicsObject.setAlignedMovement(dodgeDirection, speed/2);
 			}
+			
+			justCollided = false;
 		}
-		
-		justCollided = false;
 	}
 	
+	private boolean detectBeingStuck() {
+		if (previousDirection != null && previousPosition != null) {
+			if (stuckCtr >= stuckInterval) {
+				Vector3f diffDirection = new Vector3f(dodgeDirection.x - previousDirection.x, 0, dodgeDirection.z - previousDirection.z);
+				Vector3f diffPosition = new Vector3f(physicsObject.getPosition().x - previousPosition.x, 0, physicsObject.getPosition().z - previousPosition.z);
+				if (diffDirection.length() < 0.001f && diffPosition.length() < 0.1f) {
+					System.out.println("diffDirection: " + diffDirection);
+					System.out.println("diffPosition: " + diffPosition);
+					dodgeDirection = Maths.turnDirectionVector(currentDirection, -135);
+					currentDirection = dodgeDirection;
+					
+					physicsObject.setAlignedMovement(dodgeDirection, speed);
+				}
+				previousDirection = dodgeDirection;
+				previousPosition = physicsObject.getPosition();
+			}
+		} else {
+			previousDirection = dodgeDirection;
+			previousPosition = physicsObject.getPosition();
+		}	
+		stuckCtr++;
+		return false;
+	}
+
 	private void updateOriginalDirection() {
 		originalDirection = previousMode.getDirection();
 		originalDirection.normalize();

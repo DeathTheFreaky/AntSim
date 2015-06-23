@@ -135,6 +135,8 @@ public interface EntityBuilder {
 	public EntityBuilder createSphere(float scale);
 	
 	public EntityBuilder setHiveParameters(int foodStacks);
+	
+	public EntityBuilder setLocatorMaxAnts(int maxAnts);
 		
 	/**
 	 * @return - the created {@link Entity}
