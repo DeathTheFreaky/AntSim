@@ -46,7 +46,7 @@ public class MasterRenderer {
 	private static final float NIGHT_BLUE = 0.05f;
 	private static final Vector3f DAY_FOG = new Vector3f(RED, GREEN, BLUE);
 	private static final Vector3f NIGHT_FOG = new Vector3f(NIGHT_RED, NIGHT_GREEN, NIGHT_BLUE);
-	private static float time = 0;
+	private static float time = 8000;
 	private float blendFactor; //used for blending day/night cycle
 	
 	private Matrix4f projectionMatrix;

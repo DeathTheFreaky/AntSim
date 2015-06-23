@@ -106,11 +106,11 @@ public class PositionLocator extends Entity {
 	 * @return
 	 */
 	public boolean entryPossible(Ant ant) {
-		for (Ant a : activeAnts) {
-			System.out.println("ant: " + a);
-		}
-		System.out.println("entryPossible: " + activeAnts.size());
-		System.out.println("entryPossible - contains ant?: " + activeAnts.contains(ant));
+//		for (Ant a : activeAnts) {
+//			System.out.println("ant: " + a);
+//		}
+//		System.out.println("entryPossible: " + activeAnts.size());
+//		System.out.println("entryPossible - contains ant?: " + activeAnts.contains(ant));
 		if (activeAnts.size() < Globals.MAX_LOCATOR_ANTS || activeAnts.contains(ant)) {
 			return true;
 		}
@@ -121,10 +121,10 @@ public class PositionLocator extends Entity {
 	 * @param ant
 	 */
 	public void unregisterAnt(Ant ant) {
-		System.out.println("unregistering ant " + ant);
+		//System.out.println("unregistering ant " + ant);
 		activeAnts.remove(ant);
 		waitingAnts.remove(ant);
-		System.out.println("locator now contains " + activeAnts.size() + " active ants and " + waitingAnts.size() + " waiting ants");
+		//System.out.println("locator now contains " + activeAnts.size() + " active ants and " + waitingAnts.size() + " waiting ants");
 	}
 	
 	public int numberOfActiveAnts() {

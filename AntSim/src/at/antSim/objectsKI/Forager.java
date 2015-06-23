@@ -84,7 +84,7 @@ public class Forager extends Ant implements Runnable {
 							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
 	//							System.out.println(this + " was allowed entry into hive locator");
 							}
-							System.out.println(this + " was allowed entry into locator");
+//							System.out.println(this + " was allowed entry into locator");
 							lockedLocator = locator;
 							locator.registerAnt(this); //ant will be added to active ants in locator
 							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
@@ -92,7 +92,7 @@ public class Forager extends Ant implements Runnable {
 							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
 	//							System.out.println(this + " was told to wait for entry into hive locator");
 							}
-							System.out.println(this + " was told to wait for entry into locator");
+//							System.out.println(this + " was told to wait for entry into locator");
 							lockedLocator = locator;
 							locator.registerAnt(this); //ant will be added to waiting ants in locator
 							movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
@@ -121,7 +121,9 @@ public class Forager extends Ant implements Runnable {
 			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
 			Pheromone p = (Pheromone) parentingEntities.get(ghostPhysicsObject);
 //			System.out.println("an ant ran into " + ghostPhysicsObject.getType());
-			movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(), Globals.ANT_SPEED));		
+//			System.out.println("pheromone " + p);
+			if(p != null)
+				movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(), Globals.ANT_SPEED));		
 		}
 	}
 	

@@ -22,6 +22,7 @@ public class MovementManager {
 	private static MovementManager INSTANCE = null;
 
 	HashMap<DynamicPhysicsObject, Stack<MovementMode>> entries = new HashMap<>();
+	private int moveToDir = 0;
 
 	static {
 		INSTANCE = new MovementManager();
@@ -88,12 +89,24 @@ public class MovementManager {
 			((Dodge) mode).setCurrentDirection(previousMode.getDirection());
 			((Dodge) mode).setPreviousMovementMode(previousMode);
 		} else if (mode.type == MovementModeType.TARGET) {
-			if(entries.get(physicsObject).lastElement().type != MovementModeType.TARGET){
+			if (entries.get(physicsObject).lastElement().type != MovementModeType.TARGET) {
 				entries.get(physicsObject).add(mode);
+				System.out.println(" NEW TARGET ");
 			}
-		} else {
-			entries.get(physicsObject).add(mode);
-		}
+		} else if (mode.type == MovementModeType.DIRECTION ) {
+			if (entries.get(physicsObject).lastElement().type != MovementModeType.TARGET) {
+				if(moveToDir == 2){
+					removeLastMovementEntry(physicsObject);
+				}
+				moveToDir++;
+				if(entries.get(physicsObject) != null)
+					entries.get(physicsObject).add(mode);
+			}
+		} 
+//		else {
+//			System.out.println(" ich soll hier nicht rein");
+//			entries.get(physicsObject).add(mode);
+//		}
 	}
 
 	/**
@@ -104,7 +117,10 @@ public class MovementManager {
 	 */
 	public void removeLastMovementEntry(DynamicPhysicsObject physicsObject) {
 		if (entries.containsKey(physicsObject)) {
-			entries.get(physicsObject).pop();
+			MovementMode m = entries.get(physicsObject).pop();
+			if(m.type == MovementModeType.DIRECTION){
+				moveToDir--;
+			}
 			if (entries.get(physicsObject).size() == 0) {
 				entries.remove(physicsObject);
 			}
