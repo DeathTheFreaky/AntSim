@@ -19,6 +19,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.BasicMovement;
 import at.antSim.objectsPhysic.Movement.BorderCollisionMovement;
 import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MoveInDirection;
@@ -76,7 +77,7 @@ public abstract class Enemy extends Entity {
 		Vector3f v = Maths.turnDirectionVector(dir, (int) this.physicsObject.getRotationDegrees().y);
 		EventManager.getInstance().registerEventListener(this);
 		movementManager = MovementManager.getInstance();
-		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new MoveInDirection((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
+		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new BasicMovement((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
 	}
 
 	@Override
@@ -84,15 +85,14 @@ public abstract class Enemy extends Entity {
 					
 		if (Entity.entities.contains(this)) { //enemy could have died in the meanwhile but event has not yet been processed...
 			if (staticPhysicsObject.getType().equals("border")) {
-				if (MovementManager.getInstance().getTopMovementMode(physicsObject).getType() == MovementModeType.DIRECTION) {
-					BorderCollisionMovement borderCollisionMovement = new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED);
-					MoveInDirection moveInDirection = new MoveInDirection(physicsObject, borderCollisionMovement.getDirection(), Globals.ANT_SPEED);
-					movementManager.removeLastMovementEntry(physicsObject); //makes no sense to keep moving into same direction when hitting a wall
-					movementManager.addMovementEntry(physicsObject, moveInDirection);
-					movementManager.addMovementEntry(physicsObject, borderCollisionMovement);
-				} else {
-					movementManager.addMovementEntry(physicsObject, new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED));
+				if (movementManager.getBaseMovementMode(physicsObject).getType() == MovementModeType.BASIC) {
+					BasicMovement basicMovement = (BasicMovement) MovementManager.getInstance().getBaseMovementMode(physicsObject);
+					basicMovement.setDirection(Maths.turnDirectionVector(basicMovement.getDirection(), 125));
 				}
+				if (MovementManager.getInstance().getTopMovementMode(physicsObject).getType() == MovementModeType.DIRECTION) {
+					movementManager.removeLastMovementEntry(physicsObject); //makes no sense to keep moving into same direction when hitting a wall
+					movementManager.addMovementEntry(physicsObject, new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED));
+				} 
 			} else {
 				ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
 				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
@@ -162,12 +162,7 @@ public abstract class Enemy extends Entity {
 		}
 	}
 
-	@Override
-	protected void deleteSpecific() {
-		positionLocator.delete(true);
-		dynamicEntities.remove(this);
-		enemies.remove(this);
-	}
+	abstract protected void deleteSpecific();
 
 	public void fight(float damage) {
 		hp -= damage;

@@ -56,6 +56,8 @@ public abstract class Ant extends Entity {
 	protected int velocityZ = 0;
 	protected float lastposition = 0;
 	protected PositionLocator lockedLocator; //target's positionLocator where ant is currently heading to, all targets must have positionLocators
+	
+	protected Pheromone currentPheromone;
 
 	// wahrscheinlich eigene Jobklasse => fuer im Bautätige
 	// und Worker/Forager
@@ -87,15 +89,14 @@ public abstract class Ant extends Entity {
 	public void react(StaticPhysicsObject staticPhysicsObject) {		
 		if (Entity.entities.contains(this)) { //ant could have died in the meanwhile but event has not yet been processed...
 			if (staticPhysicsObject.getType().equals("border")) {
+				if (movementManager.getBaseMovementMode(physicsObject).getType() == MovementModeType.BASIC) {
+					BasicMovement basicMovement = (BasicMovement) MovementManager.getInstance().getBaseMovementMode(physicsObject);
+					basicMovement.setDirection(Maths.turnDirectionVector(basicMovement.getDirection(), 125));
+				} 				
 				if (MovementManager.getInstance().getTopMovementMode(physicsObject).getType() == MovementModeType.DIRECTION) {
-					BorderCollisionMovement borderCollisionMovement = new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED);
-					MoveInDirection moveInDirection = new MoveInDirection(physicsObject, borderCollisionMovement.getDirection(), Globals.ANT_SPEED);
 					movementManager.removeLastMovementEntry(physicsObject); //makes no sense to keep moving into same direction when hitting a wall
-					movementManager.addMovementEntry(physicsObject, moveInDirection);
-					movementManager.addMovementEntry(physicsObject, borderCollisionMovement);
-				} else {
 					movementManager.addMovementEntry(physicsObject, new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED));
-				}
+				} 
 			} else {
 				ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
 				if (tp.equals(ObjectType.ENVIRONMENT)) { 
@@ -245,7 +246,11 @@ public abstract class Ant extends Entity {
 	 * 
 	 */
 	public void resetPheromones() {
-		pheromones.update();
+		for (Pheromone p : pheromones.update()) {
+			if (currentPheromone == p) {
+				currentPheromone = null;
+			}
+		};
 	}
 	
 	/**Called at the end of every update, after events have been processed, to identify if an ant left some PositionLocators.
@@ -278,6 +283,7 @@ public abstract class Ant extends Entity {
 		unlockLocator();
 		dynamicEntities.remove(this);
 		ants.remove(this);
+		hive.removeAnt(this);
 	}
 	
 	public void fight(float damage) {
@@ -296,7 +302,7 @@ public abstract class Ant extends Entity {
 		MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(pos) //position will be set later anyway in main loop according to mouse position
 				.setRotation(rot)
-				.buildGraphicsEntity("deadAnt", 1, 10)
+				.buildGraphicsEntity("deadAnt", 1, 20)
 				.setObjectType(ObjectType.FOOD)
 				.buildPhysicsObject()
 				.registerResult();
@@ -304,10 +310,12 @@ public abstract class Ant extends Entity {
 
 	public Entity layPheromones() {
 		org.lwjgl.util.vector.Vector3f pos = Maths.vec3fToSlickUtil(physicsObject.getPosition());
+		int pheromoneSize = 100;
+		pos.y = pos.y - pheromoneSize/2;
 		physicsObject.getRotationQuaternions();
 		Entity pheromone = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(GhostPhysicsObjectFactory.getInstance())
 				.setPosition(pos)
-				.buildGraphicsEntity("pheromone", 1, 50) //enable for debugging just to visualize the pheromones
+				.buildGraphicsEntity("pheromone", 1, pheromoneSize) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
 		return pheromone;

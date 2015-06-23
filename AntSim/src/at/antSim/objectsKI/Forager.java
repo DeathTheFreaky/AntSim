@@ -108,9 +108,12 @@ public class Forager extends Ant{
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
 			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
 			Pheromone p = (Pheromone) parentingEntities.get(ghostPhysicsObject);
-//			System.out.println("an ant ran into " + ghostPhysicsObject.getType());
-//			System.out.println("pheromone " + p);
-			if(p != null)
+			currentPheromone = p;
+			if (foodtransport > 0) {
+				p.setLifetime(Globals.maxPheromoneLifetime);
+			}
+//			System.out.println("direction in forager event: " + p.getDirection());
+			if(p != null && p.getDirection() != null)
 				movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(), Globals.ANT_SPEED));		
 		}
 	}
@@ -119,26 +122,30 @@ public class Forager extends Ant{
 	
 	@Override
 	public void reactSpecific(StaticPhysicsObject staticPhysicsObject) {
-		
+//		System.out.println("lockedlocator " + lockedLocator);
 		if (lockedLocator != null) {
 			if (staticPhysicsObject.equals(lockedLocator.getTarget().physicsObject)) { //ant ran into lockedLocator
 				
 				if (lockedLocator.getTarget().objectType == ObjectType.FOOD) {
-					
 					if (foodtransport < maxFoodTransport) {
 						
 						Food food = (Food) parentingEntities.get(staticPhysicsObject);
 						carryMoreFood(food.harvest()); //amount of food which cannot be carried by ant is put back into food resource
 						
 						if (!Entity.entities.contains(food)) { //food has been deleted cause its foodstacks reached 0
-							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
 							this.setOdorStatus(2);
+							unlockLocator();
 						}
 											
 						if (lockedLocator != null) {
 							//lock in on lockedLocator
-							movementManager.removeLastMovementEntry(physicsObject); //whatfor?
+							
 							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) lockedLocator.physicsObject, Globals.LOCKIN_SPEED));							
+						} else {
+							if (movementManager.getTopMovementMode(physicsObject).getType() == MovementModeType.TARGET) {
+								movementManager.removeLastMovementEntry(physicsObject); //whatfor?
+							}
+							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
 						}
 					} else {
 						if (movementManager.getTopMovementMode(physicsObject).getType() != MovementModeType.DODGE) {

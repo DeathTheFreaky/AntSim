@@ -2,7 +2,6 @@ package at.antSim.objectsPhysic.Movement;
 
 import java.util.LinkedList;
 
-import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
 import at.antSim.objectsKI.Entity;
@@ -56,7 +55,7 @@ public class Dodge extends MovementMode {
 		updateOriginalDirection();
 		
 		if (!detectBeingStuck()) { //avoid ants from getting stuck if they are for whatever reason unable to move
-				
+			
 			stillColliding--;
 			
 			if (!targetExists()) {	

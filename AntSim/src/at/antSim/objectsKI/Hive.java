@@ -15,6 +15,8 @@ import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.MovementManager;
+import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
@@ -35,7 +37,7 @@ public class Hive extends Entity {
 	private ArrayList<Egg> eggs = new ArrayList<Egg>();
 	private ArrayList<Larva> larvae = new ArrayList<Larva>();
 	
-	private List<Entity> pheromones = new LinkedList<>();
+	private List<Entity> deleteablePheromones = new LinkedList<>();
 
 	private int foodStacks;
 	private Queen queen;
@@ -86,6 +88,7 @@ public class Hive extends Entity {
 			a.setHp(a.getHp() - 1);
 		}
 		ants.removeAll(deleteAnts);
+		deleteAnts.clear();
 	}
 	public void addEgg(Egg e) {
 		eggs.add(e);
@@ -125,12 +128,12 @@ public class Hive extends Entity {
 		deleteAnts.add(a);
 	}
 
-	public void addPheromone(Entity e) {
-		pheromones.add(e);
+	public void removePheromone(Entity e) {
+		deleteablePheromones.add(e);
 	}
 
 	public void removeAnt(Ant a) {
-		ants.remove(a);
+		deleteAnts.add(a);
 	}
 
 	public int getAntsNum() {
@@ -222,13 +225,20 @@ public class Hive extends Entity {
 
 	public void layPheromones() {
 		for (Ant a : ants) {
-			if (a.getOdorStatus() == 2) {
-//				Pheromone p = (Pheromone) a.layPheromones();
-//				javax.vecmath.Vector3f dir = a.physicsObject.getPosition();
-////				dir.x = dir.x * -1;
-////				dir.z = dir.z * -1;
-//				p.setDirection(dir);
-//				Entity.pheromones.add(p);
+			if (a.getOdorStatus() == 2 && a.currentPheromone == null) {
+				Pheromone p = (Pheromone) a.layPheromones();
+				if (MovementManager.getInstance().getTopMovementMode(a.physicsObject).getType() == MovementModeType.TARGET) {
+					javax.vecmath.Vector3f dir = MovementManager.getInstance().getTopMovementMode(a.physicsObject).getDirection();
+					if (dir != null) {
+						dir.x = dir.x * -1;
+						dir.z = dir.z * -1;
+						dir.y = 0;
+						p.setDirection(dir);
+						Entity.pheromones.add(p);
+					} else {
+						System.err.println("Direciton of pheromone to be added was null ");
+					}
+				}
 			}
 		}
 
@@ -239,9 +249,8 @@ public class Hive extends Entity {
 		}
 
 		// Destroy pheromones
-		for (Entity e : pheromones) {
+		for (Entity e : deleteablePheromones) {
 			Pheromone p = (Pheromone) e;
-			Entity.pheromones.remove(p);
 			p.delete(true);
 		}
 	}

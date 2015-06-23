@@ -21,4 +21,8 @@ public class BasicMovement extends MovementMode {
 	public Vector3f getDirection() {
 		return direction;
 	}
+
+	public void setDirection(Vector3f turnDirectionVector) {
+		this.direction = turnDirectionVector;
+	}
 }

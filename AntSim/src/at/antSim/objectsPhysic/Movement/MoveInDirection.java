@@ -17,12 +17,18 @@ public class MoveInDirection extends MovementMode {
 	public MoveInDirection(DynamicPhysicsObject physicsObject, Vector3f direction, float speed) {
 		super(MovementModeType.DIRECTION, physicsObject, speed);
 		this.direction = direction;
+if (this.direction == null) {
+		System.err.println("direction was null in constructor");	
+		}
 	}
 	
 	public MoveInDirection(DynamicPhysicsObject physicsObject, Vector3f direction, float speed, int limit) {
 		super(MovementModeType.DIRECTION, physicsObject, speed);
 		this.direction = direction;
 		this.limit = limit;
+if (this.direction == null) {
+	System.err.println("direction was null in constructor");
+		}
 	}
 	
 	public void move() {

@@ -21,8 +21,8 @@ public class MovementManager {
 
 	private static MovementManager INSTANCE = null;
 
-	HashMap<DynamicPhysicsObject, Stack<MovementMode>> entries = new HashMap<>();
-	private int moveToDir = 0;
+	HashMap<DynamicPhysicsObject, StackEntry> entries = new HashMap<>();
+	private int maxStackMovements = 7;
 
 	static {
 		INSTANCE = new MovementManager();
@@ -43,8 +43,8 @@ public class MovementManager {
 		if (entries.containsKey(physicsObject)) {
 			tryAdding(physicsObject, mode);
 		} else {
-			entries.put(physicsObject, new Stack<MovementMode>());
-			entries.get(physicsObject).add(mode);
+			entries.put(physicsObject, new StackEntry());
+			entries.get(physicsObject).stack.add(mode);
 		}
 	}
 
@@ -53,58 +53,78 @@ public class MovementManager {
 	 * the movement stack.
 	 * 
 	 * @param physicsObject
-	 * @param mode
+	 * @param modesw
 	 */
 	public void tryAdding(DynamicPhysicsObject physicsObject, MovementMode mode) {
+		
+		if (entries.get(physicsObject).stack.size() >= maxStackMovements) {
+			return;
+		}
 
 		// check if collides with same obstacle
-
-		if (entries.get(physicsObject).lastElement().type == MovementModeType.DODGE
+//		System.out.println("size " + entries.get(physicsObject).size());
+//		System.out.println(" last " + entries.get(physicsObject).lastElement());
+		if (entries.get(physicsObject).stack.lastElement().type == MovementModeType.DODGE
 				&& mode.type == MovementModeType.DODGE) {
 
-			Dodge lastDodge = (Dodge) entries.get(physicsObject).lastElement();
+			Dodge lastDodge = (Dodge) entries.get(physicsObject).stack.lastElement();
 			Dodge newDodge = (Dodge) mode;
 
 			if (lastDodge.obstacle == newDodge.obstacle) {
-				((Dodge) entries.get(physicsObject).lastElement())
+				((Dodge) entries.get(physicsObject).stack.lastElement())
 						.setStillColliding();
 			} else {
-				((Dodge) entries.get(physicsObject).lastElement())
+				((Dodge) entries.get(physicsObject).stack.lastElement())
 						.reset(newDodge.obstacle);
 			}
 
-		} else if (entries.get(physicsObject).lastElement().type == MovementModeType.BORDER
+		} else if (entries.get(physicsObject).stack.lastElement().type == MovementModeType.BORDER
 				&& mode.type == MovementModeType.BORDER) {
 			// ignore new border movement, wait for previous one to finish
 		} else if (mode.type == MovementModeType.BORDER) {
-			MovementMode previousMode = entries.get(physicsObject)
+			MovementMode previousMode = entries.get(physicsObject).stack
 					.lastElement();
 			((BorderCollisionMovement) mode).setOriginalDirection(previousMode
 					.getDirection());
-			entries.get(physicsObject).add(mode);
+			entries.get(physicsObject).stack.add(mode);
 		} else if (mode.type == MovementModeType.DODGE) {
 			MovementMode previousMode = entries.get(physicsObject)
-					.lastElement();
-			entries.get(physicsObject).add(mode);
+					.stack.lastElement();
+			entries.get(physicsObject).stack.add(mode);
 			((Dodge) mode).setCurrentDirection(previousMode.getDirection());
 			((Dodge) mode).setPreviousMovementMode(previousMode);
 		} else if (mode.type == MovementModeType.TARGET) {
-			if (entries.get(physicsObject).lastElement().type != MovementModeType.TARGET) {
-				entries.get(physicsObject).add(mode);
+			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.TARGET) {
+				entries.get(physicsObject).stack.add(mode);
 			}
 		} else if (mode.type == MovementModeType.DIRECTION ) {
-			if (entries.get(physicsObject).lastElement().type != MovementModeType.TARGET) {
-				if(moveToDir == 2){
-					removeLastMovementEntry(physicsObject);
+			Iterator it = entries.get(physicsObject).stack.iterator();
+//			System.out.println(" ------------list-------------- " + moveToDir);
+			while(it.hasNext()){
+				MovementMode bla = (MovementMode) it.next();
+				if (bla.getDirection() == null) {
+					System.out.println(bla + ", " + bla.getDirection());
 				}
-				moveToDir++;
-				if(entries.get(physicsObject) != null)
-					entries.get(physicsObject).add(mode);
+			}
+			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.TARGET && entries.get(physicsObject).stack.lastElement().type != MovementModeType.DODGE) {
+				entries.get(physicsObject).moveToDirCtr++;
+//				System.out.println("moveToDir " + moveToDir + " size " + entries.get(physicsObject).size());
+//				System.out.println(" last " + entries.get(physicsObject).lastElement());
+				if(entries.get(physicsObject).moveToDirCtr > 1){
+//					System.out.println("add + remove ");
+					removeLastMovementEntry(physicsObject);
+					if(entries.get(physicsObject) != null)
+						entries.get(physicsObject).stack.add(mode);
+				} else {
+//					System.out.println("add ");
+					if(entries.get(physicsObject) != null)
+						entries.get(physicsObject).stack.add(mode);
+				}	
 			}
 		} else if (mode.type == MovementModeType.WAIT) {
-			entries.get(physicsObject).add(mode);
+			entries.get(physicsObject).stack.add(mode);
 		} else if (mode.type == MovementModeType.BASIC) {
-			entries.get(physicsObject).add(mode);
+			entries.get(physicsObject).stack.add(mode);
 		}
 	}
 
@@ -116,11 +136,14 @@ public class MovementManager {
 	 */
 	public void removeLastMovementEntry(DynamicPhysicsObject physicsObject) {
 		if (entries.containsKey(physicsObject)) {
-			MovementMode m = entries.get(physicsObject).pop();
+//			System.out.println( " size " + entries.get(physicsObject).stack.size());
+			MovementMode m = entries.get(physicsObject).stack.pop();
+//			System.out.println(" size " + entries.get(physicsObject).stack.size());
 			if(m.type == MovementModeType.DIRECTION){
-				moveToDir--;
+//				System.out.println("--");
+				entries.get(physicsObject).moveToDirCtr--;
 			}
-			if (entries.get(physicsObject).size() == 0) {
+			if (entries.get(physicsObject).stack.size() == 0) {
 				entries.remove(physicsObject);
 			}
 		}
@@ -147,12 +170,14 @@ public class MovementManager {
 	}
 
 	public void moveAllEntries() {
-		for (Stack<MovementMode> stack : entries.values()) {
-			stack.lastElement().move();
+//		System.out.println();
+//		System.out.println("------------------");
+		for (StackEntry entry : entries.values()) {
+			entry.stack.lastElement().move();
 			
 //			System.out.println("ant ");
 //			
-//			Iterator it = stack.iterator();
+//			Iterator it = entry.stack.iterator();
 //			
 //			while(it.hasNext()) {
 //				System.out.println(it.next());
@@ -165,9 +190,24 @@ public class MovementManager {
 	public MovementMode getTopMovementMode(PhysicsObject physicsObject) {
 		MovementMode retMode = null;
 		if (entries.containsKey(physicsObject)) {
-			retMode = entries.get(physicsObject).lastElement();
+			retMode = entries.get(physicsObject).stack.lastElement();
 		}
 		return retMode;
+	}
+	
+	public MovementMode getBaseMovementMode(PhysicsObject physicsObject) {
+		return entries.get(physicsObject).stack.elementAt(0);
+	}
+	
+	class StackEntry {
+		
+		Stack<MovementMode> stack;
+		int moveToDirCtr;
+		
+		StackEntry() {
+			stack = new Stack<MovementMode>();
+			moveToDirCtr = 0;
+		}
 	}
 
 	public static MovementManager getInstance() {

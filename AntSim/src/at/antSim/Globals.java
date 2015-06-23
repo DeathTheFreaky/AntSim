@@ -64,6 +64,9 @@ public final class Globals {
 	//maximum number of food an ant can carry
 	public static int maxFoodCarry;
 	
+	//max lifetime of pheromone
+	public static int maxPheromoneLifetime;
+	
 	//default food resource sizes
 	public static int foodResAppleSize;
 	public static int foodResAntSize;
