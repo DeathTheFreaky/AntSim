@@ -46,7 +46,7 @@ public class Forager extends Ant{
 	
 	@Override
 	public void reactSpecific(GhostPhysicsObject ghostPhysicsObject) {
-		
+				
 		if (ghostPhysicsObject.getType().equals("positionLocator")) { //ant is inside a positionLocator
 			
 //			System.out.println(this + " inside a positionLocator and lockedLocator == " + lockedLocator);
@@ -69,6 +69,7 @@ public class Forager extends Ant{
 						}
 						
 						if (locator.entryPossible(this)) {
+							System.out.println("allowed entry into locator");
 							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
 	//							System.out.println(this + " was allowed entry into hive locator");
 							}

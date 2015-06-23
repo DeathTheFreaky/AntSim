@@ -92,7 +92,6 @@ public class MovementManager {
 		} else if (mode.type == MovementModeType.TARGET) {
 			if (entries.get(physicsObject).lastElement().type != MovementModeType.TARGET) {
 				entries.get(physicsObject).add(mode);
-//				System.out.println(" NEW TARGET ");
 			}
 		} else if (mode.type == MovementModeType.DIRECTION ) {
 			Iterator it = entries.get(physicsObject).iterator();
@@ -167,6 +166,16 @@ public class MovementManager {
 	public void moveAllEntries() {
 		for (Stack<MovementMode> stack : entries.values()) {
 			stack.lastElement().move();
+			
+//			System.out.println("ant ");
+//			
+//			Iterator it = stack.iterator();
+//			
+//			while(it.hasNext()) {
+//				System.out.println(it.next());
+//			}
+//			
+//			System.out.println();
 		}
 	}
 

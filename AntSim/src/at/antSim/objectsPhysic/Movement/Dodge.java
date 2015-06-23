@@ -141,6 +141,7 @@ public class Dodge extends MovementMode {
 	}
 
 	private void updateOriginalDirection() {
+//		System.out.println("previousMode: " + previousMode);
 		originalDirection = previousMode.getDirection();
 		originalDirection.normalize();
 	}
@@ -186,6 +187,7 @@ public class Dodge extends MovementMode {
 	}
 	
 	public void setPreviousMovementMode(MovementMode previousMode) {
+//		System.out.println("previousMovementMode: " + previousMode);
 		this.previousMode = previousMode;
 	}
 	
