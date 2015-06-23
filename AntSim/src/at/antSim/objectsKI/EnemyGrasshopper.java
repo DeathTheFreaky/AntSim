@@ -11,11 +11,4 @@ public class EnemyGrasshopper extends Enemy {
 		this.hp = Globals.enemyGrasshopperHp;
 		this.attack = Globals.enemyGrasshopperAttack;
 	}
-	
-	public void fight(float damage) {
-		hp -= damage;
-		if (hp < 0) {
-			
-		}
-	}
 }

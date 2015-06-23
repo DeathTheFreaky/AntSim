@@ -59,6 +59,7 @@ public abstract class Enemy extends Entity {
 				.setPosition(new org.lwjgl.util.vector.Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z))
 				.buildGraphicsEntity("positionLocator", 1, graphicsEntity.getScale() + Globals.POSITION_LOCATOR_MARGIN * 2) 
 				.setTarget(this)
+				.setLocatorMaxAnts(3)
 				.buildPhysicsObject()
 				.registerResult();
 				
@@ -80,20 +81,20 @@ public abstract class Enemy extends Entity {
 
 	@Override
 	public void react(StaticPhysicsObject staticPhysicsObject) {
-				
-		if (staticPhysicsObject.getType().equals("border")) {
-			if (MovementManager.getInstance().getTopMovementMode(physicsObject).getType() == MovementModeType.DIRECTION) {
-				BorderCollisionMovement borderCollisionMovement = new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED);
-				MoveInDirection moveInDirection = new MoveInDirection(physicsObject, borderCollisionMovement.getDirection(), Globals.ANT_SPEED);
-				movementManager.removeLastMovementEntry(physicsObject); //makes no sense to keep moving into same direction when hitting a wall
-				movementManager.addMovementEntry(physicsObject, moveInDirection);
-				movementManager.addMovementEntry(physicsObject, borderCollisionMovement);
+					
+		if (Entity.entities.contains(this)) { //enemy could have died in the meanwhile but event has not yet been processed...
+			if (staticPhysicsObject.getType().equals("border")) {
+				if (MovementManager.getInstance().getTopMovementMode(physicsObject).getType() == MovementModeType.DIRECTION) {
+					BorderCollisionMovement borderCollisionMovement = new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED);
+					MoveInDirection moveInDirection = new MoveInDirection(physicsObject, borderCollisionMovement.getDirection(), Globals.ANT_SPEED);
+					movementManager.removeLastMovementEntry(physicsObject); //makes no sense to keep moving into same direction when hitting a wall
+					movementManager.addMovementEntry(physicsObject, moveInDirection);
+					movementManager.addMovementEntry(physicsObject, borderCollisionMovement);
+				} else {
+					movementManager.addMovementEntry(physicsObject, new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED));
+				}
 			} else {
-				movementManager.addMovementEntry(physicsObject, new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED));
-			}
-		} else {
-			ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
-			if (tp.equals(ObjectType.ENVIRONMENT)) { 
+				ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
 				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
 			}
 		}
@@ -101,30 +102,29 @@ public abstract class Enemy extends Entity {
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
-		
-//		if (Entity.parentingEntities.get(dynamicPhysicsObject).objectType == ObjectType.ANT) {
-//			Ant ant = (Ant) Entity.parentingEntities.get(dynamicPhysicsObject);
-//			ant.fight(attack);
-//			fight(ant.attack);
-//		}
+		if (Entity.entities.contains(this)) { //enemy could have died in the meanwhile but event has not yet been processed...
+			
+		}
 	}
 
 	@Override
 	public void react(GhostPhysicsObject ghostPhysicsObject) {
-		// TODO Auto-generated method stub
+		if (Entity.entities.contains(this)) { //enemy could have died in the meanwhile but event has not yet been processed...
+			
+		}
 	}
 	
 	@Override
 	public void react(TerrainPhysicsObject terrainPhysicsObject) {
-		// TODO Auto-generated method stub
-		
+		if (Entity.entities.contains(this)) { //enemy could have died in the meanwhile but event has not yet been processed...
+			
+		}
 	}
 	
 	@EventListener(priority = EventPriority.NORMAL)
 	public void decideEvent(CollisionEvent ce) {
+		
 		if (!ce.getPhyObj1().getType().equals("terrain") && !ce.getPhyObj2().getType().equals("terrain")) {
-//			 System.out.println("Ant: in decideEvent\nAnt:" + physicsObject +
-//			 "\nPhyObj1: " + ce.getPhyObj1().getType() + "\nPhyObj2: " + ce.getPhyObj2().getType() + " with ctr " + MainApplication.getInstance().getCycleCtr());
 			
 			boolean hitAnt = false;
 			
@@ -171,7 +171,6 @@ public abstract class Enemy extends Entity {
 
 	public void fight(float damage) {
 		hp -= damage;
-		System.out.println(this + " has " + hp + " health left");
 		if (hp <= 0) {
 			delete(true);
 		}

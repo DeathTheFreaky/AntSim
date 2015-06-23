@@ -1,7 +1,5 @@
 package at.antSim.objectsKI;
 
-import java.util.LinkedList;
-
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
@@ -11,26 +9,19 @@ import at.antSim.eventSystem.EventListener;
 import at.antSim.eventSystem.EventManager;
 import at.antSim.eventSystem.EventPriority;
 import at.antSim.eventSystem.events.CollisionEvent;
-import at.antSim.eventSystem.events.LocatorLockEvent;
 import at.antSim.graphics.entities.GraphicsEntity;
-import at.antSim.graphics.graphicsUtils.WorldLoader;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
-import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.Movement.BorderCollisionMovement;
 import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MoveInDirection;
-import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
-import at.antSim.objectsPhysic.Movement.MovementMode;
 import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
-import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
-import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 import at.antSim.utils.CountingLinkedList;
 import at.antSim.utils.Maths;
 
@@ -63,8 +54,6 @@ public abstract class Ant extends Entity {
 	protected int velocityX = -5; //attention: positive velocity in x-axis moves entity to right side, although x decreases to the right side!
 	protected int velocityZ = 0;
 	protected float lastposition = 0;
-	private int velocityhelper = 0;
-	
 	protected PositionLocator lockedLocator; //target's positionLocator where ant is currently heading to, all targets must have positionLocators
 
 	// wahrscheinlich eigene Jobklasse => fuer im Bautätige
@@ -84,7 +73,8 @@ public abstract class Ant extends Entity {
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
 		hive = Hive.getInstance();
 		hive.addAnt(this);
-		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
+//		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
+		Vector3f v = new Vector3f(1,0,0);
 //		this.physicsObject.setLinearVelocity(v);
 //		this.physicsObject.setAlignedMovement(new Vector3f(0, 0, -1), Globals.ANT_SPEED*3);
 		dynamicEntities.add(this);
@@ -98,69 +88,26 @@ public abstract class Ant extends Entity {
 	}
 
 	@Override
-	public void react(StaticPhysicsObject staticPhysicsObject) {
-		//Colliding with the ground/terrain
-		
-		if (staticPhysicsObject.getType().equals("border")) {
-			if (MovementManager.getInstance().getTopMovementMode(physicsObject).getType() == MovementModeType.DIRECTION) {
-				BorderCollisionMovement borderCollisionMovement = new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED);
-				MoveInDirection moveInDirection = new MoveInDirection(physicsObject, borderCollisionMovement.getDirection(), Globals.ANT_SPEED);
-				movementManager.removeLastMovementEntry(physicsObject); //makes no sense to keep moving into same direction when hitting a wall
-				movementManager.addMovementEntry(physicsObject, moveInDirection);
-				movementManager.addMovementEntry(physicsObject, borderCollisionMovement);
+	public void react(StaticPhysicsObject staticPhysicsObject) {		
+		if (Entity.entities.contains(this)) { //ant could have died in the meanwhile but event has not yet been processed...
+			if (staticPhysicsObject.getType().equals("border")) {
+				if (MovementManager.getInstance().getTopMovementMode(physicsObject).getType() == MovementModeType.DIRECTION) {
+					BorderCollisionMovement borderCollisionMovement = new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED);
+					MoveInDirection moveInDirection = new MoveInDirection(physicsObject, borderCollisionMovement.getDirection(), Globals.ANT_SPEED);
+					movementManager.removeLastMovementEntry(physicsObject); //makes no sense to keep moving into same direction when hitting a wall
+					movementManager.addMovementEntry(physicsObject, moveInDirection);
+					movementManager.addMovementEntry(physicsObject, borderCollisionMovement);
+				} else {
+					movementManager.addMovementEntry(physicsObject, new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED));
+				}
 			} else {
-				movementManager.addMovementEntry(physicsObject, new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED));
+				ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
+				if (tp.equals(ObjectType.ENVIRONMENT)) { 
+					movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
+				}
 			}
-		} else {
-			ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
-			if (tp.equals(ObjectType.ENVIRONMENT)) { 
-				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
-			}
+			reactSpecific(staticPhysicsObject);
 		}
-		
-		
-		
-		// example
-		// if(physicsObject.getPosition().y <
-		// staticPhysicsObject.getPosition().y){
-//		if (staticPhysicsObject.getPosition().y == 0) {
-//			if (physicsObject.getLinearVelocity().x < velocityX
-//					|| physicsObject.getLinearVelocity().z < velocityZ) {
-//				Vector3f v = new Vector3f(velocityX, 0, velocityZ);
-//				physicsObject.setLinearVelocity(v);
-////				 System.out.println("Ant: " + physicsObject.getPosition() +
-////				 " Ground: " + staticPhysicsObject.getPosition());
-//			}
-//		} else {
-//			// Not colliding with the ground but something else like a tree 
-//			if (physicsObject.getPosition().x > staticPhysicsObject
-//					.getPosition().x) {
-//				Vector3f v;
-//				v = new Vector3f(velocityX + 10, 0, velocityZ);
-//				physicsObject.setLinearVelocity(v);
-////				System.out.println("velocity: "
-////						+ physicsObject.getLinearVelocity() + " helper "
-////						+ velocityhelper);
-//			} else {
-//				Vector3f v;
-//				if (lastposition == physicsObject.getPosition().x) {
-//					velocityhelper = velocityhelper + 10;
-//					velocityZ = velocityhelper;
-//					v = new Vector3f(velocityX, 0, velocityZ);
-//				} else {
-//					lastposition = physicsObject.getPosition().x;
-//					v = new Vector3f(velocityX + 10, 0, velocityZ);
-//					physicsObject.setLinearVelocity(v);
-//					velocityhelper = 0;
-//				}
-//			}
-//			System.out.println("Ant: " + physicsObject.getPosition().x
-//					+ " lastposition: " + lastposition + " velocity: "
-//					+ physicsObject.getLinearVelocity() + " helper "
-//					+ velocityhelper);
-
-		
-		reactSpecific(staticPhysicsObject);
 	}
 	
 	/**Allows different ant types to react differently.
@@ -170,29 +117,13 @@ public abstract class Ant extends Entity {
 
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
-		
-		ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
-		if (tp.equals(ObjectType.ANT)) { //ant hit another ant: start dodging procedure
-			movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, dynamicPhysicsObject, Globals.ANT_SPEED));
-		} else if (tp.equals(ObjectType.ENEMY)) {
-//			attackEnemy(dynamicPhysicsObject);
+		if (Entity.entities.contains(this)) { //ant could have died in the meanwhile but event has not yet been processed...
+			ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
+			if (tp.equals(ObjectType.ANT)) { //ant hit another ant: start dodging procedure
+				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, dynamicPhysicsObject, Globals.ANT_SPEED));
+			}
+			reactSpecific(dynamicPhysicsObject);
 		}
-		reactSpecific(dynamicPhysicsObject);
-		
-		
-//		System.out.println("dynamisch");
-//		ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
-//		if (tp.equals(ObjectType.ANT)) {
-//			// interacting with ghost, the ant must not stray from its path!
-//			// think up smthg to handle it
-//			Vector3f v = new Vector3f(velocityX, 0, 0);
-//			physicsObject.setLinearVelocity(v);
-//			v = new Vector3f(0, 0, velocityZ);
-//			dynamicPhysicsObject.setLinearVelocity(v);
-//		} else if (tp.equals(ObjectType.ENEMY)) {
-//			attackEnemy(dynamicPhysicsObject);
-//		}
-//		reactSpecific(dynamicPhysicsObject);
 	}
 	
 	/**Allows different ant types to react differently.
@@ -201,9 +132,10 @@ public abstract class Ant extends Entity {
 	public abstract void reactSpecific(DynamicPhysicsObject dynamicPhysicsObject);
 
 	@Override
-	public void react(GhostPhysicsObject ghostPhysicsObject) {
-		//common reacting behaviour of all ant types
-		reactSpecific(ghostPhysicsObject);
+	public void react(GhostPhysicsObject ghostPhysicsObject) {		
+		if (Entity.entities.contains(this)) { //ant could have died in the meanwhile but event has not yet been processed...
+			reactSpecific(ghostPhysicsObject);
+		}
 	}
 	
 	/**Allows different ant types to react differently.
@@ -214,7 +146,9 @@ public abstract class Ant extends Entity {
 	@Override
 	public void react(TerrainPhysicsObject terrainPhysicsObject) {
 		// TODO Auto-generated method stub
-		
+		if (Entity.entities.contains(this)) { //ant could have died in the meanwhile but event has not yet been processed...
+			
+		}
 	}
 
 	public void move() {
@@ -222,10 +156,6 @@ public abstract class Ant extends Entity {
 		/*
 		 * if (oderStacks > 0){ followTrail(); }else{ randomMove(x,y) }
 		 */
-
-	}
-
-	public void attackEnemy(DynamicPhysicsObject dynamicPhysicsObject) {
 
 	}
 
@@ -293,7 +223,6 @@ public abstract class Ant extends Entity {
 	}
 	
 	public void unlockLocator() {
-		System.out.println("unlocking locator: " + lockedLocator);
 		//return to default movement behavior - this is just a dummy
 //		System.out.println("unlocked locator " + lockedLocator + " for " + this);
 		if (lockedLocator != null) {
@@ -358,7 +287,6 @@ public abstract class Ant extends Entity {
 	
 	public void fight(float damage) {
 		hp -= damage;
-		System.out.println(this + " has " + hp + " health left");
 		if (hp <= 0) {
 			delete(true);
 		}
@@ -370,7 +298,7 @@ public abstract class Ant extends Entity {
 		delete(true);
 		Hive.getInstance().addDeleteAnt(this);
 		
-		Entity movingEntity = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())
+		MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(pos) //position will be set later anyway in main loop according to mouse position
 				.setRotation(rot)
 				.buildGraphicsEntity("deadAnt", 1, 10)
@@ -381,7 +309,7 @@ public abstract class Ant extends Entity {
 
 	public Entity layPheromones() {
 		org.lwjgl.util.vector.Vector3f pos = Maths.vec3fToSlickUtil(physicsObject.getPosition());
-		Quat4f rot = physicsObject.getRotationQuaternions();
+		physicsObject.getRotationQuaternions();
 		Entity pheromone = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(GhostPhysicsObjectFactory.getInstance())
 				.setPosition(pos)
 				.buildGraphicsEntity("pheromone", 1, 50) //enable for debugging just to visualize the pheromones
