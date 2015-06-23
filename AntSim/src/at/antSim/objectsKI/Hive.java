@@ -222,12 +222,12 @@ public class Hive extends Entity {
 	public void layPheromones() {
 		for (Ant a : ants) {
 			if (a.getOdorStatus() == 2) {
-				Pheromone p = (Pheromone) a.layPheromones();
-				javax.vecmath.Vector3f dir = a.physicsObject.getPosition();
-//				dir.x = dir.x * -1;
-//				dir.z = dir.z * -1;
-				p.setDirection(dir);
-				Entity.pheromones.add(p);
+//				Pheromone p = (Pheromone) a.layPheromones();
+//				javax.vecmath.Vector3f dir = a.physicsObject.getPosition();
+////				dir.x = dir.x * -1;
+////				dir.z = dir.z * -1;
+//				p.setDirection(dir);
+//				Entity.pheromones.add(p);
 			}
 		}
 
