@@ -125,7 +125,6 @@ public class Forager extends Ant{
 			if (staticPhysicsObject.equals(lockedLocator.getTarget().physicsObject)) { //ant ran into lockedLocator
 				
 				if (lockedLocator.getTarget().objectType == ObjectType.FOOD) {
-					System.out.println("FOOD");
 					if (foodtransport < maxFoodTransport) {
 						
 						Food food = (Food) parentingEntities.get(staticPhysicsObject);
