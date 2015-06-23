@@ -108,6 +108,18 @@ public class WorldLoader {
 
 		hive = (Hive) hiveEntity;
 
+		Entity grass = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 50, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 50, Globals.WORLD_SIZE/2 + 50) -6, -Globals.WORLD_SIZE/2 + 50))
+				.buildGraphicsEntity("grass", 1, 10)
+				.buildPhysicsObject()
+				.registerResult();
+
+		Entity fern = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 60, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 60, Globals.WORLD_SIZE/2 + 60) -3, -Globals.WORLD_SIZE/2 + 60))
+				.buildGraphicsEntity("fern", 1, 80)
+				.buildPhysicsObject()
+				.registerResult();
+
 		loadBorders(terrain);
 	}
 	

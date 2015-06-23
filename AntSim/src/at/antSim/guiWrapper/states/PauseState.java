@@ -1,17 +1,11 @@
 package at.antSim.guiWrapper.states;
 
+import at.antSim.guiWrapper.*;
 import org.lwjgl.util.vector.Vector3f;
 
 import at.antSim.eventSystem.EventManager;
 import at.antSim.graphics.graphicsUtils.OpenGLLoader;
 import at.antSim.graphics.graphicsUtils.OpenGLTextDrawer;
-import at.antSim.guiWrapper.GuiContainer;
-import at.antSim.guiWrapper.GuiText;
-import at.antSim.guiWrapper.GuiWrapper;
-import at.antSim.guiWrapper.HorPositions;
-import at.antSim.guiWrapper.HorReference;
-import at.antSim.guiWrapper.VerPositions;
-import at.antSim.guiWrapper.VerReference;
 import at.antSim.guiWrapper.commands.Command;
 import at.antSim.guiWrapper.commands.ContinueCmd;
 import at.antSim.guiWrapper.commands.QuitToMainMenuCmd;
@@ -45,6 +39,8 @@ public class PauseState extends AbstractGuiState {
 		// Big container
 		GuiContainer mainContainer = new GuiContainer("mainContainer", loader, null, null, wrapper.getGuiTexture("pauseMenu/pauseMenuContainer"),
 				600, 300, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.3f, new Vector3f(1,1,1), 0f);
+		GuiImage pauseMenuContainerBorder = new GuiImage("startMenuContainerBorder", loader, mainContainer, null, wrapper.getGuiTexture("pauseMenu/pauseMenuContainerBorder"), 600, 300,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 		
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, loader.loadGuiTexture("font"));
 		

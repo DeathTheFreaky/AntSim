@@ -38,13 +38,15 @@ public class OptionsDisplayState extends AbstractGuiState {
 		backCmd = new BackCmd(state);
 		switchToControlsCmd = new SwitchStateOptionsCmd(args[1], state, this);
 		
-		GuiContainer mainContainer = new GuiContainer("mainContainer", loader, null, null, wrapper.getGuiTexture("white"),
-				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0, new Vector3f(1,1,1), 1);
+		GuiContainer mainContainer = new GuiContainer("mainContainer", loader, null, null, wrapper.getGuiTexture("background"),
+				Globals.displayWidth, Globals.displayHeight, HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(1,1,1), 0f);
 
 		OpenGLTextDrawer textDrawer = new OpenGLTextDrawer(loader, wrapper.getGuiTexture("font"));
 
 		// optionsContainer
 		GuiContainer optionsContainer = new GuiContainer("optionsContainer", loader, mainContainer, null, wrapper.getGuiTexture("optionsMenu/optionsContainer_display"), 700, 600,
+				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0.3f, new Vector3f(0, 0, 0), 0f);
+		GuiImage startMenuContainerBorder = new GuiImage("startMenuContainerBorder", loader, optionsContainer, null, wrapper.getGuiTexture("optionsMenu/optionsContainer_displayBorder"), 700, 600,
 				HorReference.PARENT, HorPositions.CENTER, 0, VerReference.PARENT, VerPositions.MIDDLE, 0, 0f, new Vector3f(0, 0, 0), 0f);
 
 		// Switching Containers
@@ -185,7 +187,7 @@ public class OptionsDisplayState extends AbstractGuiState {
 
 		// Foreground-Ant
 		GuiImage antForeground = new GuiImage("antForeground", loader, mainContainer, null, wrapper.getGuiTexture("ant_foreground"), 440, 360,
-				HorReference.PARENT, HorPositions.RIGHT, 0, VerReference.PARENT, VerPositions.BOTTOM, 0, 0f, new Vector3f(0, 0, 0), 0f);
+				HorReference.PARENT, HorPositions.RIGHT, 0, VerReference.PARENT, VerPositions.BOTTOM, -5, 0f, new Vector3f(0, 0, 0), 0f);
 		
 		state.addContainer(mainContainer);
 		
