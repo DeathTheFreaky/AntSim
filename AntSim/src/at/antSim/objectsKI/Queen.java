@@ -15,7 +15,7 @@ import at.antSim.objectsPhysic.basics.PhysicsObject;
  *
  */
 public class Queen  implements Feedable {
-	private int hp;
+	private float hp;
 	private int hunger;
 	private int eggLayingCost = 1;
 	private int eggLayingSpeed = 1;
@@ -38,7 +38,7 @@ public class Queen  implements Feedable {
 		}
 	}
 
-	public int getHp() {
+	public float getHp() {
 		return hp;
 	}
 
