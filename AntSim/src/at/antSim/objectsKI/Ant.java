@@ -76,8 +76,8 @@ public abstract class Ant extends Entity {
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
 		hive = Hive.getInstance();
 		hive.addAnt(this);
-		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
-//		Vector3f v = new Vector3f(1,0,0);
+//		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
+		Vector3f v = new Vector3f(0,0,1);
 		dynamicEntities.add(this);
 		ants.add(this);
 		EventManager.getInstance().registerEventListener(this);

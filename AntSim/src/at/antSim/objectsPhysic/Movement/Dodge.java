@@ -39,6 +39,8 @@ public class Dodge extends MovementMode {
 	int turnAngle;
 	
 	int debugCtr = 0;
+	
+	int turnCtr = 0;
 		
 	LinkedList<ReadOnlyPhysicsObject> previousObstacles = new LinkedList<>();
 	
@@ -63,6 +65,13 @@ public class Dodge extends MovementMode {
 				MovementManager.getInstance().removeLastMovementEntry(physicsObject);
 				return;
 			}
+			if (reachedOriginalDirection()) {
+				if (turnCtr >= 3) {
+					System.out.println(" finih ");
+					MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+					turnCtr = 0;
+				}
+			}
 					
 			if (stillColliding > 0) {
 														
@@ -83,6 +92,7 @@ public class Dodge extends MovementMode {
 						currentDirection = dodgeDirection;
 						
 						physicsObject.setAlignedMovement(dodgeDirection, speed);
+						turnCtr++;
 											
 						if (checkStillCollides) {
 							checkStillCollides = false;
@@ -96,6 +106,7 @@ public class Dodge extends MovementMode {
 			} else {
 							
 				if (reachedOriginalDirection()) {
+					System.out.println(" DOM E ");
 					MovementManager.getInstance().removeLastMovementEntry(physicsObject);
 				} else {
 					
@@ -105,6 +116,7 @@ public class Dodge extends MovementMode {
 					currentDirection = dodgeDirection;
 					
 					physicsObject.setAlignedMovement(dodgeDirection, speed/2);
+					turnCtr++;
 				}
 			}
 			
@@ -120,7 +132,7 @@ public class Dodge extends MovementMode {
 //				if (diffDirection.length() < 0.001f && diffPosition.length() < 0.1f) {
 //					System.out.println("diffDirection: " + diffDirection);
 //					System.out.println("diffPosition: " + diffPosition);
-//					dodgeDirection = Maths.turnDirectionVector(currentDirection, -135);
+//					dodgeDirection = Maths.turnDirectionVector(currentDirection, -90);
 //					currentDirection = dodgeDirection;
 //					
 //					physicsObject.setAlignedMovement(dodgeDirection, speed);
