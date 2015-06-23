@@ -24,7 +24,7 @@ public class EnemyAnt extends Enemy {
 		MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(pos) //position will be set later anyway in main loop according to mouse position
 				.setRotation(rot)
-				.buildGraphicsEntity("deadAnt", 1, 10)
+				.buildGraphicsEntity("deadAnt", 1, 20)
 				.setObjectType(ObjectType.FOOD)
 				.buildPhysicsObject()
 				.registerResult();

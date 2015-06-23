@@ -134,15 +134,15 @@ public class ConfigReader {
 			
 			Globals.maxPheromoneLifetime = 35;
 			
-			Globals.foodResAppleSize = 100;
-			Globals.foodResAntSize = 5;
-			Globals.foodResGrasshopperSize = 20;
-			Globals.foodResSquirrelSize = 100;
+			Globals.foodResAppleSize = 150;
+			Globals.foodResAntSize = 30;
+			Globals.foodResGrasshopperSize = 50;
+			Globals.foodResSquirrelSize = 300;
 			
 			Globals.enemyAntHp = 75;
 			Globals.enemyAntAttack = 0.2f;
 			Globals.enemyGrasshopperHp = 100;
-			Globals.enemyGrasshopperAttack = 0.5f;
+			Globals.enemyGrasshopperAttack = 0.3f;
 			
 			Globals.antAttack = 0.15f;
 			Globals.antHp = 50;
@@ -150,6 +150,8 @@ public class ConfigReader {
 			Globals.queenHp = 1000;
 			
 			Globals.maxFoodCarry = 10;
+			
+			Globals.hiveFoodStacks = 100;
 			
 			ConfigWriter.writeConfig();
 		}

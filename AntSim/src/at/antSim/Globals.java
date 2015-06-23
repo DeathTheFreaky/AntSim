@@ -85,6 +85,8 @@ public final class Globals {
 	public static float queenHp;
 	public static float queenAttack;
 	
+	public static int hiveFoodStacks; //
+	
 	//config file entries set by config reader
 	public static int displayWidth; 
 	public static int displayHeight;

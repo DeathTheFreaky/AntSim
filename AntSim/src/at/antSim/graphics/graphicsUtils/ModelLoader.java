@@ -66,7 +66,7 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkTexture", "queen", PrimitiveType.CUBOID, ObjectType.ANT, massDummie, false));
 		
 		//enemies
-		modelPresets.add(new ModelNamesAndTypes("ant", "antBlackTexture", "enemyAnt", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("ant", "antDarkRedTexture", "enemyAnt", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("grasshopper", "grasshopperTexture", "enemyGrasshopper", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		
 		//hive

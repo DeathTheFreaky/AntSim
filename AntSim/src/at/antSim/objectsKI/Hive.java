@@ -47,7 +47,7 @@ public class Hive extends Entity {
 	PositionLocator positionLocator;
 
 	protected Hive(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
-		this(100, graphicsEntity, physicsObject);
+		this(Globals.hiveFoodStacks, graphicsEntity, physicsObject);
 	}
 
 	// Startbedingungen aendern
@@ -270,14 +270,14 @@ public class Hive extends Entity {
 	}
 	
 	public void newAnt(){
-//		Entity ant = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(DynamicPhysicsObjectFactory.getInstance())
-////				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, MainApplication.getInstance().getTerrain().getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) +35, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 40, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
-//				.setRotation(0, 0, 0)
-//				.buildGraphicsEntity("forager", 1, 20)
-//				.setObjectType(ObjectType.ANT)
-//				.buildPhysicsObject()
-//				.registerResult();
+		Entity ant = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, MainApplication.getInstance().getTerrain().getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) +35, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 40, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
+				.setRotation(0, 0, 0)
+				.buildGraphicsEntity("forager", 1, 20)
+				.setObjectType(ObjectType.ANT)
+				.buildPhysicsObject()
+				.registerResult();
 	}
 
 }

@@ -175,6 +175,10 @@ public class MovementManager {
 		for (StackEntry entry : entries.values()) {
 			entry.stack.lastElement().move();
 			
+//			if (entry.stack.size() == 1) {
+//				System.out.println("only basic");
+//			}
+			
 //			System.out.println("ant ");
 //			
 //			Iterator it = entry.stack.iterator();
