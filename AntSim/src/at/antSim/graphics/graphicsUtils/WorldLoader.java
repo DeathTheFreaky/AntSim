@@ -100,24 +100,24 @@ public class WorldLoader {
 //		}
 		
 		
-		Entity greenCube = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
-				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
-				.buildPhysicsObject()
-				.registerResult();
-		
-		
-		Entity greenCube2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 20, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 20, -Globals.WORLD_SIZE/2 - 30), -Globals.WORLD_SIZE/2 - 30))
-				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
-				.buildPhysicsObject()
-				.registerResult();
-		
-		Entity greenCube3 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 50, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 50, -Globals.WORLD_SIZE/2 - 10), -Globals.WORLD_SIZE/2 - 10))
-				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
-				.buildPhysicsObject()
-				.registerResult();
+//		Entity greenCube = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
+//				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
+//				.buildPhysicsObject()
+//				.registerResult();
+//		
+//		
+//		Entity greenCube2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 20, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 20, -Globals.WORLD_SIZE/2 - 30), -Globals.WORLD_SIZE/2 - 30))
+//				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
+//				.buildPhysicsObject()
+//				.registerResult();
+//		
+//		Entity greenCube3 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 50, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 50, -Globals.WORLD_SIZE/2 - 10), -Globals.WORLD_SIZE/2 - 10))
+//				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
+//				.buildPhysicsObject()
+//				.registerResult();
 
 		Entity hiveEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) -5, -Globals.WORLD_SIZE/2 - 150))
@@ -129,14 +129,38 @@ public class WorldLoader {
 		hive = (Hive) hiveEntity;		
 
 		Entity grass = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 50, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 50, Globals.WORLD_SIZE/2 + 50) -6, -Globals.WORLD_SIZE/2 + 50))
-				.buildGraphicsEntity("grass", 1, 10)
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, Globals.WORLD_SIZE/2 + 50) -6, -Globals.WORLD_SIZE/2 + 50))
+				.buildGraphicsEntity("grass", 1, 30)
 				.buildPhysicsObject()
 				.registerResult();
 
-		Entity fern = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+		Entity bush = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 60, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 60, Globals.WORLD_SIZE/2 + 60) -3, -Globals.WORLD_SIZE/2 + 60))
-				.buildGraphicsEntity("fern", 1, 80)
+				.buildGraphicsEntity("bush", 1, 70)
+				.buildPhysicsObject()
+				.registerResult();
+		
+		Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 60, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 60, Globals.WORLD_SIZE/2 + 60) - 10, -Globals.WORLD_SIZE/2 + 60))
+				.buildGraphicsEntity("rock", 1, 40)
+				.buildPhysicsObject()
+				.registerResult();
+		
+		Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 120, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 120, Globals.WORLD_SIZE/2 + 60) - 12, -Globals.WORLD_SIZE/2 + 60))
+				.buildGraphicsEntity("stomp", 1, 70)
+				.buildPhysicsObject()
+				.registerResult();
+		
+		Entity fern = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 60, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 60, Globals.WORLD_SIZE/2 + 120) -3, -Globals.WORLD_SIZE/2 + 120))
+				.buildGraphicsEntity("fern", 1, 60)
+				.buildPhysicsObject()
+				.registerResult();
+				
+		Entity pointedLightLamp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(185, terrain.getHeightOfTerrain(185, -293) -3, -293))
+				.buildGraphicsEntity("lamp", 1, 30)
 				.buildPhysicsObject()
 				.registerResult();
 
@@ -190,7 +214,13 @@ public class WorldLoader {
 		ArrayList<Light> lights = new ArrayList<Light>();
 		
 		lights.add(new Light(new Vector3f(0, 1000, -7000), new Vector3f(0.7f, 0.7f, 0.7f))); //sun
-		lights.add(new Light(new Vector3f(185, 10, -293), new Vector3f(2, 0, 0), new Vector3f(1, 0.01f, 0.002f))); //lamp
+		lights.add(new Light(new Vector3f(0, -400, 7000), new Vector3f(0.4f, 0.4f, 0.4f))); //moon
+		
+		//pointed light sources with attenuation -> 1 lamp, lit from 4 sources to make lamp seem glowing
+		lights.add(new Light(new Vector3f(185, 18, -288), new Vector3f(2, 0, 0), new Vector3f(0.5f, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(185, 18, -298), new Vector3f(2, 0, 0), new Vector3f(0.5f, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(180, 18, -293), new Vector3f(2, 0, 0), new Vector3f(0.5f, 0.01f, 0.002f)));
+		lights.add(new Light(new Vector3f(190, 18, -293), new Vector3f(2, 0, 0), new Vector3f(0.5f, 0.01f, 0.002f)));
 		
 		return lights;
 	}
