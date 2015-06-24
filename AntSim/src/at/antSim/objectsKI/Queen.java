@@ -32,7 +32,7 @@ public class Queen  implements Feedable {
 	
 	public void feed(){
 		hunger++;
-		if(hunger > eggLayingSpeed){
+		if(hunger > Hive.getInstance().getGrowthSpeed()){
 			layEgg();
 			hunger = hunger-eggLayingCost;
 		}

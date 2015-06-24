@@ -44,6 +44,8 @@ public class Hive extends Entity {
 	private Queen queen;
 
 	private int startFood;
+	
+	private int growthSpeed;
 
 	PositionLocator positionLocator;
 
@@ -59,6 +61,7 @@ public class Hive extends Entity {
 		startFood = food;
 		foodStacks = food;
 		queen = new Queen();
+		growthSpeed = 5;
 		fa.add(queen);
 
 		buildPositionLocator();
@@ -124,6 +127,13 @@ public class Hive extends Entity {
 
 	public void addAnt(Ant a) {
 		ants.add(a);
+		if(ants.size() < 10){
+			growthSpeed = 5;
+		}else if(ants.size() > 10 && ants.size() < 40){
+			growthSpeed = 3;
+		}else if( ants.size() > 40){
+			growthSpeed = 1;
+		}
 	}
 
 	public void addDeleteAnt(Ant a) {
@@ -274,6 +284,7 @@ public class Hive extends Entity {
 		removeFeed.clear();
 		addFeed.clear();
 
+		
 	}
 	
 	/**Used when restarting game in singleton Hive.
@@ -301,5 +312,13 @@ public class Hive extends Entity {
 				.setObjectType(ObjectType.ANT)
 				.buildPhysicsObject()
 				.registerResult();
+	}
+
+	public int getGrowthSpeed() {
+		return growthSpeed;
+	}
+
+	public void setGrowthSpeed(int growthSpeed) {
+		this.growthSpeed = growthSpeed;
 	}
 }
