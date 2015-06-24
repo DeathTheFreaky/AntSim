@@ -65,33 +65,43 @@ public class MovementManager {
 		// check if collides with same obstacle
 //		System.out.println("size " + entries.get(physicsObject).size());
 //		System.out.println(" last " + entries.get(physicsObject).lastElement());
-		if (entries.get(physicsObject).stack.lastElement().type == MovementModeType.DODGE
-				&& mode.type == MovementModeType.DODGE) {
-
-			Dodge lastDodge = (Dodge) entries.get(physicsObject).stack.lastElement();
-			Dodge newDodge = (Dodge) mode;
-
-			if (lastDodge.obstacle == newDodge.obstacle) {
-				((Dodge) entries.get(physicsObject).stack.lastElement())
-						.setStillColliding();
-			} else {
-				((Dodge) entries.get(physicsObject).stack.lastElement())
-						.reset(newDodge.obstacle);
-			}
-
-		} else if (entries.get(physicsObject).stack.lastElement().type == MovementModeType.BORDER && mode.type == MovementModeType.BORDER) {
+		if (entries.get(physicsObject).stack.lastElement().type == MovementModeType.BORDER && mode.type == MovementModeType.BORDER) {
 			// ignore new border movement, wait for previous one to finish
 		} else if (mode.type == MovementModeType.BORDER) {
 			MovementMode previousMode = entries.get(physicsObject).stack.lastElement();
 			((BorderCollisionMovement) mode).setOriginalDirection(previousMode.getDirection());
 			entries.get(physicsObject).stack.add(mode);
 		} else if (mode.type == MovementModeType.DODGE) {
-			MovementMode previousMode = entries.get(physicsObject).stack.lastElement();
-			entries.get(physicsObject).stack.add(mode);
-			((Dodge) mode).setCurrentDirection(previousMode.getDirection());
-			((Dodge) mode).setPreviousMovementMode(previousMode);
+			if (entries.get(physicsObject).stack.lastElement().type == MovementModeType.DODGE) {
+				Dodge lastDodge = (Dodge) entries.get(physicsObject).stack.lastElement();
+				Dodge newDodge = (Dodge) mode;
+				if (lastDodge.obstacle == newDodge.obstacle) {
+					((Dodge) entries.get(physicsObject).stack.lastElement()).setStillColliding();
+				} else {
+					((Dodge) entries.get(physicsObject).stack.lastElement()).reset(newDodge.obstacle);
+				}
+			} else if (entries.get(physicsObject).stack.lastElement().type == MovementModeType.WAIT) {
+//				MovementMode previousMode = getTargetMovementMode(physicsObject);
+//				if (previousMode == null) {
+//					previousMode = getDirectionMovementMode(physicsObject);
+//				}
+//				if (previousMode == null) {
+//					previousMode = getBaseMovementMode(physicsObject);
+//				}
+//				((Dodge) mode).setCurrentDirection(previousMode.getDirection());
+//				((Dodge) mode).setPreviousMovementMode(previousMode);
+//				entries.get(physicsObject).stack.add(mode);
+			} else {
+				MovementMode previousMode = entries.get(physicsObject).stack.lastElement();
+				((Dodge) mode).setCurrentDirection(previousMode.getDirection());
+				((Dodge) mode).setPreviousMovementMode(previousMode);
+				entries.get(physicsObject).stack.add(mode);
+			}
 		} else if (mode.type == MovementModeType.TARGET) {
-			if (getTargetMovementMode(physicsObject) == null && getHiveMovementMode(physicsObject) == null && entries.get(physicsObject).stack.lastElement().type != MovementModeType.DODGE) {
+			if (getTargetMovementMode(physicsObject) == null && getHiveMovementMode(physicsObject) == null) {
+				if (entries.get(physicsObject).stack.lastElement().type == MovementModeType.DODGE) {
+					removeLastMovementEntry(physicsObject);
+				}
 				entries.get(physicsObject).stack.add(mode);
 			}
 		} else if (mode.type == MovementModeType.DIRECTION ) {
@@ -111,7 +121,9 @@ public class MovementManager {
 				}	
 			}
 		} else if (mode.type == MovementModeType.WAIT) {
-			entries.get(physicsObject).stack.add(mode);
+			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.WAIT) {
+				entries.get(physicsObject).stack.add(mode);
+			}
 		} else if (mode.type == MovementModeType.BASIC) {
 			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.BASIC) {
 				entries.get(physicsObject).stack.add(mode);

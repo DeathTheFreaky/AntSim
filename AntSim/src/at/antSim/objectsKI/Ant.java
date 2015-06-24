@@ -331,4 +331,8 @@ public abstract class Ant extends Entity {
 				.registerResult();
 		return pheromone;
 	}
+
+	public boolean insideLocator(PositionLocator locator) {
+		return positionLocators.contains(locator);
+	}
 }

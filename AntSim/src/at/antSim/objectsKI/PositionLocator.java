@@ -95,6 +95,17 @@ public class PositionLocator extends Entity {
 	 * @return
 	 */
 	public boolean entryPossible(Ant ant) {
+		
+		LinkedList<Ant> deleteAbles = new LinkedList<>();
+		//remove ants which have left the locator or are stuck
+		for (Ant a : activeAnts) {
+			if (!a.insideLocator(this)) {
+				deleteAbles.add(a);
+			}
+		}
+		
+		activeAnts.removeAll(deleteAbles);
+		
 		if (activeAnts.size() < maxAnts || activeAnts.contains(ant)) {
 			return true;
 		}

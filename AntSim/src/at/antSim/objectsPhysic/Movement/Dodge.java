@@ -41,8 +41,10 @@ public class Dodge extends MovementMode {
 	int turnAngle;
 	
 	int debugCtr = 0;
-	
 	int turnCtr = 0;
+	
+	int dodgeThreshold = 500;
+	int dodgeCtr = 0;
 		
 	LinkedList<ReadOnlyPhysicsObject> previousObstacles = new LinkedList<>();
 	
@@ -55,6 +57,12 @@ public class Dodge extends MovementMode {
 	}
 	
 	public void move() {
+		
+		dodgeCtr++;
+		if (dodgeCtr >= dodgeThreshold) {
+			MovementManager.getInstance().topDeleteables.add(physicsObject);
+			return;
+		}
 		
 		if (!updateOriginalDirection()) {
 			MovementManager.getInstance().topDeleteables.add(physicsObject);

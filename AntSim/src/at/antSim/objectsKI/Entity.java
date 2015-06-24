@@ -189,16 +189,14 @@ public abstract class Entity {
 	}
 	
 	public static void testDynamicsHaveMovementModes() {
-		System.out.println();
-		System.out.println("size of dynamicEntities: " + dynamicEntities.size());
 		for (Entity e : dynamicEntities) {
 			if (PhysicsManager.getInstance().getPhysicsObject(e.physicsObject.getCollisionBody()) == null) {
 				PhysicsManager.getInstance().unregisterPhysicsObject(e.physicsObject);
 				PhysicsManager.getInstance().registerPhysicsObject(e.physicsObject);
-				System.out.println("entity " + e + " has been reset");
+//				System.out.println("entity " + e + " has been reset");
 			}
 			else if (MovementManager.getInstance().getTopMovementMode(e.physicsObject) == null) {
-				System.out.println("dynamic entity lost basic movement");
+//				System.out.println("dynamic entity lost basic movement");
 				Vector3f dir = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
 				MovementManager.getInstance().addMovementEntry((DynamicPhysicsObject) e.physicsObject, new BasicMovement((DynamicPhysicsObject) e.physicsObject, dir, Globals.ANT_SPEED));
 			} else {
@@ -206,6 +204,7 @@ public abstract class Entity {
 					Ant a = (Ant) e;
 					Vector3f currentPos = ((ReadOnlyPhysicsObject) e.getPhysicsObject()).getPosition();
 					Vector3f diffPosition = new Vector3f(currentPos.x - a.previousResetPosition.x, 0, currentPos.z - a.previousResetPosition.z);
+					a.previousResetPosition = currentPos;
 					if (diffPosition.length() < 1f) {
 						a.previousResetCtr++;
 						if (a.previousResetCtr >= a.previousResetThreshold) {
@@ -216,7 +215,7 @@ public abstract class Entity {
 							try {
 								PhysicsManager.getInstance().unregisterPhysicsObject(a.physicsObject);
 								PhysicsManager.getInstance().registerPhysicsObject(a.physicsObject);
-								System.out.println("ant " + a  + " has been reset");
+//								System.out.println("ant " + a  + " has been reset");
 							} catch (Exception ex) {
 								System.out.println(e + " failed to be readded to physicsWorld");
 							}
@@ -226,6 +225,7 @@ public abstract class Entity {
 					Enemy en = (Enemy) e;
 					Vector3f currentPos = ((ReadOnlyPhysicsObject) e.getPhysicsObject()).getPosition();
 					Vector3f diffPosition = new Vector3f(currentPos.x - en.previousResetPosition.x, 0, currentPos.z - en.previousResetPosition.z);
+					en.previousResetPosition = currentPos;
 					if (diffPosition.length() < 1f) {
 						en.previousResetCtr++;
 						if (en.previousResetCtr >= en.previousResetThreshold) {
@@ -236,7 +236,7 @@ public abstract class Entity {
 							try {
 								PhysicsManager.getInstance().unregisterPhysicsObject(en.physicsObject);
 								PhysicsManager.getInstance().registerPhysicsObject(en.physicsObject);
-								System.out.println("enemy " + e + " has been reset");
+//								System.out.println("enemy " + e + " has been reset");
 							} catch (Exception ex) {
 								System.out.println(e + " failed to be readded to physicsWorld");
 							}
