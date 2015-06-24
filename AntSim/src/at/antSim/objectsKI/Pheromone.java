@@ -103,8 +103,10 @@ public class Pheromone extends Entity {
 		}
 		if (targetPos != null) {
 			previousTargetPosition = targetPos;
-		} 
-		returnDirection = new Vector3f(previousTargetPosition.x - position.x, 0, previousTargetPosition.z - position.z);
+		}
+		if (previousTargetPosition != null) {
+			returnDirection = new Vector3f(previousTargetPosition.x - position.x, 0, previousTargetPosition.z - position.z);
+		}
 		return returnDirection;
 	}
 	

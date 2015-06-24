@@ -117,7 +117,7 @@ public class Forager extends Ant {
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
 			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
 			Pheromone p = (Pheromone) parentingEntities.get(ghostPhysicsObject);
-			if (p != currentPheromone) { //only update and move along pheromones the first time an ant enters them
+			if (p != currentPheromone && p != null) { //only update and move along pheromones the first time an ant enters them
 				currentPheromone = p;
 				if (foodtransport > 0) {
 					MoveToHive moveToHive = MovementManager.getInstance().getHiveMovementMode(physicsObject);
@@ -126,8 +126,10 @@ public class Forager extends Ant {
 						p.increaseLifetime(source);
 					}
 				} else {
-					movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(physicsObject.getPosition()), Globals.ANT_SPEED));
-					
+					Vector3f dir = p.getDirection(physicsObject.getPosition());
+					if (dir != null) {
+						movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(physicsObject.getPosition()), Globals.ANT_SPEED));
+					}
 				}
 			}
 		}

@@ -220,8 +220,7 @@ public class MainApplication {
 		movingEntity = new MovingEntity();
 
 		// camera for navigating in the world
-		camera = new Camera(new Vector3f(Globals.WORLD_SIZE / 2, 0,
-				-Globals.WORLD_SIZE / 2), pauseState.getName());
+		camera = new Camera(new Vector3f(Globals.WORLD_SIZE/2, 0, -Globals.WORLD_SIZE/2 - 150), pauseState.getName());
 		EventManager.getInstance().registerEventListener(camera);
 
 		// mousepicker to interact with the world
