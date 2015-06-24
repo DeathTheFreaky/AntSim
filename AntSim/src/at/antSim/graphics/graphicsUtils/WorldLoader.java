@@ -153,8 +153,8 @@ public class WorldLoader {
 				.registerResult();
 		
 		Entity fern = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 60, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 60, Globals.WORLD_SIZE/2 + 120) -3, -Globals.WORLD_SIZE/2 + 120))
-				.buildGraphicsEntity("fern", 1, 60)
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 60, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 60, Globals.WORLD_SIZE/2 + 120) -5, -Globals.WORLD_SIZE/2 + 120))
+				.buildGraphicsEntity("fern", 1, 70)
 				.buildPhysicsObject()
 				.registerResult();
 				
