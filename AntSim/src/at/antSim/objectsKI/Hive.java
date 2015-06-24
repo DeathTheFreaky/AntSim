@@ -16,6 +16,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.MoveToHive;
 import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.Movement.MovementModeType;
@@ -245,10 +246,12 @@ public class Hive extends Entity {
 		for (Ant a : ants) {
 			if (a.getOdorStatus() == 2 && a.currentPheromone == null) {
 				Pheromone p = (Pheromone) a.layPheromones();
-				MoveToTarget moveToTarget = MovementManager.getInstance().getTargetMovementMode(a.physicsObject);
-				if (moveToTarget != null) {
-					javax.vecmath.Vector3f dir = moveToTarget.getDirection();
-					p.increaseLifetime(dir);
+				MoveToHive moveToHive = MovementManager.getInstance().getHiveMovementMode(a.physicsObject);
+				if (moveToHive != null) {
+					ReadOnlyPhysicsObject source = moveToHive.getOrigin();
+					if (source != null) {
+						p.increaseLifetime(source);
+					}
 				}
 			}
 		}

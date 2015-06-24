@@ -5,6 +5,7 @@ import javax.vecmath.Quat4f;
 import at.antSim.Globals;
 import at.antSim.MainApplication;
 import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.utils.Maths;
@@ -33,6 +34,7 @@ public class EnemyAnt extends Enemy {
 
 	@Override
 	protected void deleteSpecific() {
+		MovementManager.getInstance().removeAllMovementEntries(physicsObject, true);
 		if (deleteAllowed) {
 			positionLocator.delete();
 			spawnDeadAnt();

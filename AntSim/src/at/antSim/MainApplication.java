@@ -484,6 +484,7 @@ public class MainApplication {
 		Entity.deleteAllEntities();
 		if (hive != null)
 			hive.reset();
+		MovementManager.getInstance().clearAllEntries();
 	}
 
 	public void pause() {

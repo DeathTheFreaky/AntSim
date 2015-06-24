@@ -15,6 +15,7 @@ import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 import at.antSim.utils.Maths;
 
 /**For pheromones...
@@ -24,8 +25,8 @@ import at.antSim.utils.Maths;
  */
 public class Pheromone extends Entity {
 	
-	private LinkedList<DirectionEntry> directions = new LinkedList<>();
-	private int idCtr;
+	private HashMap<ReadOnlyPhysicsObject, Integer> sources = new HashMap<>();
+	Vector3f previousTargetPosition;
 
 	public Pheromone(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.PHEROMONE);
@@ -62,77 +63,49 @@ public class Pheromone extends Entity {
 			Entity.pheromones.remove(this);
 		}
 	}
-
-	public int getLifetime() {
-		int maxLifetime = 0;
-		for (DirectionEntry entry : directions) {
-			if (entry.lifetime > maxLifetime) {
-				maxLifetime = entry.lifetime;
-			}
-		}
-		return maxLifetime;
-	}
 	
-	public void increaseLifetime(Vector3f direction) {
-		
-		if (direction != null) {
-			direction.x = direction.x * -1;
-			direction.z = direction.z * -1;
-			direction.y = 0;
-			direction.normalize();
-			direction.x = Maths.round(direction.x, 2);
-			direction.z = Maths.round(direction.z, 2);
-			
-			Vector3f similarDirection = null;
-			for (DirectionEntry entry : directions) {
-				Vector3f change = new Vector3f();
-				change.sub(entry.direction, direction);
-				change.y = 0;
-				
-				if (change.length() < 0.01f) {
-					entry.lifetime = Globals.maxPheromoneLifetime;
-				}
-			}
-			
-			if (similarDirection == null) {
-				directions.add(new DirectionEntry(direction, Globals.maxPheromoneLifetime));
-			}
-			
-		} else {
-			System.err.println("Direciton of pheromone to be added was null ");
-		}
+	public void increaseLifetime(ReadOnlyPhysicsObject po) {
+		sources.put(po, Globals.maxPheromoneLifetime);
 	}
 
 	public void decreaseLifetime() {
-		LinkedList<DirectionEntry> deleteables = new LinkedList<>();
-		for (DirectionEntry entry : directions) {
-			entry.lifetime -= 1;
-			if (entry.lifetime <= 0) {
-				deleteables.add(entry);
+		LinkedList<ReadOnlyPhysicsObject> deleteables = new LinkedList<>();
+		for (Entry<ReadOnlyPhysicsObject, Integer> entry : sources.entrySet()) {
+			entry.setValue(entry.getValue() - 1);
+			if (entry.getValue() <= 0) {
+				deleteables.add(entry.getKey());
 			}
 		}
-		for (DirectionEntry d : deleteables) {
-			directions.remove(d);
+		for (ReadOnlyPhysicsObject d : deleteables) {
+			sources.remove(d);
 		}
 		deleteables.clear();
-		if (directions.size() == 0) {
+		if (sources.size() == 0) {
 			Hive.getInstance().removePheromone(this);
 		}
 	}
 
 	/**
+	 * @param - position: position of an ant 
 	 * @return - "strongest" direction -> visited the most
 	 */
-	public Vector3f getDirection() {
-		Vector3f returnDir = null;
+	public Vector3f getDirection(Vector3f position) {
+		Vector3f returnDirection = null;
+		Vector3f targetPos = null;
 		int maxLifetime = 0;
-		for (DirectionEntry entry : directions) {
-			if (entry.lifetime > maxLifetime) {
-				maxLifetime = entry.lifetime;
-				returnDir = entry.direction;
+		for (Entry<ReadOnlyPhysicsObject, Integer> entry : sources.entrySet()) {
+			if (entry.getValue() > maxLifetime) {
+				maxLifetime = entry.getValue();
+				if (entry.getKey() != null) {
+					targetPos = entry.getKey().getPosition();
+				} 
 			}
 		}
-		return returnDir;
+		if (targetPos != null) {
+			previousTargetPosition = targetPos;
+		} 
+		returnDirection = new Vector3f(previousTargetPosition.x - position.x, 0, previousTargetPosition.z - position.z);
+		return returnDirection;
 	}
 	
 	class DirectionEntry {

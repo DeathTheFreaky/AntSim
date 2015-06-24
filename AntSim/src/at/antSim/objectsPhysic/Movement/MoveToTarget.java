@@ -15,6 +15,7 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
  */
 public class MoveToTarget extends MovementMode {
 
+	public PhysicsObject origin;
 	public ReadOnlyPhysicsObject target;
 	Vector3f direction;
 	

@@ -1,5 +1,7 @@
 package at.antSim.objectsKI;
 
+import javax.vecmath.Vector3f;
+
 import at.antSim.Globals;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
@@ -8,6 +10,7 @@ import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.Movement.BasicMovement;
 import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MoveInDirection;
+import at.antSim.objectsPhysic.Movement.MoveToHive;
 import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.Movement.MovementModeType;
@@ -50,17 +53,17 @@ public class Forager extends Ant {
 	@Override
 	public void reactSpecific(GhostPhysicsObject ghostPhysicsObject) {
 		
-		System.out.println("hitting ghost " + Entity.parentingEntities.get(ghostPhysicsObject));
+//		System.out.println("hitting ghost " + Entity.parentingEntities.get(ghostPhysicsObject));
 
 		if (Entity.parentingEntities.get(ghostPhysicsObject) != null && Entity.parentingEntities.get(ghostPhysicsObject).objectType == ObjectType.LOCATOR) { // ant is inside a position locator
 
-			System.out.println(this + " inside a positionLocator and lockedLocator == " + lockedLocator);
+//			System.out.println(this + " inside a positionLocator and lockedLocator == " + lockedLocator);
 
 			PositionLocator locator = (PositionLocator) parentingEntities.get(ghostPhysicsObject);
 			positionLocators.increaseCount(locator); //make sure positionLocator remains/is being added to list of all PositionLocators ant is currently inn
 
 			if (locator != null) {
-				System.out.println("locator: " + locator);
+//				System.out.println("locator: " + locator);
 				if (lockedLocator == null) { // only register ant for one
 												// locator at a time
 					if ((locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport < maxFoodTransport)
@@ -94,7 +97,7 @@ public class Forager extends Ant {
 						}
 					} else if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport == 0) {
 						//dont enter hive without food
-						System.out.println("hitting hive ghost with no food");
+//						System.out.println("hitting hive ghost with no food");
 						BasicMovement basicMovement = (BasicMovement) movementManager.getBaseMovementMode(physicsObject);
 						basicMovement.setDirection(Maths.turnDirectionVector(basicMovement.getDirection(), 125));
 					}
@@ -107,25 +110,25 @@ public class Forager extends Ant {
 					}
 				}
 			} else {
-				System.out.println(" locator was null");
+//				System.out.println(" locator was null");
 			}
 			// System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at "
 			// + locator.getTargetPosition());
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
 			pheromones.increaseCount((Pheromone) parentingEntities.get(ghostPhysicsObject));
 			Pheromone p = (Pheromone) parentingEntities.get(ghostPhysicsObject);
-			currentPheromone = p;
-			if (foodtransport > 0) {
-				MoveToTarget moveToTarget = MovementManager.getInstance().getTargetMovementMode(physicsObject);
-				if (moveToTarget != null) {
-					javax.vecmath.Vector3f dir = moveToTarget.getDirection();
-					p.increaseLifetime(dir);
+			if (p != currentPheromone) { //only update and move along pheromones the first time an ant enters them
+				currentPheromone = p;
+				if (foodtransport > 0) {
+					MoveToHive moveToHive = MovementManager.getInstance().getHiveMovementMode(physicsObject);
+					if (moveToHive != null) {
+						ReadOnlyPhysicsObject source = moveToHive.getOrigin();
+						p.increaseLifetime(source);
+					}
+				} else {
+					movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(physicsObject.getPosition()), Globals.ANT_SPEED));
+					
 				}
-			}
-			// System.out.println("direction in forager event: " +
-			// p.getDirection());
-			if (p != null && p.getDirection() != null) {
-				movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(), Globals.ANT_SPEED));
 			}
 		}
 	}
@@ -154,12 +157,12 @@ public class Forager extends Ant {
 							if (movementManager.getTopMovementMode(physicsObject).getType() == MovementModeType.TARGET) {
 								movementManager.removeLastMovementEntry(physicsObject); // whatfor?
 							}
-							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
+							movementManager.addMovementEntry(physicsObject, new MoveToHive(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
 						}
 					} else {
 						if (movementManager.getTopMovementMode(physicsObject).getType() != MovementModeType.DODGE) {
 							movementManager.removeLastMovementEntry(physicsObject); // whatfor?
-							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, Globals.ANT_SPEED));
+							movementManager.addMovementEntry(physicsObject, new MoveToHive(physicsObject, (ReadOnlyPhysicsObject) hive.physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
 							movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
 							this.setOdorStatus(2);
 						} else {
@@ -172,11 +175,24 @@ public class Forager extends Ant {
 						foodtransport = 0;
 						this.setHp(Globals.antHp);
 						this.setOdorStatus(1);
+						currentPheromone = null;
 						if (movementManager.getTopMovementMode(physicsObject) != null) {
 							if (movementManager.getTopMovementMode(physicsObject).getType() != MovementModeType.BASIC) {
-								movementManager.removeLastMovementEntry(physicsObject); // So he doesnt stand at the hive
+								Vector3f lastDirection = null;
+								if (movementManager.getTargetMovementMode(physicsObject) != null) {
+									lastDirection = movementManager.getTargetMovementMode(physicsObject).getDirection();
+								}
+								if (lastDirection == null) {
+									lastDirection = movementManager.getBaseMovementMode(physicsObject).getDirection();
+								}
+								movementManager.removeAllMovementEntries(physicsObject, false); //clear movement stack except for basic movement and start from scratch
+								BasicMovement basicMovement = (BasicMovement) movementManager.getBaseMovementMode(physicsObject);
+								basicMovement.setDirection(Maths.turnDirectionVector(lastDirection, 180));
 							}
 						}
+					} else {
+						BasicMovement basicMovement = (BasicMovement) movementManager.getBaseMovementMode(physicsObject);
+						basicMovement.setDirection(Maths.turnDirectionVector(basicMovement.getDirection(), 180));
 					}
 				}
 			}
@@ -185,7 +201,7 @@ public class Forager extends Ant {
 //				System.out.println("Dodge " + movementManager.getTopMovementMode(physicsObject).getType());
 				movementManager.addMovementEntry(physicsObject, new Dodge(
 						physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
-			}
+			} 
 		}
 	}
 

@@ -94,19 +94,12 @@ public class MovementManager {
 			((Dodge) mode).setCurrentDirection(previousMode.getDirection());
 			((Dodge) mode).setPreviousMovementMode(previousMode);
 		} else if (mode.type == MovementModeType.TARGET) {
-			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.TARGET && entries.get(physicsObject).stack.lastElement().type != MovementModeType.DODGE) {
+			if (getTargetMovementMode(physicsObject) == null && getHiveMovementMode(physicsObject) == null && entries.get(physicsObject).stack.lastElement().type != MovementModeType.DODGE) {
 				entries.get(physicsObject).stack.add(mode);
 			}
 		} else if (mode.type == MovementModeType.DIRECTION ) {
-			Iterator it = entries.get(physicsObject).stack.iterator();
-//			System.out.println(" ------------list-------------- " + moveToDir);
-			while(it.hasNext()){
-				MovementMode bla = (MovementMode) it.next();
-				if (bla.getDirection() == null) {
-					System.out.println(bla + ", " + bla.getDirection());
-				}
-			}
-			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.TARGET && entries.get(physicsObject).stack.lastElement().type != MovementModeType.DODGE) {
+			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.TARGET 
+					&& entries.get(physicsObject).stack.lastElement().type != MovementModeType.DODGE) {
 				entries.get(physicsObject).moveToDirCtr++;
 //				System.out.println("moveToDir " + moveToDir + " size " + entries.get(physicsObject).size());
 //				System.out.println(" last " + entries.get(physicsObject).lastElement());
@@ -124,7 +117,13 @@ public class MovementManager {
 		} else if (mode.type == MovementModeType.WAIT) {
 			entries.get(physicsObject).stack.add(mode);
 		} else if (mode.type == MovementModeType.BASIC) {
-			entries.get(physicsObject).stack.add(mode);
+			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.BASIC) {
+				entries.get(physicsObject).stack.add(mode);
+			}
+		} else if (mode.type == MovementModeType.HIVE) {
+			if (getHiveMovementMode(physicsObject) == null) {
+				entries.get(physicsObject).stack.add(mode);
+			}
 		}
 	}
 
@@ -134,7 +133,7 @@ public class MovementManager {
 	 * 
 	 * @param physicsObject
 	 */
-	public void removeLastMovementEntry(DynamicPhysicsObject physicsObject) {
+	public boolean removeLastMovementEntry(DynamicPhysicsObject physicsObject) {
 		if (entries.containsKey(physicsObject)) {
 //			System.out.println( " size " + entries.get(physicsObject).stack.size());
 			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.BASIC) {
@@ -147,8 +146,10 @@ public class MovementManager {
 				if (entries.get(physicsObject).stack.size() == 0) {
 					entries.remove(physicsObject);
 				}
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -157,9 +158,15 @@ public class MovementManager {
 	 * {@link MovementMode} entries.
 	 * 
 	 * @param physicsObject
+	 * @param deleteBasic - true if last basic movement mode shall also be deleted
 	 */
-	public void removeAllMovementEntries(DynamicPhysicsObject physicsObject) {
-		entries.remove(physicsObject);
+	public void removeAllMovementEntries(DynamicPhysicsObject physicsObject, boolean deleteBasic) {
+		if (deleteBasic) {
+			entries.remove(physicsObject);
+		}
+		if (removeLastMovementEntry(physicsObject)) {
+			removeAllMovementEntries(physicsObject, deleteBasic);
+		}
 	}
 
 	/**
@@ -177,19 +184,19 @@ public class MovementManager {
 		for (StackEntry entry : entries.values()) {
 			entry.stack.lastElement().move();
 			
-//			if (entry.stack.size() == 1) {
-//				System.out.println("only basic");
-//			}
+			if (entry.stack.size() == 1) {
+				System.out.println("only basic");
+			}
 			
-//			System.out.println("ant ");
-//			
-//			Iterator it = entry.stack.iterator();
-//			
-//			while(it.hasNext()) {
-//				System.out.println(it.next());
-//			}
-//			
-//			System.out.println();
+			System.out.println("ant ");
+			
+			Iterator it = entry.stack.iterator();
+			
+			while(it.hasNext()) {
+				System.out.println(it.next());
+			}
+			
+			System.out.println();
 		}
 		for (DynamicPhysicsObject po : topDeleteables) {
 			removeLastMovementEntry(po);
@@ -209,13 +216,49 @@ public class MovementManager {
 		return entries.get(physicsObject).stack.elementAt(0);
 	}
 	
+	/**
+	 * @param physicsObject
+	 * @return - topMost {@link MoveToTarget}
+	 */
 	public MoveToTarget getTargetMovementMode(PhysicsObject physicsObject) {
 		MoveToTarget ret = null;
-		Iterator it = entries.get(physicsObject).stack.iterator();
+		Iterator<MovementMode> it = entries.get(physicsObject).stack.iterator();
 		while(it.hasNext()) {
-			MovementMode mode = (MovementMode) it.next();
+			MovementMode mode = it.next();
 			if (mode.type == MovementModeType.TARGET) {
 				ret = (MoveToTarget) mode;
+			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * @param physicsObject
+	 * @return - topMost {@link MoveToTarget}
+	 */
+	public MoveInDirection getDirectionMovementMode(PhysicsObject physicsObject) {
+		MoveInDirection ret = null;
+		Iterator<MovementMode> it = entries.get(physicsObject).stack.iterator();
+		while(it.hasNext()) {
+			MovementMode mode = it.next();
+			if (mode.type == MovementModeType.DIRECTION) {
+				ret = (MoveInDirection) mode;
+			}
+		}
+		return ret;
+	}
+	
+	/**
+	 * @param physicsObject
+	 * @return - topMost {@link MoveToHive}
+	 */
+	public MoveToHive getHiveMovementMode(PhysicsObject physicsObject) {
+		MoveToHive ret = null;
+		Iterator<MovementMode> it = entries.get(physicsObject).stack.iterator();
+		while(it.hasNext()) {
+			MovementMode mode = it.next();
+			if (mode.type == MovementModeType.HIVE) {
+				ret = (MoveToHive) mode;
 			}
 		}
 		return ret;

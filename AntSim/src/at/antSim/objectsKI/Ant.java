@@ -283,6 +283,7 @@ public abstract class Ant extends Entity {
 	protected void deleteSpecific() {
 		unlockLocator();
 		hive.removeAnt(this);
+		MovementManager.getInstance().removeAllMovementEntries(physicsObject, true);
 		if (deleteAllowed) {
 			dynamicEntities.remove(this);
 			ants.remove(this);
