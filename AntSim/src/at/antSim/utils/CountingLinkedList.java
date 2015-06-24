@@ -19,6 +19,14 @@ import com.sun.javafx.collections.UnmodifiableListSet;
 public class CountingLinkedList<E> {
 
 	LinkedList<Pair<E, Integer>> list = new LinkedList<>();
+	int limit;
+	
+	/**
+	 * @param limit - number of update cycles after which entries get deleted
+	 */
+	public CountingLinkedList(int limit) {
+		this.limit = limit;
+	}
 
 	private void add(E key) {
 		list.add(new Pair<E, Integer>(key, 1));
