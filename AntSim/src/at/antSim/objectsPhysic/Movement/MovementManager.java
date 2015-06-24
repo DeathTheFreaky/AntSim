@@ -209,6 +209,18 @@ public class MovementManager {
 		return entries.get(physicsObject).stack.elementAt(0);
 	}
 	
+	public MoveToTarget getTargetMovementMode(PhysicsObject physicsObject) {
+		MoveToTarget ret = null;
+		Iterator it = entries.get(physicsObject).stack.iterator();
+		while(it.hasNext()) {
+			MovementMode mode = (MovementMode) it.next();
+			if (mode.type == MovementModeType.TARGET) {
+				ret = (MoveToTarget) mode;
+			}
+		}
+		return ret;
+	}
+	
 	public void addTopDeleteAble(DynamicPhysicsObject po) {
 		topDeleteables.add(po);
 	}

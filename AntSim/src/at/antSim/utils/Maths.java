@@ -369,4 +369,8 @@ public class Maths {
 	    
 	    return new javax.vecmath.Vector3f(x, currentDirection.y, z);
 	}
+	
+	public static float round(final float number, final int precision){
+	    return (float) (Math.round(number * Math.pow(10, precision)) / Math.pow(10, precision));
+	}
 }

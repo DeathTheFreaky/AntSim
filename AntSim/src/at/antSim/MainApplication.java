@@ -168,6 +168,8 @@ public class MainApplication {
 	private Hive hive;
 	private int antFoodCtr;
 	private int antFoodThreshold = 100;
+	private int antPheromoneCtr;
+	private int antPheromoneThreshold= 50;
 
 	private boolean glLoaded = false;
 	private boolean worldLoaded = false;
@@ -348,12 +350,17 @@ public class MainApplication {
 
 			cycleCtr++;
 			antFoodCtr++;
+			antPheromoneCtr++;
 			if (antFoodCtr > antFoodThreshold) {
 				antFoodCtr = 0;
 				hive.foodChain();
-				hive.layPheromones();
 				hive.feedAll();
 			}
+			if (antPheromoneCtr > antPheromoneThreshold) {
+				antPheromoneCtr = 0;
+				hive.layPheromones();
+			}
+			
 			// System.out.println();
 		}
 

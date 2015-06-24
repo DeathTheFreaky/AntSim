@@ -132,7 +132,7 @@ public class ConfigReader {
 			Globals.invertHorizontalAxis = -1;
 			Globals.invertVerticalAxis = -1;
 			
-			Globals.maxPheromoneLifetime = 35;
+			Globals.maxPheromoneLifetime = 70;
 			
 			Globals.foodResAppleSize = 150;
 			Globals.foodResAntSize = 30;

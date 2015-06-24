@@ -16,6 +16,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.MoveToTarget;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
@@ -244,17 +245,10 @@ public class Hive extends Entity {
 		for (Ant a : ants) {
 			if (a.getOdorStatus() == 2 && a.currentPheromone == null) {
 				Pheromone p = (Pheromone) a.layPheromones();
-				if (MovementManager.getInstance().getTopMovementMode(a.physicsObject).getType() == MovementModeType.TARGET) {
-					javax.vecmath.Vector3f dir = MovementManager.getInstance().getTopMovementMode(a.physicsObject).getDirection();
-					if (dir != null) {
-						dir.x = dir.x * -1;
-						dir.z = dir.z * -1;
-						dir.y = 0;
-						p.setDirection(dir);
-						Entity.pheromones.add(p);
-					} else {
-						System.err.println("Direciton of pheromone to be added was null ");
-					}
+				MoveToTarget moveToTarget = MovementManager.getInstance().getTargetMovementMode(a.physicsObject);
+				if (moveToTarget != null) {
+					javax.vecmath.Vector3f dir = moveToTarget.getDirection();
+					p.increaseLifetime(dir);
 				}
 			}
 		}
@@ -262,7 +256,7 @@ public class Hive extends Entity {
 		// remove pheromones over time
 		for (Entity e : Entity.pheromones) {
 			Pheromone p = (Pheromone) e;
-			p.setLifetime(p.getLifetime() - 1);
+			p.decreaseLifetime();
 		}
 
 		// Destroy pheromones
@@ -283,8 +277,6 @@ public class Hive extends Entity {
 		fa.addAll(addFeed);
 		removeFeed.clear();
 		addFeed.clear();
-
-		
 	}
 	
 	/**Used when restarting game in singleton Hive.

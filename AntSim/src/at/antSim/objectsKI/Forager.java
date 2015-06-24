@@ -8,6 +8,7 @@ import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MoveInDirection;
 import at.antSim.objectsPhysic.Movement.MoveToTarget;
+import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.Movement.Wait;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
@@ -41,7 +42,7 @@ public class Forager extends Ant {
 	public void foundFood() {
 		setOdorStatus(2);
 		// extractfood from Enemy
-		foodtransport = 1;
+//		foodtransport = 1;
 	}
 
 	@Override
@@ -106,7 +107,11 @@ public class Forager extends Ant {
 			Pheromone p = (Pheromone) parentingEntities.get(ghostPhysicsObject);
 			currentPheromone = p;
 			if (foodtransport > 0) {
-				p.setLifetime(Globals.maxPheromoneLifetime);
+				MoveToTarget moveToTarget = MovementManager.getInstance().getTargetMovementMode(physicsObject);
+				if (moveToTarget != null) {
+					javax.vecmath.Vector3f dir = moveToTarget.getDirection();
+					p.increaseLifetime(dir);
+				}
 			}
 			// System.out.println("direction in forager event: " +
 			// p.getDirection());
