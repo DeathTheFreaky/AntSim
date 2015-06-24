@@ -82,6 +82,10 @@ public abstract class Food extends Entity implements Foodressource {
 
 	@Override
 	protected void deleteSpecific() {
-		deleteableLocators.add(positionLocator);
+		if (deleteAllowed) {
+			positionLocator.delete();
+		} else {
+			deleteableLocators.add(positionLocator);
+		}
 	}
 }

@@ -297,6 +297,7 @@ public abstract class Ant extends Entity {
 	
 	private void spawnDeadAnt() {
 		org.lwjgl.util.vector.Vector3f pos = Maths.vec3fToSlickUtil(physicsObject.getPosition());
+		pos.y = MainApplication.getInstance().getTerrain().getHeightOfTerrain(pos.x, pos.z);
 		Quat4f rot = physicsObject.getRotationQuaternions();
 		delete();
 		Hive.getInstance().addDeleteAnt(this);

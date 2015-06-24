@@ -89,8 +89,7 @@ public class MovementManager {
 					.getDirection());
 			entries.get(physicsObject).stack.add(mode);
 		} else if (mode.type == MovementModeType.DODGE) {
-			MovementMode previousMode = entries.get(physicsObject)
-					.stack.lastElement();
+			MovementMode previousMode = entries.get(physicsObject).stack.lastElement();
 			entries.get(physicsObject).stack.add(mode);
 			((Dodge) mode).setCurrentDirection(previousMode.getDirection());
 			((Dodge) mode).setPreviousMovementMode(previousMode);
@@ -138,14 +137,16 @@ public class MovementManager {
 	public void removeLastMovementEntry(DynamicPhysicsObject physicsObject) {
 		if (entries.containsKey(physicsObject)) {
 //			System.out.println( " size " + entries.get(physicsObject).stack.size());
-			MovementMode m = entries.get(physicsObject).stack.pop();
-//			System.out.println(" size " + entries.get(physicsObject).stack.size());
-			if(m.type == MovementModeType.DIRECTION){
-//				System.out.println("--");
-				entries.get(physicsObject).moveToDirCtr--;
-			}
-			if (entries.get(physicsObject).stack.size() == 0) {
-				entries.remove(physicsObject);
+			if (entries.get(physicsObject).stack.lastElement().type != MovementModeType.BASIC) {
+				MovementMode m = entries.get(physicsObject).stack.pop();
+//				System.out.println(" size " + entries.get(physicsObject).stack.size());
+				if(m.type == MovementModeType.DIRECTION){
+//					System.out.println("--");
+					entries.get(physicsObject).moveToDirCtr--;
+				}
+				if (entries.get(physicsObject).stack.size() == 0) {
+					entries.remove(physicsObject);
+				}
 			}
 		}
 	}

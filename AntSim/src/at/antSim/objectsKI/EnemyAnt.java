@@ -19,6 +19,7 @@ public class EnemyAnt extends Enemy {
 	
 	private void spawnDeadAnt() {
 		org.lwjgl.util.vector.Vector3f pos = Maths.vec3fToSlickUtil(physicsObject.getPosition());
+		pos.y = MainApplication.getInstance().getTerrain().getHeightOfTerrain(pos.x, pos.y);
 		Quat4f rot = physicsObject.getRotationQuaternions();
 		
 		MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())
@@ -32,11 +33,13 @@ public class EnemyAnt extends Enemy {
 
 	@Override
 	protected void deleteSpecific() {
-		deleteableLocators.add(positionLocator);
 		if (deleteAllowed) {
+			positionLocator.delete();
 			spawnDeadAnt();
 			dynamicEntities.remove(this);
 			enemies.remove(this);
+		} else {
+			deleteableLocators.add(positionLocator);
 		}
 	}
 }

@@ -168,7 +168,7 @@ public class Forager extends Ant {
 			}
 		} else {
 			if (movementManager.getTopMovementMode(physicsObject).getType() == MovementModeType.TARGET || movementManager.getTopMovementMode(physicsObject).getType() == MovementModeType.DODGE ) {
-				System.out.println("Dodge " + movementManager.getTopMovementMode(physicsObject).getType());
+//				System.out.println("Dodge " + movementManager.getTopMovementMode(physicsObject).getType());
 				movementManager.addMovementEntry(physicsObject, new Dodge(
 						physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
 			}

@@ -9,6 +9,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
@@ -115,7 +116,9 @@ public abstract class Entity {
 			parentingEntities.remove(physicsObject);
 			physicsObjectTypeMap.remove(this);
 			if (graphicsEntity != null) { //null for Pheromones
-				renderingMap.get(graphicsEntity.getModel()).remove(this);
+				if (renderingMap.containsKey(graphicsEntity.getModel())) {
+					renderingMap.get(graphicsEntity.getModel()).remove(this);
+				}
 				sortedTransparents.remove(this);
 			}
 		}
@@ -181,6 +184,14 @@ public abstract class Entity {
 		pheromones.clear();
 		deleteableLocators.clear();
 		setDeleteAllowed(true);
+	}
+	
+	public static void testDynamicsHaveMovementModes() {
+		for (Entity e : dynamicEntities) {
+			if (MovementManager.getInstance().getTopMovementMode(e.physicsObject) == null) {
+				System.out.println("Entity " + e + " - " + e.objectType + " has lost all movement modes");
+			}
+		}
 	}
 	
 	public static void resetHive() {

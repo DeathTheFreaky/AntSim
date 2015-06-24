@@ -358,6 +358,8 @@ public class MainApplication {
 		}
 
 		timeLastLogicUpdate = timeCurrentUpdate;
+		
+//		Entity.testDynamicsHaveMovementModes();
 	}
 
 	/**

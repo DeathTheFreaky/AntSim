@@ -66,7 +66,7 @@ public class Dodge extends MovementMode {
 			}
 			if (reachedOriginalDirection()) {
 				if (turnCtr >= 3) {
-					System.out.println(" finih ");
+//					System.out.println(" finih ");
 					MovementManager.getInstance().topDeleteables.add(physicsObject);
 					return;
 				}

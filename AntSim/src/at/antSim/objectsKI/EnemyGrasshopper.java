@@ -19,16 +19,19 @@ public class EnemyGrasshopper extends Enemy {
 	
 	@Override
 	protected void deleteSpecific() {
-		deleteableLocators.add(positionLocator);
 		if (deleteAllowed) {
+			positionLocator.delete();
 			spawnDeadGrasshopper();
 			dynamicEntities.remove(this);
 			enemies.remove(this);
+		} else {
+			deleteableLocators.add(positionLocator);
 		}
 	}
 	
 	private void spawnDeadGrasshopper() {
 		org.lwjgl.util.vector.Vector3f pos = Maths.vec3fToSlickUtil(physicsObject.getPosition());
+		pos.y = MainApplication.getInstance().getTerrain().getHeightOfTerrain(pos.x, pos.z);
 		Quat4f rot = physicsObject.getRotationQuaternions();
 		
 		MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())
