@@ -94,7 +94,6 @@ public abstract class Enemy extends Entity {
 					movementManager.addMovementEntry(physicsObject, new BorderCollisionMovement(physicsObject, Globals.ANT_SPEED));
 				} 
 			} else {
-				ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
 				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
 			}
 		}
@@ -103,7 +102,7 @@ public abstract class Enemy extends Entity {
 	@Override
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
 		if (Entity.entities.contains(this)) { //enemy could have died in the meanwhile but event has not yet been processed...
-			
+			movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, dynamicPhysicsObject, Globals.ANT_SPEED));
 		}
 	}
 
