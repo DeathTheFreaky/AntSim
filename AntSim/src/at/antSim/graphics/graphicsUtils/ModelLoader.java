@@ -36,8 +36,8 @@ public class ModelLoader {
 		
 		//environment
 		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("grass", "grassTexture", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("bush", "bushTexture", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("stomp", "stomp", "stomp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("rock", "rockTexture", "rock", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
