@@ -36,15 +36,18 @@ public class ModelLoader {
 		
 		//environment
 		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
-		modelPresets.add(new ModelNamesAndTypes("grass", "grass", "grass", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("grass", "grassTexture", "grass", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("bush", "bushTexture", "bush", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("lamp", "lamp", "lamp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("stomp", "stomp", "stomp", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("rock", "rockTexture", "rock", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		
 		//ghosts
 		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "pheromone", PrimitiveType.SPHERE, ObjectType.PHEROMONE, massDummie, true));
-		modelPresets.add(new ModelNamesAndTypes("sphere", "blue", "positionLocator", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "blue", "positionLocatorBlue", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "green", "positionLocatorGreen", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "positionLocatorRed", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
 		
 		//test
 		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));

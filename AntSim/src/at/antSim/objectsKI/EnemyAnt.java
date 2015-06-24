@@ -24,7 +24,7 @@ public class EnemyAnt extends Enemy {
 		MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(pos) //position will be set later anyway in main loop according to mouse position
 				.setRotation(rot)
-				.buildGraphicsEntity("deadAnt", 1, 20)
+				.buildGraphicsEntity("deadAnt", 1, 15)
 				.setObjectType(ObjectType.FOOD)
 				.buildPhysicsObject()
 				.registerResult();
@@ -32,9 +32,11 @@ public class EnemyAnt extends Enemy {
 
 	@Override
 	protected void deleteSpecific() {
-		spawnDeadAnt();
-		positionLocator.delete(true);
-		dynamicEntities.remove(this);
-		enemies.remove(this);
+		deleteableLocators.add(positionLocator);
+		if (deleteAllowed) {
+			spawnDeadAnt();
+			dynamicEntities.remove(this);
+			enemies.remove(this);
+		}
 	}
 }

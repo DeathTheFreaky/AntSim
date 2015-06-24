@@ -52,7 +52,9 @@ public class Pheromone extends Entity {
 
 	@Override
 	protected void deleteSpecific() {
-		Entity.pheromones.remove(this);
+		if (deleteAllowed) {
+			Entity.pheromones.remove(this);
+		}
 	}
 
 	public int getLifetime() {

@@ -238,7 +238,6 @@ public class EntityBuilderImpl implements EntityBuilder {
 	@Override
 	public Entity registerResult() {
 		Entity retEntity = null;
-		PhysicsManager.getInstance().registerPhysicsObject(physicsObject);
 		switch (objectType) {
 		case ANT:
 			if (type.equals("forager")) {
@@ -285,6 +284,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 		default:
 			break;
 		}
+		PhysicsManager.getInstance().registerPhysicsObject(retEntity.physicsObject);
 		reset();
 		return retEntity;
 	}

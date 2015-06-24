@@ -141,6 +141,11 @@ public class PositionLocator extends Entity {
 	protected void deleteSpecific() {
 		// TODO Auto-generated method stub
 	}
+	
+	public void reset() {
+		activeAnts.clear();
+		waitingAnts.clear();
+	}
 
 	public void cancelAnts() {
 		for (Ant ant : activeAnts) {

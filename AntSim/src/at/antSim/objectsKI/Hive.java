@@ -13,6 +13,7 @@ import at.antSim.MainApplication;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
 import at.antSim.objectsPhysic.Movement.MovementManager;
@@ -60,11 +61,18 @@ public class Hive extends Entity {
 		queen = new Queen();
 		fa.add(queen);
 
-		// set initial position and size of PositionLocator ghost physics object
-		javax.vecmath.Vector3f vecMathPos = ((ReadOnlyPhysicsObject) physicsObject)
-				.getPosition();
-		vecMathPos.y = vecMathPos.y - Globals.POSITION_LOCATOR_MARGIN;
+		buildPositionLocator();
+		
+		Entity.hive = this;
+	}
 
+	private void buildPositionLocator() {
+		
+		// set initial position and size of PositionLocator ghost physics object
+				javax.vecmath.Vector3f vecMathPos = ((ReadOnlyPhysicsObject) physicsObject)
+						.getPosition();
+				vecMathPos.y = vecMathPos.y - Globals.POSITION_LOCATOR_MARGIN;
+		
 		positionLocator = (PositionLocator) MainApplication
 				.getInstance()
 				.getDefaultEntityBuilder()
@@ -73,14 +81,8 @@ public class Hive extends Entity {
 				.setPosition(
 						new Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z))
 				.buildGraphicsEntity(
-						"positionLocator",
-						1,
-						graphicsEntity.getScale()
-								+ Globals.POSITION_LOCATOR_MARGIN * 2)
+						"positionLocatorBlue", 1, graphicsEntity.getScale() + Globals.POSITION_LOCATOR_MARGIN * 2)
 				.setTarget(this).buildPhysicsObject().registerResult();
-
-		// positionLocator.physicsObject.getCollisionBody().setCollisionFlags(positionLocator.physicsObject.getCollisionBody().getCollisionFlags()
-		// | CollisionFlags.NO_CONTACT_RESPONSE);
 	}
 
 	public void foodChain() {
@@ -188,7 +190,7 @@ public class Hive extends Entity {
 
 	@Override
 	protected void deleteSpecific() {
-		// TODO Auto-generated method stub
+		positionLocator.reset();
 	}
 
 	public void reset() {
@@ -196,7 +198,12 @@ public class Hive extends Entity {
 		ants.clear();
 		deleteAnts.clear();
 		fa.clear();
+		eggs.clear();
+		larvae.clear();
+		fa.add(queen);
 		removeFeed.clear();
+		Entity.resetHive();
+		buildPositionLocator();
 	}
 
 	public ArrayList<Feedable> getFeedables() {
@@ -251,7 +258,7 @@ public class Hive extends Entity {
 		// Destroy pheromones
 		for (Entity e : deleteablePheromones) {
 			Pheromone p = (Pheromone) e;
-			p.delete(true);
+			p.delete();
 		}
 	}
 
@@ -269,15 +276,30 @@ public class Hive extends Entity {
 
 	}
 	
-	public void newAnt(){
-//		Entity ant = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(DynamicPhysicsObjectFactory.getInstance())
-////				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, MainApplication.getInstance().getTerrain().getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) +35, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 40, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
-//				.setRotation(0, 0, 0)
-//				.buildGraphicsEntity("forager", 1, 20)
-//				.setObjectType(ObjectType.ANT)
-//				.buildPhysicsObject()
-//				.registerResult();
+	/**Used when restarting game in singleton Hive.
+	 * 
+	 * @param ge
+	 */
+	public void setGraphicsEntity(GraphicsEntity ge) {
+		graphicsEntity = ge;
 	}
-
+	
+	/**Used when restarting game in singleton Hive.
+	 * 
+	 * @param po
+	 */
+	public void setPhysicsObject(PhysicsObject po) {
+		physicsObject = po;
+	}
+	
+	public void newAnt(){
+		Entity ant = MainApplication.getInstance().getDefaultEntityBuilder().setFactory(DynamicPhysicsObjectFactory.getInstance())
+//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, MainApplication.getInstance().getTerrain().getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) +35, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
+				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, 40, -Globals.WORLD_SIZE/2 - 150)) //position will be set later anyway in main loop according to mouse position
+				.setRotation(0, 0, 0)
+				.buildGraphicsEntity("forager", 1, 15)
+				.setObjectType(ObjectType.ANT)
+				.buildPhysicsObject()
+				.registerResult();
+	}
 }
