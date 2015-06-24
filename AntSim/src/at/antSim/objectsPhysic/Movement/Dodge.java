@@ -4,6 +4,8 @@ import java.util.LinkedList;
 
 import javax.vecmath.Vector3f;
 
+import com.sun.javafx.scene.traversal.TopMostTraversalEngine;
+
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
@@ -53,7 +55,11 @@ public class Dodge extends MovementMode {
 	}
 	
 	public void move() {
-		updateOriginalDirection();
+		
+		if (!updateOriginalDirection()) {
+			MovementManager.getInstance().topDeleteables.add(physicsObject);
+			return;
+		};
 		
 		if (!detectBeingStuck()) { //avoid ants from getting stuck if they are for whatever reason unable to move
 			
@@ -131,10 +137,11 @@ public class Dodge extends MovementMode {
 //				if (diffDirection.length() < 0.001f && diffPosition.length() < 0.1f) {
 //					System.out.println("diffDirection: " + diffDirection);
 //					System.out.println("diffPosition: " + diffPosition);
-//					dodgeDirection = Maths.turnDirectionVector(currentDirection, -90);
-//					currentDirection = dodgeDirection;
-//					
-//					physicsObject.setAlignedMovement(dodgeDirection, speed);
+////					dodgeDirection = Maths.turnDirectionVector(currentDirection, -90);
+////					currentDirection = dodgeDirection;
+////					
+////					physicsObject.setAlignedMovement(dodgeDirection, speed);
+//					physicsObject.setLinearVelocity(new Vector3f(0, 100, 0));
 //				}
 //				previousDirection = dodgeDirection;
 //				previousPosition = physicsObject.getPosition();
@@ -147,12 +154,15 @@ public class Dodge extends MovementMode {
 		return false;
 	}
 
-	private void updateOriginalDirection() {
+	private boolean updateOriginalDirection() {
 //		System.out.println("previousMode: " + previousMode);
-//		if (previousMode != null) {
-		originalDirection = previousMode.getDirection();
-		originalDirection.normalize();
-//		}
+		if (previousMode != null) {
+			originalDirection = previousMode.getDirection();
+			originalDirection.normalize();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private boolean reachedOriginalDirection() {

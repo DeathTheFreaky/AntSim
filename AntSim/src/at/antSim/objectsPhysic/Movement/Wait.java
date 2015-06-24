@@ -45,7 +45,7 @@ public class Wait extends MovementMode {
 		
 		if (limit > 0) {
 			limit--;
-		} else if (limit == 0){
+		} else if (limit <= 0){
 			MovementManager.getInstance().topDeleteables.add(physicsObject);
 			return;
 		}

@@ -46,6 +46,10 @@ public abstract class Enemy extends Entity {
 	float attack;
 	
 	MovementManager movementManager;
+	
+	protected Vector3f previousResetPosition = new Vector3f();
+	protected int previousResetCtr = 0;
+	protected int previousResetThreshold = 10;
 
 	public Enemy(GraphicsEntity graphicsEntity, PhysicsObject physicsObject) {
 		super(graphicsEntity, physicsObject, ObjectType.ENEMY);
@@ -78,6 +82,7 @@ public abstract class Enemy extends Entity {
 		EventManager.getInstance().registerEventListener(this);
 		movementManager = MovementManager.getInstance();
 		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new BasicMovement((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
+		previousResetPosition = this.physicsObject.getPosition();
 	}
 
 	@Override

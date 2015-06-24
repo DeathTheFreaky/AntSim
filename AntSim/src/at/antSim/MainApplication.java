@@ -170,6 +170,8 @@ public class MainApplication {
 	private int antFoodThreshold = 100;
 	private int antPheromoneCtr;
 	private int antPheromoneThreshold= 50;
+	private int positionResetCtr;
+	private int positionResetThreshold = 50;
 
 	private boolean glLoaded = false;
 	private boolean worldLoaded = false;
@@ -350,6 +352,7 @@ public class MainApplication {
 			cycleCtr++;
 			antFoodCtr++;
 			antPheromoneCtr++;
+			positionResetCtr++;
 			if (antFoodCtr > antFoodThreshold) {
 				antFoodCtr = 0;
 				hive.foodChain();
@@ -359,13 +362,15 @@ public class MainApplication {
 				antPheromoneCtr = 0;
 				hive.layPheromones();
 			}
+			if (positionResetCtr > positionResetThreshold) {
+				positionResetCtr = 0;
+				Entity.testDynamicsHaveMovementModes();
+			}
 			
 			// System.out.println();
 		}
 
 		timeLastLogicUpdate = timeCurrentUpdate;
-		
-//		Entity.testDynamicsHaveMovementModes();
 	}
 
 	/**

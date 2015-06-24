@@ -58,7 +58,11 @@ public abstract class Ant extends Entity {
 	protected PositionLocator lockedLocator; //target's positionLocator where ant is currently heading to, all targets must have positionLocators
 	
 	protected Pheromone currentPheromone;
-
+	
+	protected Vector3f previousResetPosition = new Vector3f();
+	protected int previousResetCtr = 0;
+	protected int previousResetThreshold = 10;
+	
 	// wahrscheinlich eigene Jobklasse => fuer im Bautätige
 	// und Worker/Forager
 	private String job;
@@ -83,6 +87,7 @@ public abstract class Ant extends Entity {
 		EventManager.getInstance().registerEventListener(this);
 		movementManager = MovementManager.getInstance();
 		movementManager.addMovementEntry((DynamicPhysicsObject) physicsObject, new BasicMovement((DynamicPhysicsObject) physicsObject, v, Globals.ANT_SPEED));
+		previousResetPosition = this.physicsObject.getPosition();
 	}
 
 	@Override
@@ -117,8 +122,9 @@ public abstract class Ant extends Entity {
 	public void react(DynamicPhysicsObject dynamicPhysicsObject) {
 		if (Entity.entities.contains(this)) { //ant could have died in the meanwhile but event has not yet been processed...
 			ObjectType tp = Entity.physicsObjectTypeMap.get(dynamicPhysicsObject);
-			if (tp.equals(ObjectType.ANT)) { //ant hit another ant: start dodging procedure
+			if (tp == ObjectType.ANT) { //ant hit another ant: start dodging procedure
 				movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, dynamicPhysicsObject, Globals.ANT_SPEED));
+				movementManager.addMovementEntry(dynamicPhysicsObject, new Dodge(dynamicPhysicsObject, physicsObject, Globals.ANT_SPEED * 0.75f));
 			}
 			reactSpecific(dynamicPhysicsObject);
 		}
@@ -307,7 +313,7 @@ public abstract class Ant extends Entity {
 		MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(pos) //position will be set later anyway in main loop according to mouse position
 				.setRotation(rot)
-				.buildGraphicsEntity("deadAnt", 1, 20)
+				.buildGraphicsEntity("deadAnt", 1, 15)
 				.setObjectType(ObjectType.FOOD)
 				.buildPhysicsObject()
 				.registerResult();

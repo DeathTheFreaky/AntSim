@@ -75,7 +75,8 @@ public class Forager extends Ant {
 						}
 
 						if (locator.getTarget().getObjectType().equals(ObjectType.ENEMY)) {
-							movementManager.addMovementEntry((DynamicPhysicsObject) locator.getTarget().physicsObject, new Wait((DynamicPhysicsObject) locator.getTarget().physicsObject, physicsObject, Globals.ANT_SPEED));
+							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
+							movementManager.addMovementEntry((DynamicPhysicsObject) locator.getTarget().physicsObject, new Wait((DynamicPhysicsObject) locator.getTarget().physicsObject, physicsObject, Globals.ANT_SPEED, 600));
 						}
 
 						if (locator.entryPossible(this)) {
@@ -85,14 +86,15 @@ public class Forager extends Ant {
 
 							lockedLocator = locator;
 							locator.registerAnt(this); // ant will be added to active ants in locator
-							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.physicsObject, Globals.ANT_SPEED));
+							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
 						} else { // entry not possible -> either add to waiting list by calling locator.registerAnt or do something else
 							if (locator.getTarget().getObjectType().equals(ObjectType.HIVE)	&& foodtransport > 0) {
 								// System.out.println(this + " was told to wait for entry into hive locator");
 							}
 							lockedLocator = locator;
 							locator.registerAnt(this); // ant will be added to waiting ants in locator
-							movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
+							movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
+							movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED, 600));
 							// movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, physicsObject, Globals.ANT_SPEED));
 						}
 					} else if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport == 0) {
@@ -119,16 +121,19 @@ public class Forager extends Ant {
 			Pheromone p = (Pheromone) parentingEntities.get(ghostPhysicsObject);
 			if (p != currentPheromone && p != null) { //only update and move along pheromones the first time an ant enters them
 				currentPheromone = p;
-				if (foodtransport > 0) {
-					MoveToHive moveToHive = MovementManager.getInstance().getHiveMovementMode(physicsObject);
-					if (moveToHive != null) {
-						ReadOnlyPhysicsObject source = moveToHive.getOrigin();
-						p.increaseLifetime(source);
-					}
-				} else {
-					Vector3f dir = p.getDirection(physicsObject.getPosition());
-					if (dir != null) {
-						movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(physicsObject.getPosition()), Globals.ANT_SPEED));
+				
+				if (lockedLocator == null || (lockedLocator.getTarget().objectType == ObjectType.HIVE && foodtransport == 0)) {
+					if (foodtransport > 0) {
+						MoveToHive moveToHive = MovementManager.getInstance().getHiveMovementMode(physicsObject);
+						if (moveToHive != null) {
+							ReadOnlyPhysicsObject source = moveToHive.getOrigin();
+							p.increaseLifetime(source);
+						}
+					} else {
+						Vector3f dir = p.getDirection(physicsObject.getPosition());
+						if (dir != null) {
+							movementManager.addMovementEntry(physicsObject, new MoveInDirection(physicsObject, p.getDirection(physicsObject.getPosition()), Globals.ANT_SPEED));
+						}
 					}
 				}
 			}

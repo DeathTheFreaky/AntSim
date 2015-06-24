@@ -1,5 +1,6 @@
 package at.antSim.objectsKI;
 
+import at.antSim.Globals;
 import at.antSim.MainApplication;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.models.TexturedModel;
@@ -9,6 +10,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.TerrainPhysicsObject;
+import at.antSim.objectsPhysic.Movement.BasicMovement;
 import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
@@ -187,9 +189,60 @@ public abstract class Entity {
 	}
 	
 	public static void testDynamicsHaveMovementModes() {
+		System.out.println();
+		System.out.println("size of dynamicEntities: " + dynamicEntities.size());
 		for (Entity e : dynamicEntities) {
-			if (MovementManager.getInstance().getTopMovementMode(e.physicsObject) == null) {
-				System.out.println("Entity " + e + " - " + e.objectType + " has lost all movement modes");
+			if (PhysicsManager.getInstance().getPhysicsObject(e.physicsObject.getCollisionBody()) == null) {
+				PhysicsManager.getInstance().unregisterPhysicsObject(e.physicsObject);
+				PhysicsManager.getInstance().registerPhysicsObject(e.physicsObject);
+				System.out.println("entity " + e + " has been reset");
+			}
+			else if (MovementManager.getInstance().getTopMovementMode(e.physicsObject) == null) {
+				System.out.println("dynamic entity lost basic movement");
+				Vector3f dir = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
+				MovementManager.getInstance().addMovementEntry((DynamicPhysicsObject) e.physicsObject, new BasicMovement((DynamicPhysicsObject) e.physicsObject, dir, Globals.ANT_SPEED));
+			} else {
+				if (e.objectType == ObjectType.ANT) {
+					Ant a = (Ant) e;
+					Vector3f currentPos = ((ReadOnlyPhysicsObject) e.getPhysicsObject()).getPosition();
+					Vector3f diffPosition = new Vector3f(currentPos.x - a.previousResetPosition.x, 0, currentPos.z - a.previousResetPosition.z);
+					if (diffPosition.length() < 1f) {
+						a.previousResetCtr++;
+						if (a.previousResetCtr >= a.previousResetThreshold) {
+							a.previousResetCtr = 0;
+							Vector3f dir = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
+							MovementManager.getInstance().removeAllMovementEntries(a.physicsObject, false);
+							((BasicMovement) MovementManager.getInstance().getBaseMovementMode(a.physicsObject)).setDirection(dir);
+							try {
+								PhysicsManager.getInstance().unregisterPhysicsObject(a.physicsObject);
+								PhysicsManager.getInstance().registerPhysicsObject(a.physicsObject);
+								System.out.println("ant " + a  + " has been reset");
+							} catch (Exception ex) {
+								System.out.println(e + " failed to be readded to physicsWorld");
+							}
+						}
+					}
+				} else if (e.objectType == ObjectType.ENEMY) {
+					Enemy en = (Enemy) e;
+					Vector3f currentPos = ((ReadOnlyPhysicsObject) e.getPhysicsObject()).getPosition();
+					Vector3f diffPosition = new Vector3f(currentPos.x - en.previousResetPosition.x, 0, currentPos.z - en.previousResetPosition.z);
+					if (diffPosition.length() < 1f) {
+						en.previousResetCtr++;
+						if (en.previousResetCtr >= en.previousResetThreshold) {
+							en.previousResetCtr = 0;
+							Vector3f dir = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
+							MovementManager.getInstance().removeAllMovementEntries(en.physicsObject, false);
+							((BasicMovement) MovementManager.getInstance().getBaseMovementMode(en.physicsObject)).setDirection(dir);
+							try {
+								PhysicsManager.getInstance().unregisterPhysicsObject(en.physicsObject);
+								PhysicsManager.getInstance().registerPhysicsObject(en.physicsObject);
+								System.out.println("enemy " + e + " has been reset");
+							} catch (Exception ex) {
+								System.out.println(e + " failed to be readded to physicsWorld");
+							}
+						}
+					}
+				}
 			}
 		}
 	}
