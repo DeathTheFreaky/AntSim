@@ -53,7 +53,6 @@ public class Dodge extends MovementMode {
 	}
 	
 	public void move() {
-				
 		updateOriginalDirection();
 		
 		if (!detectBeingStuck()) { //avoid ants from getting stuck if they are for whatever reason unable to move
@@ -62,14 +61,14 @@ public class Dodge extends MovementMode {
 			
 			if (!targetExists()) {	
 				physicsObject.setAlignedMovement(originalDirection, speed);
-				MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+				MovementManager.getInstance().topDeleteables.add(physicsObject);
 				return;
 			}
 			if (reachedOriginalDirection()) {
 				if (turnCtr >= 3) {
 					System.out.println(" finih ");
-					MovementManager.getInstance().removeLastMovementEntry(physicsObject);
-					turnCtr = 0;
+					MovementManager.getInstance().topDeleteables.add(physicsObject);
+					return;
 				}
 			}
 					
@@ -106,8 +105,8 @@ public class Dodge extends MovementMode {
 			} else {
 							
 				if (reachedOriginalDirection()) {
-					System.out.println(" DOM E ");
-					MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+					MovementManager.getInstance().topDeleteables.add(physicsObject);
+					return;
 				} else {
 					
 					int currentTurnAngle = -orTurnAngle/2;

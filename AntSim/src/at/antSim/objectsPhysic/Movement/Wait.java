@@ -35,9 +35,9 @@ public class Wait extends MovementMode {
 
 	@Override
 	public void move() {
-				
 		if (target != null && !targetExists()) {
-			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+			MovementManager.getInstance().topDeleteables.add(physicsObject);
+			return;
 		};
 		
 		direction = new Vector3f(position.x - physicsObject.getPosition().x, 0, position.z - physicsObject.getPosition().z);
@@ -46,7 +46,8 @@ public class Wait extends MovementMode {
 		if (limit > 0) {
 			limit--;
 		} else if (limit == 0){
-			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+			MovementManager.getInstance().topDeleteables.add(physicsObject);
+			return;
 		}
 	}
 	

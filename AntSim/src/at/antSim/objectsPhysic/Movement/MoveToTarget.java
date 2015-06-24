@@ -25,9 +25,9 @@ public class MoveToTarget extends MovementMode {
 	}
 	
 	public void move() {
-		
 		if (!targetExists()) {
-			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+			MovementManager.getInstance().topDeleteables.add(physicsObject);
+			return;
 		};
 		direction = new Vector3f(target.getPosition().x - physicsObject.getPosition().x, 0, target.getPosition().z - physicsObject.getPosition().z);
 		physicsObject.setAlignedMovement(direction, speed);

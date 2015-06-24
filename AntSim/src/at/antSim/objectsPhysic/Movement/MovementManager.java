@@ -22,6 +22,7 @@ public class MovementManager {
 	private static MovementManager INSTANCE = null;
 
 	HashMap<DynamicPhysicsObject, StackEntry> entries = new HashMap<>();
+	LinkedList<DynamicPhysicsObject> topDeleteables = new LinkedList<>();
 	private int maxStackMovements = 7;
 
 	static {
@@ -189,6 +190,10 @@ public class MovementManager {
 //			
 //			System.out.println();
 		}
+		for (DynamicPhysicsObject po : topDeleteables) {
+			removeLastMovementEntry(po);
+		}
+		topDeleteables.clear();
 	}
 
 	public MovementMode getTopMovementMode(PhysicsObject physicsObject) {
@@ -201,6 +206,10 @@ public class MovementManager {
 	
 	public MovementMode getBaseMovementMode(PhysicsObject physicsObject) {
 		return entries.get(physicsObject).stack.elementAt(0);
+	}
+	
+	public void addTopDeleteAble(DynamicPhysicsObject po) {
+		topDeleteables.add(po);
 	}
 	
 	class StackEntry {

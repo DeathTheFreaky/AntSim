@@ -37,7 +37,8 @@ if (this.direction == null) {
 		if (limit > 0) {
 			limit--;
 		} else if (limit == 0){
-			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+			MovementManager.getInstance().topDeleteables.add(physicsObject);
+			return;
 		}
 	}
 

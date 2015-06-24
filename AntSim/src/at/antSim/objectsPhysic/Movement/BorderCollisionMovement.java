@@ -29,12 +29,12 @@ public class BorderCollisionMovement extends MovementMode {
 
 	@Override
 	public void move() {
-		
 		physicsObject.setAlignedMovement(direction, speed);
 		if (limit > 0) {
 			limit--;
 		} else if (limit == 0){
-			MovementManager.getInstance().removeLastMovementEntry(physicsObject);
+			MovementManager.getInstance().topDeleteables.add(physicsObject);
+			return;
 		}
 	}
 	
