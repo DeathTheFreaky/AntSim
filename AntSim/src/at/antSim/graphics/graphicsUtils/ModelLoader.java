@@ -45,7 +45,9 @@ public class ModelLoader {
 		
 		//ghosts
 		modelPresets.add(new ModelNamesAndTypes("sphere", "orange", "pheromone", PrimitiveType.SPHERE, ObjectType.PHEROMONE, massDummie, true));
-		modelPresets.add(new ModelNamesAndTypes("sphere", "blue", "positionLocator", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "blue", "positionLocatorBlue", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "green", "positionLocatorGreen", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere", "red", "positionLocatorRed", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
 		
 		//test
 		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));

@@ -81,10 +81,7 @@ public class Hive extends Entity {
 				.setPosition(
 						new Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z))
 				.buildGraphicsEntity(
-						"positionLocator",
-						1,
-						graphicsEntity.getScale()
-								+ Globals.POSITION_LOCATOR_MARGIN * 2)
+						"positionLocatorBlue", 1, graphicsEntity.getScale() + Globals.POSITION_LOCATOR_MARGIN * 2)
 				.setTarget(this).buildPhysicsObject().registerResult();
 	}
 

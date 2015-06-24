@@ -36,7 +36,8 @@ public abstract class Food extends Entity implements Foodressource {
 		
 		positionLocator = (PositionLocator) MainApplication.getInstance().getDefaultEntityBuilder().setFactory(GhostPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z))
-				.buildGraphicsEntity("positionLocator", 1, graphicsEntity.getScale() + Globals.POSITION_LOCATOR_MARGIN * 2) 
+				.buildGraphicsEntity("positionLocatorGreen", 1, graphicsEntity.getScale() + Globals.POSITION_LOCATOR_MARGIN * 2) 
+				.setLocatorMaxAnts(1)
 				.setTarget(this)
 				.buildPhysicsObject()
 				.registerResult();

@@ -58,7 +58,7 @@ public abstract class Enemy extends Entity {
 	
 		positionLocator = (PositionLocator) MainApplication.getInstance().getDefaultEntityBuilder().setFactory(GhostPhysicsObjectFactory.getInstance())
 				.setPosition(new org.lwjgl.util.vector.Vector3f(vecMathPos.x, vecMathPos.y, vecMathPos.z))
-				.buildGraphicsEntity("positionLocator", 1, graphicsEntity.getScale() + Globals.POSITION_LOCATOR_MARGIN * 2) 
+				.buildGraphicsEntity("positionLocatorRed", 1, graphicsEntity.getScale() + Globals.POSITION_LOCATOR_MARGIN * 2) 
 				.setTarget(this)
 				.setLocatorMaxAnts(3)
 				.buildPhysicsObject()

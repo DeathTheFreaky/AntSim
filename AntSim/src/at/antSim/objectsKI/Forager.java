@@ -47,7 +47,7 @@ public class Forager extends Ant{
 	@Override
 	public void reactSpecific(GhostPhysicsObject ghostPhysicsObject) {
 				
-		if (ghostPhysicsObject.getType().equals("positionLocator")) { //ant is inside a positionLocator
+		if (Entity.parentingEntities.get(ghostPhysicsObject) != null && Entity.parentingEntities.get(ghostPhysicsObject).objectType == ObjectType.LOCATOR) { //ant is inside a positionLocator
 			
 //			System.out.println(this + " inside a positionLocator and lockedLocator == " + lockedLocator);
 			
