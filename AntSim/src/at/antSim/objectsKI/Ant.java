@@ -101,9 +101,10 @@ public abstract class Ant extends Entity {
 				ObjectType tp = Entity.physicsObjectTypeMap.get(staticPhysicsObject);
 				if (tp.equals(ObjectType.ENVIRONMENT)) { 
 					movementManager.addMovementEntry(physicsObject, new Dodge(physicsObject, staticPhysicsObject, Globals.ANT_SPEED));
+				} else { //react specific for food and hive
+					reactSpecific(staticPhysicsObject);
 				}
 			}
-			reactSpecific(staticPhysicsObject);
 		}
 	}
 	

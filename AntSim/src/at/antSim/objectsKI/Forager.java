@@ -5,6 +5,7 @@ import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.Movement.BasicMovement;
 import at.antSim.objectsPhysic.Movement.Dodge;
 import at.antSim.objectsPhysic.Movement.MoveInDirection;
 import at.antSim.objectsPhysic.Movement.MoveToTarget;
@@ -13,6 +14,7 @@ import at.antSim.objectsPhysic.Movement.MovementModeType;
 import at.antSim.objectsPhysic.Movement.Wait;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
 
 public class Forager extends Ant {
 	private int threshold;
@@ -47,15 +49,18 @@ public class Forager extends Ant {
 
 	@Override
 	public void reactSpecific(GhostPhysicsObject ghostPhysicsObject) {
+		
+		System.out.println("hitting ghost " + Entity.parentingEntities.get(ghostPhysicsObject));
 
 		if (Entity.parentingEntities.get(ghostPhysicsObject) != null && Entity.parentingEntities.get(ghostPhysicsObject).objectType == ObjectType.LOCATOR) { // ant is inside a position locator
 
-			// System.out.println(this + " inside a positionLocator and lockedLocator == " + lockedLocator);
+			System.out.println(this + " inside a positionLocator and lockedLocator == " + lockedLocator);
 
 			PositionLocator locator = (PositionLocator) parentingEntities.get(ghostPhysicsObject);
 			positionLocators.increaseCount(locator); //make sure positionLocator remains/is being added to list of all PositionLocators ant is currently inn
 
 			if (locator != null) {
+				System.out.println("locator: " + locator);
 				if (lockedLocator == null) { // only register ant for one
 												// locator at a time
 					if ((locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport < maxFoodTransport)
@@ -87,9 +92,12 @@ public class Forager extends Ant {
 							movementManager.addMovementEntry(physicsObject, new Wait(physicsObject, (ReadOnlyPhysicsObject) locator.getTarget().physicsObject, Globals.ANT_SPEED));
 							// movementManager.addMovementEntry(physicsObject, new MoveToTarget(physicsObject, physicsObject, Globals.ANT_SPEED));
 						}
+					} else if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport == 0) {
+						//dont enter hive without food
+						System.out.println("hitting hive ghost with no food");
+						BasicMovement basicMovement = (BasicMovement) movementManager.getBaseMovementMode(physicsObject);
+						basicMovement.setDirection(Maths.turnDirectionVector(basicMovement.getDirection(), 125));
 					}
-				} else if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport == 0) {
-
 				} else {
 					if (!locator.containsActiveAnt(this)) {
 						if (locator.registerAnt(this)) { // try to get access -> if allowed, ant will be added to actives, so method will not be called again
@@ -98,8 +106,9 @@ public class Forager extends Ant {
 						};
 					}
 				}
+			} else {
+				System.out.println(" locator was null");
 			}
-
 			// System.out.println("i tapped into the sphere of a positionLocator. I need to go to my target at "
 			// + locator.getTargetPosition());
 		} else if (ghostPhysicsObject.getType().equals("pheromone")) {
