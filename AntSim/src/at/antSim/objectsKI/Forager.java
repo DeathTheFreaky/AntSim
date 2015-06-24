@@ -178,10 +178,12 @@ public class Forager extends Ant{
 	@Override
 	public void reactSpecific(DynamicPhysicsObject dynamicPhysicsObject) {
 		
-		if (Entity.parentingEntities.get(dynamicPhysicsObject).objectType == ObjectType.ENEMY) {
-			Enemy enemy = (Enemy) Entity.parentingEntities.get(dynamicPhysicsObject);
-			enemy.fight(attack);
-			fight(enemy.attack);
+		if (Entity.parentingEntities.get(dynamicPhysicsObject) != null) {
+			if (Entity.parentingEntities.get(dynamicPhysicsObject).objectType == ObjectType.ENEMY) {
+				Enemy enemy = (Enemy) Entity.parentingEntities.get(dynamicPhysicsObject);
+				enemy.fight(attack);
+				fight(enemy.attack);
+			}
 		}
 	}
 }
