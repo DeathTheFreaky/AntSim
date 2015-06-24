@@ -60,11 +60,18 @@ public class Hive extends Entity {
 		queen = new Queen();
 		fa.add(queen);
 
-		// set initial position and size of PositionLocator ghost physics object
-		javax.vecmath.Vector3f vecMathPos = ((ReadOnlyPhysicsObject) physicsObject)
-				.getPosition();
-		vecMathPos.y = vecMathPos.y - Globals.POSITION_LOCATOR_MARGIN;
+		buildPositionLocator();
+		
+		Entity.hive = this;
+	}
 
+	private void buildPositionLocator() {
+		
+		// set initial position and size of PositionLocator ghost physics object
+				javax.vecmath.Vector3f vecMathPos = ((ReadOnlyPhysicsObject) physicsObject)
+						.getPosition();
+				vecMathPos.y = vecMathPos.y - Globals.POSITION_LOCATOR_MARGIN;
+		
 		positionLocator = (PositionLocator) MainApplication
 				.getInstance()
 				.getDefaultEntityBuilder()
@@ -78,9 +85,6 @@ public class Hive extends Entity {
 						graphicsEntity.getScale()
 								+ Globals.POSITION_LOCATOR_MARGIN * 2)
 				.setTarget(this).buildPhysicsObject().registerResult();
-
-		// positionLocator.physicsObject.getCollisionBody().setCollisionFlags(positionLocator.physicsObject.getCollisionBody().getCollisionFlags()
-		// | CollisionFlags.NO_CONTACT_RESPONSE);
 	}
 
 	public void foodChain() {
@@ -188,7 +192,7 @@ public class Hive extends Entity {
 
 	@Override
 	protected void deleteSpecific() {
-		// TODO Auto-generated method stub
+		positionLocator.reset();
 	}
 
 	public void reset() {
@@ -197,6 +201,8 @@ public class Hive extends Entity {
 		deleteAnts.clear();
 		fa.clear();
 		removeFeed.clear();
+		Entity.resetHive();
+		buildPositionLocator();
 	}
 
 	public ArrayList<Feedable> getFeedables() {
@@ -251,7 +257,7 @@ public class Hive extends Entity {
 		// Destroy pheromones
 		for (Entity e : deleteablePheromones) {
 			Pheromone p = (Pheromone) e;
-			p.delete(true);
+			p.delete();
 		}
 	}
 
@@ -267,6 +273,22 @@ public class Hive extends Entity {
 		removeFeed.clear();
 		addFeed.clear();
 
+	}
+	
+	/**Used when restarting game in singleton Hive.
+	 * 
+	 * @param ge
+	 */
+	public void setGraphicsEntity(GraphicsEntity ge) {
+		graphicsEntity = ge;
+	}
+	
+	/**Used when restarting game in singleton Hive.
+	 * 
+	 * @param po
+	 */
+	public void setPhysicsObject(PhysicsObject po) {
+		physicsObject = po;
 	}
 	
 	public void newAnt(){

@@ -32,9 +32,11 @@ public class EnemyAnt extends Enemy {
 
 	@Override
 	protected void deleteSpecific() {
-		spawnDeadAnt();
-		positionLocator.delete(true);
-		dynamicEntities.remove(this);
-		enemies.remove(this);
+		deleteableLocators.add(positionLocator);
+		if (deleteAllowed) {
+			spawnDeadAnt();
+			dynamicEntities.remove(this);
+			enemies.remove(this);
+		}
 	}
 }

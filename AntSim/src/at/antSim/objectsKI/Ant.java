@@ -281,22 +281,24 @@ public abstract class Ant extends Entity {
 	@Override
 	protected void deleteSpecific() {
 		unlockLocator();
-		dynamicEntities.remove(this);
-		ants.remove(this);
 		hive.removeAnt(this);
+		if (deleteAllowed) {
+			dynamicEntities.remove(this);
+			ants.remove(this);
+		}
 	}
 	
 	public void fight(float damage) {
 		hp -= damage;
 		if (hp <= 0) {
-			delete(true);
+			delete();
 		}
 	}
 	
 	private void spawnDeadAnt() {
 		org.lwjgl.util.vector.Vector3f pos = Maths.vec3fToSlickUtil(physicsObject.getPosition());
 		Quat4f rot = physicsObject.getRotationQuaternions();
-		delete(true);
+		delete();
 		Hive.getInstance().addDeleteAnt(this);
 		
 		MainApplication.getInstance().getDefaultEntityBuilder().setFactory(StaticPhysicsObjectFactory.getInstance())

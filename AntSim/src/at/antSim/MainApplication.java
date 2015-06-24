@@ -472,9 +472,9 @@ public class MainApplication {
 		EventManager.getInstance().reset();
 		worldLoaded = false;
 		paused = false;
+		Entity.deleteAllEntities();
 		if (hive != null)
 			hive.reset();
-		Entity.deleteAllEntities();
 	}
 
 	public void pause() {

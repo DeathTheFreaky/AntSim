@@ -32,9 +32,13 @@ public abstract class Entity {
 	static final List<Entity> dynamicEntities = new LinkedList<>();
 	static final List<Ant> ants = new LinkedList<Ant>();
 	static final List<Entity> pheromones = new LinkedList<>();
+	static final List<PositionLocator> deleteableLocators = new LinkedList<PositionLocator>();
+	static Hive hive;
+	
+	static boolean deleteAllowed = true; //set to false when quitting a game so that events do not delete entities that are already being deleted
 
-	final GraphicsEntity graphicsEntity;
-	final PhysicsObject physicsObject;
+	GraphicsEntity graphicsEntity;
+	PhysicsObject physicsObject;
 	final ObjectType objectType;
 
 	public Entity(GraphicsEntity graphicsEntity, PhysicsObject physicsObject, ObjectType type) {
@@ -86,7 +90,7 @@ public abstract class Entity {
 	/**
 	 * Adds an Entity to the renderingMap.
 	 */
-	private void addRenderingEntity() {
+	void addRenderingEntity() {
 		TexturedModel entityModel = graphicsEntity.getModel();
 		List<Entity> batch = renderingMap.get(entityModel);
 		if (batch != null) {
@@ -103,17 +107,17 @@ public abstract class Entity {
 	 * 
 	 * @param removeFromEntities - set to false if iterating through Entity.entities list to avoid concurrentModification exception
 	 */
-	public void delete(boolean removeFromEntities) {
+	public void delete() {
 		deleteSpecific();
 		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
-		if (removeFromEntities) {
+		if (deleteAllowed) {
 			entities.remove(this);
-		}
-		parentingEntities.remove(physicsObject);
-		physicsObjectTypeMap.remove(this);
-		if (graphicsEntity != null) { //null for Pheromones
-			renderingMap.get(graphicsEntity.getModel()).remove(this);
-			sortedTransparents.remove(this);
+			parentingEntities.remove(physicsObject);
+			physicsObjectTypeMap.remove(this);
+			if (graphicsEntity != null) { //null for Pheromones
+				renderingMap.get(graphicsEntity.getModel()).remove(this);
+				sortedTransparents.remove(this);
+			}
 		}
 	}
 	
@@ -152,12 +156,20 @@ public abstract class Entity {
 		return objectType;
 	}
 	
+	public static void setDeleteAllowed(boolean allowed) {
+		deleteAllowed = allowed;
+	}
+	
 	/**Deletes all Entities from physicsObjects and GraphicsEntities maps when game session is quit (return to main menu).
 	 * 
 	 */
 	public static void deleteAllEntities() {
+		setDeleteAllowed(false);
 		for (Entity entity : entities) {
-			entity.delete(false);
+			entity.delete();
+		}
+		for (PositionLocator loc : deleteableLocators) {
+			loc.delete();
 		}
 		physicsObjectTypeMap.clear();
 		renderingMap.clear();
@@ -167,6 +179,16 @@ public abstract class Entity {
 		dynamicEntities.clear();
 		ants.clear();
 		pheromones.clear();
+		deleteableLocators.clear();
+		setDeleteAllowed(true);
+	}
+	
+	public static void resetHive() {
+		//reset hive 
+		entities.add(hive);
+		hive.addRenderingEntity();
+		physicsObjectTypeMap.put(hive.physicsObject, hive.objectType);
+		parentingEntities.put(hive.physicsObject, hive);
 	}
 	
 	/**Strangely, sometimes dynamic objects seem to fall below the world. 

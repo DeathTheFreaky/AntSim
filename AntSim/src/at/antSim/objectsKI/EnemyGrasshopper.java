@@ -19,10 +19,12 @@ public class EnemyGrasshopper extends Enemy {
 	
 	@Override
 	protected void deleteSpecific() {
-		spawnDeadGrasshopper();
-		positionLocator.delete(true);
-		dynamicEntities.remove(this);
-		enemies.remove(this);
+		deleteableLocators.add(positionLocator);
+		if (deleteAllowed) {
+			spawnDeadGrasshopper();
+			dynamicEntities.remove(this);
+			enemies.remove(this);
+		}
 	}
 	
 	private void spawnDeadGrasshopper() {

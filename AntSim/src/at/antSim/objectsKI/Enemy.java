@@ -167,7 +167,7 @@ public abstract class Enemy extends Entity {
 	public void fight(float damage) {
 		hp -= damage;
 		if (hp <= 0) {
-			delete(true);
+			delete();
 		}
 	}
 }
