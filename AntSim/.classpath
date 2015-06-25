@@ -18,7 +18,7 @@
 			<attribute name="javadoc_location" value="http://slick.ninjacave.com/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/jbullet-20101010/dist/jbullet.jar" sourcepath="jBulletSrc">
+	<classpathentry kind="lib" path="libs/jbullet-20101010/dist/jbullet.jar" sourcepath="D:/Dokumente/fh/bif/4/itp4 - ai">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/Users/Flo/git/AntSim/AntSim/libs/jbullet-20101010/dist/javadoc/"/>
 		</attributes>

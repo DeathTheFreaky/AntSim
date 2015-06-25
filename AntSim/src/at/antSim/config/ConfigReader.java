@@ -100,7 +100,7 @@ public class ConfigReader {
 			}
 			
 			//write default values if config file does not exist
-			PrintWriter writer = new PrintWriter(Globals.CONFIG + "config.txt", "UTF-8");
+			PrintWriter writer = new PrintWriter(Globals.CONFIG + "/config.txt", "UTF-8");
 			writer.close();
 						
 			//set default values
