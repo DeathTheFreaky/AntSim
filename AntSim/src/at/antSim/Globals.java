@@ -21,7 +21,7 @@ public final class Globals {
 	public static final String MODELS = RESOURCES + "models\\";
 	public static final String TEXTURES = RESOURCES + "textures\\";
 	public static final String CONFIG = WORKING_DIR + "\\config";
-	public static final String SHADERS = WORKING_DIR + "\\src\\at\\antSim\\graphics\\shaders\\";
+	public static final String SHADERS = WORKING_DIR + "\\shaders\\";
 	public static final int FPS_CAP = 120;
 	/**
 	 * duration of 1/FPS second in nanoseconds
