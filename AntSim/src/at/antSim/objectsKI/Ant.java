@@ -58,6 +58,8 @@ public abstract class Ant extends Entity {
 	protected PositionLocator lockedLocator; //target's positionLocator where ant is currently heading to, all targets must have positionLocators
 	
 	protected Pheromone currentPheromone;
+	protected PositionLocator currentHiveLocator;
+	protected boolean initialHiveMove = true;
 	
 	protected Vector3f previousResetPosition = new Vector3f();
 	protected int previousResetCtr = 0;
@@ -80,8 +82,8 @@ public abstract class Ant extends Entity {
 		this.physicsObject = (DynamicPhysicsObject) physicsObject;
 		hive = Hive.getInstance();
 		hive.addAnt(this);
-//		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
-		Vector3f v = new Vector3f(0,0,1);
+		Vector3f v = new Vector3f(-1f + 2*(float) Math.random(), 0, -1f + 2*(float) Math.random());
+//		Vector3f v = new Vector3f(0,0,1);
 		dynamicEntities.add(this);
 		ants.add(this);
 		EventManager.getInstance().registerEventListener(this);
@@ -266,11 +268,14 @@ public abstract class Ant extends Entity {
 	public void resetPositionLocators() {
 		for (PositionLocator loc : positionLocators.update()) {
 			if (loc != null) {
-				if (loc.equals(lockedLocator)) {
+				if (loc == lockedLocator) {
 					unlockLocator();
 				} else {
 					loc.unregisterAnt(this);
 //					System.out.println("unregisterd " + this + " in " + loc);
+				}
+				if (loc == currentHiveLocator) {
+					currentHiveLocator = null;
 				}
 			} else {
 				unlockLocator();

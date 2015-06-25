@@ -69,6 +69,8 @@ public class Forager extends Ant {
 					if ((locator.getTarget().getObjectType().equals(ObjectType.FOOD) && foodtransport < maxFoodTransport)
 							|| (locator.getTarget().getObjectType().equals(ObjectType.ENEMY) && foodtransport == 0)
 							|| (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0)) {
+						
+						initialHiveMove = false;
 
 						if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport > 0) {
 							// System.out.println(this + " is trying to enter hive locator");
@@ -100,8 +102,11 @@ public class Forager extends Ant {
 					} else if (locator.getTarget().getObjectType().equals(ObjectType.HIVE) && foodtransport == 0) {
 						//dont enter hive without food
 //						System.out.println("hitting hive ghost with no food");
-						BasicMovement basicMovement = (BasicMovement) movementManager.getBaseMovementMode(physicsObject);
-						basicMovement.setDirection(Maths.turnDirectionVector(basicMovement.getDirection(), 125));
+						if (currentHiveLocator != locator && !initialHiveMove) {
+							currentHiveLocator = locator;
+							BasicMovement basicMovement = (BasicMovement) movementManager.getBaseMovementMode(physicsObject);
+							basicMovement.setDirection(Maths.turnDirectionVector(basicMovement.getDirection(), 125));
+						}
 					}
 				} else {
 					if (!locator.containsActiveAnt(this)) {

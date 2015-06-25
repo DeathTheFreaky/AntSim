@@ -51,8 +51,8 @@ public final class Globals {
 	public static final short COL_BORDER = 256;
 	
 	//transparency of pheromones and positionLocators
-	public static final float GHOST_TRANSPARENCY = 0.6f;
-	public static float currentGhostTransparency = 0.6f;
+	public static final float GHOST_TRANSPARENCY = 0.75f;
+	public static float currentGhostTransparency = 0.75f;
 	
 	//maximum nbr of ants waiting at a position locator
 	public static final int MAX_LOCATOR_ANTS = 1;
