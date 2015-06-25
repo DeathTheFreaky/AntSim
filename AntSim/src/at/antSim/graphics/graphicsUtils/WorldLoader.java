@@ -36,6 +36,8 @@ public class WorldLoader {
 	private static EntityBuilder builder = new EntityBuilderImpl();
 	public static Hive hive;
 	
+	private static float margin = 20;
+	
 	/**Loads the world's terrain.
 	 * 
 	 * @param loader
@@ -68,59 +70,73 @@ public class WorldLoader {
 				
 		//create a random flora
 		Random random = new Random(676452);
-//		for (int i = 0; i < 1200; i++) {
-//			if (i % 20 == 0) {
-//				float x = random.nextFloat() * Globals.WORLD_SIZE;
-//				float z = random.nextFloat() * -Globals.WORLD_SIZE;
-//				float y = terrain.getHeightOfTerrain(x, z);
-//				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//					.setPosition(new Vector3f(x, y, z))
-//					.setRotation(0, random.nextFloat() * 360, 0)
-//					.buildGraphicsEntity("fern", random.nextInt(4), 20f)
-//					.buildPhysicsObject()
-//					.registerResult();
-//			}
-//			if (i % 5 == 0) {
-//				float x = random.nextFloat() * Globals.WORLD_SIZE;
-//				float z = random.nextFloat() * -Globals.WORLD_SIZE;
-//				float y = terrain.getHeightOfTerrain(x, z);
-//				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//					.setPosition(new Vector3f(x, y, z))
-//					.setRotation(0, random.nextFloat() * 360, 0)
-//					.buildGraphicsEntity("grass", 1, random.nextFloat() * 2f + 25f)
-//					.buildPhysicsObject()
-//					.registerResult();
-//				x = random.nextFloat() * Globals.WORLD_SIZE;
-//				z = random.nextFloat() * -Globals.WORLD_SIZE;
-//				y = terrain.getHeightOfTerrain(x, z);
-//				builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//					.setPosition(new Vector3f(x, y, z))
-//					.setRotation(0, random.nextFloat() * 360, 0)
-//					.buildGraphicsEntity("tree", 1, random.nextFloat() * 5f + 20f)
-//					.buildPhysicsObject()
-//					.registerResult();
-//			}
-//		}
-		
-		
-//		Entity greenCube = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2), -Globals.WORLD_SIZE/2))
-//				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
-//				.buildPhysicsObject()
-//				.registerResult();
-//		
-//		
-//		Entity greenCube2 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 20, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 20, -Globals.WORLD_SIZE/2 - 30), -Globals.WORLD_SIZE/2 - 30))
-//				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
-//				.buildPhysicsObject()
-//				.registerResult();
-//		
-//		Entity greenCube3 = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-//				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 50, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 50, -Globals.WORLD_SIZE/2 - 10), -Globals.WORLD_SIZE/2 - 10))
-//				.buildGraphicsEntity("cylinder", 1, 50) //enable for debugging just to visualize the pheromones
-//				.buildPhysicsObject()
-//				.registerResult();
+		for (int i = 0; i < 1200; i++) {
+			if (i % 30 == 0) {
+				float x = margin + random.nextFloat() * (Globals.WORLD_SIZE - 2 * margin);
+				float z = -margin + random.nextFloat() * (-Globals.WORLD_SIZE + 2 * margin);
+				float y = terrain.getHeightOfTerrain(x, z);
+				if (!insideStartingArea(x, z)) {
+					Entity grass = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+							.setPosition(new Vector3f(x, y - 6, z))
+							.setRotation(0, random.nextFloat() * 360, 0)
+							.buildGraphicsEntity("grass", 1, 30)
+							.buildPhysicsObject()
+							.registerResult();
+				}
+			}
+			if (i % 180 == 0) {
+				float x = margin + random.nextFloat() * (Globals.WORLD_SIZE - 2 * margin);
+				float z = -margin + random.nextFloat() * (-Globals.WORLD_SIZE + 2 * margin);
+				float y = terrain.getHeightOfTerrain(x, z);
+				if (!insideStartingArea(x, z)) {
+					Entity fern = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+							.setPosition(new Vector3f(x, y - 5, z))
+							.setRotation(0, random.nextFloat() * 360, 0)
+							.buildGraphicsEntity("fern", 1, 70)
+							.buildPhysicsObject()
+							.registerResult();
+				}
+			}
+			if (i % 300 == 0) {
+				float x = margin + random.nextFloat() * (Globals.WORLD_SIZE - 2 * margin);
+				float z = -margin + random.nextFloat() * (-Globals.WORLD_SIZE + 2 * margin);
+				float y = terrain.getHeightOfTerrain(x, z);
+				if (!insideStartingArea(x, z)) {
+					Entity bush = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+							.setPosition(new Vector3f(x, y - 3, z))
+							.setRotation(0, random.nextFloat() * 360, 0)
+							.buildGraphicsEntity("bush", 1, 70)
+							.buildPhysicsObject()
+							.registerResult();
+				}
+			}
+			if (i % 250 == 0) {
+				float x = margin + random.nextFloat() * (Globals.WORLD_SIZE - 2 * margin);
+				float z = -margin + random.nextFloat() * (-Globals.WORLD_SIZE + 2 * margin);
+				float y = terrain.getHeightOfTerrain(x, z);
+				if (!insideStartingArea(x, z)) {
+					Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+							.setPosition(new Vector3f(x, y - 10, z))
+							.setRotation(0, random.nextFloat() * 360, 0)
+							.buildGraphicsEntity("rock", 1, 40)
+							.buildPhysicsObject()
+							.registerResult();
+				}
+			}
+			if (i % 400 == 0) {
+				float x = margin + random.nextFloat() * (Globals.WORLD_SIZE - 2 * margin);
+				float z = -margin + random.nextFloat() * (-Globals.WORLD_SIZE + 2 * margin);
+				float y = terrain.getHeightOfTerrain(x, z);
+				if (!insideStartingArea(x, z)) {
+					Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+							.setPosition(new Vector3f(x, y - 12, z))
+							.setRotation(0, random.nextFloat() * 360, 0)
+							.buildGraphicsEntity("stomp", 1, 70)
+							.buildPhysicsObject()
+							.registerResult();
+				}
+			}
+		}
 
 		Entity hiveEntity = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150) -5, -Globals.WORLD_SIZE/2 - 150))
@@ -128,38 +144,14 @@ public class WorldLoader {
 				.buildGraphicsEntity("hive", 1, 80) //enable for debugging just to visualize the pheromones
 				.buildPhysicsObject()
 				.registerResult();
+		
+		if (!insideStartingArea(Globals.WORLD_SIZE/2, -Globals.WORLD_SIZE/2 - 150)) {
+			
+		} else {
+			
+		}
 
 		hive = (Hive) hiveEntity;		
-
-		Entity grass = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2, Globals.WORLD_SIZE/2 + 50) -6, -Globals.WORLD_SIZE/2 + 50))
-				.buildGraphicsEntity("grass", 1, 30)
-				.buildPhysicsObject()
-				.registerResult();
-
-		Entity bush = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 + 60, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 + 60, Globals.WORLD_SIZE/2 + 60) -3, -Globals.WORLD_SIZE/2 + 60))
-				.buildGraphicsEntity("bush", 1, 70)
-				.buildPhysicsObject()
-				.registerResult();
-		
-		Entity rock = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 60, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 60, Globals.WORLD_SIZE/2 + 60) - 10, -Globals.WORLD_SIZE/2 + 60))
-				.buildGraphicsEntity("rock", 1, 40)
-				.buildPhysicsObject()
-				.registerResult();
-		
-		Entity stomp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 120, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 120, Globals.WORLD_SIZE/2 + 60) - 12, -Globals.WORLD_SIZE/2 + 60))
-				.buildGraphicsEntity("stomp", 1, 70)
-				.buildPhysicsObject()
-				.registerResult();
-		
-		Entity fern = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(Globals.WORLD_SIZE/2 - 60, terrain.getHeightOfTerrain(Globals.WORLD_SIZE/2 - 60, Globals.WORLD_SIZE/2 + 120) -5, -Globals.WORLD_SIZE/2 + 120))
-				.buildGraphicsEntity("fern", 1, 70)
-				.buildPhysicsObject()
-				.registerResult();
 				
 		Entity pointedLightLamp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(185, terrain.getHeightOfTerrain(185, -293) -3, -293))
@@ -170,6 +162,17 @@ public class WorldLoader {
 		loadBorders(terrain);
 	}
 	
+	private static boolean insideStartingArea(float x, float z) {
+		float left = Globals.WORLD_SIZE/2 - 75;
+		float right = Globals.WORLD_SIZE/2 + 75;
+		float top = -Globals.WORLD_SIZE/2 - 75;
+		float bottom = -Globals.WORLD_SIZE/2 - 225;
+		if (x > left && x < right && z > bottom && z < top) {
+			return true;
+		}
+		return false;
+	}
+
 	/**Loads borders at the edge of the world to trigger events telling ants/enemies they are leaving the world.
 	 * 
 	 */

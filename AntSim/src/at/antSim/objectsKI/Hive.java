@@ -92,7 +92,7 @@ public class Hive extends Entity {
 
 	public void foodChain() {
 		for (Ant a : ants) {
-			a.setHp(a.getHp() - 1);
+			a.setHp(a.getHp() - 0.4f);
 		}
 		ants.removeAll(deleteAnts);
 		deleteAnts.clear();
