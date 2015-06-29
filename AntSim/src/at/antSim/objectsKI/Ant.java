@@ -198,10 +198,10 @@ public abstract class Ant extends Entity {
 	}
 
 	public void setHp(float hp) {
-		this.hp = hp;
-		if(hp <= 0){
+		if(this.hp > 0 && hp <= 0){
 			spawnDeadAnt();
 		}
+		this.hp = hp;
 	}
 
 	public float getAttack() {

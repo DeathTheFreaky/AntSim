@@ -7,7 +7,7 @@ import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 
-public class Worker extends Ant implements Runnable {
+public class Worker extends Ant {
 
 	private int threshold;
 	
@@ -16,25 +16,6 @@ public class Worker extends Ant implements Runnable {
 		hp = Globals.antHp;
 		attack = Globals.antAttack;
 		threshold = 2;
-	}
-
-	@Override
-	public void run() {
-		while(getHp()>0){
-			// Wenn er unter dem threshold ist muss die Ameise essen
-			// Falls kein Futter vorhanden ist verliert sie HP
-			// bei <1 HP stirbt die Ameise aka die while im Thread läuft nicht mehr
-			if(getHunger() < threshold){
-				try{
-					this.eat();
-				}catch(Exception e){
-					setHp(getHp()-10);
-				}	
-			}
-			
-			//Always get the first one which is not served from Hive.fa list
-			Hive.getInstance().getFeedables().get(0).feed();
-		}		
 	}
 
 	@Override
