@@ -199,7 +199,7 @@ public abstract class Ant extends Entity {
 
 	public void setHp(float hp) {
 		this.hp = hp;
-		if(hp == 1){
+		if(hp <= 0){
 			spawnDeadAnt();
 		}
 	}
