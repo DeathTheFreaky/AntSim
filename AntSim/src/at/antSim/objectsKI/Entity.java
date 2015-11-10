@@ -29,7 +29,7 @@ public abstract class Entity {
 
 	static final Map<PhysicsObject, ObjectType> physicsObjectTypeMap = new HashMap<PhysicsObject, ObjectType>();
 	static final Map<TexturedModel, List<Entity>> renderingMap = new HashMap<TexturedModel, List<Entity>>();
-	static final LinkedList<Entity> sortedTransparents = new LinkedList<>();
+	static final LinkedList<Entity> transparents = new LinkedList<>();
 	static final Map<PhysicsObject, Entity> parentingEntities = new HashMap<PhysicsObject, Entity>(); //allows us to get eg. the Food Entity in a react() method when an ant hit the Food Entitie's physicsObject
 	static final List<Entity> entities = new LinkedList<>(); //used to delete all entities
 	static final List<Entity> dynamicEntities = new LinkedList<>();
@@ -65,20 +65,8 @@ public abstract class Entity {
 	/**Adds entity sorted by z-value in world position.
 	 * @param entity
 	 */
-	private void addTransparent(Entity entity) {
-		
-		int idx = 0;
-		ReadOnlyPhysicsObject po = (ReadOnlyPhysicsObject) entity.physicsObject;
-		
-		for (Entity sortedEntity : sortedTransparents){
-			ReadOnlyPhysicsObject sortedPo = (ReadOnlyPhysicsObject) sortedEntity.physicsObject;
-			if ((po.getPosition().z - entity.getGraphicsEntity().getScale()/2) > (sortedPo.getPosition().z - sortedEntity.getGraphicsEntity().getScale()/2)) {
-				break;
-			}
-			idx++;
-		}
-		
-		sortedTransparents.add(idx, entity);
+	private void addTransparent(Entity entity) {		
+		transparents.add(entity);
 	}
 
 	public abstract void react(StaticPhysicsObject staticPhysicsObject);
@@ -121,7 +109,7 @@ public abstract class Entity {
 				if (renderingMap.containsKey(graphicsEntity.getModel())) {
 					renderingMap.get(graphicsEntity.getModel()).remove(this);
 				}
-				sortedTransparents.remove(this);
+				transparents.remove(this);
 			}
 		}
 	}
@@ -142,7 +130,7 @@ public abstract class Entity {
 	 * @return - an unmodifiable version of renderingMap for preventing changes on renderingMap while allowing it to be retrieved for rendering
 	 */
 	public static LinkedList<Entity> getTransparentsList() {
-		return sortedTransparents;
+		return transparents;
 	}
 	
 	public static Entity getParentEntity(PhysicsObject physicsObject) {
@@ -178,7 +166,7 @@ public abstract class Entity {
 		}
 		physicsObjectTypeMap.clear();
 		renderingMap.clear();
-		sortedTransparents.clear();
+		transparents.clear();
 		parentingEntities.clear();
 		entities.clear();
 		dynamicEntities.clear();
@@ -278,5 +266,11 @@ public abstract class Entity {
 				phyObj.getCollisionBody().setAngularVelocity(angVelocity);
 			}
 		}
+	}
+
+	// sorts all vertices by the distance between their barrycentre and the camera, from the back to the front
+	public static void calcTransparentDists() {
+		
+		
 	}
 }

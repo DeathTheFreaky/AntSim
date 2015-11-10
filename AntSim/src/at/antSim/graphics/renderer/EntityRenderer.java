@@ -88,12 +88,16 @@ public class EntityRenderer {
 		
 		LinkedList<Entity> transparentEntities = Entity.getTransparentsList();
 		
-		renderTransparents(transparentEntities); //does not work quite as intended, but is not that important and no time to change left
+		renderTransparents(transparentEntities);
 		
 		shader.stop();
 	}
 	
-	/**Renders all transparent Entities, sorted by WorldPosition z value of their center, starting from 0 to increasing negative values.
+	/**Renders all transparent Entities, sorted their barycentre's distance to the camera, drawing the ones furthest away first.
+	 * 
+	 * http://blogs.msdn.com/b/shawnhar/archive/2009/02/18/depth-sorting-alpha-blended-objects.aspx
+	 * https://www.opengl.org/wiki/Transparency_Sorting
+	 * 
 	 * @param transparentEntities
 	 */
 	private void renderTransparents(LinkedList<Entity> transparentEntities) {
@@ -101,6 +105,10 @@ public class EntityRenderer {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
+		
+		// other parameters like shine variables etc. should still be applied to model,
+		// even if its vertices might not be drawn all at once now, for they are now 
+		// ordered by their barrycenter's distance to the camera
 		for(Entity entity:transparentEntities) {
 			
 			prepareTexturedModel(entity.getGraphicsEntity().getModel()); //lots of state changes, but unavoidable...

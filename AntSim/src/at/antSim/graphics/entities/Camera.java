@@ -1,6 +1,7 @@
 package at.antSim.graphics.entities;
 
 import at.antSim.eventSystem.EventManager;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -17,6 +18,7 @@ import at.antSim.eventSystem.events.MouseScrollEvent;
 import at.antSim.graphics.graphicsUtils.DisplayManager;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.guiWrapper.GuiWrapper;
+import at.antSim.objectsKI.Entity;
 
 /**A virtual camera, pretending camera movement by moving the whole world in the opposite direction.
  * 
@@ -156,18 +158,24 @@ public class Camera {
 	@EventListener (priority = EventPriority.NORMAL)
 	public void checkKeyInputs(KeyPressedEvent event) {
 		
+		boolean calcTransparentDists = false;
+		
 		if(event.getKey() == Globals.moveForwardKey) {
 			this.currentMovementSpeed = MOVE_SPEED;
+			calcTransparentDists = true;
 			event.consume();
 		} else if (event.getKey() == Globals.moveBackwardKey) {
 			this.currentMovementSpeed = -MOVE_SPEED;
+			calcTransparentDists = true;
 			event.consume();
 		}
 		if(event.getKey() == Globals.moveUpKey) {
 			this.currentFloatSpeed = FLOAT_SPEED;
+			calcTransparentDists = true;
 			event.consume();
 		} else if (event.getKey() == Globals.moveDownKey) {
 			this.currentFloatSpeed = -FLOAT_SPEED;
+			calcTransparentDists = true;
 			event.consume();
 		}
 		if(event.getKey() == Globals.moveLeftKey) {
@@ -193,10 +201,17 @@ public class Camera {
 		}
 		if(event.getKey() == Globals.zoomInKey) {
 			this.currentZoomSpeed = -ZOOM_SPEED;
+			calcTransparentDists = true;
 			event.consume();
 		} else if (event.getKey() == Globals.zoomOutKey) {
 			this.currentZoomSpeed = ZOOM_SPEED;
+			calcTransparentDists = true;
 			event.consume();
+		}
+		
+		if (calcTransparentDists)
+		{
+			Entity.calcTransparentDists();
 		}
 	}
 	
