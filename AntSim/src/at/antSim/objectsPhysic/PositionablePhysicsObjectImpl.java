@@ -1,5 +1,6 @@
 package at.antSim.objectsPhysic;
 
+import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.utils.Maths;
 
@@ -29,6 +30,9 @@ public abstract class PositionablePhysicsObjectImpl extends ReadOnlyPhysicsObjec
 		Quat4f bodyRotation = new Quat4f();
 		bodyTransform.getRotation(bodyRotation);
 		getCollisionBody().setWorldTransform(new Transform(new Matrix4f(bodyRotation, position, 1)));
+		
+		// update triangle positions
+		Entity.setTriangleTransforms(this);
 	}
 
 	@Override
@@ -42,5 +46,8 @@ public abstract class PositionablePhysicsObjectImpl extends ReadOnlyPhysicsObjec
 		Vector3f position = getPosition();
 		Transform bodyTransform = new Transform(Maths.createTransformationMatrix(Maths.vec3fToSlickUtil(position), pitch, yaw, roll));
 		getCollisionBody().setWorldTransform(bodyTransform);
+		
+		// update triangle positions
+		Entity.setTriangleTransforms(this);
 	}
 }

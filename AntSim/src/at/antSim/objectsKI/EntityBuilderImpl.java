@@ -19,40 +19,42 @@ import at.antSim.objectsPhysic.PhysicsManager;
 import at.antSim.objectsPhysic.PhysicsFactorys.PhysicsObjectFactory;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PhysicsObjectOrientation;
+import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 import at.antSim.utils.Maths;
 
-/**Implements {@link EntityBuilder}.
+/**
+ * Implements {@link EntityBuilder}.
  * 
  * @author Flo
  *
  */
 public class EntityBuilderImpl implements EntityBuilder {
-	
+
 	GraphicsEntity graphicsEntity;
 	GTPObject gtpObject;
 	PhysicsObject physicsObject;
 	PhysicsObjectFactory factory;
 	ObjectType objectType;
-	
+
 	float mass;
 	Vector3f position = new Vector3f();
 	Vector3f rotation = null;
 	Quat4f quat;
 	Transform transform = new Transform();
 	String type = null;
-	
+
 	float height;
 	float scale;
-	
-	Entity target; //for position locators
-	
+
+	Entity target; // for position locators
+
 	int hiveFoodstackSize;
-	int maxAnts; //posiiton locator
-	
+	int maxAnts; // posiiton locator
+
 	public EntityBuilderImpl() {
 		reset();
 	}
-	
+
 	@Override
 	public void reset() {
 		mass = 0;
@@ -69,26 +71,26 @@ public class EntityBuilderImpl implements EntityBuilder {
 		scale = 0;
 		target = null;
 		hiveFoodstackSize = 0;
-		maxAnts = Globals.MAX_LOCATOR_ANTS; //default
+		maxAnts = Globals.MAX_LOCATOR_ANTS; // default
 	}
-	
+
 	@Override
 	public EntityBuilder buildGraphicsEntity(String type, int textureIndex, float scale) {
-		
-		scale = scale/2; //use scale/2 because entity has length of 2 on longest axis but scale shall refer to actual size of object
-		
-		graphicsEntity = new GraphicsEntity(ModelLoader.texturedModels.get(type), textureIndex, scale); 
+
+		scale = scale / 2; // use scale/2 because entity has length of 2 on longest axis but scale shall refer to actual size of object
+
+		graphicsEntity = new GraphicsEntity(ModelLoader.texturedModels.get(type), textureIndex, scale);
 		gtpObject = GTPMapper.getObject(graphicsEntity, scale, graphicsEntity.getModel().getPrimitiveType());
-		mass = graphicsEntity.getModel().getMass(); //set default mass
+		mass = graphicsEntity.getModel().getMass(); // set default mass
 		this.type = type;
 		this.height = graphicsEntity.getModel().getRawModel().getyLength() * scale;
 		this.scale = scale;
 		objectType = graphicsEntity.getModel().getObjectType();
 		return this;
 	}
-	
+
 	private void setTransform() {
-		position.y = position.y + height/2;
+		position.y = position.y + height / 2;
 		if (rotation != null) {
 			transform.set(Maths.createTransformationMatrix(position, rotation.x, rotation.y, rotation.z));
 		} else {
@@ -131,23 +133,24 @@ public class EntityBuilderImpl implements EntityBuilder {
 		physicsObject = factory.createSphere(type, mass, sphere.getRadious(), transform);
 		return this;
 	}
-	
+
 	@Override
-	public EntityBuilder createCone(float scale, float height, float radius, PhysicsObjectOrientation orientation) {
+	public EntityBuilder createCone(float scale, float height, float radius,
+			PhysicsObjectOrientation orientation) {
 		this.scale = scale;
 		if (radius * 2 > height) {
-			height = height/radius/2 * scale;
-			radius = scale/2;
+			height = height / radius / 2 * scale;
+			radius = scale / 2;
 		} else {
 			height = scale;
-			radius = radius/height * scale;
+			radius = radius / height * scale;
 		}
 		if (orientation == PhysicsObjectOrientation.X) {
-			this.height = radius*2;
+			this.height = radius * 2;
 		} else if (orientation == PhysicsObjectOrientation.Y) {
 			this.height = height;
 		} else if (orientation == PhysicsObjectOrientation.Z) {
-			this.height = radius*2;
+			this.height = radius * 2;
 		}
 		setTransform();
 		physicsObject = factory.createCone(type, mass, height, radius, orientation, transform);
@@ -155,20 +158,21 @@ public class EntityBuilderImpl implements EntityBuilder {
 	}
 
 	@Override
-	public EntityBuilder createCuboid(float scale, float xLength, float yLength, float zLength) {
+	public EntityBuilder createCuboid(float scale, float xLength,
+			float yLength, float zLength) {
 		this.scale = scale;
 		if (xLength > yLength && xLength > zLength) {
 			xLength = scale;
-			yLength = yLength/xLength * scale;
-			zLength = zLength/xLength * scale;
+			yLength = yLength / xLength * scale;
+			zLength = zLength / xLength * scale;
 		} else if (yLength > xLength && yLength > zLength) {
 			yLength = scale;
-			xLength = xLength/yLength * scale;
-			zLength = zLength/yLength * scale;
+			xLength = xLength / yLength * scale;
+			zLength = zLength / yLength * scale;
 		} else if (zLength > yLength && zLength > xLength) {
 			zLength = scale;
-			yLength = yLength/zLength * scale;
-			xLength = xLength/zLength * scale;
+			yLength = yLength / zLength * scale;
+			xLength = xLength / zLength * scale;
 		} else {
 			xLength = scale;
 			yLength = scale;
@@ -181,21 +185,22 @@ public class EntityBuilderImpl implements EntityBuilder {
 	}
 
 	@Override
-	public EntityBuilder createCylinder(float scale, float height, float radius, PhysicsObjectOrientation orientation) {
+	public EntityBuilder createCylinder(float scale, float height,
+			float radius, PhysicsObjectOrientation orientation) {
 		this.scale = scale;
 		if (radius * 2 > height) {
-			height = height/radius/2 * scale;
-			radius = scale/2;
+			height = height / radius / 2 * scale;
+			radius = scale / 2;
 		} else {
 			height = scale;
-			radius = radius/height * scale;
+			radius = radius / height * scale;
 		}
 		if (orientation == PhysicsObjectOrientation.X) {
-			this.height = radius*2;
+			this.height = radius * 2;
 		} else if (orientation == PhysicsObjectOrientation.Y) {
 			this.height = height;
 		} else if (orientation == PhysicsObjectOrientation.Z) {
-			this.height = radius*2;
+			this.height = radius * 2;
 		}
 		setTransform();
 		physicsObject = factory.createCone(type, mass, height, radius, orientation, transform);
@@ -207,7 +212,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 		this.scale = scale;
 		this.height = scale;
 		setTransform();
-		physicsObject = factory.createSphere(type, mass, scale/2, transform);
+		physicsObject = factory.createSphere(type, mass, scale / 2, transform);
 		return this;
 	}
 
@@ -228,33 +233,34 @@ public class EntityBuilderImpl implements EntityBuilder {
 		rotation = new Vector3f(rx, ry, rz);
 		return this;
 	}
-	
+
 	@Override
 	public EntityBuilder setTarget(Entity target) {
 		this.target = target;
 		return this;
 	}
-	
+
 	@Override
 	public Entity registerResult() {
 		Entity retEntity = null;
+		
 		switch (objectType) {
 		case ANT:
 			if (type.equals("forager")) {
 				retEntity = new Forager(graphicsEntity, physicsObject);
 			} else if (type.equals("worker")) {
 				retEntity = new Worker(graphicsEntity, physicsObject);
-			} 
-//			else if (type.equals("queen")) {
-//				retEntity = new Queen(graphicsEntity, physicsObject);
-//			}
+			}
+			// else if (type.equals("queen")) {
+			// retEntity = new Queen(graphicsEntity, physicsObject);
+			// }
 			break;
 		case ENEMY:
 			if (type.equals("enemyAnt")) {
 				retEntity = new EnemyAnt(graphicsEntity, physicsObject);
 			} else if (type.equals("enemyGrasshopper")) {
 				retEntity = new EnemyGrasshopper(graphicsEntity, physicsObject);
-			} 
+			}
 			break;
 		case ENVIRONMENT:
 			retEntity = new EnvironmentObject(graphicsEntity, physicsObject);
@@ -277,14 +283,23 @@ public class EntityBuilderImpl implements EntityBuilder {
 			retEntity = new Moving(graphicsEntity, physicsObject);
 			break;
 		case LOCATOR:
-			retEntity = new PositionLocator(graphicsEntity, physicsObject, target, maxAnts);
+			retEntity = new PositionLocator(graphicsEntity, physicsObject,
+					target, maxAnts);
 			break;
 		case HIVE:
-			retEntity = Hive.getInstance(hiveFoodstackSize, graphicsEntity, physicsObject);
+			retEntity = Hive.getInstance(hiveFoodstackSize, graphicsEntity,
+					physicsObject);
 		default:
 			break;
 		}
 		PhysicsManager.getInstance().registerPhysicsObject(retEntity.physicsObject);
+		
+		// set initial world transform for transparent triangles
+		if (graphicsEntity.getModel().usesTransparency() && physicsObject instanceof ReadOnlyPhysicsObject)
+		{
+			Entity.setTriangleTransforms((ReadOnlyPhysicsObject) physicsObject);
+		}
+		
 		reset();
 		return retEntity;
 	}

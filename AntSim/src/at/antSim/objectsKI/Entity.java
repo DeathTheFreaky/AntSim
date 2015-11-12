@@ -3,6 +3,7 @@ package at.antSim.objectsKI;
 import at.antSim.Globals;
 import at.antSim.MainApplication;
 import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.graphics.graphicsUtils.TransparentTriangle;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
@@ -15,27 +16,40 @@ import at.antSim.objectsPhysic.Movement.MovementManager;
 import at.antSim.objectsPhysic.basics.PhysicsObject;
 import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
+import at.antSim.utils.Pair;
+import at.antSim.utils.TransparentTriangleComparator;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.vecmath.Vector3f;
+
+import org.lwjgl.util.vector.Matrix4f;
 
 /**
  * Created on 18.05.2015.
  *
  * @author Flo, Clemens
  */
+/**
+ * @author Flo
+ *
+ */
 public abstract class Entity {
 
 	static final Map<PhysicsObject, ObjectType> physicsObjectTypeMap = new HashMap<PhysicsObject, ObjectType>();
 	static final Map<TexturedModel, List<Entity>> renderingMap = new HashMap<TexturedModel, List<Entity>>();
 	static final LinkedList<Entity> transparents = new LinkedList<>();
+	static final ArrayList<Pair<Entity, TransparentTriangle>> transparentTriangles = new ArrayList<Pair<Entity, TransparentTriangle>>();
+	static final List<Entry<Entity, Integer>> entityVertices = new ArrayList<Entry<Entity, Integer>>();
 	static final Map<PhysicsObject, Entity> parentingEntities = new HashMap<PhysicsObject, Entity>(); //allows us to get eg. the Food Entity in a react() method when an ant hit the Food Entitie's physicsObject
 	static final List<Entity> entities = new LinkedList<>(); //used to delete all entities
 	static final List<Entity> dynamicEntities = new LinkedList<>();
 	static final List<Ant> ants = new LinkedList<Ant>();
 	static final List<Entity> pheromones = new LinkedList<>();
 	static final List<PositionLocator> deleteableLocators = new LinkedList<PositionLocator>();
+	static TransparentTriangleComparator triangleComp = new TransparentTriangleComparator();
 	static Hive hive;
 	
 	static boolean deleteAllowed = true; //set to false when quitting a game so that events do not delete entities that are already being deleted
@@ -58,6 +72,16 @@ public abstract class Entity {
 			addRenderingEntity();
 			if (graphicsEntity.getModel().usesTransparency()) {
 				addTransparent(this);
+				
+				// do not insert elements at correct position but sort whole list at the end -> should be faster for big amounts of data				
+				for (TransparentTriangle triangle : graphicsEntity.getModel().getRawModel().getTransparentVertices())
+				{
+					transparentTriangles.add(new Pair<Entity, TransparentTriangle>(this, triangle));
+				}
+				
+				System.out.println("added transparentTriangles for " + toString());
+				
+				sortAllTransparentTriangles();
 			}
 		}
 	}
@@ -66,6 +90,7 @@ public abstract class Entity {
 	 * @param entity
 	 */
 	private void addTransparent(Entity entity) {		
+		
 		transparents.add(entity);
 	}
 
@@ -110,6 +135,18 @@ public abstract class Entity {
 					renderingMap.get(graphicsEntity.getModel()).remove(this);
 				}
 				transparents.remove(this);
+				
+				// remove from transparent triangles
+				for (Iterator<Pair<Entity, TransparentTriangle>> iterator = transparentTriangles.iterator(); iterator.hasNext();) {
+					
+					Pair<Entity, TransparentTriangle> triangle = iterator.next();
+				    
+				    if (triangle.getKey() == this)
+				    {
+				    	iterator.remove();
+				    }
+				}
+				
 			}
 		}
 	}
@@ -269,8 +306,68 @@ public abstract class Entity {
 	}
 
 	// sorts all vertices by the distance between their barrycentre and the camera, from the back to the front
-	public static void calcTransparentDists() {
+	// positions, normals and texture coords as well as all other data stays the same as in original entities,
+	// 
+	
+	/**Sorts all vertices by the distance between their barrycentre and the camera, from the back to the front.
+	 * Positions, normals and texture coords can stay as they are since they are referenced by vertex indices.
+	 * However, the array of vertex indices needs to be sorted from back to front and in the process an Entity
+	 * might be "split" into multiple pieces if it intersects with another Entity.
+	 * 
+	 * Finally, these parts of the original Entities will be rendered in the correct sorted order from back to front.
+	 * 
+	 */
+	private static void sortAllTransparentTriangles() 
+	{
+		Collections.sort(transparentTriangles, triangleComp);
 		
+		System.out.println("sorted triangles");
+	}
+	
+	public static List<Pair<Entity, TransparentTriangle>> getTransparentTriangles()
+	{
+		return transparentTriangles;
+	}
+	
+	/**Updates transparent triangle sorting if camera position has changed.
+	 * @param vector3f
+	 */
+	public static void updateTransparentTriangles(org.lwjgl.util.vector.Vector3f cameraPos)
+	{
+		for (Pair<Entity, TransparentTriangle> triangle : transparentTriangles)
+		{
+			triangle.getValue().calcCameraSquaredDist(cameraPos);
+		}
 		
+		System.out.println("camera position changed");
+		
+		sortAllTransparentTriangles();
+	}
+	
+	/**Updates a transparent entitie's triangles' barrycentre if the triangle's parenting Entity's world transform has changed.
+	 * @param po
+	 */
+	public static void setTriangleTransforms(ReadOnlyPhysicsObject po)
+	{
+		Entity entity = parentingEntities.get(po);
+		
+		if (entity.getGraphicsEntity().getModel().usesTransparency())
+		{
+			Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.vec3fToSlickUtil(po.getPosition()), 
+					po.getRotationDegrees().x, po.getRotationDegrees().y, po.getRotationDegrees().z, 
+					entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
+			
+			for (Pair<Entity, TransparentTriangle> triangle : transparentTriangles)
+			{
+				if (triangle.getKey() == entity)
+				{
+					triangle.getValue().updateTransform(transformationMatrix);
+				}
+			}
+			
+			System.out.println("set triangle transforms for " + entity.toString());
+			
+			sortAllTransparentTriangles();
+		}
 	}
 }

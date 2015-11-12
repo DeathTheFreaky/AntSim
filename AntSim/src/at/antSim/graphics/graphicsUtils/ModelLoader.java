@@ -81,6 +81,12 @@ public class ModelLoader {
 			rawModel.setFurthestPoint(modelData.getFurthestPoint());
 			rawModel.setLenghts(modelData.getxLength(), modelData.getyLength(), modelData.getzLength());
 			ModelTexture modelTexture = new ModelTexture(loader.loadTexture(modelPreset.textureFileName));
+			
+			if (modelPreset.useTransparency)
+			{
+				rawModel.loadTransparentVertices(modelData);
+			}
+			
 			texturedModels.put(modelPreset.key, new TexturedModel(rawModel, modelTexture, modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.useTransparency, modelPreset.key));
 		}
 		
@@ -101,7 +107,6 @@ public class ModelLoader {
 		texturedModels.get("grass").getTexture().setUseFakeLighting(true);
 		texturedModels.get("fern").getTexture().setHasTransparency(true);
 		texturedModels.get("fern").getTexture().setUseFakeLighting(true);
-		
 	}
 	
 	/**Stores "presets" for an {@link Entity}'s model.

@@ -211,7 +211,7 @@ public class Camera {
 		
 		if (calcTransparentDists)
 		{
-			Entity.calcTransparentDists();
+			Entity.updateTransparentTriangles(getPosition());
 		}
 	}
 	

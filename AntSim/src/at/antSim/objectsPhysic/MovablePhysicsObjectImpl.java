@@ -1,6 +1,8 @@
 package at.antSim.objectsPhysic;
 
+import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.basics.MovablePhysicsObject;
+
 import com.bulletphysics.dynamics.RigidBody;
 
 import javax.vecmath.Vector3f;
@@ -16,6 +18,9 @@ public abstract class MovablePhysicsObjectImpl extends PositionablePhysicsObject
 		RigidBody body = RigidBody.upcast(getCollisionBody());
 		if (body != null) {
 			body.setLinearVelocity(linearVelocity);
+			
+			// update triangle positions
+			Entity.setTriangleTransforms(this);
 		}
 	}
 
@@ -34,6 +39,9 @@ public abstract class MovablePhysicsObjectImpl extends PositionablePhysicsObject
 		RigidBody body = RigidBody.upcast(getCollisionBody());
 		if (body != null) {
 			body.setAngularVelocity(angularVelocity);
+			
+			// update triangle positions
+			Entity.setTriangleTransforms(this);
 		}
 	}
 

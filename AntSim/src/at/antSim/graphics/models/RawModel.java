@@ -1,5 +1,12 @@
 package at.antSim.graphics.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.util.vector.Vector3f;
+
+import at.antSim.graphics.graphicsUtils.TransparentTriangle;
+
 /**The RawModel stores 3D models as VAOs (Vertex Array Objects).<br><br>
  * VAOs are the modern way of storing and rendering models in OpenGl.<br>
  * A VAO stores data about 3D Models in slots which are called attribute lists.<br>
@@ -23,6 +30,7 @@ public class RawModel {
 	private float xLength;
     private float yLength;
     private float zLength;
+    private List<TransparentTriangle> transparentTriangles;
 	
 	public RawModel(int vaoID, int vertexCount) {
 		
@@ -74,5 +82,41 @@ public class RawModel {
 
 	public float getzLength() {
 		return zLength;
+	}
+	
+	public List<TransparentTriangle> getTransparentVertices() {
+		return transparentTriangles;
+	}
+
+	public void loadTransparentVertices(ModelData modelData)
+	{
+		transparentTriangles = new ArrayList<TransparentTriangle>();
+		
+		for (int i = 0; i < modelData.getIndices().length; i++)
+		{
+			if (i % 3 == 0) // each triangle has 3 vertices
+			{
+				int indexBufferOffset = i;
+				int p1IndexVal = modelData.getIndices()[i];
+				int p2IndexVal = modelData.getIndices()[i + 1];
+				int p3IndexVal = modelData.getIndices()[i + 2];
+				
+				Vector3f p1 = new Vector3f(modelData.getVertices()[p1IndexVal], modelData.getVertices()[p1IndexVal + 1], modelData.getVertices()[p1IndexVal + 2]);
+				Vector3f p2 = new Vector3f(modelData.getVertices()[p2IndexVal], modelData.getVertices()[p2IndexVal + 1], modelData.getVertices()[p2IndexVal + 2]);
+				Vector3f p3 = new Vector3f(modelData.getVertices()[p3IndexVal], modelData.getVertices()[p3IndexVal + 1], modelData.getVertices()[p3IndexVal + 2]);
+				
+				transparentTriangles.add(new TransparentTriangle(indexBufferOffset, p1, p2, p3));
+			}
+		}
+		
+		System.out.println("VaoID: " + vaoID + " - created " + transparentTriangles.size() + " transparent triangles.");
+	}
+	
+	public void setTransparentVerticesWorldPosition()
+	{
+		for (TransparentTriangle triangle : transparentTriangles)
+		{
+			
+		}
 	}
 }

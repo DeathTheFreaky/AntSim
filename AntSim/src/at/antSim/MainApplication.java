@@ -253,15 +253,8 @@ public class MainApplication {
 				statsTimeAccumulator -= statsTimeStep;
 
 				if (worldLoaded && !paused) {
-					loader.tempCleanUp(); // remove temporary data (like text
-											// stats models) after each
-											// rendering frame
-					((MainGameState) mainGameState).updateStatus(); // update
-																	// stats in
-																	// main game
-																	// state
-																	// (population,
-																	// food...)
+					loader.tempCleanUp(); // remove temporary data (like textstats models) after each rendering frame
+					((MainGameState) mainGameState).updateStatus(); // update stats in main gamestate (population, food...)
 				}
 			}
 
@@ -272,29 +265,18 @@ public class MainApplication {
 			}
 
 			// update camera and mouse picker
-			// camera movement should not be affected by game speed since it
-			// works with movement speeds multiplied with time elapsed since
-			// last frame update
+			// camera movement should not be affected by game speed since it works with movement speeds multiplied with time elapsed since last frame update
 			if (worldLoaded) {
 
-				camera.move(terrain); // every single frame check for key inputs
-										// which move the camera
+				camera.move(terrain); // every single frame check for key inputs which move the camera
 				picker.update();
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 				if (terrainPoint != null && movingEntity.getEntity() != null) {
-					PhysicsObject phyObj = movingEntity.getEntity()
-							.getPhysicsObject();
-					GraphicsEntity graphicsEntity = movingEntity.getEntity()
-							.getGraphicsEntity();
-					Vector3f correctedTerrainPoint = new Vector3f(
-							terrainPoint.x, terrainPoint.y
-									+ graphicsEntity.getModel().getRawModel()
-											.getyLength() / 2
-									* graphicsEntity.getScale(), terrainPoint.z);
+					PhysicsObject phyObj = movingEntity.getEntity().getPhysicsObject();
+					GraphicsEntity graphicsEntity = movingEntity.getEntity().getGraphicsEntity();
+					Vector3f correctedTerrainPoint = new Vector3f(terrainPoint.x, terrainPoint.y + graphicsEntity.getModel().getRawModel().getyLength() / 2 * graphicsEntity.getScale(), terrainPoint.z);
 					PositionablePhysicsObject posPhyObj = (PositionablePhysicsObject) phyObj;
-					posPhyObj.setPosition(new javax.vecmath.Vector3f(
-							correctedTerrainPoint.x, correctedTerrainPoint.y,
-							correctedTerrainPoint.z));
+					posPhyObj.setPosition(new javax.vecmath.Vector3f(correctedTerrainPoint.x, correctedTerrainPoint.y, correctedTerrainPoint.z));
 				}
 
 				renderer.processTerrain(terrain);
@@ -304,8 +286,7 @@ public class MainApplication {
 			renderer.render(lights, camera, worldLoaded);
 			DisplayManager.updateDisplay();
 
-			// load world after loading screen has been rendered to support
-			// single threaded architecture
+			// load world after loading screen has been rendered to support single threaded architecture
 			if (triggeredLoading) {
 				loadWorld(loader, renderer);
 				triggeredLoading = false;
@@ -325,9 +306,7 @@ public class MainApplication {
 
 		long timeCurrentUpdate = System.currentTimeMillis();
 
-		movingEntity.setColliding(false); // assume that moving Entity does not
-											// collide by default, if it
-											// collides, a collision event...
+		movingEntity.setColliding(false); // assume that moving Entity does not collide by default, if it collides, a collision event...
 		EventManager.getInstance().workThroughQueue();
 
 		// game logic
@@ -335,19 +314,15 @@ public class MainApplication {
 			// System.out.println("update cycle: " + cyclyCtr);
 			float timeSinceLastUpdate = (timeCurrentUpdate - timeLastLogicUpdate) / 1000f;
 			timeSinceLastUpdate *= speed;
-			// System.out.println("time since last updates: " +
-			// timeSinceLastUpdate);
-			Enemy.updatePositionLocators(); // ensure the PositionLocators
-											// follow their target's position
+			// System.out.println("time since last updates: " + timeSinceLastUpdate);
+			Enemy.updatePositionLocators(); // ensure the PositionLocators follow their target's position
 			MovementManager.getInstance().moveAllEntries();
 			Entity.resetUndergroundEntities();
 			// Ant.printAllPositionLocatorsAndPheromones();
 			Ant.resetPheromonesAndPositionLocators();
 			// PhysicsManager.getInstance().printAllCollisionObjects();
 			PhysicsManager.getInstance().performCollisionDetection(
-					timeSinceLastUpdate); // ... will be triggered here and
-											// registered by the movingEntity's
-											// Collision event listener
+					timeSinceLastUpdate); // ... will be triggered here and registered by the movingEntity's Collision event listener
 
 			cycleCtr++;
 			antFoodCtr++;
@@ -382,22 +357,17 @@ public class MainApplication {
 
 		// MEINS
 		startMenuState = new StartMenuState(loader, "startMenuState");
-		optionsDisplayState = new OptionsDisplayState(loader,
-				"optionsDisplayState");
-		optionsControlsState = new OptionsControlState(loader,
-				"optionsControlState");
+		optionsDisplayState = new OptionsDisplayState(loader, "optionsDisplayState");
+		optionsControlsState = new OptionsControlState(loader, "optionsControlState");
 		mainGameState = new MainGameState(loader, "mainGameState");
 		loadingState = new LoadingState(loader, "loadingState");
 		pauseState = new PauseState(loader, "pauseState");
 
 		startMenuState.initializeState(optionsDisplayState.getName());
 		loadingState.initializeState();
-		optionsDisplayState.initializeState(startMenuState.getName(),
-				optionsControlsState.getName());
-		optionsControlsState.initializeState(startMenuState.getName(),
-				optionsDisplayState.getName());
-		pauseState.initializeState(mainGameState.getName(),
-				startMenuState.getName(), optionsDisplayState.getName());
+		optionsDisplayState.initializeState(startMenuState.getName(), optionsControlsState.getName());
+		optionsControlsState.initializeState(startMenuState.getName(), optionsDisplayState.getName());
+		pauseState.initializeState(mainGameState.getName(), startMenuState.getName(), optionsDisplayState.getName());
 
 		GuiWrapper.getInstance().setCurrentState(startMenuState.getName());
 	}
@@ -413,38 +383,25 @@ public class MainApplication {
 		if (!worldLoaded) {
 
 			/*
-			 * Using index buffers will help to use less data in total by not
-			 * specifying positions shared by different vertexes multiple times
-			 * and instead using indices defining which vertexes use which
-			 * positions.
+			 * Using index buffers will help to use less data in total by not specifying positions shared by different vertexes multiple times
+			 * and instead using indices defining which vertexes use which positions.
 			 */
 
-			// open GL stuff needs to be loaded only once, even when starting a
-			// new game to speed up loading times, only released at application
-			// exit
+			// open GL stuff needs to be loaded only once, even when starting a new game to speed up loading times, only released at application exit
 			if (!glLoaded) {
-				ModelLoader.loadTexturedModels(loader); // model's geometry and
-														// textures need to be
-														// loaded at first
+				ModelLoader.loadTexturedModels(loader); // model's geometry and textures need to be loaded at first
 				glLoaded = true;
 			}
 
-			terrain = WorldLoader.loadTerrain(loader); // loads the world's
-														// terrain
-			WorldLoader.loadWorldEntities(loader, terrain); // loads the world's
-															// "material"
-															// contents
+			terrain = WorldLoader.loadTerrain(loader); // loads the world's terrain
+			WorldLoader.loadWorldEntities(loader, terrain); // loads the world's "material" contents
 			hive = Hive.getInstance();
 			lights = WorldLoader.loadLights();
 
 			// a lamp freely positionable on the map
 			/*
-			 * movingLamp = new
-			 * GraphicsEntity(WorldLoader.texturedModels.get("lamp"), 1, new
-			 * Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
-			 * entities.add(movingLamp); movingLight = new Light(new
-			 * Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1,
-			 * 0.01f, 0.002f)); lights.add(movingLight);
+			 * movingLamp = new GraphicsEntity(WorldLoader.texturedModels.get("lamp"), 1, new Vector3f(293, -6.8f, -305), 0, 0, 0, 1);
+			 * entities.add(movingLamp); movingLight = new Light(new Vector3f(293, 7, -305), new Vector3f(0, 2, 2), new Vector3f(1, 0.01f, 0.002f)); lights.add(movingLight);
 			 */
 
 			camera.triggerReset();
@@ -453,8 +410,7 @@ public class MainApplication {
 			// indicate to main game loop that world has finished loadings
 			worldLoaded = true;
 
-			mainGameState.initializeState(); // commands in mainGameState need
-												// data from this method
+			mainGameState.initializeState(); // commands in mainGameState need data from this method
 
 			// sets gui to main game state once world has finished loading
 			GuiWrapper.getInstance().setCurrentState(mainGameState.getName());
