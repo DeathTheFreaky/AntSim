@@ -31,4 +31,5 @@ void main(void){
 	float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit); //factor of 0: below lower limit, factor of 1: above upper limit
 	factor = clamp(factor, 0.0, 1.0); //anything outside lower/upper range does not really affect us
 	outColor = mix(vec4(finalFogColor, 1.0), finalColor, factor); //calculate color of final pixel onscreen
+	outColor = finalColor; // FOR DEBUGGING
 }

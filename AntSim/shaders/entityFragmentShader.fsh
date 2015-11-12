@@ -81,7 +81,7 @@ void main(void) {
 	//original pixel color is created by applying diffuse lighting on the texture color and adding the reflection from specular lighting
 	outColor = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0) ; 
 	//apply fog: create mixture of skyColor and actual vertex color -> 0 visibility: completely foggy = skyColor, 1 visibility:  original pixel color
-	outColor = mix(vec4(finalFogColor, 1.0), outColor, visibility); 
+	outColor = mix(vec4(finalFogColor, 1.0), outColor, visibility);	// DISABLED FOG FOR DEBUG PURPOSES
 		
 	//color moving entity in red if it collides or green if it does not collide and hence can be placed on the terrain
 	if (movingEntityBlendFactor > 0) {

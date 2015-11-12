@@ -19,7 +19,7 @@ import at.antSim.graphics.shaders.SkyboxShader;
  */
 public class SkyboxRenderer {
 	
-	private static final float SIZE = 500f; //length of the skybox cube's sides
+	private static final float SIZE = 2000f; //length of the skybox cube's sides
 	
 	//the skybox vertices creation code has been taken from https://www.dropbox.com/sh/trn3cugng9ahec1/AAARqfvCzsEcu7mxocjqPT39a/Skybox%20Vertex%20Positions.txt?dl=0
 	//6 sides of a cube, each side made up of 2 triangles

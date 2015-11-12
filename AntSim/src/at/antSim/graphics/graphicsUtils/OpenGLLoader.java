@@ -48,11 +48,11 @@ public class OpenGLLoader {
 	 * - "Texture Formats": p.282
 	 * */
 	
-	private List<Integer> vaos = new ArrayList<Integer>(); //list holding all vaos ids to be cleaned at program exit
-	private List<Integer> vbos = new ArrayList<Integer>(); //list holding all vbos ids to be cleaned at program exit
-	private List<Integer> textures = new ArrayList<Integer>(); //list holding all texture ids to be cleaned at program exit
-	private List<Integer> tempVaos = new ArrayList<Integer>(); //list holding all vaos ids for temp data to be cleaned after every render call
-	private List<Integer> tempVbos = new ArrayList<Integer>(); //list holding all vbos ids for temp data to be cleaned after every render call
+	private static List<Integer> vaos = new ArrayList<Integer>(); //list holding all vaos ids to be cleaned at program exit
+	private static List<Integer> vbos = new ArrayList<Integer>(); //list holding all vbos ids to be cleaned at program exit
+	private static List<Integer> textures = new ArrayList<Integer>(); //list holding all texture ids to be cleaned at program exit
+	private static List<Integer> tempVaos = new ArrayList<Integer>(); //list holding all vaos ids for temp data to be cleaned after every render call
+	private static List<Integer> tempVbos = new ArrayList<Integer>(); //list holding all vbos ids for temp data to be cleaned after every render call
 	
 	/**Takes in position coordinates, texture coordinates and the indices of positions of a model's vertexes, loads this data into a VAO and then returns information about the VAO as a RawModel object.
 	 * 
@@ -62,14 +62,14 @@ public class OpenGLLoader {
 	 * @param indices - an array of integer indices indicating the positions of vertexes
 	 * @return - a RawModel object storing positions', texture coordinate's and normals' data inside a VAO
 	 */
-	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
+	public static RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO(false); //creates and activates a VAO: the following VBOs will all be stored to this activated VAO
-		bindIndicesBuffer(indices); //bind indices to the activated VAO
+		int indicesID = bindIndicesBuffer(indices); //bind indices to the activated VAO
 		storeDataInAttributeList(0, 3, positions, false); //store positional data into attribute list 0 of the activated VAO
 		storeDataInAttributeList(1, 2, textureCoords, false); //store texture coordinates into attribute list 1 of the activated VAO
 		storeDataInAttributeList(2, 3, normals, false); //store normals into attribute list 2 of the activated VAO
 		unbindVAO(); //now that we finished using the our VAO bound in createVAO(), we need to unbind it - deactivate it
-		return new RawModel(vaoID, indices.length); //number of indices equals vertex count
+		return new RawModel(vaoID, indicesID, indices.length); //number of indices equals vertex count
 	}
 	
 	/**Takes in position coordinates of a model's vertexes, loads this data into a VAO and then returns information about the VAO as a RawModel object.<br>
@@ -80,9 +80,9 @@ public class OpenGLLoader {
 	 * @param dimensions - can be either 2 or 3 (2D quads, 3D Skybox cubes)
 	 * @return - a RawModel object storing positions' data inside a VAO
 	 */
-	public RawModel loadToVAO(float [] positions, int dimensions) {
+	public static RawModel loadToVAO(float [] positions, int dimensions) {
 		int vaoID = createVAO(false);
-		this.storeDataInAttributeList(0, dimensions, positions, false); //store positional data into attribute list 0 of the activated VAO
+		storeDataInAttributeList(0, dimensions, positions, false); //store positional data into attribute list 0 of the activated VAO
 		unbindVAO();
 		return new RawModel(vaoID, positions.length/dimensions); //for 2d models there are 2 number per vertex, for 3d models there are 3
 	}
@@ -97,7 +97,7 @@ public class OpenGLLoader {
 	 * @param temporary - true if data shall only be stored for one render loop (eg. stats text which changes at every render loop)
 	 * @return - a RawModel object storing positions' data inside a VAO
 	 */
-	public RawModel loadToVAO(float [] positions, float[] textureCoords, int dimensions, boolean temporary) {
+	public static RawModel loadToVAO(float [] positions, float[] textureCoords, int dimensions, boolean temporary) {
 		int vaoID = createVAO(temporary);
 		storeDataInAttributeList(0, dimensions, positions, temporary); //store positional data into attribute list 0 of the activated VAO
 		storeDataInAttributeList(1, 2, textureCoords, temporary); //store texture coordinates into attribute list 1 of the activated VAO
@@ -110,7 +110,7 @@ public class OpenGLLoader {
 	 * @param filename - the filename of the texture 
 	 * @return - the ID of the newly loaded texture
 	 */
-	public int loadTexture(String fileName) {
+	public static int loadTexture(String fileName) {
 		
 		//load a texture in .png format from /res/models directory and store it in raw format
 		Texture texture = null;
@@ -153,7 +153,7 @@ public class OpenGLLoader {
 	 * @param filename - the filename of the texture 
 	 * @return - a {@link Texture}
 	 */
-	public Texture loadGuiTexture(String fileName) {
+	public static Texture loadGuiTexture(String fileName) {
 			
 		//load a texture in .png format from /res/models directory and store it in raw format
 		Texture texture = null;
@@ -206,7 +206,7 @@ public class OpenGLLoader {
 	 * @param textureFiles - names of the textureFiles to be loaded into the CubeMap
 	 * @return - ID of the CubeMap texture
 	 */
-	public int loadCubeMap(String[] textureFiles) {
+	public static int loadCubeMap(String[] textureFiles) {
 		
 		//for more information on cubemaps, see OpenGL Programming Guide p.309
 		
@@ -275,7 +275,7 @@ public class OpenGLLoader {
 	 * @param fileName - name of the texture file
 	 * @return - a new {@link TextureData}
 	 */
-	private TextureData decodeTextureFile(String fileName) {
+	private static TextureData decodeTextureFile(String fileName) {
 		int width = 0;
 		int height = 0;
 		ByteBuffer buffer = null;
@@ -312,7 +312,7 @@ public class OpenGLLoader {
 	 * @param temporary - true if data shall only be stored for one render loop (eg. stats text which changes at every render loop)
 	 * @return - the ID of the newly created VAO
 	 */
-	private int createVAO(boolean temporary){
+	private static int createVAO(boolean temporary){
 		int vaoID = GL30.glGenVertexArrays(); //creates empty VAO returning its ID
 		if (temporary) {
 			tempVaos.add(vaoID);
@@ -326,7 +326,7 @@ public class OpenGLLoader {
 	/**Unbinds the VAO when we're done using the VAO.
 	 * 
 	 */
-	private void unbindVAO(){
+	private static void unbindVAO(){
 		GL30.glBindVertexArray(0); //unbind currently bound VAO by passing ID of 0
 	}
 	
@@ -334,7 +334,7 @@ public class OpenGLLoader {
 	 * 
 	 * @param indices - array of integer vertex indices for indicating the positions used by vertexes
 	 */
-	private void bindIndicesBuffer(int[] indices) {
+	public static int bindIndicesBuffer(int[] indices) {
 		
 		/* Other then for GL_ARRAY_BUFFER, which uses glVertexAttribPointer() 
 		 * to store vertex data in one of the 16 arrays in a VAO,
@@ -345,14 +345,25 @@ public class OpenGLLoader {
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);//bind VBO as GL_ELEMENT_ARRAY_BUFFER -> tells OpenGL to use an Index Buffer
 		IntBuffer buffer = storeDataInIntBuffer(indices);
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);//data is vertex indices, usage of static means we will not be editing the data later on
+		
+		return vboID;
 	};
 	
+	/**Replaces the old indices buffer in the currently active VAO.
+	 * @param indices
+	 */
+	public static void setNewIndicesBuffer(int[] indices, int vboID)
+	{
+		GL15.glDeleteBuffers(vboID);
+		bindIndicesBuffer(indices);
+	}
+		
 	/**Converts array of integer indices into an IntBuffer.
 	 * 
 	 * @param data - integer array of indices that shall be stored to the IntBuffer
 	 * @return - an IntBuffer containing the indices used to indicate the positions of vertexes
 	 */
-	private IntBuffer storeDataInIntBuffer(int[] data) {
+	private static IntBuffer storeDataInIntBuffer(int[] data) {
 		IntBuffer buffer = BufferUtils.createIntBuffer(data.length); //create an empty IntBuffer with the size of data
 		buffer.put(data); //put data into the buffer
 		buffer.flip(); //change from write to read access mode
@@ -366,7 +377,7 @@ public class OpenGLLoader {
 	 * @param data - the data which shall be stored inside an attribute list of a VAO
 	 * @param temporary - true if data shall only be stored for one render loop (eg. stats text which changes at every render loop)
 	 */
-	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data, boolean temporary) {
+	private static void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data, boolean temporary) {
 		int vboID = GL15.glGenBuffers(); //creates an empty VBO, returning the empty VBO's ID
 		if (temporary) {
 			tempVbos.add(vboID);
@@ -394,7 +405,7 @@ public class OpenGLLoader {
 	 * @param data - float array that should be converted into a float buffer
 	 * @return - a FloatBuffer filled with an array of floats
 	 */
-	private FloatBuffer storeDataInFloatBuffer(float[] data){
+	private static FloatBuffer storeDataInFloatBuffer(float[] data){
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length); //create empty float buffer with the size of data
 		buffer.put(data); //put data into buffer
 		buffer.flip(); //change from write to read access mode
@@ -404,7 +415,7 @@ public class OpenGLLoader {
 	/**Deletes all VAOS, VBOS and textures stored in the vaos, vbos and textures lists when they are not needed any longer.
 	 * 
 	 */
-	public void cleanUp(){
+	public static void cleanUp(){
 		for(int vao:vaos) {
 			GL30.glDeleteVertexArrays(vao);
 		}
@@ -419,7 +430,7 @@ public class OpenGLLoader {
 	/**Deletes all temporary VAOS, VBOS and textures stored in the vaos, vbos and textures lists when they are not needed any longer.
 	 * 
 	 */
-	public void tempCleanUp() {
+	public static void tempCleanUp() {
 		for(int vao:tempVaos) {
 			GL30.glDeleteVertexArrays(vao);
 		}

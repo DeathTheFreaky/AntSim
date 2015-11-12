@@ -25,16 +25,26 @@ import at.antSim.graphics.graphicsUtils.TransparentTriangle;
 public class RawModel {
 	
 	private int vaoID; //id or "name" of the vao used to store this model's vertex indices, positional coordinates, texture coordinates and normals
+	private int indicesID;
 	private int vertexCount; //how many vertexes are stored inside the model
 	private float furthestDistance; //furthest distance from a point to the origin of a geometry model
 	private float xLength;
     private float yLength;
     private float zLength;
     private List<TransparentTriangle> transparentTriangles;
+    private ModelData modelData; // to be removed - only for debug purposes
+	
+	public RawModel(int vaoID, int indicesID, int vertexCount) {
+		
+		this.vaoID = vaoID;
+		this.indicesID = indicesID;
+		this.vertexCount = vertexCount;	
+	}
 	
 	public RawModel(int vaoID, int vertexCount) {
 		
 		this.vaoID = vaoID;
+		this.indicesID = -1;
 		this.vertexCount = vertexCount;	
 	}
 
@@ -43,6 +53,14 @@ public class RawModel {
 	 */
 	public int getVaoID() {
 		return vaoID;
+	}
+	
+	/**
+	 * @return - ID of the index buffer vbo
+	 */
+	public int getIndicesID()
+	{
+		return indicesID;
 	}
 
 	/**
@@ -90,6 +108,8 @@ public class RawModel {
 
 	public void loadTransparentVertices(ModelData modelData)
 	{
+		this.modelData = modelData;
+		
 		transparentTriangles = new ArrayList<TransparentTriangle>();
 		
 		for (int i = 0; i < modelData.getIndices().length; i++)
@@ -118,5 +138,10 @@ public class RawModel {
 		{
 			
 		}
+	}
+	
+	public ModelData getModelData()
+	{
+		return modelData;
 	}
 }

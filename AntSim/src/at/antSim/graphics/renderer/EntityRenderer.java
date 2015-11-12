@@ -1,5 +1,7 @@
 package at.antSim.graphics.renderer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,9 @@ import at.antSim.MainApplication;
 import at.antSim.graphics.entities.Camera;
 import at.antSim.graphics.entities.GraphicsEntity;
 import at.antSim.graphics.entities.Light;
+import at.antSim.graphics.graphicsUtils.OpenGLLoader;
+import at.antSim.graphics.graphicsUtils.TransparentTriangle;
+import at.antSim.graphics.models.ModelData;
 import at.antSim.graphics.models.RawModel;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.shaders.EntityShader;
@@ -25,6 +30,7 @@ import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 import at.antSim.utils.Maths;
+import at.antSim.utils.Pair;
 
 /**EntityRenderer renders static models.
  * 
@@ -36,6 +42,7 @@ public class EntityRenderer {
 	private EntityShader shader;
 	private final Vector3f COLLIDING_COLOR = new Vector3f(1,0,0);
 	private final Vector3f NOT_COLLIDING_COLOR = new Vector3f(0,1,0);
+	private HashMap<Entity, Matrix4f> transforms = new HashMap<>();
 	
 	/**Creates a new EntityRenderer which can be used by {@link MasterRenderer} to delegate rendering functions.
 	 * 
@@ -86,57 +93,86 @@ public class EntityRenderer {
 			renderBatch(model);
 		}
 		
-		LinkedList<Entity> transparentEntities = Entity.getTransparentsList();
+		renderTransparents();
 		
-		renderTransparents(transparentEntities);
+		transforms.clear();
 		
 		shader.stop();
 	}
-	
-	/**Renders all transparent Entities, sorted their barycentre's distance to the camera, drawing the ones furthest away first.
+
+	/**Renders transparent triangles sorted from the furthest away from to the closest to the camera.
 	 * 
-	 * http://blogs.msdn.com/b/shawnhar/archive/2009/02/18/depth-sorting-alpha-blended-objects.aspx
-	 * https://www.opengl.org/wiki/Transparency_Sorting
-	 * 
-	 * @param transparentEntities
 	 */
-	private void renderTransparents(LinkedList<Entity> transparentEntities) {
-				
+	private void renderTransparents()
+	{
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				
+		int offset = 0;
+		int length = 0;
+		int previousOffset;
+		Entity currentEntity = null;
+		ArrayList<Integer> cumulatedIndices = new ArrayList<Integer>();
 		
+		//GL11.glDepthMask(false);
+		//MasterRenderer.disableCulling();
 		
-		// other parameters like shine variables etc. should still be applied to model,
-		// even if its vertices might not be drawn all at once now, for they are now 
-		// ordered by their barrycenter's distance to the camera
-		for(Entity entity:transparentEntities) {
+		shader.loadMovingEntityBlend(0.0f);
+				
+		for (Pair<Entity, TransparentTriangle> triangle : Entity.getTransparentTriangles())
+		{
+			int idxOffset = triangle.getValue().getIndexBufferOffset();
+			ModelData data = triangle.getKey().getGraphicsEntity().getModel().getRawModel().getModelData();
 			
-			prepareTexturedModel(entity.getGraphicsEntity().getModel()); //lots of state changes, but unavoidable...
-			
-			prepareInstance(entity); //load transformation matrix and texture atlas offset
-			
-			if (MainApplication.getInstance().getMovingEntity().getEntity() == entity) {
-				shader.loadMovingEntityBlend(0.75f);
-				if (MainApplication.getInstance().getMovingEntity().isColliding()) {
-					shader.loadMovingEntityColor(COLLIDING_COLOR);
-				} else {
-					shader.loadMovingEntityColor(NOT_COLLIDING_COLOR);
+			if (currentEntity != triangle.getKey()) // entity has changed
+			{
+				if (currentEntity != null)
+				{
+					rewriteIndicesBufferAndDraw(cumulatedIndices, triangle.getKey().getGraphicsEntity().getModel().getRawModel().getIndicesID());
+					cumulatedIndices.clear();
 				}
-			} else {
-				shader.loadMovingEntityBlend(0.0f);
+				
+				unbindTexturedModel(); // unbind previously used Textured Model and VAO
+				
+				// bind new Textured Model and VAO
+				prepareTexturedModel(triangle.getKey().getGraphicsEntity().getModel()); //lots of state changes, but unavoidable...
+				prepareInstance(triangle.getKey()); //load transformation matrix and texture atlas offset
 			}
 			
-			//Render indexed vertices as triangles, draw all vertexes, indices are stored as unsigned ints and start rendering at the beginning of the data
-			GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getGraphicsEntity().getModel().getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+			cumulatedIndices.add(data.getIndices()[idxOffset]);
+			cumulatedIndices.add(data.getIndices()[idxOffset + 1]);
+			cumulatedIndices.add(data.getIndices()[idxOffset + 2]);
 			
-			//"restore the defaults" -> enable culling, disable vertexAttributeArrays (VBOS holding position, normals, texture coords) and unbind VAO
-			unbindTexturedModel();
+			currentEntity = triangle.getKey();
 		}
 		
-		GL11.glDisable(GL11.GL_BLEND); //disable alpha blending after we're done with our (transparent) textures
+		rewriteIndicesBufferAndDraw(cumulatedIndices, currentEntity.getGraphicsEntity().getModel().getRawModel().getIndicesID());
+		cumulatedIndices.clear();
 		
+		GL11.glDisable(GL11.GL_BLEND); //disable alpha blending after we're done with our (transparent) textures
 	}
-
+	
+	/**To reduce number of draw calls, rewrite the index buffer bound to the active VAO as long as the transparent Entity stays the same.
+	 * 
+	 * @param cumulatedIndices
+	 */
+	private void rewriteIndicesBufferAndDraw(ArrayList<Integer> cumulatedIndices, int indicesID)
+	{
+		int[] indicesBuffer = new int[cumulatedIndices.size()];
+		
+		System.out.println("cumulatedIndizes size: " + cumulatedIndices.size());
+		
+		for (int i = 0; i < cumulatedIndices.size(); i++)
+		{
+			indicesBuffer[i] = cumulatedIndices.get(i);
+		}
+		
+		OpenGLLoader.setNewIndicesBuffer(indicesBuffer, indicesID);
+		
+		//so this is a little confusing... the offset is measured in bytes -> an int has 4 bytes, its mentioned nowhere in the lwjgl documentation
+		GL11.glDrawElements(GL11.GL_TRIANGLES, cumulatedIndices.size() * 3, GL11.GL_UNSIGNED_INT, 0);
+	}
+	
 	/**Renders a batch of same models.
 	 * 
 	 * @param model
@@ -224,11 +260,15 @@ public class EntityRenderer {
 	 * @param entity - the {@link Entity} to be rendered
 	 */
 	private void prepareInstance(Entity entity) {
-		ReadOnlyPhysicsObject physicsObject = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
-		Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.vec3fToSlickUtil(physicsObject.getPosition()), 
-				physicsObject.getRotationDegrees().x, physicsObject.getRotationDegrees().y, physicsObject.getRotationDegrees().z, 
-				entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
-		shader.loadTransformationMatrix(transformationMatrix); //load transformation matrix into the shader program
+		if (!transforms.containsKey(entity))
+		{
+			ReadOnlyPhysicsObject physicsObject = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
+			Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.vec3fToSlickUtil(physicsObject.getPosition()), 
+					physicsObject.getRotationDegrees().x, physicsObject.getRotationDegrees().y, physicsObject.getRotationDegrees().z, 
+					entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
+			transforms.put(entity, transformationMatrix);
+		}
+		shader.loadTransformationMatrix(transforms.get(entity)); //load transformation matrix into the shader program
 		shader.loadOffset(entity.getGraphicsEntity().getTextureXOffset(), entity.getGraphicsEntity().getTextureYOffset()); //offsets could be different for each entity
 		shader.loadTransparency(entity.getGraphicsEntity().getTransparency());
 	}

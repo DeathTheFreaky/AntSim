@@ -51,6 +51,7 @@ void main(void) { //main is run for every vertex which undergoes vertexShader
 	
 	//calculate vertex' visibility when fog is applied
 	float distance = length(positionRelativeToCam.xyz); //length of relativePositon vector indicates distance of a vertex from the camera
-	visibility = exp(-pow((distance*density), gradient)); //calculate visibility of vertex in fog
+	//visibility = exp(-pow((distance*density), gradient)); //calculate visibility of vertex in fog
+	visibility = 1.0; //DISABLED FOG FOR DEBUG PURPOSES
 	visibility = clamp(visibility,0.0,1.0); //ensure that visibility stays between 0 and 1
 }
