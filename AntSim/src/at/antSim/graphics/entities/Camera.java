@@ -67,6 +67,8 @@ public class Camera {
 	
 	private String pauseMenuName;
 	
+	private Vector3f lastPosition = new Vector3f(0,0,0);
+		
 	/**Creates a new reference point camera, passing the reference point's initial position.
 	 * 
 	 * @param refPointPosition
@@ -150,6 +152,8 @@ public class Camera {
 		rotY = 0;
 		distanceFromReferencePoint = 100;
 		triggerReset = false;
+
+		Entity.updateTransparentTriangles(position);
 	}
 
 	/**Checks if the camera movement keys have been pressed on the keyboard and sets movement variables accordingly.
@@ -158,24 +162,18 @@ public class Camera {
 	@EventListener (priority = EventPriority.NORMAL)
 	public void checkKeyInputs(KeyPressedEvent event) {
 		
-		boolean calcTransparentDists = false;
-		
 		if(event.getKey() == Globals.moveForwardKey) {
 			this.currentMovementSpeed = MOVE_SPEED;
-			calcTransparentDists = true;
 			event.consume();
 		} else if (event.getKey() == Globals.moveBackwardKey) {
 			this.currentMovementSpeed = -MOVE_SPEED;
-			calcTransparentDists = true;
 			event.consume();
 		}
 		if(event.getKey() == Globals.moveUpKey) {
 			this.currentFloatSpeed = FLOAT_SPEED;
-			calcTransparentDists = true;
 			event.consume();
 		} else if (event.getKey() == Globals.moveDownKey) {
 			this.currentFloatSpeed = -FLOAT_SPEED;
-			calcTransparentDists = true;
 			event.consume();
 		}
 		if(event.getKey() == Globals.moveLeftKey) {
@@ -201,17 +199,10 @@ public class Camera {
 		}
 		if(event.getKey() == Globals.zoomInKey) {
 			this.currentZoomSpeed = -ZOOM_SPEED;
-			calcTransparentDists = true;
 			event.consume();
 		} else if (event.getKey() == Globals.zoomOutKey) {
 			this.currentZoomSpeed = ZOOM_SPEED;
-			calcTransparentDists = true;
 			event.consume();
-		}
-		
-		if (calcTransparentDists)
-		{
-			Entity.updateTransparentTriangles(getPosition());
 		}
 	}
 	
@@ -334,6 +325,15 @@ public class Camera {
 		position.y = refPointPosition.y + verticalDistance;
 		position.z = refPointPosition.z - offsetZ; 
 		this.yaw = 180 - rotY; //add 180 degrees to make camera look along the negative z-axis (forwards) instead of the positive z-axis 
+		
+		if (lastPosition.x != position.x || lastPosition.y != position.y || lastPosition.z != position.z)
+		{
+			Entity.updateTransparentTriangles(position);
+			
+			lastPosition.x = position.x;
+			lastPosition.y = position.y;
+			lastPosition.z = position.z;
+		}
 	}
 	
 	/*

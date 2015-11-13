@@ -44,10 +44,10 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("rock", "rockTexture", "rock", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		
 		//ghosts
-		modelPresets.add(new ModelNamesAndTypes("cube", "orange", "pheromone", PrimitiveType.SPHERE, ObjectType.PHEROMONE, massDummie, true));
-		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "positionLocatorBlue", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
-		modelPresets.add(new ModelNamesAndTypes("cube", "green", "positionLocatorGreen", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
-		modelPresets.add(new ModelNamesAndTypes("cube", "red", "positionLocatorRed", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere1", "orange", "pheromone", PrimitiveType.SPHERE, ObjectType.PHEROMONE, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere1", "blue", "positionLocatorBlue", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere1", "green", "positionLocatorGreen", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
+		modelPresets.add(new ModelNamesAndTypes("sphere1", "red", "positionLocatorRed", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
 		
 		//test
 		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));

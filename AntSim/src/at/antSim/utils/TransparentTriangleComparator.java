@@ -10,11 +10,11 @@ public class TransparentTriangleComparator implements Comparator<Pair<Entity, Tr
 	@Override
 	public int compare(Pair<Entity, TransparentTriangle> o1, Pair<Entity, TransparentTriangle> o2) {
 		
-		if (o1.getValue().getCameraSquaredDist() > o2.getValue().getCameraSquaredDist())
+		if (o1.getValue().getCameraDist() > o2.getValue().getCameraDist())
 		{
 			return 1;
 		}
-		else if (o1.getValue().getCameraSquaredDist() == o2.getValue().getCameraSquaredDist())
+		else if (o1.getValue().getCameraDist() == o2.getValue().getCameraDist())
 		{
 			return 0;
 		}

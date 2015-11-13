@@ -4,6 +4,8 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import at.antSim.graphics.entities.Camera;
+
 /**Used for transparent rendering to sort vertices by their barycentre's distance from the camera.
  * 
  * @author Flo
@@ -16,6 +18,8 @@ public class TransparentTriangle {
 	Vector4f centroid;
 	Vector4f translatedCentroid;
 	float cameraSquaredDist; // not actually camera pos, root not considered
+	float cameraDist;
+	Vector3f lastCameraPos = new Vector3f();
 	
 	public TransparentTriangle(int bufferOffset, Vector3f p1, Vector3f p2, Vector3f p3)
 	{
@@ -32,6 +36,20 @@ public class TransparentTriangle {
 		
 		// System.out.println("Created TransparentTriangle with indexBufferOffset " + indexBufferOffset + " and centroid " + centroid);
 	}
+	
+	/**Provide copy constructors because for sorting different instances of the same Model we need copies and not references!
+	 * Different instances can have different world transforms and hence a different cameraDist!
+	 * 
+	 * @param other
+	 */
+	public TransparentTriangle(TransparentTriangle other)
+	{
+		this.indexBufferOffset = other.indexBufferOffset;
+		this.centroid = new Vector4f(other.centroid);
+		this.translatedCentroid = new Vector4f(other.translatedCentroid);
+		this.cameraSquaredDist = other.cameraSquaredDist;
+		this.cameraDist = other.cameraDist;
+	}
 
 	public int getIndexBufferOffset() {
 		return indexBufferOffset;
@@ -43,17 +61,53 @@ public class TransparentTriangle {
 	 */
 	public void calcCameraSquaredDist(Vector3f cameraPos)
 	{	
-		Vector3f toCamera = new Vector3f(translatedCentroid.x - cameraPos.x, translatedCentroid.y - cameraPos.y, translatedCentroid.z - cameraPos.z);
-		cameraSquaredDist = toCamera.lengthSquared(); // do not consider root cause it doesn't matter
+		if (cameraPos != null)
+		{
+			lastCameraPos.x = cameraPos.x;
+			lastCameraPos.y = cameraPos.y;
+			lastCameraPos.z = cameraPos.z;
+			Vector3f toCamera = new Vector3f(translatedCentroid.x - cameraPos.x, translatedCentroid.y - cameraPos.y, translatedCentroid.z - cameraPos.z);
+			cameraDist = toCamera.lengthSquared(); // do consider root since otherwise the resulting numbers get far too big
+		}
+		else
+		{
+			System.out.println("Camera was null");
+		}
+	}
+	
+	/**Calculates distance from camera to centroid of this transparent triangle in world space.
+	 * 
+	 * First, centroid needs to be translated by translationMatrix to be positioned correctly in world space.
+	 */
+	public void calcCameraDist(Vector3f cameraPos)
+	{	
+		if (cameraPos != null)
+		{
+			lastCameraPos.x = cameraPos.x;
+			lastCameraPos.y = cameraPos.y;
+			lastCameraPos.z = cameraPos.z;
+			Vector3f toCamera = new Vector3f(translatedCentroid.x - cameraPos.x, translatedCentroid.y - cameraPos.y, translatedCentroid.z - cameraPos.z);
+			cameraDist = toCamera.length(); // do consider root since otherwise the resulting numbers get far too big
+		}
+		else
+		{
+			System.out.println("Camera was null");
+		}
 	}
 	
 	public void updateTransform(Matrix4f transformationMatrix)
 	{
 		Matrix4f.transform(transformationMatrix, centroid, translatedCentroid); // translate here
+		calcCameraDist(lastCameraPos); // does not work?!?
 	}
 	
 	public float getCameraSquaredDist()
 	{
 		return cameraSquaredDist;
+	}
+	
+	public float getCameraDist()
+	{
+		return cameraDist;
 	}
 }

@@ -76,11 +76,11 @@ public abstract class Entity {
 				// do not insert elements at correct position but sort whole list at the end -> should be faster for big amounts of data				
 				for (TransparentTriangle triangle : graphicsEntity.getModel().getRawModel().getTransparentVertices())
 				{
-					transparentTriangles.add(new Pair<Entity, TransparentTriangle>(this, triangle));
+					//!!! IMPORTANT: MAKE COPIES AND NOT REFERENCES OF RAW MODEL PRESET'S TRIANGLES
+					TransparentTriangle copiedTriangle = new TransparentTriangle(triangle);
+					transparentTriangles.add(new Pair<Entity, TransparentTriangle>(this, copiedTriangle));
 				}
-				
-				System.out.println("added transparentTriangles for " + toString());
-				
+								
 				sortAllTransparentTriangles();
 			}
 		}
@@ -128,6 +128,18 @@ public abstract class Entity {
 		PhysicsManager.getInstance().unregisterPhysicsObject(physicsObject);
 		if (deleteAllowed) {
 			entities.remove(this);
+			
+			// remove from transparent triangles
+			for (Iterator<Pair<Entity, TransparentTriangle>> iterator = transparentTriangles.iterator(); iterator.hasNext();) {
+				
+				Pair<Entity, TransparentTriangle> triangle = iterator.next();
+			    
+			    if (triangle.getKey() == this)
+			    {
+			    	iterator.remove();
+			    }
+			}
+			
 			parentingEntities.remove(physicsObject);
 			physicsObjectTypeMap.remove(this);
 			if (graphicsEntity != null) { //null for Pheromones
@@ -135,18 +147,6 @@ public abstract class Entity {
 					renderingMap.get(graphicsEntity.getModel()).remove(this);
 				}
 				transparents.remove(this);
-				
-				// remove from transparent triangles
-				for (Iterator<Pair<Entity, TransparentTriangle>> iterator = transparentTriangles.iterator(); iterator.hasNext();) {
-					
-					Pair<Entity, TransparentTriangle> triangle = iterator.next();
-				    
-				    if (triangle.getKey() == this)
-				    {
-				    	iterator.remove();
-				    }
-				}
-				
 			}
 		}
 	}
@@ -194,6 +194,7 @@ public abstract class Entity {
 	 * 
 	 */
 	public static void deleteAllEntities() {
+				
 		setDeleteAllowed(false);
 		for (Entity entity : entities) {
 			entity.delete();
@@ -203,13 +204,14 @@ public abstract class Entity {
 		}
 		physicsObjectTypeMap.clear();
 		renderingMap.clear();
-		transparents.clear();
 		parentingEntities.clear();
 		entities.clear();
 		dynamicEntities.clear();
 		ants.clear();
 		pheromones.clear();
 		deleteableLocators.clear();
+		transparents.clear();
+		transparentTriangles.clear();
 		setDeleteAllowed(true);
 	}
 	
@@ -320,8 +322,6 @@ public abstract class Entity {
 	private static void sortAllTransparentTriangles() 
 	{
 		Collections.sort(transparentTriangles, triangleComp);
-		
-		System.out.println("sorted triangles");
 	}
 	
 	public static List<Pair<Entity, TransparentTriangle>> getTransparentTriangles()
@@ -333,14 +333,12 @@ public abstract class Entity {
 	 * @param vector3f
 	 */
 	public static void updateTransparentTriangles(org.lwjgl.util.vector.Vector3f cameraPos)
-	{
+	{		
 		for (Pair<Entity, TransparentTriangle> triangle : transparentTriangles)
 		{
-			triangle.getValue().calcCameraSquaredDist(cameraPos);
+			triangle.getValue().calcCameraDist(cameraPos);
 		}
-		
-		System.out.println("camera position changed");
-		
+				
 		sortAllTransparentTriangles();
 	}
 	
@@ -356,7 +354,7 @@ public abstract class Entity {
 			Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.vec3fToSlickUtil(po.getPosition()), 
 					po.getRotationDegrees().x, po.getRotationDegrees().y, po.getRotationDegrees().z, 
 					entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
-			
+						
 			for (Pair<Entity, TransparentTriangle> triangle : transparentTriangles)
 			{
 				if (triangle.getKey() == entity)
@@ -364,9 +362,7 @@ public abstract class Entity {
 					triangle.getValue().updateTransform(transformationMatrix);
 				}
 			}
-			
-			System.out.println("set triangle transforms for " + entity.toString());
-			
+									
 			sortAllTransparentTriangles();
 		}
 	}

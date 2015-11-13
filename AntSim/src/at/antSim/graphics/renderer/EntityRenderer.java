@@ -101,6 +101,7 @@ public class EntityRenderer {
 	}
 
 	/**Renders transparent triangles sorted from the furthest away from to the closest to the camera.
+	 * In order to reduce number of state changes, indices from the same Entity are accumulated and drawn in one draw call when the currently rendered Entity changes.
 	 * 
 	 */
 	private void renderTransparents()
@@ -114,8 +115,7 @@ public class EntityRenderer {
 		Entity currentEntity = null;
 		ArrayList<Integer> cumulatedIndices = new ArrayList<Integer>();
 		
-		//GL11.glDepthMask(false);
-		//MasterRenderer.disableCulling();
+		GL11.glDepthMask(false);
 		
 		shader.loadMovingEntityBlend(0.0f);
 				
@@ -149,10 +149,12 @@ public class EntityRenderer {
 		rewriteIndicesBufferAndDraw(cumulatedIndices, currentEntity.getGraphicsEntity().getModel().getRawModel().getIndicesID());
 		cumulatedIndices.clear();
 		
+		GL11.glDepthMask(true);
+				
 		GL11.glDisable(GL11.GL_BLEND); //disable alpha blending after we're done with our (transparent) textures
 	}
 	
-	/**To reduce number of draw calls, rewrite the index buffer bound to the active VAO as long as the transparent Entity stays the same.
+	/**To reduce number of draw calls, rewrite the index buffer bound to the active VAO for as many triangles in a row as the transparent Entity stays the same.
 	 * 
 	 * @param cumulatedIndices
 	 */
@@ -160,13 +162,11 @@ public class EntityRenderer {
 	{
 		int[] indicesBuffer = new int[cumulatedIndices.size()];
 		
-		System.out.println("cumulatedIndizes size: " + cumulatedIndices.size());
-		
 		for (int i = 0; i < cumulatedIndices.size(); i++)
 		{
 			indicesBuffer[i] = cumulatedIndices.get(i);
 		}
-		
+				
 		OpenGLLoader.setNewIndicesBuffer(indicesBuffer, indicesID);
 		
 		//so this is a little confusing... the offset is measured in bytes -> an int has 4 bytes, its mentioned nowhere in the lwjgl documentation
@@ -210,12 +210,18 @@ public class EntityRenderer {
 		//"restore the defaults" -> enable culling, disable vertexAttributeArrays (VBOS holding position, normals, texture coords) and unbind VAO
 		unbindTexturedModel();
 	}
+	
+	private void prepareTexturedModel(TexturedModel model)
+	{
+		prepareTexturedModel(model, false);
+	}
 
 	/**Prepares a {@link TexturedModel} for rendering ONCE for all entity instances of that model.
 	 * 
 	 * @param model - the {@link TexturedModel} to be rendered
+	 * @param disableBackfaceCulling - true to disable Backface Culling for transparent entities
 	 */
-	private void prepareTexturedModel(TexturedModel model) {
+	private void prepareTexturedModel(TexturedModel model, boolean disableBackfaceCulling) {
 		
 		//bind VAO and enable attributelists
 		RawModel rawModel = model.getRawModel();
@@ -227,7 +233,7 @@ public class EntityRenderer {
 		//load, activate and bind model texture 
 		ModelTexture texture = model.getTexture();
 		shader.loadNumberOfRows(texture.getNumberOfRows());
-		if (texture.isHasTransparency()) {
+		if (texture.isHasTransparency() || disableBackfaceCulling) {
 			MasterRenderer.disableCulling(); //disable back face culling for transparent textures
 		}
 		
