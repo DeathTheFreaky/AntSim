@@ -297,7 +297,7 @@ public class EntityBuilderImpl implements EntityBuilder {
 		// set initial world transform for transparent triangles
 		if (graphicsEntity.getModel().usesTransparency() && physicsObject instanceof ReadOnlyPhysicsObject)
 		{
-			Entity.setTriangleTransforms((ReadOnlyPhysicsObject) physicsObject);
+			Entity.setTransforms((ReadOnlyPhysicsObject) physicsObject);
 		}
 		
 		reset();

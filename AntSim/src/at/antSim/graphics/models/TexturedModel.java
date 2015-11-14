@@ -19,6 +19,7 @@ public class TexturedModel {
 	private float mass;
 	private boolean useTransparency;
 	private boolean usesLod = false;
+	private float cameraDist = 0;
 	
 	public TexturedModel(PrimitiveType sphereType, ObjectType objectType, float mass, boolean useTransparency, String type) {
 		this.type = type;
@@ -57,12 +58,22 @@ public class TexturedModel {
 		this.usesLod = usesLod;
 	}
 	
-	public boolean usesLoad()
+	public boolean usesLod()
 	{
 		return usesLod;
 	}
 	
 	public boolean usesTransparency() {
 		return useTransparency;
+	}
+	
+	public void setCameraDist(float cameraDist)
+	{
+		this.cameraDist = cameraDist;
+	}
+	
+	public float getCameraDist()
+	{
+		return cameraDist;
 	}
 }

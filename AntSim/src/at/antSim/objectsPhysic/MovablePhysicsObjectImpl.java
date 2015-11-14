@@ -20,7 +20,7 @@ public abstract class MovablePhysicsObjectImpl extends PositionablePhysicsObject
 			body.setLinearVelocity(linearVelocity);
 			
 			// update triangle positions
-			Entity.setTriangleTransforms(this);
+			Entity.setTransforms(this);
 		}
 	}
 
@@ -41,7 +41,7 @@ public abstract class MovablePhysicsObjectImpl extends PositionablePhysicsObject
 			body.setAngularVelocity(angularVelocity);
 			
 			// update triangle positions
-			Entity.setTriangleTransforms(this);
+			Entity.setTransforms(this);
 		}
 	}
 

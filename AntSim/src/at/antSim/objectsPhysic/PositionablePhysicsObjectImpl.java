@@ -32,7 +32,7 @@ public abstract class PositionablePhysicsObjectImpl extends ReadOnlyPhysicsObjec
 		getCollisionBody().setWorldTransform(new Transform(new Matrix4f(bodyRotation, position, 1)));
 		
 		// update triangle positions
-		Entity.setTriangleTransforms(this);
+		Entity.setTransforms(this);
 	}
 
 	@Override
@@ -48,6 +48,6 @@ public abstract class PositionablePhysicsObjectImpl extends ReadOnlyPhysicsObjec
 		getCollisionBody().setWorldTransform(bodyTransform);
 		
 		// update triangle positions
-		Entity.setTriangleTransforms(this);
+		Entity.setTransforms(this);
 	}
 }

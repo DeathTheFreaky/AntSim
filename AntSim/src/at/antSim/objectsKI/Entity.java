@@ -19,7 +19,7 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 import at.antSim.utils.Maths;
 import at.antSim.utils.Pair;
 import at.antSim.utils.TransparentTriangleComparator;
-import at.antSim.utils.TransparentsSorterWorker;
+import at.antSim.utils.TransparentsWorker;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -41,8 +41,10 @@ public abstract class Entity {
 
 	static final Map<PhysicsObject, ObjectType> physicsObjectTypeMap = new HashMap<PhysicsObject, ObjectType>();
 	static final Map<TexturedModel, List<Entity>> renderingMap = new HashMap<TexturedModel, List<Entity>>();
-	static final LinkedList<Entity> transparents = new LinkedList<>();
+	static final HashSet<Entity> lodEnitites = new HashSet<>();
+	static final HashSet<Entity> changedLodEntites = new HashSet<>();
 	static ArrayList<Pair<Entity, TransparentTriangle>> transparentTriangles = new ArrayList<Pair<Entity, TransparentTriangle>>();
+	static final HashSet<Entity> changedTransparentEntities = new HashSet<>();
 	static final List<Entry<Entity, Integer>> entityVertices = new ArrayList<Entry<Entity, Integer>>();
 	static final Map<PhysicsObject, Entity> parentingEntities = new HashMap<PhysicsObject, Entity>(); //allows us to get eg. the Food Entity in a react() method when an ant hit the Food Entitie's physicsObject
 	static final List<Entity> entities = new LinkedList<>(); //used to delete all entities
@@ -52,7 +54,7 @@ public abstract class Entity {
 	static final List<PositionLocator> deleteableLocators = new LinkedList<PositionLocator>();
 	static Hive hive;
 	
-	static TransparentsSorterWorker triangleSorter = new TransparentsSorterWorker();
+	static TransparentsWorker triangleSorter = new TransparentsWorker();
 	
 	static boolean deleteAllowed = true; //set to false when quitting a game so that events do not delete entities that are already being deleted
 
@@ -71,9 +73,15 @@ public abstract class Entity {
 		//add Entity to physics and rendering hashmaps
 		physicsObjectTypeMap.put(physicsObject, type);
 		if (graphicsEntity != null) {
+			
 			addRenderingEntity();
+			
+			if (graphicsEntity.getModel().usesLod())
+			{
+				lodEnitites.add(this);
+			}
+			
 			if (graphicsEntity.getModel().usesTransparency()) {
-				addTransparent(this);
 				
 				// do not insert elements at correct position but sort whole list at the end -> should be faster for big amounts of data				
 				for (TransparentTriangle triangle : graphicsEntity.getModel().getRawModel().getTransparentVertices())
@@ -86,14 +94,6 @@ public abstract class Entity {
 				sortAllTransparentTriangles();
 			}
 		}
-	}
-
-	/**Adds entity sorted by z-value in world position.
-	 * @param entity
-	 */
-	private void addTransparent(Entity entity) {		
-		
-		transparents.add(entity);
 	}
 
 	public abstract void react(StaticPhysicsObject staticPhysicsObject);
@@ -144,11 +144,12 @@ public abstract class Entity {
 			
 			parentingEntities.remove(physicsObject);
 			physicsObjectTypeMap.remove(this);
+			lodEnitites.remove(this);
+			changedLodEntites.remove(this);
 			if (graphicsEntity != null) { //null for Pheromones
 				if (renderingMap.containsKey(graphicsEntity.getModel())) {
 					renderingMap.get(graphicsEntity.getModel()).remove(this);
 				}
-				transparents.remove(this);
 			}
 		}
 	}
@@ -163,13 +164,6 @@ public abstract class Entity {
 	 */
 	public static Map<TexturedModel, List<Entity>> getUnmodifiableRenderingMap() {
 		return Collections.unmodifiableMap(renderingMap);
-	}
-	
-	/**
-	 * @return - an unmodifiable version of renderingMap for preventing changes on renderingMap while allowing it to be retrieved for rendering
-	 */
-	public static LinkedList<Entity> getTransparentsList() {
-		return transparents;
 	}
 	
 	public static Entity getParentEntity(PhysicsObject physicsObject) {
@@ -212,7 +206,8 @@ public abstract class Entity {
 		ants.clear();
 		pheromones.clear();
 		deleteableLocators.clear();
-		transparents.clear();
+		lodEnitites.clear();
+		changedLodEntites.clear();
 		transparentTriangles.clear();
 		setDeleteAllowed(true);
 	}
@@ -335,15 +330,34 @@ public abstract class Entity {
 		return transparentTriangles;
 	}
 	
+	/**Returns all transparent Entities of which the position has changed since the last update and resets the hashSet afterwards.
+	 * @return
+	 */
+	public static HashSet<Entity> consumeChangedTransparents()
+	{
+		// make sure caller (TransparentsWorker) receives copy of current hashSet state
+		HashSet<Entity> ret = new HashSet<>();
+		
+		for (Entity e : changedTransparentEntities)
+		{
+			ret.add(e);
+		}
+		
+		changedTransparentEntities.clear();
+		return ret;
+	}
+	
 	public static void setTransparentTriangles(ArrayList<Pair<Entity, TransparentTriangle>> triangles)
 	{
 		transparentTriangles = triangles;
 	}
 	
-	/**Updates transparent triangle sorting if camera position has changed.
+	/**1. Updates transparent triangle sorting if camera position has changed.
+	 * 2. Updates lod Entities' distance to the camera.
+	 * 
 	 * @param vector3f
 	 */
-	public static void updateTransparentTriangles(org.lwjgl.util.vector.Vector3f cameraPos)
+	public static void updateCameraPos(org.lwjgl.util.vector.Vector3f cameraPos)
 	{		
 		for (Pair<Entity, TransparentTriangle> triangle : transparentTriangles)
 		{
@@ -353,29 +367,49 @@ public abstract class Entity {
 		sortAllTransparentTriangles();
 	}
 	
-	/**Updates a transparent entitie's triangles' barrycentre if the triangle's parenting Entity's world transform has changed.
+	public static void update()
+	{
+		updateTransparents();
+		updateLods();
+	}
+	
+	/**Updates all transparent triangle of which the parenting Entity's position has changed since the last update.
+	 * 
+	 */
+	private static void updateTransparents()
+	{					
+		sortAllTransparentTriangles();
+	}
+	
+	private static void updateLods()
+	{
+		
+	}
+	
+	/**1. Updates a transparent entitie's triangles' barrycentre if the triangle's parenting Entity's world transform has changed.
+	 * 2. Updates lod Entities' distance to the camera.
 	 * @param po
 	 */
-	public static void setTriangleTransforms(ReadOnlyPhysicsObject po)
+	public static void setTransforms(ReadOnlyPhysicsObject po)
 	{
 		Entity entity = parentingEntities.get(po);
 		
 		// entity will be null for GhostPhysicsObjects (collision detection triggers)
-		if (entity != null && entity.getGraphicsEntity() != null && entity.getGraphicsEntity().getModel().usesTransparency())
+		if (entity != null && entity.getGraphicsEntity() != null)
 		{
-			Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.vec3fToSlickUtil(po.getPosition()), 
-					po.getRotationDegrees().x, po.getRotationDegrees().y, po.getRotationDegrees().z, 
-					entity.getGraphicsEntity().getScale()); //transformation matrix to be applied in the shader program
-						
-			for (Pair<Entity, TransparentTriangle> triangle : transparentTriangles)
+			if (entity.getGraphicsEntity().getModel().usesTransparency())
 			{
-				if (triangle.getKey() == entity)
+				System.out.println("adding to changedTransparentEntites: " + entity);
+				changedTransparentEntities.add(entity);
+			}
+			
+			if (entity.getGraphicsEntity().getModel().usesLod())
+			{
+				if (lodEnitites.contains(entity))
 				{
-					triangle.getValue().updateTransform(transformationMatrix);
+					changedLodEntites.add(entity);
 				}
 			}
-												
-			sortAllTransparentTriangles();
 		}
 	}
 }

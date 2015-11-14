@@ -153,7 +153,7 @@ public class Camera {
 		distanceFromReferencePoint = 100;
 		triggerReset = false;
 
-		Entity.updateTransparentTriangles(position);
+		Entity.updateCameraPos(position);
 	}
 
 	/**Checks if the camera movement keys have been pressed on the keyboard and sets movement variables accordingly.
@@ -333,7 +333,7 @@ public class Camera {
 		
 		if (lastPosition.x != position.x || lastPosition.y != position.y || lastPosition.z != position.z)
 		{
-			Entity.updateTransparentTriangles(position);
+			Entity.updateCameraPos(position);
 			
 			lastPosition.x = position.x;
 			lastPosition.y = position.y;

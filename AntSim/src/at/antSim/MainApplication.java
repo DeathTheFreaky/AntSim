@@ -273,6 +273,7 @@ public class MainApplication {
 
 				camera.move(terrain); // every single frame check for key inputs which move the camera
 				picker.update();
+				Entity.update();
 				Vector3f terrainPoint = picker.getCurrentTerrainPoint();
 				if (terrainPoint != null && movingEntity.getEntity() != null) {
 					PhysicsObject phyObj = movingEntity.getEntity().getPhysicsObject();

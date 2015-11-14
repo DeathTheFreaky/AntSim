@@ -108,10 +108,9 @@ public class EntityRenderer {
 	{
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				
-		int offset = 0;
-		int length = 0;
-		int previousOffset;
+		
+		shader.loadMovingEntityBlend(0.0f);
+
 		Entity currentEntity = null;
 		ArrayList<Integer> cumulatedIndices = new ArrayList<Integer>();
 		
