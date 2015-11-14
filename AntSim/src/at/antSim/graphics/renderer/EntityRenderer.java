@@ -116,9 +116,7 @@ public class EntityRenderer {
 		ArrayList<Integer> cumulatedIndices = new ArrayList<Integer>();
 		
 		GL11.glDepthMask(false);
-		
-		shader.loadMovingEntityBlend(0.0f);
-				
+						
 		for (Pair<Entity, TransparentTriangle> triangle : Entity.getTransparentTriangles())
 		{
 			int idxOffset = triangle.getValue().getIndexBufferOffset();
