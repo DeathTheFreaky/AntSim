@@ -395,6 +395,14 @@ public abstract class Entity {
 		updateLods();
 	}
 	
+	/**Always returns last camera position, no matter wether the camera position changed or not.
+	 * @return
+	 */
+	public static org.lwjgl.util.vector.Vector3f getLastCameraPos()
+	{
+		return new org.lwjgl.util.vector.Vector3f(lastCameraPos.x, lastCameraPos.y, lastCameraPos.z);
+	}
+	
 	/**
 	 * @return - new lastCameraPos Vector3f or null if camera position did not change
 	 */

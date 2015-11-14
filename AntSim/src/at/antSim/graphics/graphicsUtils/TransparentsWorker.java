@@ -2,6 +2,7 @@ package at.antSim.graphics.graphicsUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -42,7 +43,14 @@ public class TransparentsWorker implements Runnable {
 			}
 		}
 		
-		for (Entity entity : Entity.consumeChangedTransparents())
+		HashSet<Entity> changedTransparents = Entity.consumeChangedTransparents();
+		
+		if (changedTransparents.size() > 0)
+		{
+			cameraPos = Entity.getLastCameraPos();
+		}
+		
+		for (Entity entity : changedTransparents)
 		{
 			ReadOnlyPhysicsObject po = (ReadOnlyPhysicsObject) entity.getPhysicsObject();
 			
@@ -55,6 +63,7 @@ public class TransparentsWorker implements Runnable {
 				if (triangle.getKey() == entity)
 				{
 					triangle.getValue().updateTransform(transformationMatrix);
+					triangle.getValue().calcCameraDist(cameraPos);
 				}
 			}
 		}
