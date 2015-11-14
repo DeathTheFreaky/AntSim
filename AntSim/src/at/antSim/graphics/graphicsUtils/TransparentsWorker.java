@@ -1,13 +1,15 @@
-package at.antSim.utils;
+package at.antSim.graphics.graphicsUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
-import at.antSim.graphics.graphicsUtils.TransparentTriangle;
 import at.antSim.objectsKI.Entity;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
+import at.antSim.utils.Maths;
+import at.antSim.utils.Pair;
 
 /**Sorts transparent triangles in different thread.
  * 
@@ -18,21 +20,26 @@ public class TransparentsWorker implements Runnable {
 	
 	private TransparentTriangleComparator comparator = new TransparentTriangleComparator();
 	
-	public TransparentsWorker()
-	{
-		
-	}
-	
 	@Override
 	public void run() {
-		
+				
 		// make copy and sort copy, so renderer still has access to old list and there is no concurrent modification
 		ArrayList<Pair<Entity, TransparentTriangle>> transparentTriangles = new ArrayList<Pair<Entity, TransparentTriangle>>();
+		
+		Vector3f cameraPos = Entity.getLastCamerPos();
 		
 		for (Pair<Entity, TransparentTriangle> t : Entity.getTransparentTriangles())
 		{
 			TransparentTriangle copiedTriangle = new TransparentTriangle(t.getValue());
 			transparentTriangles.add(new Pair<Entity, TransparentTriangle>(t.getKey(), copiedTriangle));
+		}
+		
+		if (cameraPos != null)
+		{
+			for (Pair<Entity, TransparentTriangle> triangle : transparentTriangles)
+			{
+				triangle.getValue().calcCameraDist(cameraPos);
+			}
 		}
 		
 		for (Entity entity : Entity.consumeChangedTransparents())

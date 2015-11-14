@@ -1,9 +1,9 @@
-package at.antSim.utils;
+package at.antSim.graphics.graphicsUtils;
 
 import java.util.Comparator;
 
-import at.antSim.graphics.graphicsUtils.TransparentTriangle;
 import at.antSim.objectsKI.Entity;
+import at.antSim.utils.Pair;
 
 public class TransparentTriangleComparator implements Comparator<Pair<Entity, TransparentTriangle>> {
 

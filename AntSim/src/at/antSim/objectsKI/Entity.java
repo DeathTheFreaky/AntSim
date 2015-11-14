@@ -3,7 +3,10 @@ package at.antSim.objectsKI;
 import at.antSim.Globals;
 import at.antSim.MainApplication;
 import at.antSim.graphics.entities.GraphicsEntity;
+import at.antSim.graphics.graphicsUtils.LodWorker;
 import at.antSim.graphics.graphicsUtils.TransparentTriangle;
+import at.antSim.graphics.graphicsUtils.TransparentTriangleComparator;
+import at.antSim.graphics.graphicsUtils.TransparentsWorker;
 import at.antSim.graphics.models.TexturedModel;
 import at.antSim.graphics.terrains.Terrain;
 import at.antSim.objectsPhysic.DynamicPhysicsObject;
@@ -18,8 +21,6 @@ import at.antSim.objectsPhysic.basics.PositionablePhysicsObject;
 import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 import at.antSim.utils.Maths;
 import at.antSim.utils.Pair;
-import at.antSim.utils.TransparentTriangleComparator;
-import at.antSim.utils.TransparentsWorker;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -52,9 +53,12 @@ public abstract class Entity {
 	static final List<Ant> ants = new LinkedList<Ant>();
 	static final List<Entity> pheromones = new LinkedList<>();
 	static final List<PositionLocator> deleteableLocators = new LinkedList<PositionLocator>();
+	static final Vector3f lastCameraPos = new Vector3f();
+	static boolean cameraPosChanged = false;
 	static Hive hive;
 	
 	static TransparentsWorker triangleSorter = new TransparentsWorker();
+	static LodWorker lodWorker = new LodWorker();
 	
 	static boolean deleteAllowed = true; //set to false when quitting a game so that events do not delete entities that are already being deleted
 
@@ -144,9 +148,10 @@ public abstract class Entity {
 			
 			parentingEntities.remove(physicsObject);
 			physicsObjectTypeMap.remove(this);
-			lodEnitites.remove(this);
-			changedLodEntites.remove(this);
 			if (graphicsEntity != null) { //null for Pheromones
+				lodEnitites.remove(this);
+				changedLodEntites.remove(this);
+				changedTransparentEntities.remove(this);
 				if (renderingMap.containsKey(graphicsEntity.getModel())) {
 					renderingMap.get(graphicsEntity.getModel()).remove(this);
 				}
@@ -208,6 +213,7 @@ public abstract class Entity {
 		deleteableLocators.clear();
 		lodEnitites.clear();
 		changedLodEntites.clear();
+		changedTransparentEntities.clear();
 		transparentTriangles.clear();
 		setDeleteAllowed(true);
 	}
@@ -359,12 +365,25 @@ public abstract class Entity {
 	 */
 	public static void updateCameraPos(org.lwjgl.util.vector.Vector3f cameraPos)
 	{		
-		for (Pair<Entity, TransparentTriangle> triangle : transparentTriangles)
-		{
-			triangle.getValue().calcCameraDist(cameraPos);
-		}
-				
+		lastCameraPos.set(cameraPos.x, cameraPos.y, cameraPos.z);	
+		cameraPosChanged = true;
 		sortAllTransparentTriangles();
+	}
+	
+	/**
+	 * @return - new lastCameraPos Vector3f or null if camera position did not change
+	 */
+	public static org.lwjgl.util.vector.Vector3f getLastCamerPos()
+	{
+		if (cameraPosChanged)
+		{
+			cameraPosChanged = false;
+			return new org.lwjgl.util.vector.Vector3f(lastCameraPos.x, lastCameraPos.y, lastCameraPos.z);
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	public static void update()
@@ -377,13 +396,22 @@ public abstract class Entity {
 	 * 
 	 */
 	private static void updateTransparents()
-	{					
-		sortAllTransparentTriangles();
+	{			
+		if (changedTransparentEntities.size() > 0)
+		{
+			sortAllTransparentTriangles();
+		}
 	}
 	
+	/**Update camera distance of all lod Entities' of which the position has changed since the last update.
+	 * 
+	 */
 	private static void updateLods()
 	{
-		
+		if (changedLodEntites.size() > 0)
+		{
+			
+		}
 	}
 	
 	/**1. Updates a transparent entitie's triangles' barrycentre if the triangle's parenting Entity's world transform has changed.
@@ -399,7 +427,6 @@ public abstract class Entity {
 		{
 			if (entity.getGraphicsEntity().getModel().usesTransparency())
 			{
-				System.out.println("adding to changedTransparentEntites: " + entity);
 				changedTransparentEntities.add(entity);
 			}
 			
