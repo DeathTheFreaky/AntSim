@@ -20,6 +20,11 @@ import at.antSim.graphics.models.ModelData;
  * THIS CLASS HAS BEEN COPIED AND LATER MODIFIED FROM "3D GAME DEVELOPMENT SERIES": https://www.dropbox.com/sh/x1fyet1otejxk3z/AAAVdsje7VSnwrS93NT43K3ta/OBJFileLoader.java?dl=0<br>
  * TO ENSURE COMPREHENSION, EXTENSIVE COMMENTS HAVE BEEN ADDED.
  * 
+ * Make sure to select the following when exporting OBJ from Blender:
+ * 	- Include Normals
+ *  - Include UVS
+ *  - Triangle Faces
+ * 
  * @author Clemens
  *
  */

@@ -87,6 +87,7 @@ public class OptionsControlState extends AbstractGuiState {
 		bindings.add(new KeyNameBindingWrapper("Zoom Out", "zoomOutKey"));
 		bindings.add(new KeyNameBindingWrapper("Restore Position", "restoreCameraPosition"));
 		bindings.add(new KeyNameBindingWrapper("Show Ghost Spheres", "showGhostSpheres"));
+		bindings.add(new KeyNameBindingWrapper("Turn Sorting on/off", "disableSorting"));
 		
 		int idx = 0;
 		for (KeyNameBindingWrapper keyWrapper : bindings) {

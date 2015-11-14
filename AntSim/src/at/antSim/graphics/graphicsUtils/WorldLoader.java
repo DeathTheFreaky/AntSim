@@ -12,6 +12,7 @@ import at.antSim.objectsKI.EntityBuilderImpl;
 import at.antSim.objectsKI.Hive;
 import at.antSim.objectsPhysic.GhostPhysicsObject;
 import at.antSim.objectsPhysic.StaticPhysicsObject;
+import at.antSim.objectsPhysic.PhysicsFactorys.DynamicPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.GhostPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsFactorys.StaticPhysicsObjectFactory;
 import at.antSim.objectsPhysic.PhysicsManager;
@@ -154,8 +155,14 @@ public class WorldLoader {
 		hive = (Hive) hiveEntity;		
 				
 		Entity pointedLightLamp = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
-				.setPosition(new Vector3f(185, terrain.getHeightOfTerrain(185, -293) -3, -293))
+				.setPosition(new Vector3f(185, terrain.getHeightOfTerrain(185, -293) - 3, -293))
 				.buildGraphicsEntity("lamp", 1, 30)
+				.buildPhysicsObject()
+				.registerResult();
+		
+		Entity lodDragon = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(100, terrain.getHeightOfTerrain(100, -780), -780))
+				.buildGraphicsEntity("dragon", 1, 50)
 				.buildPhysicsObject()
 				.registerResult();
 

@@ -128,6 +128,7 @@ public class ConfigReader {
 			Globals.zoomOutKey = Keyboard.KEY_E;
 			Globals.restoreCameraPosition = Keyboard.KEY_R;
 			Globals.showGhostSpheres = Keyboard.KEY_G;
+			Globals.disableSorting = Keyboard.KEY_N;
 			
 			Globals.invertHorizontalAxis = -1;
 			Globals.invertVerticalAxis = -1;

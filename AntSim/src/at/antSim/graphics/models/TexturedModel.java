@@ -1,6 +1,7 @@
 package at.antSim.graphics.models;
 
 import at.antSim.GTPMapper.PrimitiveType;
+import at.antSim.graphics.graphicsUtils.ModelLoader;
 import at.antSim.graphics.textures.ModelTexture;
 import at.antSim.objectsKI.ObjectType;
 
@@ -13,17 +14,14 @@ import at.antSim.objectsKI.ObjectType;
 public class TexturedModel {
 	
 	private String type;
-	private RawModel rawModel;
-	private ModelTexture texture;
 	private PrimitiveType sphereType;
 	private ObjectType objectType;
 	private float mass;
 	private boolean useTransparency;
+	private boolean usesLod = false;
 	
-	public TexturedModel(RawModel model, ModelTexture texture, PrimitiveType sphereType, ObjectType objectType, float mass, boolean useTransparency, String type) {
+	public TexturedModel(PrimitiveType sphereType, ObjectType objectType, float mass, boolean useTransparency, String type) {
 		this.type = type;
-		this.rawModel = model;
-		this.texture = texture;
 		this.sphereType = sphereType;
 		this.objectType = objectType;
 		this.mass = mass;
@@ -31,11 +29,11 @@ public class TexturedModel {
 	}
 
 	public RawModel getRawModel() {
-		return rawModel;
+		return ModelLoader.getRawModel(type);
 	}
 
 	public ModelTexture getTexture() {
-		return texture;
+		return ModelLoader.getModelTexture(type);
 	}
 	
 	public PrimitiveType getPrimitiveType() {
@@ -52,6 +50,16 @@ public class TexturedModel {
 	
 	public String getType() {
 		return type;
+	}
+	
+	public void setUsesLod(boolean usesLod)
+	{
+		this.usesLod = usesLod;
+	}
+	
+	public boolean usesLoad()
+	{
+		return usesLod;
 	}
 	
 	public boolean usesTransparency() {

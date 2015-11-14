@@ -23,6 +23,8 @@ public class ModelLoader {
 	public static float massDummie = Globals.MASS_DUMMIE;
 	
 	public static HashMap<String, TexturedModel> texturedModels = new HashMap<>(); //holds all textured models used for entities
+	private static HashMap<String, HashMap<Integer, RawModel>> rawModels = new HashMap<>(); //holds all textured models used for entities
+	private static HashMap<String, HashMap<Integer, ModelTexture>> modelTextures = new HashMap<>(); //holds all textured models used for entities
 	private static LinkedList<ModelNamesAndTypes> modelPresets = new LinkedList<>(); //names of all obj files and associated textures to be loaded
 
 	/**Loads all {@link TexturedModel}s needed for creating {@link GraphicsEntity}s into a HashMap.<br>
@@ -50,7 +52,6 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("sphere1", "red", "positionLocatorRed", PrimitiveType.SPHERE, ObjectType.LOCATOR, massDummie, true));
 		
 		//test
-		modelPresets.add(new ModelNamesAndTypes("dragon", "dragon", "dragon", PrimitiveType.CUBOID, ObjectType.ENEMY, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("cube", "green", "greenCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("cube", "red", "redCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("cube", "blue", "blueCube", PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
@@ -75,6 +76,11 @@ public class ModelLoader {
 		//hive
 		modelPresets.add(new ModelNamesAndTypes("anthill", "anthillTexture", "hive", PrimitiveType.SPHERE, ObjectType.HIVE, massDummie, false));
 		
+		//lod test objects
+		modelPresets.add(new ModelNamesAndTypes("dragon_hq", "dragon", "dragon", 0, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("dragon_mq", "dragon", "dragon", 1, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("dragon_lq", "dragon", "dragon", 2, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);
 			RawModel rawModel = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
@@ -87,7 +93,10 @@ public class ModelLoader {
 				rawModel.loadTransparentVertices(modelData);
 			}
 			
-			texturedModels.put(modelPreset.key, new TexturedModel(rawModel, modelTexture, modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.useTransparency, modelPreset.key));
+			addRawModel(modelPreset.key, modelPreset.lodLevel, rawModel);
+			addModelTexture(modelPreset.key, modelPreset.lodLevel, modelTexture);
+			
+			texturedModels.put(modelPreset.key, new TexturedModel(modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.useTransparency, modelPreset.key));
 		}
 		
 		texturedModels.get("fern").getTexture().setNumberOfRows(2); //set number of rows inside texture atlas
@@ -95,6 +104,12 @@ public class ModelLoader {
 		//set parameters for specular lighting for demo dragon
 		texturedModels.get("dragon").getTexture().setShineDamper(10); //set shine damper for specular lighting
 		texturedModels.get("dragon").getTexture().setReflectivity(1); //set reflectivity for specular lighting
+		/*texturedModels.get("dragon_hq").getTexture().setShineDamper(10); //set shine damper for specular lighting
+		texturedModels.get("dragon_hq").getTexture().setReflectivity(1); //set reflectivity for specular lighting
+		texturedModels.get("dragon_mq").getTexture().setShineDamper(10); //set shine damper for specular lighting
+		texturedModels.get("dragon_mq").getTexture().setReflectivity(1); //set reflectivity for specular lighting
+		texturedModels.get("dragon_lq").getTexture().setShineDamper(10); //set shine damper for specular lighting
+		texturedModels.get("dragon_lq").getTexture().setReflectivity(1); //set reflectivity for specular lighting*/
 		texturedModels.get("forager").getTexture().setShineDamper(10); //set shine damper for specular lighting
 		texturedModels.get("forager").getTexture().setReflectivity(1); //set reflectivity for specular lighting
 		texturedModels.get("enemyAnt").getTexture().setShineDamper(10); //set shine damper for specular lighting
@@ -107,6 +122,94 @@ public class ModelLoader {
 		texturedModels.get("grass").getTexture().setUseFakeLighting(true);
 		texturedModels.get("fern").getTexture().setHasTransparency(true);
 		texturedModels.get("fern").getTexture().setUseFakeLighting(true);
+	}
+	
+	private static void addRawModel(String key, int lodLevel, RawModel rawModel)
+	{
+		if (!rawModels.containsKey(key))
+		{
+			HashMap<Integer, RawModel> lodMap = new HashMap<>();
+			
+			rawModels.put(key, lodMap);
+		}
+		
+		rawModels.get(key).put(lodLevel, rawModel);
+	}
+	
+	private static void addModelTexture(String key, int lodLevel, ModelTexture modelTexture)
+	{
+		if (!modelTextures.containsKey(key))
+		{
+			HashMap<Integer, ModelTexture> lodMap = new HashMap<>();
+			
+			modelTextures.put(key, lodMap);
+		}
+		
+		modelTextures.get(key).put(lodLevel, modelTexture);
+	}
+	
+	/**If no distance is passed, always return high poly mesh.
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public static RawModel getRawModel(String key)
+	{
+		return rawModels.get(key).get(0);
+	}
+	
+	/**Return appropriate lod Raw Model, determined by distance to the camera.
+	 * 
+	 * @param key
+	 * @param cameraDist
+	 * @return
+	 */
+	public static RawModel getRawModel(String key, float cameraDist)
+	{
+		if (cameraDist < Globals.mqDist)
+		{
+			return rawModels.get(key).get(0);
+		}
+		else if (cameraDist < Globals.lqDist)
+		{
+			return rawModels.get(key).get(1);
+		}
+		else
+		{
+			return rawModels.get(key).get(0);
+		}
+	}
+	
+	/**If no distance is passed, always return high poly mesh.
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public static ModelTexture getModelTexture(String key)
+	{
+		return modelTextures.get(key).get(0);
+	}
+	
+	/**Return appropriate lod Raw Model, determined by distance to the camera.
+	 * 
+	 * @param key
+	 * @param cameraDist
+	 * @return
+	 */
+	public static ModelTexture getModelTexture(String key, float cameraDist)
+	{
+		if (cameraDist < Globals.mqDist)
+		{
+			return modelTextures.get(key).get(0);
+		}
+		else if (cameraDist < Globals.lqDist)
+		{
+			return modelTextures.get(key).get(1);
+		}
+		else
+		{
+			return modelTextures.get(key).get(2);
+		}
 	}
 	
 	/**Stores "presets" for an {@link Entity}'s model.
@@ -123,11 +226,24 @@ public class ModelLoader {
 		ObjectType objectType;
 		float mass;
 		boolean useTransparency;
+		int lodLevel;
+		
+		public ModelNamesAndTypes(String objFileName, String textureFileName, String key, int lodLevel, PrimitiveType sphereType, ObjectType objectType, float mass, boolean useTransparency) {
+			this.objFileName = objFileName;
+			this.textureFileName = textureFileName;
+			this.key = key;
+			this.lodLevel = lodLevel;
+			this.primitiveType = sphereType;
+			this.objectType = objectType;
+			this.mass = mass;
+			this.useTransparency = useTransparency;
+		}
 		
 		public ModelNamesAndTypes(String objFileName, String textureFileName, String key, PrimitiveType sphereType, ObjectType objectType, float mass, boolean useTransparency) {
 			this.objFileName = objFileName;
 			this.textureFileName = textureFileName;
 			this.key = key;
+			this.lodLevel = 0;
 			this.primitiveType = sphereType;
 			this.objectType = objectType;
 			this.mass = mass;

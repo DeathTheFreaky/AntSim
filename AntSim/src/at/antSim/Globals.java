@@ -52,6 +52,10 @@ public final class Globals {
 	public static final short COL_MOVING = 128;
 	public static final short COL_BORDER = 256;
 	
+	//lod stages
+	public static final float mqDist = 200.f;
+	public static final float lqDist = 400.f;
+	
 	//transparency of pheromones and positionLocators
 	public static final float GHOST_TRANSPARENCY = 0.35f;
 	public static float currentGhostTransparency = 0.35f;
@@ -113,7 +117,7 @@ public final class Globals {
 	public static int zoomOutKey;
 	public static int restoreCameraPosition;
 	public static int showGhostSpheres;
-	public static int disableSorting = Keyboard.KEY_N;
+	public static int disableSorting;
 	
 	public static boolean sortingDisabled;
 	
@@ -145,6 +149,7 @@ public final class Globals {
 		keyMappings.put("zoomOutKey", zoomOutKey);
 		keyMappings.put("restoreCameraPosition", restoreCameraPosition);
 		keyMappings.put("showGhostSpheres", showGhostSpheres);
+		keyMappings.put("showGhostSpheres", disableSorting);
 		
 		boolean used = false;
 		
