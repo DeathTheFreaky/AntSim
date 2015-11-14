@@ -42,8 +42,8 @@ public abstract class Entity {
 
 	static final Map<PhysicsObject, ObjectType> physicsObjectTypeMap = new HashMap<PhysicsObject, ObjectType>();
 	static final Map<TexturedModel, List<Entity>> renderingMap = new HashMap<TexturedModel, List<Entity>>();
-	static final HashSet<Entity> lodEnitites = new HashSet<>();
-	static final HashSet<Entity> changedLodEntites = new HashSet<>();
+	static final HashSet<Entity> lodEntities = new HashSet<>();
+	static final HashSet<Entity> changedLodEntities = new HashSet<>();
 	static ArrayList<Pair<Entity, TransparentTriangle>> transparentTriangles = new ArrayList<Pair<Entity, TransparentTriangle>>();
 	static final HashSet<Entity> changedTransparentEntities = new HashSet<>();
 	static final List<Entry<Entity, Integer>> entityVertices = new ArrayList<Entry<Entity, Integer>>();
@@ -54,7 +54,8 @@ public abstract class Entity {
 	static final List<Entity> pheromones = new LinkedList<>();
 	static final List<PositionLocator> deleteableLocators = new LinkedList<PositionLocator>();
 	static final Vector3f lastCameraPos = new Vector3f();
-	static boolean cameraPosChanged = false;
+	static boolean cameraPosChangedTransparents = false;
+	static boolean cameraPosChangedLods = false;
 	static Hive hive;
 	
 	static TransparentsWorker triangleSorter = new TransparentsWorker();
@@ -82,7 +83,8 @@ public abstract class Entity {
 			
 			if (graphicsEntity.getModel().usesLod())
 			{
-				lodEnitites.add(this);
+				System.out.println(graphicsEntity.getModel().getType() + " uses lod");
+				lodEntities.add(this);
 			}
 			
 			if (graphicsEntity.getModel().usesTransparency()) {
@@ -149,8 +151,8 @@ public abstract class Entity {
 			parentingEntities.remove(physicsObject);
 			physicsObjectTypeMap.remove(this);
 			if (graphicsEntity != null) { //null for Pheromones
-				lodEnitites.remove(this);
-				changedLodEntites.remove(this);
+				lodEntities.remove(this);
+				changedLodEntities.remove(this);
 				changedTransparentEntities.remove(this);
 				if (renderingMap.containsKey(graphicsEntity.getModel())) {
 					renderingMap.get(graphicsEntity.getModel()).remove(this);
@@ -211,8 +213,8 @@ public abstract class Entity {
 		ants.clear();
 		pheromones.clear();
 		deleteableLocators.clear();
-		lodEnitites.clear();
-		changedLodEntites.clear();
+		lodEntities.clear();
+		changedLodEntities.clear();
 		changedTransparentEntities.clear();
 		transparentTriangles.clear();
 		setDeleteAllowed(true);
@@ -336,6 +338,27 @@ public abstract class Entity {
 		return transparentTriangles;
 	}
 	
+	/**Returns all lod Entities of which the position has changed since the last update and resets the hashSet afterwards.
+	 * @return
+	 */
+	public static HashSet<Entity> consumeChangedLodEntities()
+	{
+		HashSet<Entity> ret = new HashSet<>();
+		
+		for (Entity e : changedLodEntities)
+		{
+			ret.add(e);
+		}
+		
+		changedLodEntities.clear();
+		return ret;
+	}
+	
+	public static HashSet<Entity> getLodEntities()
+	{
+		return lodEntities;
+	}
+	
 	/**Returns all transparent Entities of which the position has changed since the last update and resets the hashSet afterwards.
 	 * @return
 	 */
@@ -366,18 +389,36 @@ public abstract class Entity {
 	public static void updateCameraPos(org.lwjgl.util.vector.Vector3f cameraPos)
 	{		
 		lastCameraPos.set(cameraPos.x, cameraPos.y, cameraPos.z);	
-		cameraPosChanged = true;
+		cameraPosChangedTransparents = true;
+		cameraPosChangedLods = true;
 		sortAllTransparentTriangles();
+		updateLods();
 	}
 	
 	/**
 	 * @return - new lastCameraPos Vector3f or null if camera position did not change
 	 */
-	public static org.lwjgl.util.vector.Vector3f getLastCamerPos()
+	public static org.lwjgl.util.vector.Vector3f getLastCamerPosTransparents()
 	{
-		if (cameraPosChanged)
+		if (cameraPosChangedTransparents)
 		{
-			cameraPosChanged = false;
+			cameraPosChangedTransparents = false;
+			return new org.lwjgl.util.vector.Vector3f(lastCameraPos.x, lastCameraPos.y, lastCameraPos.z);
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	/**
+	 * @return - new lastCameraPos Vector3f or null if camera position did not change
+	 */
+	public static org.lwjgl.util.vector.Vector3f getLastCamerPosLods()
+	{
+		if (cameraPosChangedLods)
+		{
+			cameraPosChangedLods = false;
 			return new org.lwjgl.util.vector.Vector3f(lastCameraPos.x, lastCameraPos.y, lastCameraPos.z);
 		}
 		else
@@ -388,18 +429,13 @@ public abstract class Entity {
 	
 	public static void update()
 	{
-		updateTransparents();
-		updateLods();
-	}
-	
-	/**Updates all transparent triangle of which the parenting Entity's position has changed since the last update.
-	 * 
-	 */
-	private static void updateTransparents()
-	{			
 		if (changedTransparentEntities.size() > 0)
 		{
 			sortAllTransparentTriangles();
+		}
+		if (changedLodEntities.size() > 0)
+		{
+			updateLods();
 		}
 	}
 	
@@ -408,9 +444,9 @@ public abstract class Entity {
 	 */
 	private static void updateLods()
 	{
-		if (changedLodEntites.size() > 0)
+		if (MainApplication.getWorldLoaded())
 		{
-			
+			MainApplication.getExecutor().execute(lodWorker);
 		}
 	}
 	
@@ -432,9 +468,9 @@ public abstract class Entity {
 			
 			if (entity.getGraphicsEntity().getModel().usesLod())
 			{
-				if (lodEnitites.contains(entity))
+				if (lodEntities.contains(entity))
 				{
-					changedLodEntites.add(entity);
+					changedLodEntities.add(entity);
 				}
 			}
 		}

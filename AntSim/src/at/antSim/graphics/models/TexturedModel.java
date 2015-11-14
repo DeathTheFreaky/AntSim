@@ -30,11 +30,25 @@ public class TexturedModel {
 	}
 
 	public RawModel getRawModel() {
-		return ModelLoader.getRawModel(type);
+		if (usesLod)
+		{
+			return ModelLoader.getRawModel(type, cameraDist);
+		}
+		else
+		{
+			return ModelLoader.getRawModel(type);
+		}
 	}
 
 	public ModelTexture getTexture() {
-		return ModelLoader.getModelTexture(type);
+		if (usesLod)
+		{
+			return ModelLoader.getModelTexture(type, cameraDist);
+		}
+		else
+		{
+			return ModelLoader.getModelTexture(type);
+		}
 	}
 	
 	public PrimitiveType getPrimitiveType() {

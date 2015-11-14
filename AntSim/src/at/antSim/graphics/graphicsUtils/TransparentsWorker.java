@@ -26,7 +26,7 @@ public class TransparentsWorker implements Runnable {
 		// make copy and sort copy, so renderer still has access to old list and there is no concurrent modification
 		ArrayList<Pair<Entity, TransparentTriangle>> transparentTriangles = new ArrayList<Pair<Entity, TransparentTriangle>>();
 		
-		Vector3f cameraPos = Entity.getLastCamerPos();
+		Vector3f cameraPos = Entity.getLastCamerPosTransparents();
 		
 		for (Pair<Entity, TransparentTriangle> t : Entity.getTransparentTriangles())
 		{

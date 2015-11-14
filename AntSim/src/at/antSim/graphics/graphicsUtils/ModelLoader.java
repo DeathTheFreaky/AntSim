@@ -11,7 +11,10 @@ import at.antSim.objectsKI.Entity;
 import at.antSim.objectsKI.ObjectType;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**Loads models from obj Files and creates presets for higher abstraction TexturedModels, which can be used to build entities.
  * 
@@ -93,23 +96,23 @@ public class ModelLoader {
 				rawModel.loadTransparentVertices(modelData);
 			}
 			
-			addRawModel(modelPreset.key, modelPreset.lodLevel, rawModel);
-			addModelTexture(modelPreset.key, modelPreset.lodLevel, modelTexture);
+			if (!texturedModels.containsKey(modelPreset.key))
+			{
+				texturedModels.put(modelPreset.key, new TexturedModel(modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.useTransparency, modelPreset.key));
+			}
 			
-			texturedModels.put(modelPreset.key, new TexturedModel(modelPreset.primitiveType, modelPreset.objectType, modelPreset.mass, modelPreset.useTransparency, modelPreset.key));
+			addRawModelAndModelTexture(modelPreset.key, modelPreset.lodLevel, rawModel, modelTexture);
 		}
 		
 		texturedModels.get("fern").getTexture().setNumberOfRows(2); //set number of rows inside texture atlas
 		
 		//set parameters for specular lighting for demo dragon
-		texturedModels.get("dragon").getTexture().setShineDamper(10); //set shine damper for specular lighting
-		texturedModels.get("dragon").getTexture().setReflectivity(1); //set reflectivity for specular lighting
-		/*texturedModels.get("dragon_hq").getTexture().setShineDamper(10); //set shine damper for specular lighting
-		texturedModels.get("dragon_hq").getTexture().setReflectivity(1); //set reflectivity for specular lighting
-		texturedModels.get("dragon_mq").getTexture().setShineDamper(10); //set shine damper for specular lighting
-		texturedModels.get("dragon_mq").getTexture().setReflectivity(1); //set reflectivity for specular lighting
-		texturedModels.get("dragon_lq").getTexture().setShineDamper(10); //set shine damper for specular lighting
-		texturedModels.get("dragon_lq").getTexture().setReflectivity(1); //set reflectivity for specular lighting*/
+		modelTextures.get("dragon").get(0).setShineDamper(10);
+		modelTextures.get("dragon").get(0).setReflectivity(1);
+		modelTextures.get("dragon").get(1).setShineDamper(10);
+		modelTextures.get("dragon").get(1).setReflectivity(1);
+		modelTextures.get("dragon").get(2).setShineDamper(10);
+		modelTextures.get("dragon").get(2).setReflectivity(1);
 		texturedModels.get("forager").getTexture().setShineDamper(10); //set shine damper for specular lighting
 		texturedModels.get("forager").getTexture().setReflectivity(1); //set reflectivity for specular lighting
 		texturedModels.get("enemyAnt").getTexture().setShineDamper(10); //set shine damper for specular lighting
@@ -124,7 +127,7 @@ public class ModelLoader {
 		texturedModels.get("fern").getTexture().setUseFakeLighting(true);
 	}
 	
-	private static void addRawModel(String key, int lodLevel, RawModel rawModel)
+	private static void addRawModelAndModelTexture(String key, int lodLevel, RawModel rawModel, ModelTexture modelTexture)
 	{
 		if (!rawModels.containsKey(key))
 		{
@@ -133,11 +136,6 @@ public class ModelLoader {
 			rawModels.put(key, lodMap);
 		}
 		
-		rawModels.get(key).put(lodLevel, rawModel);
-	}
-	
-	private static void addModelTexture(String key, int lodLevel, ModelTexture modelTexture)
-	{
 		if (!modelTextures.containsKey(key))
 		{
 			HashMap<Integer, ModelTexture> lodMap = new HashMap<>();
@@ -145,7 +143,16 @@ public class ModelLoader {
 			modelTextures.put(key, lodMap);
 		}
 		
+		rawModels.get(key).put(lodLevel, rawModel);
 		modelTextures.get(key).put(lodLevel, modelTexture);
+		
+		if (lodLevel > 0)
+		{
+			if (texturedModels.containsKey(key) && !texturedModels.get(key).usesLod())
+			{
+				texturedModels.get(key).setUsesLod(true);
+			}
+		}
 	}
 	
 	/**If no distance is passed, always return high poly mesh.
@@ -176,7 +183,7 @@ public class ModelLoader {
 		}
 		else
 		{
-			return rawModels.get(key).get(0);
+			return rawModels.get(key).get(2);
 		}
 	}
 	

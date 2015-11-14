@@ -53,8 +53,8 @@ public final class Globals {
 	public static final short COL_BORDER = 256;
 	
 	//lod stages
-	public static final float mqDist = 200.f;
-	public static final float lqDist = 400.f;
+	public static final float mqDist = 300.f;
+	public static final float lqDist = 600.f;
 	
 	//transparency of pheromones and positionLocators
 	public static final float GHOST_TRANSPARENCY = 0.35f;
