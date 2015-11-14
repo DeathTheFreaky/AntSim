@@ -271,6 +271,11 @@ public class Camera {
 			event.consume();
 		}
 		
+		if (event.getKey() == Globals.disableSorting) {
+			Globals.sortingDisabled = !Globals.sortingDisabled;
+			event.consume();
+		}
+		
 		//pause menu
 		if (event.getKey() == Keyboard.KEY_ESCAPE) {
 			MainApplication.getInstance().pause();

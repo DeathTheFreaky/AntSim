@@ -3,6 +3,8 @@ package at.antSim;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.lwjgl.input.Keyboard;
+
 import com.bulletphysics.collision.broadphase.CollisionFilterGroups;
 
 /**Stores global variables, mainly config file entries and constants like resource folder, fps_cap...
@@ -51,8 +53,8 @@ public final class Globals {
 	public static final short COL_BORDER = 256;
 	
 	//transparency of pheromones and positionLocators
-	public static final float GHOST_TRANSPARENCY = 0.25f;
-	public static float currentGhostTransparency = 0.25f;
+	public static final float GHOST_TRANSPARENCY = 0.35f;
+	public static float currentGhostTransparency = 0.35f;
 	
 	//maximum nbr of ants waiting at a position locator
 	public static final int MAX_LOCATOR_ANTS = 1;
@@ -111,6 +113,9 @@ public final class Globals {
 	public static int zoomOutKey;
 	public static int restoreCameraPosition;
 	public static int showGhostSpheres;
+	public static int disableSorting = Keyboard.KEY_N;
+	
+	public static boolean sortingDisabled;
 	
 	public static int invertHorizontalAxis; //-1 if inverted, 1 if not inverted
 	public static int invertVerticalAxis;

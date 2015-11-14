@@ -19,6 +19,7 @@ import at.antSim.objectsPhysic.basics.ReadOnlyPhysicsObject;
 import at.antSim.utils.Maths;
 import at.antSim.utils.Pair;
 import at.antSim.utils.TransparentTriangleComparator;
+import at.antSim.utils.TransparentsSorterWorker;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -41,7 +42,7 @@ public abstract class Entity {
 	static final Map<PhysicsObject, ObjectType> physicsObjectTypeMap = new HashMap<PhysicsObject, ObjectType>();
 	static final Map<TexturedModel, List<Entity>> renderingMap = new HashMap<TexturedModel, List<Entity>>();
 	static final LinkedList<Entity> transparents = new LinkedList<>();
-	static final ArrayList<Pair<Entity, TransparentTriangle>> transparentTriangles = new ArrayList<Pair<Entity, TransparentTriangle>>();
+	static ArrayList<Pair<Entity, TransparentTriangle>> transparentTriangles = new ArrayList<Pair<Entity, TransparentTriangle>>();
 	static final List<Entry<Entity, Integer>> entityVertices = new ArrayList<Entry<Entity, Integer>>();
 	static final Map<PhysicsObject, Entity> parentingEntities = new HashMap<PhysicsObject, Entity>(); //allows us to get eg. the Food Entity in a react() method when an ant hit the Food Entitie's physicsObject
 	static final List<Entity> entities = new LinkedList<>(); //used to delete all entities
@@ -49,8 +50,9 @@ public abstract class Entity {
 	static final List<Ant> ants = new LinkedList<Ant>();
 	static final List<Entity> pheromones = new LinkedList<>();
 	static final List<PositionLocator> deleteableLocators = new LinkedList<PositionLocator>();
-	static TransparentTriangleComparator triangleComp = new TransparentTriangleComparator();
 	static Hive hive;
+	
+	static TransparentsSorterWorker triangleSorter = new TransparentsSorterWorker();
 	
 	static boolean deleteAllowed = true; //set to false when quitting a game so that events do not delete entities that are already being deleted
 
@@ -321,12 +323,21 @@ public abstract class Entity {
 	 */
 	private static void sortAllTransparentTriangles() 
 	{
-		Collections.sort(transparentTriangles, triangleComp);
+		if (!Globals.sortingDisabled && MainApplication.getWorldLoaded())
+		{
+			MainApplication.getExecutor().execute(triangleSorter);
+			//Collections.sort(transparentTriangles, triangleComp);	
+		}
 	}
 	
 	public static List<Pair<Entity, TransparentTriangle>> getTransparentTriangles()
 	{
 		return transparentTriangles;
+	}
+	
+	public static void setTransparentTriangles(ArrayList<Pair<Entity, TransparentTriangle>> triangles)
+	{
+		transparentTriangles = triangles;
 	}
 	
 	/**Updates transparent triangle sorting if camera position has changed.
@@ -349,7 +360,8 @@ public abstract class Entity {
 	{
 		Entity entity = parentingEntities.get(po);
 		
-		if (entity.getGraphicsEntity().getModel().usesTransparency())
+		// entity will be null for GhostPhysicsObjects (collision detection triggers)
+		if (entity != null && entity.getGraphicsEntity() != null && entity.getGraphicsEntity().getModel().usesTransparency())
 		{
 			Matrix4f transformationMatrix = Maths.createTransformationMatrix(Maths.vec3fToSlickUtil(po.getPosition()), 
 					po.getRotationDegrees().x, po.getRotationDegrees().y, po.getRotationDegrees().z, 
@@ -362,7 +374,7 @@ public abstract class Entity {
 					triangle.getValue().updateTransform(transformationMatrix);
 				}
 			}
-									
+												
 			sortAllTransparentTriangles();
 		}
 	}

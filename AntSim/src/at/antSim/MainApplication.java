@@ -31,6 +31,8 @@ import com.bulletphysics.linearmath.Transform;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * MainApplication holds the main game loop containing the main game logic.<br>
@@ -146,6 +148,7 @@ public class MainApplication {
 	 */
 
 	private static MainApplication INSTANCE = null;
+	private static ExecutorService executor;
 
 	private AbstractGuiState startMenuState;
 	private AbstractGuiState optionsDisplayState;
@@ -174,7 +177,7 @@ public class MainApplication {
 	private int positionResetThreshold = 50;
 
 	private boolean glLoaded = false;
-	private boolean worldLoaded = false;
+	private static boolean worldLoaded = false;
 	private boolean triggeredLoading = false;
 	private boolean quit = false;
 	private boolean paused = false;
@@ -212,7 +215,7 @@ public class MainApplication {
 	 * @param renderer
 	 */
 	public void launch(OpenGLLoader loader, MasterRenderer renderer) {
-
+		
 		this.renderer = renderer;
 		defaultEntityBuilder = new EntityBuilderImpl();
 
@@ -381,6 +384,8 @@ public class MainApplication {
 	private void loadWorld(OpenGLLoader loader, MasterRenderer renderer) {
 
 		if (!worldLoaded) {
+			
+			executor = Executors.newFixedThreadPool(2);
 
 			/*
 			 * Using index buffers will help to use less data in total by not specifying positions shared by different vertexes multiple times
@@ -441,6 +446,13 @@ public class MainApplication {
 		EventManager.getInstance().reset();
 		worldLoaded = false;
 		paused = false;
+		
+		executor.shutdown();
+		while (!executor.isTerminated())
+		{
+			//wait for worker threads to finish
+		}
+		
 		Entity.deleteAllEntities();
 		if (hive != null)
 			hive.reset();
@@ -520,6 +532,16 @@ public class MainApplication {
 
 	public void setMoonPosition(Vector3f moonPosition) {
 		lights.get(1).setPosition(moonPosition);
+	}
+	
+	public static ExecutorService getExecutor()
+	{
+		return executor;
+	}
+	
+	public static boolean getWorldLoaded()
+	{
+		return worldLoaded;
 	}
 
 	/**
