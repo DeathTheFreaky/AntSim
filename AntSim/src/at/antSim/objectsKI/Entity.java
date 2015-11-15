@@ -24,6 +24,7 @@ import at.antSim.utils.Pair;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.vecmath.Vector3f;
 
@@ -43,9 +44,9 @@ public abstract class Entity {
 	static final Map<PhysicsObject, ObjectType> physicsObjectTypeMap = new HashMap<PhysicsObject, ObjectType>();
 	static final Map<TexturedModel, List<Entity>> renderingMap = new HashMap<TexturedModel, List<Entity>>();
 	static final HashSet<Entity> lodEntities = new HashSet<>();
-	static final HashSet<Entity> changedLodEntities = new HashSet<>();
+	static final Set<Entity> changedLodEntities = Collections.synchronizedSet(new HashSet<Entity>());
 	static ArrayList<Pair<Entity, TransparentTriangle>> transparentTriangles = new ArrayList<Pair<Entity, TransparentTriangle>>();
-	static final HashSet<Entity> changedTransparentEntities = new HashSet<>();
+	static final Set<Entity> changedTransparentEntities = Collections.synchronizedSet(new HashSet<Entity>());
 	static final List<Entry<Entity, Integer>> entityVertices = new ArrayList<Entry<Entity, Integer>>();
 	static final Map<PhysicsObject, Entity> parentingEntities = new HashMap<PhysicsObject, Entity>(); //allows us to get eg. the Food Entity in a react() method when an ant hit the Food Entitie's physicsObject
 	static final List<Entity> entities = new LinkedList<>(); //used to delete all entities
@@ -328,7 +329,7 @@ public abstract class Entity {
 	{
 		if (!Globals.sortingDisabled && MainApplication.getWorldLoaded())
 		{
-			MainApplication.getExecutor().execute(triangleSorter);
+			MainApplication.getTransparentExecutor().execute(triangleSorter);
 			//Collections.sort(transparentTriangles, triangleComp);	
 		}
 	}
@@ -454,7 +455,7 @@ public abstract class Entity {
 	{
 		if (MainApplication.getWorldLoaded())
 		{
-			MainApplication.getExecutor().execute(lodWorker);
+			MainApplication.getLodExecutor().execute(lodWorker);
 		}
 	}
 	

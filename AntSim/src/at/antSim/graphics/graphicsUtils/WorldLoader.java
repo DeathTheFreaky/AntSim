@@ -165,6 +165,12 @@ public class WorldLoader {
 				.buildGraphicsEntity("dragon", 1, 50)
 				.buildPhysicsObject()
 				.registerResult();
+		
+		Entity lodTree = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
+				.setPosition(new Vector3f(150, terrain.getHeightOfTerrain(150, -780), -780))
+				.buildGraphicsEntity("tree", 1, 50)
+				.buildPhysicsObject()
+				.registerResult();
 
 		loadBorders(terrain);
 	}

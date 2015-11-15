@@ -40,7 +40,6 @@ public class ModelLoader {
 		//first String in array is name of obj file, second is name of texture, third is desired name of TexturedModel in Hashmap
 		
 		//environment
-		modelPresets.add(new ModelNamesAndTypes("tree", "tree", "tree", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("grass", "grassTexture", "grass", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("fern", "fern", "fern", PrimitiveType.SPHERE, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("bush", "bushTexture", "bush", PrimitiveType.CYLINDER, ObjectType.ENVIRONMENT, massDummie, false));
@@ -83,6 +82,10 @@ public class ModelLoader {
 		modelPresets.add(new ModelNamesAndTypes("dragon_hq", "dragon", "dragon", 0, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("dragon_mq", "dragon", "dragon", 1, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		modelPresets.add(new ModelNamesAndTypes("dragon_lq", "dragon", "dragon", 2, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		//modelPresets.add(new ModelNamesAndTypes("tree_new", "tree", "tree", 0, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("tree_hq", "orange", "tree", 0, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("tree_mq", "orange", "tree", 1, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
+		modelPresets.add(new ModelNamesAndTypes("tree_lq", "orange", "tree", 2, PrimitiveType.CUBOID, ObjectType.ENVIRONMENT, massDummie, false));
 		
 		for (ModelNamesAndTypes modelPreset : modelPresets) {
 			ModelData modelData = OBJFileLoader.loadOBJ(modelPreset.objFileName);

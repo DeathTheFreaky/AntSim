@@ -148,7 +148,8 @@ public class MainApplication {
 	 */
 
 	private static MainApplication INSTANCE = null;
-	private static ExecutorService executor;
+	private static ExecutorService transparentExecutor;
+	private static ExecutorService lodExecutor;
 
 	private AbstractGuiState startMenuState;
 	private AbstractGuiState optionsDisplayState;
@@ -386,7 +387,8 @@ public class MainApplication {
 
 		if (!worldLoaded) {
 			
-			executor = Executors.newFixedThreadPool(2);
+			transparentExecutor = Executors.newFixedThreadPool(1);
+			lodExecutor = Executors.newFixedThreadPool(1);
 
 			/*
 			 * Using index buffers will help to use less data in total by not specifying positions shared by different vertexes multiple times
@@ -448,8 +450,13 @@ public class MainApplication {
 		worldLoaded = false;
 		paused = false;
 		
-		executor.shutdown();
-		while (!executor.isTerminated())
+		transparentExecutor.shutdown();
+		lodExecutor.shutdown();
+		while (!transparentExecutor.isTerminated())
+		{
+			//wait for worker threads to finish
+		}
+		while (!lodExecutor.isTerminated())
 		{
 			//wait for worker threads to finish
 		}
@@ -535,9 +542,14 @@ public class MainApplication {
 		lights.get(1).setPosition(moonPosition);
 	}
 	
-	public static ExecutorService getExecutor()
+	public static ExecutorService getTransparentExecutor()
 	{
-		return executor;
+		return transparentExecutor;
+	}
+	
+	public static ExecutorService getLodExecutor()
+	{
+		return lodExecutor;
 	}
 	
 	public static boolean getWorldLoaded()
