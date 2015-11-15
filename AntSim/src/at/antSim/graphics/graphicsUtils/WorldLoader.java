@@ -93,12 +93,12 @@ public class WorldLoader {
 					Entity fern = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 							.setPosition(new Vector3f(x, y - 5, z))
 							.setRotation(0, random.nextFloat() * 360, 0)
-							.buildGraphicsEntity("fern", 1, 70)
+							.buildGraphicsEntity("fern", random.nextInt(4), 70)
 							.buildPhysicsObject()
 							.registerResult();
 				}
 			}
-			if (i % 300 == 0) {
+			if (i % 380 == 0) {
 				float x = margin + random.nextFloat() * (Globals.WORLD_SIZE - 2 * margin);
 				float z = -margin + random.nextFloat() * (-Globals.WORLD_SIZE + 2 * margin);
 				float y = terrain.getHeightOfTerrain(x, z);
@@ -168,7 +168,7 @@ public class WorldLoader {
 		
 		Entity lodTree = builder.setFactory(StaticPhysicsObjectFactory.getInstance())
 				.setPosition(new Vector3f(150, terrain.getHeightOfTerrain(150, -780), -780))
-				.buildGraphicsEntity("tree", 1, 50)
+				.buildGraphicsEntity("tree", 1, 100)
 				.buildPhysicsObject()
 				.registerResult();
 
