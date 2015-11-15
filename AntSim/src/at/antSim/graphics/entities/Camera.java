@@ -273,6 +273,7 @@ public class Camera {
 		
 		if (event.getKey() == Globals.disableSorting) {
 			Globals.sortingDisabled = !Globals.sortingDisabled;
+			Entity.updateCameraPos(position);
 			event.consume();
 		}
 		
