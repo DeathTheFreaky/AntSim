@@ -103,17 +103,28 @@ public class EntityRenderer {
 	/**Renders transparent triangles sorted from the furthest away from to the closest to the camera.
 	 * In order to reduce number of state changes, indices from the same Entity are accumulated and drawn in one draw call when the currently rendered Entity changes.
 	 * 
+	 * I tried two approaches: 
+	 * 	using single draw calls for every triangle (works just fine)
+	 * 	cumulating the triangles from one entity and draw them in one draw call, by rewriting the indices buffer each time (causes triangles to flicker)
+	 * 
+	 * So I used the single draw approach but the other approach is still commented out for demonstration purposes.
+	 * 
+	 * In order to achieve perfect transparency for overlapping transparent entities, one would have to split triangles but that would be a little too much complication for this demo.
+	 * 
 	 */
 	private void renderTransparents()
 	{
+		// enable blending and set blend function to simulate transparency in openGL
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
+		// disable coloring of ghost sphere with moving entity indicator blends (red if collides, green if does not collide)
 		shader.loadMovingEntityBlend(0.0f);
 
 		Entity currentEntity = null;
-		ArrayList<Integer> cumulatedIndices = new ArrayList<Integer>();
+		/*ArrayList<Integer> cumulatedIndices = new ArrayList<Integer>();*/
 		
+		// disable depth mask so that transparent objects behind other transparent objects are not discarded due to z-buffer test
 		GL11.glDepthMask(false);
 								
 		for (Pair<Entity, TransparentTriangle> triangle : Entity.getTransparentTriangles())
@@ -121,13 +132,13 @@ public class EntityRenderer {
 			int idxOffset = triangle.getValue().getIndexBufferOffset();
 			ModelData data = triangle.getKey().getGraphicsEntity().getModel().getRawModel().getModelData();
 			
-			/*if (currentEntity != triangle.getKey()) // entity has changed
+			if (currentEntity != triangle.getKey()) // entity has changed -> load new VAO and shader variables
 			{
-				if (currentEntity != null)
+				/*if (currentEntity != null)
 				{
 					rewriteIndicesBufferAndDraw(cumulatedIndices, triangle.getKey().getGraphicsEntity().getModel().getRawModel().getIndicesID());
 					cumulatedIndices.clear();
-				}
+				}*/
 				
 				unbindTexturedModel(); // unbind previously used Textured Model and VAO
 				
@@ -136,22 +147,16 @@ public class EntityRenderer {
 				prepareInstance(triangle.getKey()); //load transformation matrix and texture atlas offset
 			}
 			
-			cumulatedIndices.add(data.getIndices()[idxOffset]);
+			currentEntity = triangle.getKey();
+			
+			/*cumulatedIndices.add(data.getIndices()[idxOffset]);
 			cumulatedIndices.add(data.getIndices()[idxOffset + 1]);
-			cumulatedIndices.add(data.getIndices()[idxOffset + 2]);
+			cumulatedIndices.add(data.getIndices()[idxOffset + 2]);*/
 						
-			currentEntity = triangle.getKey();*/
-			
-			prepareTexturedModel(triangle.getKey().getGraphicsEntity().getModel()); //lots of state changes, but unavoidable...
-			prepareInstance(triangle.getKey()); //load transformation matrix and texture atlas offset
-			
-			GL11.glDrawElements(GL11.GL_TRIANGLES, 3, GL11.GL_UNSIGNED_INT, idxOffset * 4);
-			
-			unbindTexturedModel();
+			GL11.glDrawElements(GL11.GL_TRIANGLES, 3, GL11.GL_UNSIGNED_INT, idxOffset * 4);			
 		}
 		
-		/*rewriteIndicesBufferAndDraw(cumulatedIndices, currentEntity.getGraphicsEntity().getModel().getRawModel().getIndicesID());
-		cumulatedIndices.clear();*/
+		unbindTexturedModel();
 		
 		GL11.glDepthMask(true);
 				
