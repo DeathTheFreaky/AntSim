@@ -115,13 +115,13 @@ public class EntityRenderer {
 		ArrayList<Integer> cumulatedIndices = new ArrayList<Integer>();
 		
 		GL11.glDepthMask(false);
-						
+								
 		for (Pair<Entity, TransparentTriangle> triangle : Entity.getTransparentTriangles())
 		{
 			int idxOffset = triangle.getValue().getIndexBufferOffset();
 			ModelData data = triangle.getKey().getGraphicsEntity().getModel().getRawModel().getModelData();
 			
-			if (currentEntity != triangle.getKey()) // entity has changed
+			/*if (currentEntity != triangle.getKey()) // entity has changed
 			{
 				if (currentEntity != null)
 				{
@@ -140,11 +140,18 @@ public class EntityRenderer {
 			cumulatedIndices.add(data.getIndices()[idxOffset + 1]);
 			cumulatedIndices.add(data.getIndices()[idxOffset + 2]);
 						
-			currentEntity = triangle.getKey();
+			currentEntity = triangle.getKey();*/
+			
+			prepareTexturedModel(triangle.getKey().getGraphicsEntity().getModel()); //lots of state changes, but unavoidable...
+			prepareInstance(triangle.getKey()); //load transformation matrix and texture atlas offset
+			
+			GL11.glDrawElements(GL11.GL_TRIANGLES, 3, GL11.GL_UNSIGNED_INT, idxOffset * 4);
+			
+			unbindTexturedModel();
 		}
 		
-		rewriteIndicesBufferAndDraw(cumulatedIndices, currentEntity.getGraphicsEntity().getModel().getRawModel().getIndicesID());
-		cumulatedIndices.clear();
+		/*rewriteIndicesBufferAndDraw(cumulatedIndices, currentEntity.getGraphicsEntity().getModel().getRawModel().getIndicesID());
+		cumulatedIndices.clear();*/
 		
 		GL11.glDepthMask(true);
 				
