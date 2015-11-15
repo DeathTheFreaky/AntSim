@@ -139,7 +139,7 @@ public class EntityRenderer {
 			cumulatedIndices.add(data.getIndices()[idxOffset]);
 			cumulatedIndices.add(data.getIndices()[idxOffset + 1]);
 			cumulatedIndices.add(data.getIndices()[idxOffset + 2]);
-			
+						
 			currentEntity = triangle.getKey();
 		}
 		
